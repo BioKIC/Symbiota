@@ -160,13 +160,13 @@ class SpecUploadFile extends SpecUploadBase{
 					if(!$this->conn->query($sqlA)){
 						$this->outputMsg('<li>ERROR cleaning recordID GUID</li>');
 					}
-					$sqlB = 'UPDATE uploadspectemp u INNER JOIN guidoccurrences g ON u.tempfield02 = g.guid '.
-						'SET u.occid = g.occid '.
-						'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL)';
+					$sqlB = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.tempfield02 = o.recordID '.
+						'SET u.occid = o.occid '.
+						'WHERE (u.collid IN('.$this->collId.')) AND (o.collid IN('.$this->collId.')) AND (u.occid IS NULL)';
 					if(!$this->conn->query($sqlB)){
 						$this->outputMsg('<li>ERROR populating occid from recordID GUID (stage1): '.$this->conn->error.'</li>');
 					}
-						$sqlC = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.tempfield02 = o.occurrenceid '.
+					$sqlC = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.tempfield02 = o.occurrenceid '.
 						'SET u.occid = o.occid '.
 						'WHERE (u.collid IN('.$this->collId.')) AND (o.collid IN('.$this->collId.')) AND (u.occid IS NULL)';
 					if(!$this->conn->query($sqlC)){

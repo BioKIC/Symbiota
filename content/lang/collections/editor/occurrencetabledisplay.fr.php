@@ -5,10 +5,12 @@ Language: Français (French)
 ------------------
 */
 
+$LANG['FIRST'] = 'Première';
 $LANG['PREVIOUS'] = 'Précédents';
 $LANG['RECORDS'] = 'enregistrements';
 $LANG['OF'] = 'de';
 $LANG['NEXT'] = 'Suivants';
+$LANG['LAST'] = 'Dernière';
 $LANG['TABLE_VIEW'] = 'Vue du Tableau des Occurrences';
 $LANG['SEARCH_FILTER'] = 'Rechercher / Filtrer';
 $LANG['BATCH_UPDATE'] = 'Mise à Jour Par Lots';

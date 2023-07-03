@@ -3,8 +3,8 @@ include_once($SERVER_ROOT.'/classes/RpcBase.php');
 
 class RpcOccurrenceEditor extends RpcBase{
 
-	function __construct(){
-		parent::__construct('write');
+	function __construct($connType = 'readonly'){
+		parent::__construct($connType);
 	}
 
 	function __destruct(){
@@ -80,28 +80,180 @@ class RpcOccurrenceEditor extends RpcBase{
 		$retArr = array();
 		$catNumber = $this->cleanInStr($catNum);
 		if(is_numeric($collid) && is_numeric($skipOccid) && $catNumber){
-			$sql = 'SELECT occid FROM omoccurrences WHERE (catalognumber = "'.$catNumber.'") AND (collid = '.$collid.') AND (occid != '.$skipOccid.') ';
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$retArr[$r->occid] = $r->occid;
+			$sql = 'SELECT occid FROM omoccurrences WHERE (catalognumber = ?) AND (collid = ?) AND (occid != ?) ';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('sii', $catNum, $collid, $skipOccid);
+				$stmt->execute();
+				$occid = 0;
+				$stmt->bind_result($occid);
+				while($stmt->fetch()){
+					$retArr[$occid] = $occid;
+				}
+				$stmt->close();
 			}
-			$rs->free();
 		}
 		return $retArr;
 	}
 
 	public function getDupesOtherCatalogNumbers($otherCatNum, $collid, $skipOccid){
 		$retArr = array();
-		$otherCatNum = $this->cleanInStr($otherCatNum);
 		if(is_numeric($collid) && is_numeric($skipOccid) && $otherCatNum){
 			$sql = 'SELECT o.occid FROM omoccurrences o LEFT JOIN omoccuridentifiers i ON o.occid = i.occid
-				WHERE (o.othercatalognumbers = "'.$otherCatNum.'" OR i.identifierValue = "'.$otherCatNum.'") AND (o.collid = '.$collid.') AND (o.occid != '.$skipOccid.') ';
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$retArr[$r->occid] = $r->occid;
+				WHERE (o.othercatalognumbers = ? OR i.identifierValue = ?) AND (o.collid = ?) AND (o.occid != ?) ';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('ssii', $otherCatNum, $otherCatNum, $collid, $skipOccid);
+				$stmt->execute();
+				$occid = 0;
+				$stmt->bind_result($occid);
+				while($stmt->fetch()){
+					$retArr[$occid] = $occid;
+				}
+				$stmt->close();
 			}
-			$rs->free();
 		}
+		return $retArr;
+	}
+
+	public function getOccurrenceVouchers($occid){
+		$retArr = array();
+		if(is_numeric($occid)){
+			$sql = 'SELECT c.clid, c.name FROM fmvouchers v INNER JOIN fmchklsttaxalink cl ON v.clTaxaID = cl.clTaxaID INNER JOIN fmchecklists c ON cl.clid = c.clid WHERE v.occid = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				if($stmt->bind_param('i', $occid)){
+					$stmt->execute();
+					$clid = '';
+					$name = '';
+					$stmt->bind_result($clid, $name);
+					while($stmt->fetch()){
+						$retArr[$clid] = $name;
+					}
+					$stmt->close();
+				}
+				else $this->errorMessage = 'ERROR binding params for getOccurrenceVouchers: '.$stmt->error;
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getOccurrenceVouchers: '.$this->conn->error;
+		}
+		return $retArr;
+	}
+
+	public function getImageCount($occid){
+		$retCnt = 0;
+		if(is_numeric($occid)){
+			$sql = 'SELECT count(*) AS imgcnt FROM images WHERE occid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				if($stmt->bind_param('i', $occid)){
+					$stmt->execute();
+					$stmt->bind_result($retCnt);
+					$stmt->fetch();
+					$stmt->close();
+				}
+			}
+		}
+		return $retCnt;
+	}
+
+	//Used by /collections/editor/rpc/exsiccativalidation.php
+	public function getExsiccatiID($queryTerm){
+		$ometid = '';
+		if($queryTerm){
+			$sql = 'SELECT ometid FROM omexsiccatititles WHERE CONCAT_WS("",title,CONCAT(" [",abbreviation,"]")) = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('s', $queryTerm);
+				$stmt->execute();
+				$stmt->bind_result($ometid);
+				$stmt->fetch();
+				$stmt->close();
+			}
+		}
+		return $ometid;
+	}
+
+	//Used by /collections/editor/rpc/getspeciessuggest.php,
+	public function getSpeciesSuggest($term){
+		$retArr = Array();
+		$term = preg_replace('/[^a-zA-Z()\-. ]+/', '', $term);
+		$term = preg_replace('/\s{1}x{1}\s{0,1}$/i', ' _ ', $term);
+		$term = preg_replace('/\s{1}x{1}\s{1}/i', ' _ ', $term);
+
+		// Enable scientific name entry shortcuts: 2-3 letter codes separated by spaces, e.g. "pse men"
+		// Split the search string by spaces if there are any.
+		$str1 = ''; $str2 = ''; $str3 = '';
+		$strArr = explode(' ',$term);
+		$strCnt = count($strArr);
+		$str1 = $strArr[0];
+		if($strCnt > 1){
+			$str2 = $strArr[1];
+		}
+		if($strCnt > 2){
+			$str3 = $strArr[2];
+		}
+
+		// Construct the SQL query
+		$sql = 'SELECT DISTINCT tid, sciname FROM taxa WHERE unitname1 LIKE "'.$str1.'%" ';
+		if($str2){
+			$sql .= 'AND unitname2 LIKE "'.$str2.'%" ';
+		}
+		if($str3){
+			$sql .= 'AND unitname3 LIKE "'.$str3.'%" ';
+		}
+		$sql .= 'ORDER BY sciname';
+
+		// If the search term has an infraspecific separator, use the old version of the SQL, otherwise, no matches will be returned
+		if(array_intersect($strArr, array("var.", "ssp.", "nothossp.", "f.", "×", "x", "†"))) $sql = 'SELECT DISTINCT tid, sciname FROM taxa WHERE sciname LIKE "'.$term.'%" ';
+
+		$rs = $this->conn->query($sql);
+		while ($r = $rs->fetch_object()){
+			$retArr[] = array('id' => $r->tid, 'value' => $r->sciname);
+		}
+		$rs->free();
+		return $retArr;
+	}
+
+	public function getTaxonArr($term){
+		$retArr = array();
+		if($term){
+			$sql = 'SELECT DISTINCT t.tid, t.author, ts.family, t.securitystatus FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE t.sciname = ? AND ts.taxauthid = 1 ';
+			if($stmt = $this->conn->prepare($sql)){
+				if($stmt->bind_param('s', $term)){
+					$stmt->execute();
+					$tid = 0;
+					$family = null;
+					$author = null;
+					$status = null;
+					$stmt->bind_result($tid, $author, $family, $status);
+					while($stmt->fetch()){
+						$retArr['tid'] = $tid;
+						$retArr['family'] = $family;
+						$retArr['author'] = $author;
+						$retArr['status'] = $status;
+					}
+					$stmt->close();
+				}
+			}
+		}
+		return $retArr;
+	}
+
+	//Used by /collections/editor/rpc/getPaleoGtsParents.php
+	public function getPaleoGtsParents($term){
+		$retArr = Array();
+		$sql = 'SELECT gtsid, gtsterm, rankid, rankname, parentgtsid FROM omoccurpaleogts WHERE rankid > 10 AND gtsterm = "'.$this->cleanInStr($term).'"';
+		$parentId = '';
+		do{
+			$rs = $this->conn->query($sql);
+			if($r = $rs->fetch_object()){
+				if($parentId == $r->parentgtsid){
+					$parentId = 0;
+				}
+				else{
+					$retArr[] = array("rankid" => $r->rankid, "value" => $r->gtsterm);
+					$parentId = $r->parentgtsid;
+				}
+			}
+			else $parentId = 0;
+			$rs->free();
+			$sql = 'SELECT gtsid, gtsterm, rankid, rankname, parentgtsid FROM omoccurpaleogts WHERE rankid > 10 AND gtsid = '.$parentId;
+		}while($parentId);
 		return $retArr;
 	}
 

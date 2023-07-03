@@ -66,6 +66,7 @@ function initAutoComplete(formElem){
 				}
 			});
         },
+		autoFocus: true,
 		minLength: 3 
 	});
 }
@@ -74,17 +75,9 @@ function linkVoucher(occidIn, clidIn){
 	$.ajax({
 		type: "POST",
 		url: "rpc/linkvoucher.php",
-		data: { clid: clidIn, occid: occidIn, sciname: document.getElementById("tid-"+occidIn).value }
+		data: { clid: clidIn, occid: occidIn, taxon: document.getElementById("tid-"+occidIn).value }
 	}).done(function( msg ) {
-		if(msg == 1){
-			alert("Voucher linked successfully!");
-		}
-		else if(msg == 2){
-			alert("Specimen already a voucher for checklist");
-		}
-		else{
-			alert("Voucher link failed: "+msg);
-		}
+		alert(msg);
 	});
 }
 
@@ -150,10 +143,7 @@ function selectAll(cb){
 }
 
 function openPopup(urlStr,windowName){
-	var wWidth = 900;
-	if(document.body.offsetWidth) wWidth = document.body.offsetWidth*0.9;
-	if(wWidth > 1200) wWidth = 1200;
-	newWindow = window.open(urlStr,windowName,'scrollbars=1,toolbar=0,resizable=1,width='+(wWidth)+',height=630,left=20,top=20');
+	newWindow = window.open(urlStr,windowName,'scrollbars=1,toolbar=0,resizable=1,width=900,height=630,left=20,top=20');
 	if (newWindow.opener == null) newWindow.opener = self;
 	return false;
 }

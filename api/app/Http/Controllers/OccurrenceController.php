@@ -197,7 +197,6 @@ class OccurrenceController extends Controller{
 		$id = $this->getOccid($id);
 		$occurrence = Occurrence::find($id);
 		if($occurrence){
-			$occurrence->recordID = DB::table('guidoccurrences')->where('occid', $id)->value('guid');
 			if(!$occurrence->occurrenceID) $occurrence->occurrenceID = $occurrence->recordID;
 			if($request->input('includeMedia')) $occurrence->media;
 			if($request->input('includeIdentifications')) $occurrence->identification;
@@ -373,8 +372,7 @@ class OccurrenceController extends Controller{
 	//Helper functions
 	protected function getOccid($id){
 		if(!is_numeric($id)){
-			$occid = Occurrence::where('occurrenceID', $id)->value('occid');
-			if(!$occid) $occid = DB::table('guidoccurrences')->where('guid', $id)->value('occid');
+			$occid = Occurrence::where('occurrenceID', $id)->orWhere('recordID', $id)->value('occid');
 			if(is_numeric($occid)) $id = $occid;
 		}
 		return $id;

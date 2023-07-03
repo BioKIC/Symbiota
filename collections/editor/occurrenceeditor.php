@@ -46,6 +46,9 @@ $statusStr = '';
 $navStr = '';
 
 $isEditor = 0;
+$LOCALITY_AUTO_LOOKUP = 1;
+$CATNUM_DUPE_CHECK = true;
+$OTHER_CATNUM_DUPE_CHECK = true;
 if($SYMB_UID){
 	//Set variables
 	$occManager->setOccId($occId);
@@ -100,11 +103,8 @@ if($SYMB_UID){
 			include('includes/config/crowdSourceVar.php');
 		}
 	}
-	$LOCALITY_AUTO_LOOKUP = 1;
 	if(defined('LOCALITYAUTOLOOKUP') && !LOCALITYAUTOLOOKUP) $LOCALITY_AUTO_LOOKUP = LOCALITYAUTOLOOKUP;
-	$CATNUM_DUPE_CHECK = true;
 	if(defined('CATNUMDUPECHECK') && !CATNUMDUPECHECK) $CATNUM_DUPE_CHECK = false;
-	$OTHER_CATNUM_DUPE_CHECK = true;
 	if(defined('OTHERCATNUMDUPECHECK') && !OTHERCATNUMDUPECHECK) $OTHER_CATNUM_DUPE_CHECK = false;
 	$DUPE_SEARCH = true;
 	if(defined('DUPESEARCH') && !DUPESEARCH) $DUPE_SEARCH = false;
@@ -514,12 +514,12 @@ else{
 	</script>
 	<script src="../../js/symb/collections.coordinateValidation.js?ver=2" type="text/javascript"></script>
 	<script src="../../js/symb/wktpolygontools.js?ver=2" type="text/javascript"></script>
-	<script src="../../js/symb/collections.georef.js?ver=1" type="text/javascript"></script>
-	<script src="../../js/symb/collections.editor.main.js?ver=14" type="text/javascript"></script>
+	<script src="../../js/symb/collections.georef.js?ver=2" type="text/javascript"></script>
+	<script src="../../js/symb/collections.editor.main.js?ver=3" type="text/javascript"></script>
 	<script src="../../js/symb/collections.editor.tools.js?ver=4" type="text/javascript"></script>
-	<script src="../../js/symb/collections.editor.imgtools.js?ver=2" type="text/javascript"></script>
+	<script src="../../js/symb/collections.editor.imgtools.js?ver=3" type="text/javascript"></script>
 	<script src="../../js/jquery.imagetool-1.7.js?ver=140310" type="text/javascript"></script>
-	<script src="../../js/symb/collections.editor.query.js?ver=5" type="text/javascript"></script>
+	<script src="../../js/symb/collections.editor.query.js?ver=6" type="text/javascript"></script>
 	<style type="text/css">
 		fieldset{ padding:15px }
 		fieldset > legend{ font-weight:bold; }
@@ -721,6 +721,21 @@ else{
 										<fieldset>
 											<legend><?php echo (isset($LANG['COLLECTOR_INFO'])?$LANG['COLLECTOR_INFO']:'Collector Info'); ?></legend>
 											<?php
+
+											// If it's a new record in a general observation collection, get the person info to autofill name, country & state
+											if($isGenObs && !$occId) {
+												$pHandler = new ProfileManager();
+												$pHandler->setUid($SYMB_UID);
+												$user = $pHandler->getPerson();
+												$occArr['recordedby'] = $user->getFirstName() . ' ' . $user->getLastName();
+
+												// Don't add locality if carrying over locality information
+												if($goToMode != 2) {
+													$occArr['country'] = $user->getCountry();
+													$occArr['stateprovince'] = $user->getState();
+												}
+											}
+
 											if($occId){
 												if($fragArr || $specImgArr){
 													?>

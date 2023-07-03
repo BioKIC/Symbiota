@@ -8,6 +8,7 @@ $pid = $_REQUEST['pid'];
 $target = array_key_exists('target',$_REQUEST)?$_REQUEST['target']:'checklists';
 
 //Sanitation
+$pid = htmlspecialchars($pid, HTML_SPECIAL_CHARS_FLAGS);
 if(!is_numeric($pid)) $pid = 0;
 
 $clManager = new ChecklistManager();
@@ -44,10 +45,10 @@ $clManager->setProj($pid);
 					echo "google.maps.event.addListener(marker".$clid.", 'click', function(){ closeAllInfoWins(); infoWin".$clid.".open(map,marker".$clid."); });\n";
 					//Double click event
 					if($target == 'keys'){
-						echo "var lStr".$clid." = '../ident/key.php?clid=".$clid."&pid=".$pid."&taxon=All+Species';\n";
+						echo "var lStr".$clid." = '../ident/key.php?clid=".$clid."&pid=" . $pid."&taxon=All+Species';\n";
 					}
 					else{
-						echo "var lStr".$clid." = 'checklist.php?clid=".$clid."&pid=".$pid."';\n";
+						echo "var lStr".$clid." = 'checklist.php?clid=".$clid."&pid=" . $pid."';\n";
 					}
 					echo "google.maps.event.addListener(marker".$clid.", 'dblclick', function(){ closeAllInfoWins(); marker".$clid.".setAnimation(google.maps.Animation.BOUNCE); window.location.href = lStr".$clid."; });\n";
 				}

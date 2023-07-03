@@ -214,15 +214,19 @@ class OmCollections extends Manager{
 	}
 
 	private function updateContactJson($contactArr){
+		$status = false;
 		if($this->collid){
-			$sql = 'UPDATE omcollections SET contactJson = "'.$this->cleanInStr(json_encode($contactArr)).'" WHERE collid = '.$this->collid;
-			if(!$this->conn->query($sql)){
-				$this->errorMessage = 'ERROR updating contact: '.$this->conn->error;
-				return false;
+			$contactStr = json_encode(array_values($contactArr));
+			$sql = 'UPDATE omcollections SET contactJson = ? WHERE collid = '.$this->collid;
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('s', $contactStr);
+				$stmt->execute();
+				if($stmt->affected_rows) $status = true;
+				elseif($stmt->error) $this->errorMessage = $stmt->error;
+				$stmt->close();
 			}
-			return true;
 		}
-		return false;
+		return $status;
 	}
 
 	private function getContactArr(){
@@ -288,9 +292,8 @@ class OmCollections extends Manager{
 	public function removeAddress($removeIID){
 		$status = false;
 		if($this->collid && is_numeric($removeIID)){
-			$con = MySQLiConnectionFactory::getCon("write");
-			$sql = 'UPDATE omcollections SET iid = NULL '.
-				'WHERE collid = '.$this->collid.' AND iid = '.$removeIID;
+			$con = MySQLiConnectionFactory::getCon('write');
+			$sql = 'UPDATE omcollections SET iid = NULL WHERE collid = '.$this->collid.' AND iid = '.$removeIID;
 			if($con->query($sql)){
 				$status = true;
 			}

@@ -17,7 +17,6 @@ $LANG['ROTATE'] = 'Rotar';
 $LANG['HIGH_RES'] = 'Res. Alta';
 $LANG['MED_RES'] = 'Res. Media';
 $LANG['OCR_IMAGE'] = 'Analizar Imagen con OCR';
-$LANG['OPTIONS'] = 'Opciones';
 $LANG['OCR_WHOLE_IMG'] = 'OCR imagen completa';
 $LANG['OCR_ANALYSIS'] = 'OCR con análisis';
 $LANG['IMAGE'] = 'Imagen';

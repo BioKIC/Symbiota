@@ -524,9 +524,8 @@ class OccurrenceAttributes extends Manager {
 
 	public function getEditorArr(){
 		$retArr = array();
-		$sql = 'SELECT DISTINCT u.uid, u.lastname, u.firstname, l.username '.
+		$sql = 'SELECT DISTINCT u.uid, u.lastname, u.firstname, u.username '.
 			'FROM tmattributes a INNER JOIN users u ON a.createduid = u.uid '.
-			'INNER JOIN userlogin l ON u.uid = l.uid '.
 			'INNER JOIN omoccurrences o ON a.occid = o.occid '.
 			'WHERE o.collid = '.$this->collidStr.' ORDER BY u.lastname, u.firstname';
 		$rs = $this->conn->query($sql);

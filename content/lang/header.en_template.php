@@ -10,6 +10,7 @@ $LANG['H_HOME'] = 'Home';
 $LANG['H_SEARCH'] = 'Search';
 $LANG['H_COLLECTIONS'] = 'Collections';
 $LANG['H_MAP'] = 'Map';
+$LANG['H_MAP_SEARCH'] = 'Map Search';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Taxonomic Explorer';
 
 $LANG['H_IMAGES'] = 'Images';
@@ -36,10 +37,11 @@ $LANG['H_PARTNERS'] = 'Partners';
 $LANG['H_CONTACTS'] = 'Contacts';
 $LANG['H_HELP'] = 'Symbiota Help';
 $LANG['H_SITEMAP'] = 'Sitemap';
+$LANG['H_DATA_USAGE'] = 'Data Use';
 
 $LANG['H_WELCOME'] = 'Welcome';
 $LANG['H_MY_PROFILE'] = 'My Profile';
-$LANG['H_LOGOUT'] = 'Logout';
-$LANG['H_LOGIN'] = 'Login';
+$LANG['H_LOGOUT'] = 'Sign Out';
+$LANG['H_LOGIN'] = 'Sign In';
 $LANG['H_NEW_ACCOUNT'] = 'New Account';
 ?>

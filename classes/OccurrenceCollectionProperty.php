@@ -17,8 +17,8 @@ class OccurrenceCollectionProperty extends Manager {
 
 	private function setDynamicPropertyArr(){
 		if($this->collid){
-			$sql = 'SELECT p.collPropID, p.propCategory, p.propTitle, p.propJson, p.notes, l.username, IFNULL(p.modifiedTimestamp, p.initialTimestamp) AS ts
-				FROM omcollproperties p LEFT JOIN userlogin l ON p.modifiedUid WHERE (p.collid = '.$this->collid.') ';
+			$sql = 'SELECT p.collPropID, p.propCategory, p.propTitle, p.propJson, p.notes, u.username, IFNULL(p.modifiedTimestamp, p.initialTimestamp) AS ts
+				FROM omcollproperties p LEFT JOIN users u ON p.modifiedUid = u.uid WHERE (p.collid = '.$this->collid.') ';
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
 					$this->dynPropArr[$r->propCategory][$r->collPropID]['title'] = $r->propTitle;

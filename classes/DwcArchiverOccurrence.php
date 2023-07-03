@@ -20,7 +20,7 @@ class DwcArchiverOccurrence extends Manager{
 	}
 
 	public function getOccurrenceArr(){
-		if($this->schemaType == 'pensoft') $this->occurDefArr['fields']['Taxon_Local_ID'] = 'v.tid AS Taxon_Local_ID';
+		if($this->schemaType == 'pensoft') $this->occurDefArr['fields']['Taxon_Local_ID'] = 'ctl.tid AS Taxon_Local_ID';
 		else $this->occurDefArr['fields']['id'] = 'o.occid';
 		$this->occurDefArr['terms']['institutionCode'] = 'http://rs.tdwg.org/dwc/terms/institutionCode';
 		$this->occurDefArr['fields']['institutionCode'] = 'IFNULL(o.institutionCode,c.institutionCode) AS institutionCode';
@@ -293,7 +293,7 @@ class DwcArchiverOccurrence extends Manager{
 		$this->occurDefArr['terms']['collID'] = 'https://symbiota.org/terms/collID';
 		$this->occurDefArr['fields']['collID'] = 'c.collID';
 		$this->occurDefArr['terms']['recordID'] = 'https://symbiota.org/terms/recordID';
-		$this->occurDefArr['fields']['recordID'] = 'g.guid AS recordID';
+		$this->occurDefArr['fields']['recordID'] = 'o.recordID';
 		$this->occurDefArr['terms']['references'] = 'http://purl.org/dc/terms/references';
 		$this->occurDefArr['fields']['references'] = '';
 		if($this->schemaType == 'pensoft'){
@@ -353,7 +353,6 @@ class DwcArchiverOccurrence extends Manager{
 			$sql = 'SELECT DISTINCT '.trim($sqlFrag,', ');
 		}
 		$sql .= ' FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid '.
-			'INNER JOIN guidoccurrences g ON o.occid = g.occid '.
 			'LEFT JOIN taxa t ON o.tidinterpreted = t.TID ';
 		if($this->includePaleo) $sql .= 'LEFT JOIN omoccurpaleo paleo ON o.occid = paleo.occid ';
 		//if($fullSql) $sql .= ' ORDER BY c.collid ';
@@ -414,13 +413,14 @@ class DwcArchiverOccurrence extends Manager{
 	}
 
 	public function getAssociationStr($occid){
-		$retStr = '';
 		if(is_numeric($occid)){
-			$sql = 'SELECT assocID, occid, occidAssociate, relationship, subType, resourceUrl, identifier FROM omoccurassociations WHERE (occid = '.$occid.' OR occidAssociate = '.$occid.') AND verbatimSciname IS NULL ';
+			$relOccidArr = array();
+			$assocArr = array();
+			//Get associations defined within omoccurassociations
+			$sql = 'SELECT assocID, occid, occidAssociate, relationship, subType, resourceUrl, identifier FROM omoccurassociations
+				WHERE (occid = '.$occid.' OR occidAssociate = '.$occid.') AND verbatimSciname IS NULL ';
 			$rs = $this->conn->query($sql);
 			if($rs){
-				$relOccidArr = array();
-				$assocArr = array();
 				while($r = $rs->fetch_object()){
 					$relOccid = $r->occidAssociate;
 					$relationship = $r->relationship;
@@ -442,23 +442,49 @@ class DwcArchiverOccurrence extends Manager{
 					}
 				}
 				$rs->free();
-				if($relOccidArr){
-					$this->setServerDomain();
-					$sql = 'SELECT o.occid, IFNULL(o.occurrenceid,g.guid) as guid FROM omoccurrences o INNER JOIN guidoccurrences g ON o.occid = g.occid WHERE o.occid IN('.implode(',',array_keys($relOccidArr)).')';
-					$rs = $this->conn->query($sql);
-					while($r = $rs->fetch_object()){
-						foreach($relOccidArr[$r->occid] as $targetAssocID){
-							$assocArr[$targetAssocID]['identifier'] = $r->guid;
-							$assocArr[$targetAssocID]['resourceurl'] = $this->serverDomain.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?guid='.$r->guid;
+			}
+			//Append duplicate specimen duplicate associations
+			$sql = 'SELECT s.occid, l.occid as occidAssociate
+				FROM omoccurduplicatelink s INNER JOIN omoccurduplicates d ON s.duplicateid = d.duplicateid
+				INNER JOIN omoccurduplicatelink l ON d.duplicateid = l.duplicateid
+				WHERE s.occid IN('.$occid.') AND s.occid != l.occid ';
+			$rs = $this->conn->query($sql);
+			if($rs){
+				while($r = $rs->fetch_object()){
+					$assocKey = 'sd-'.$r->occidAssociate;
+					$assocArr[$assocKey]['occidassoc'] = $r->occidAssociate;
+					$assocArr[$assocKey]['relationship'] = 'herbariumSpecimenDuplicate';
+					$relOccidArr[$r->occidAssociate][] = $assocKey;
+				}
+				$rs->free();
+			}
+			//Append resource URLs to each output record
+			if($relOccidArr){
+				$this->setServerDomain();
+				//Replace GUID identifiers with occurrenceID values
+				$sql = 'SELECT occid, occurrenceID, recordID FROM omoccurrences WHERE occid IN('.implode(',',array_keys($relOccidArr)).')';
+				$rs = $this->conn->query($sql);
+				while($r = $rs->fetch_object()){
+					foreach($relOccidArr[$r->occid] as $k => $targetAssocID){
+						if($r->occurrenceID){
+							$assocArr[$targetAssocID]['resourceurl'] = $r->occurrenceID;
+							if(substr($r->occurrenceID, 0, 4) != 'http'){
+								$assocArr[$targetAssocID]['resourceurl'] = $this->serverDomain.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?guid='.$r->occurrenceID;
+							}
+						}
+						elseif($r->recordID){
+							$assocArr[$targetAssocID]['resourceurl'] = $this->serverDomain.$GLOBALS['CLIENT_ROOT'].'/collections/individual/index.php?guid='.$r->recordID;
 						}
 					}
-					$rs->free();
 				}
-				foreach($assocArr as $assocateArr){
-					$retStr .= '|'.$assocateArr['relationship'];
-					if($assocateArr['subtype']) $retStr .= ' ('.$assocateArr['subtype'].')';
-					$retStr .= ': '.$assocateArr['resourceurl'];
-				}
+				$rs->free();
+			}
+			//Create output strings
+			$retStr = '';
+			foreach($assocArr as $assocateArr){
+				$retStr .= ' | '.$assocateArr['relationship'];
+				if(!empty($assocateArr['subtype'])) $retStr .= ' ('.$assocateArr['subtype'].')';
+				$retStr .= ': '.$assocateArr['resourceurl'];
 			}
 		}
 		return trim($retStr,' |');

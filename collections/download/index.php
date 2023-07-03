@@ -3,18 +3,11 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/DwcArchiverCore.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$sourcePage = array_key_exists('sourcepage',$_REQUEST)?$_REQUEST['sourcepage']:'specimen';
-$downloadType = array_key_exists('dltype',$_REQUEST)?$_REQUEST['dltype']:'specimen';
-$taxonFilterCode = array_key_exists('taxonFilterCode',$_REQUEST)?$_REQUEST['taxonFilterCode']:0;
-$displayHeader = array_key_exists('displayheader',$_REQUEST)?$_REQUEST['displayheader']:0;
-$searchVar = array_key_exists('searchvar',$_REQUEST)?$_REQUEST['searchvar']:'';
-
-//Sanitation
-$sourcePage = filter_var($sourcePage, FILTER_SANITIZE_STRING);
-$downloadType = filter_var($downloadType, FILTER_SANITIZE_STRING);
-if(!is_numeric($taxonFilterCode)) $taxonFilterCode = 0;
-if(!is_numeric($displayHeader)) $displayHeader = 0;
-$searchVar = filter_var($searchVar, FILTER_SANITIZE_STRING);
+$sourcePage = array_key_exists('sourcepage', $_REQUEST) ? filter_var($_REQUEST['sourcepage'], FILTER_SANITIZE_STRING) : 'specimen';
+$downloadType = array_key_exists('dltype', $_REQUEST) ? filter_var($_REQUEST['dltype'], FILTER_SANITIZE_STRING) : 'specimen';
+$taxonFilterCode = array_key_exists('taxonFilterCode', $_REQUEST) ? filter_var($_REQUEST['taxonFilterCode'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$displayHeader = array_key_exists('displayheader', $_REQUEST) ? filter_var($_REQUEST['displayheader'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$searchVar = array_key_exists('searchvar', $_REQUEST) ? filter_var($_REQUEST['searchvar'], FILTER_SANITIZE_STRING) : '';
 
 $dwcManager = new DwcArchiverCore();
 ?>
@@ -92,7 +85,7 @@ $dwcManager = new DwcArchiverCore();
 		.formElemDiv{ float:left }
 	</style>
 </head>
-<body style="width:700px;min-width:700px;background-color:#ffffff">
+<body style="width:700px;min-width:700px;margin-left:auto;margin-right:auto;background-color:#ffffff">
 	<?php
 	if($displayHeader){
 		$displayLeftMenu = (isset($collections_download_downloadMenu)?$collections_download_downloadMenu:false);
@@ -106,7 +99,7 @@ $dwcManager = new DwcArchiverCore();
 		<?php
 	}
 	?>
-	<div style="width:100%; background-color:white">
+	<div style="width:100%; background-color:white;">
 		<h2>Data Usage Guidelines</h2>
 		<div style="margin:15px 0px;">
 			By downloading data, the user confirms that he/she has read and agrees with the general <a href="../../includes/usagepolicy.php#images">data usage terms</a>.
@@ -201,6 +194,9 @@ $dwcManager = new DwcArchiverCore();
 						<input name="searchvar" type="hidden" value="<?php echo str_replace('"','&quot;',$searchVar); ?>" />
 						<button type="submit" name="submitaction">Download Data</button>
 						<img id="workingcircle" src="../../images/ajax-loader_sm.gif" style="margin-bottom:-4px;width:20px;display:none;" />
+					</div>
+					<div class="sectionDiv">
+						* There is a 1,000,000 record limit to occurrence downloads
 					</div>
 				</fieldset>
 			</form>

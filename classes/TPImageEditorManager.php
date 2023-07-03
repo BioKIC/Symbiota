@@ -98,8 +98,11 @@ class TPImageEditorManager extends TPEditorManager{
 		$imgManager = new ImageShared();
 		$imgManager->setTid($this->tid);
 		$imgManager->setCaption($postArr['caption']);
-		$imgManager->setPhotographer($postArr['photographer']);
-		$imgManager->setPhotographerUid($postArr['photographeruid']);
+		if($postArr['photographer']){
+			$imgManager->setPhotographer($postArr['photographer']);
+		} else {
+			$imgManager->setPhotographerUid($postArr['photographeruid']);
+		}
 		$imgManager->setSourceUrl($postArr['sourceurl']);
 		$imgManager->setCopyright($postArr['copyright']);
 		$imgManager->setOwner($postArr['owner']);

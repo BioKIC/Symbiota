@@ -56,7 +56,7 @@ class DebugClassLoader
         'null' => 'null',
         'resource' => 'resource',
         'boolean' => 'bool',
-        'true' => 'bool',
+        'true' => 'true',
         'false' => 'false',
         'integer' => 'int',
         'array' => 'array',
@@ -73,6 +73,8 @@ class DebugClassLoader
         'static' => 'static',
         '$this' => 'static',
         'list' => 'array',
+        'class-string' => 'string',
+        'never' => 'never',
     ];
 
     private const BUILTIN_RETURN_TYPES = [
@@ -90,6 +92,9 @@ class DebugClassLoader
         'parent' => true,
         'mixed' => true,
         'static' => true,
+        'null' => true,
+        'true' => true,
+        'never' => true,
     ];
 
     private const MAGIC_METHODS = [
@@ -368,9 +373,12 @@ class DebugClassLoader
 
         $parent = get_parent_class($class) ?: null;
         self::$returnTypes[$class] = [];
+        $classIsTemplate = false;
 
         // Detect annotations on the class
         if ($doc = $this->parsePhpDoc($refl)) {
+            $classIsTemplate = isset($doc['template']);
+
             foreach (['final', 'deprecated', 'internal'] as $annotation) {
                 if (null !== $description = $doc[$annotation][0] ?? null) {
                     self::${$annotation}[$class] = '' !== $description ? ' '.$description.(preg_match('/[.!]$/', $description) ? '' : '.') : '.';
@@ -513,6 +521,10 @@ class DebugClassLoader
 
             // To read method annotations
             $doc = $this->parsePhpDoc($method);
+
+            if (($classIsTemplate || isset($doc['template'])) && $method->hasReturnType()) {
+                unset($doc['return']);
+            }
 
             if (isset(self::$annotatedParameters[$class][$method->name])) {
                 $definedParameters = [];
@@ -751,6 +763,12 @@ class DebugClassLoader
     private function setReturnType(string $types, string $class, string $method, string $filename, ?string $parent, \ReflectionType $returnType = null): void
     {
         if ('__construct' === $method) {
+            return;
+        }
+
+        if ('null' === $types) {
+            self::$returnTypes[$class][$method] = ['null', 'null', $class, $filename];
+
             return;
         }
 

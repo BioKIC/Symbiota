@@ -1,37 +1,15 @@
 <?php
 include_once('../../../config/symbini.php');
-include_once($SERVER_ROOT.'/config/dbconnection.php');
-header("Content-Type: application/json; charset=".$CHARSET);
-$con = MySQLiConnectionFactory::getCon("readonly");
-$retArr = Array();
-$term = trim($con->real_escape_string($_REQUEST['term']));
-if($term){
-	$sql = 'SELECT DISTINCT t.tid, t.author, ts.family, t.securitystatus '.
-		'FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid '.
-		'WHERE t.sciname = "'.$term.'" AND ts.taxauthid = 1 ';
-	//echo $sql;
-	$rs = $con->query($sql);
-	while ($r = $rs->fetch_object()) {
-		$retArr['tid'] = $r->tid;
-		$retArr['family'] = $r->family;
-		$retArr['author'] = $r->author;
-		$retArr['status'] = $r->securitystatus;
-		//$retArr[] = '"family": '.$r->family.',"author":"'.str_replace('"',"''",$r->author).'","status":'.$r->securitystatus;
-	}
-	$rs->free();
-	$con->close();
-}
+include_once($SERVER_ROOT.'/classes/RpcOccurrenceEditor.php');
+header('Content-Type: application/json; charset='.$CHARSET);
 
-if($retArr){
-	if($CHARSET == 'UTF-8'){
-		echo json_encode($retArr);
-	}
-	else{
-		echo '{"tid":"'.$retArr['tid'].'","family":"'.$retArr['family'].'","author":"'.str_replace('"',"''",$retArr['author']).'","status":"'.$retArr['status'].'"}';
-		//echo '[{'.implode('},{',$retArr).'}]';
-	}
+$term = trim($_POST['term']);
+
+$retArr = array();
+if($term){
+	$editorManager = new RpcOccurrenceEditor();
+	$retArr = $editorManager->getTaxonArr($term);
 }
-else{
-	echo 'null';
-}
+if($retArr) echo json_encode($retArr);
+else echo 'null';
 ?>

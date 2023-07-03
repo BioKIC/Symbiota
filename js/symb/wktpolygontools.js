@@ -16,9 +16,9 @@ function validatePolygon(footprintWkt){
 				let keys = Object.keys(footPolyArr[i]);
 				if(!isNaN(footPolyArr[i][keys[0]]) && !isNaN(footPolyArr[i][keys[1]])){
 					let lat = parseFloat(footPolyArr[i][keys[0]]);
-					if(trimCoord) lat = lat.toFixed(6);
+					if(trimCoord) lat = lat.toFixed(5);
 					let lng = parseFloat(footPolyArr[i][keys[1]]);
-					if(trimCoord) lng = lng.toFixed(6);
+					if(trimCoord) lng = lng.toFixed(5);
 					newStr = newStr + "," + lat + " " + lng;
 				}
 				else{
@@ -47,9 +47,9 @@ function validatePolygon(footprintWkt){
 			for(var i=0; i < klmArr.length; i++){
 				let pArr = klmArr[i].split(",");
 				let lat = parseFloat(pArr[1]);
-				if(trimCoord) lat = lat.toFixed(6);
+				if(trimCoord) lat = lat.toFixed(5);
 				let lng = parseFloat(pArr[0]);
-				if(trimCoord) lng = lng.toFixed(6);
+				if(trimCoord) lng = lng.toFixed(5);
 				newStr = newStr + "," + lat + " " + lng;
 			}
 			footprintWkt = newStr.substr(1)+"";
@@ -61,9 +61,9 @@ function validatePolygon(footprintWkt){
 				for (i = 0; i < coordArr.length; i++) {
 					tempArr = coordArr[i].split(",");
 					let lat = parseFloat(tempArr[1]);
-					if(trimCoord) lat = lat.toFixed(6);
+					if(trimCoord) lat = lat.toFixed(5);
 					let lng = parseFloat(tempArr[0]);
-					if(trimCoord) lng = lng.toFixed(6);
+					if(trimCoord) lng = lng.toFixed(5);
 					coordArr[i] = lat + " " + lng;
 				}
 				footprintWkt = coordArr.join(",");
@@ -109,47 +109,37 @@ function trimPoly(polyStr){
 function formatPolyFragment(polyStr){
 	let newStr = "";
 	let patt = new RegExp(/^[\d-\.]+,[\d-\.]+/);
-	if(patt.test(polyStr)){
-		//Is a GeoLocate polygon type (e.g. 31.6661680128,-110.709762938,31.6669780128,-110.710163938,...)
-		let coordArr = polyStr.split(",");
-		for(var i=0; i < coordArr.length; i++){
-			if((i % 2) == 1){
-				let latDec = parseFloat(coordArr[i-1]);
-				if(trimCoord) latDec = latDec.toFixed(6);
-				let lngDec = parseFloat(coordArr[i]);
-				if(trimCoord) lngDec = lngDec.toFixed(6);
+	if(patt.test(polyStr)) polyStr = convertGeolocatePolygon(polyStr);
+
+	if(switchCoord) polyStr = switchCoordinates(polyStr);
+
+	if(polyStr.indexOf(')') > -1) polyStr = polyStr.substring(0,polyStr.indexOf(')'));
+	let strArr = polyStr.split(",");
+	//if(strArr.length > 3000) strArr = reduceRedundancy(strArr, 0);
+	let reductionFactorBase = ((strArr.length - 3000)/3000);
+	let reductionFactor = reductionFactorBase;
+	for(var i=0; i < strArr.length; i++){
+		let xy = strArr[i].trim().split(" ");
+		if(i<1 || strArr[i-1].trim() != strArr[i].trim()){
+			if(!isNaN(xy[0]) && !isNaN(xy[1])){
+				let latDec = parseFloat(xy[0]);
+				if(trimCoord) latDec = latDec.toFixed(5);
+				let lngDec = parseFloat(xy[1]);
+				if(trimCoord) lngDec = lngDec.toFixed(5);
 				if(Math.abs(latDec) > 90){
-					alert("One or more of the latitude values are out of range. Perhaps the coordinates need to be switched?");
+					alert("One or more of the latitude values are out of range.");
 					return false;
 				} 
 				newStr = newStr + "," + latDec + " " + lngDec;
 			}
 		}
-	}
-	else{
-		if(polyStr.indexOf(')') > -1) polyStr = polyStr.substring(0,polyStr.indexOf(')'));
-		let strArr = polyStr.split(",");
-		let reductionFactor = Math.floor(strArr.length/3000);
-		for(var i=0; i < strArr.length; i++){
-			let xy = strArr[i].trim().split(" ");
-			if(i<1 || strArr[i-1].trim() != strArr[i].trim()){
-				if(!isNaN(xy[0]) && !isNaN(xy[1])){
-					let latDec = parseFloat(xy[0]);
-					if(trimCoord) latDec = latDec.toFixed(6);
-					let lngDec = parseFloat(xy[1]);
-					if(trimCoord) lngDec = lngDec.toFixed(6);
-					if(Math.abs(latDec) > 90){
-						alert("One or more of the latitude values are out of range. Perhaps the coordinates need to be switched?");
-						return false;
-					} 
-					newStr = newStr + "," + latDec + " " + lngDec;
-				}
-			}
-			if(reductionFactor > 0) i = i + reductionFactor;
+		if(reductionFactorBase > 0){
+			let floor = Math.floor(reductionFactor);
+			i = i + floor;
+			reductionFactor = reductionFactor - floor + reductionFactorBase;
 		}
 	}
 	if(newStr) polyStr = newStr.substr(1);
-	if(switchCoord) polyStr = switchCoordinates(polyStr);
 
 	//Make sure first and last points are the same
 	if(polyStr.indexOf(",") > -1){
@@ -160,6 +150,20 @@ function formatPolyFragment(polyStr){
 	return polyStr;
 }
 
+function convertGeolocatePolygon(polyStr){
+	//Is a GeoLocate polygon type (e.g. 31.6661680128,-110.709762938,31.6669780128,-110.710163938,...)
+	let returnStr = '';
+	let coordArr = polyStr.split(",");
+	for(var i=0; i < coordArr.length; i++){
+		if((i % 2) == 1){
+			let latDec = parseFloat(coordArr[i-1]);
+			let lngDec = parseFloat(coordArr[i]);
+			returnStr = newStr + "," + latDec + " " + lngDec;
+		}
+	}
+	return returnStr;
+}
+
 function switchCoordinates(polyStr){
 	let wktStr = "";
 	let wktArr = polyStr.split(",");
@@ -168,8 +172,50 @@ function switchCoordinates(polyStr){
 		let xy = wktArr[i].trim().split(" ");
 		if(!isNaN(xy[0]) && !isNaN(xy[1])) wktStr = wktStr + "," + xy[1] + " " + xy[0];
 	}
-	if(wktStr) retStr = wktStr.substr(1);
-	return retStr;
+	if(wktStr) wktStr = wktStr.substr(1);
+	return wktStr;
+}
+
+function reduceRedundancy(polyArr, slopeLimit){
+	//Need to rework
+	alert("slopeLimit: "+slopeLimit+"; count: "+polyArr.length);
+	let retArr = [];
+	let previousLat = null;
+	let previousLng = null;
+	let previousSlope = null;
+	for(var i=0; i < polyArr.length; i++){
+		let pointStr = polyArr[i].trim();
+		let xy = pointStr.split(" ");
+		if(!isNaN(xy[0]) && !isNaN(xy[1])){
+			let lat = parseFloat(xy[0]);
+			if(trimCoord) lat = lat.toFixed(5);
+			let lng = parseFloat(xy[1]);
+			if(trimCoord) lng = lng.toFixed(5);
+			if(previousLat === null){
+				previousLat = lat;
+				previousLng = lng;
+			}
+			else{
+				let slope = (previousLng - lng) / (previousLat - lat);
+				if(previousLat - lat == 0) slope = 100000;
+				alert(lng+" "+lat+" "+slope+" "+Math.abs((previousSlope - slope) / previousSlope) );
+				if(previousSlope === null){
+					previousSlope = slope;
+				}
+				else{
+					if(Math.abs((previousSlope - slope) / previousSlope) >= slopeLimit){
+						retArr.push(previousLat + " " + previousLng);
+						previousSlope = slope;						
+					}
+				}
+				previousLat = lat;
+				previousLng = lng;
+			}
+		}
+	}
+	if(previousLat != null) retArr.push(previousLat + " " + previousLng);
+	if(retArr.length > 3000 && slopeLimit < 0.7) retArr = reduceRedundancy(retArr, slopeLimit + 0.07);
+	return retArr;
 }
 
 function trimPolygon(footprintWkt){

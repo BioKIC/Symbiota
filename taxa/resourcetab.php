@@ -24,6 +24,7 @@ if($SYMB_UID){
 ?>
 <div id="tab-resource" class="sptab">
 	<?php
+	echo '<div class="resource-div">';
 	echo '<div class="resource-title">'.(isset($LANG['INTERNAL_RESOURCES'])?$LANG['INTERNAL_RESOURCES']:'Internal Resources').'</div>';
 	echo '<ul>';
 	$occNum = $taxonManager->getOccTaxonInDbCnt();
@@ -37,9 +38,11 @@ if($SYMB_UID){
 	}
 	echo '<li><a href="taxonomy/taxonomydynamicdisplay.php?target='.$tid.'" target="_blank">Taxonomic Tree</a></li>';
 	echo '</ul>';
+	echo '</div>';
 	//TODO: list other internal resources such as Taxon Traits, etc
 
 	if($linkArr = $taxonManager->getLinkArr()){
+		echo '<div class="resource-div">';
 		echo '<div class="resource-title">'.(isset($LANG['EXTERNAL_RESOURCES'])?$LANG['EXTERNAL_RESOURCES']:'External Resources').'</div>';
 		echo '<ul>';
 		foreach($linkArr as $linkObj){
@@ -47,6 +50,18 @@ if($SYMB_UID){
 			if($linkObj['notes']) echo '<li style="margin-left:10px">'.$linkObj['notes'].'</li>';
 		}
 		echo '</ul>';
+		echo '</div>';
+	}
+	if($resourceArr = $taxonManager->getResourceLinkArr()){
+		echo '<div class="resource-div">';
+		echo '<div class="resource-title">'.(isset($LANG['TAXONOMIC_RESOURCES'])?$LANG['TAXONOMIC_RESOURCES']:'Taxonomic Resources').'</div>';
+		echo '<ul>';
+		foreach($resourceArr as $resourceObj){
+			echo '<li><a href="'.$resourceObj['url'].'" target="_blank">'.$resourceObj['name'].' #'.$resourceObj['id'].($resourceObj['guid']?$resourceObj['guid']:'').'</a></li>';
+			if($resourceObj['notes']) echo '<li style="margin-left:10px">'.$resourceObj['notes'].'</li>';
+		}
+		echo '</ul>';
+		echo '</div>';
 	}
 	?>
 </div>

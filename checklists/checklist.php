@@ -37,7 +37,7 @@ elseif($dynClid) $clManager->setDynClid($dynClid);
 $clArray = $clManager->getClMetaData();
 $activateKey = $KEY_MOD_IS_ACTIVE;
 $showDetails = 0;
-if($clid && $clArray['defaultSettings']){
+if(isset($clArray['defaultSettings'])){
 	$defaultArr = json_decode($clArray['defaultSettings'], true);
 	$showDetails = $defaultArr['ddetails'];
 	if(!$defaultOverride){
@@ -156,7 +156,7 @@ $taxaArray = $clManager->getTaxaList($pageNumber,($printMode?0:500));
 	<!-- This is inner text! -->
 	<div id='innertext'>
 		<?php
-		if($clid || $dynClid){
+		if(($clid || $dynClid) && $clArray){
 			if($clid && $isEditor){
 				?>
 				<div class="printoff" style="float:right;width:auto;">
@@ -548,12 +548,7 @@ $taxaArray = $clManager->getTaxaList($pageNumber,($printMode?0:500));
 					</div>
 					<div style="margin:3px;">
 						<?php
-						echo '<b>';
-						echo $LANG['TOTAL_TAXA'];
-						echo '<span class="printoff"> (<a href="https://symbiota.org/symbiota-species-checklist-data-fields/" target="_blank" >';
-						echo '<span style="font-style:italic;color:green" title="'.(isset($LANG['DETAILS_EXPLANATION'])?$LANG['DETAILS_EXPLANATION']:'').'" >'.(isset($LANG['DETAILS'])?$LANG['DETAILS']:'details').'</span>';
-						echo '</a>)</span>';
-						echo '</b>: ';
+						echo '<b>' . $LANG['TOTAL_TAXA'] . '</b>: ';
 						echo $clManager->getTaxaCount();
 						?>
 					</div>

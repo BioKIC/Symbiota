@@ -32,16 +32,9 @@ class DwcArchiverPublisher extends DwcArchiverCore{
 
 		//Get NULL GUID counts
 		$guidTarget = ($this->collArr?$this->collArr[$collId]['guidtarget']:'');
+		if($guidTarget == 'symbiotaUUID') $guidTarget = 'recordID';
 		if($guidTarget){
-			$sql = 'SELECT COUNT(o.occid) AS cnt FROM omoccurrences o ';
-			if($guidTarget == 'symbiotaUUID'){
-				$sql .= 'LEFT JOIN guidoccurrences g ON o.occid = g.occid WHERE g.occid IS NULL ';
-			}
-			else{
-				$sql .= 'WHERE o.'.$guidTarget.' IS NULL ';
-			}
-			$sql .= 'AND o.collid = '.$collId;
-			//echo 'SQL: '.$sql.'<br/>';
+			$sql = 'SELECT COUNT(occid) AS cnt FROM omoccurrences WHERE '.$guidTarget.' IS NULL AND collid = '.$collId;
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$recArr['nullGUIDs'] = $r->cnt;

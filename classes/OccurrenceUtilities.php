@@ -407,11 +407,6 @@ class OccurrenceUtilities {
 			if($recMap['eventdate2'] == $recMap['eventdate']) unset($recMap['eventdate2']);
 			else $recMap['verbatimeventdate'] .= ' - '.$recMap['eventdate2'];
 		}
-		if(array_key_exists('latestdatecollected',$recMap) && $recMap['latestdatecollected'] && is_numeric($recMap['latestdatecollected'])){
-			$recMap['latestdatecollected'] = self::dateCheck($recMap['latestdatecollected']);
-			if($recMap['latestdatecollected'] == $recMap['eventdate']) unset($recMap['latestdatecollected']);
-			else $recMap['verbatimeventdate'] .= ' - '.$recMap['latestdatecollected'];
-		}
 		if(array_key_exists('verbatimeventdate',$recMap) && $recMap['verbatimeventdate'] && is_numeric($recMap['verbatimeventdate'])
 				&& $recMap['verbatimeventdate'] > 2100 && $recMap['verbatimeventdate'] < 45000){
 					//Date field was converted to Excel's numeric format (number of days since 01/01/1900)
@@ -709,12 +704,11 @@ class OccurrenceUtilities {
 			}
 		}
 		else{
-			if(array_key_exists("genus",$recMap)){
+			if(array_key_exists('genus',$recMap) && array_key_exists('specificepithet',$recMap) && array_key_exists('infraspecificepithet',$recMap)){
 				//Build sciname from individual units supplied by source
-				$sciName = $recMap["genus"];
-				if(array_key_exists("specificepithet",$recMap)) $sciName .= " ".$recMap["specificepithet"];
-				if(array_key_exists("taxonrank",$recMap)) $sciName .= " ".$recMap["taxonrank"];
-				if(array_key_exists("infraspecificepithet",$recMap)) $sciName .= " ".$recMap["infraspecificepithet"];
+				$sciName = trim($recMap['genus'].' '.$recMap['specificepithet']);
+				if(array_key_exists('taxonrank',$recMap)) $sciName .= ' '.$recMap['taxonrank'];
+				$sciName .= ' '.$recMap['infraspecificepithet'];
 				$recMap['sciname'] = trim($sciName);
 			}
 			elseif(array_key_exists('scientificname',$recMap)){

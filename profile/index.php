@@ -6,7 +6,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 
 $login = array_key_exists('login',$_REQUEST)?$_REQUEST['login']:'';
 $remMe = array_key_exists("remember",$_POST)?$_POST["remember"]:'';
-$emailAddr = array_key_exists('emailaddr',$_POST)?$_POST['emailaddr']:'';
+$emailAddr = array_key_exists('email',$_POST)?$_POST['email']:'';
 $resetPwd = ((array_key_exists("resetpwd",$_REQUEST) && is_numeric($_REQUEST["resetpwd"]))?$_REQUEST["resetpwd"]:0);
 $action = array_key_exists("action",$_POST)?$_POST["action"]:"";
 if(!$action && array_key_exists('submit',$_REQUEST)) $action = $_REQUEST['submit'];
@@ -68,10 +68,15 @@ elseif($action == 'login'){
 		}
 	}
 	else{
-		if(isset($LANG['INCORRECT'])) $statusStr = $LANG['INCORRECT'];
-		else $statusStr = 'Your username or password was incorrect. Please try again.<br/> If you are unable to remember your login credentials,<br/> use the controls below to retrieve your login or reset your password.';
-		$statusStr .= '<ERR/>';
-		error_log('Authorization of user <F-USER>' . $login . '</F-USER> to access ' . $_SERVER['PHP_SELF']. ' failed', 0);
+		if($pHandler->getErrorMessage()){
+			$statusStr = $pHandler->getErrorMessage();
+		}
+		else{
+			if(isset($LANG['INCORRECT'])) $statusStr = $LANG['INCORRECT'];
+			else $statusStr = 'Your username or password was incorrect. Please try again.<br/> If you are unable to remember your login credentials, use the controls below to retrieve your login or reset your password.';
+			$statusStr .= '<ERR/>';
+			error_log('Authorization of user <F-USER>' . $login . '</F-USER> to access ' . $_SERVER['PHP_SELF']. ' failed', 0);
+		}
 	}
 }
 elseif($action == 'Retrieve Login'){
@@ -82,7 +87,7 @@ elseif($action == 'Retrieve Login'){
 			$statusStr .= ': '.$emailAddr;
 		}
 		else{
-			$statusStr = (isset($LANG['EMAIL_ERROR'])?$LANG['EMAIL_ERROR']:'Error sending email, contact administrator').' ('.$pHandler->getErrorStr().')<ERR/>';
+			$statusStr = (isset($LANG['EMAIL_ERROR'])?$LANG['EMAIL_ERROR']:'Error sending email, contact administrator').' ('.$pHandler->getErrorMessage().')<ERR/>';
 		}
 	}
 }
@@ -92,11 +97,11 @@ elseif($resetPwd){
 	}
 	else{
 		$statusStr = (isset($LANG['RESET_FAILED'])?$LANG['RESET_FAILED']:'Reset Failed! Contact Administrator').'<ERR/>';
-		if($pHandler->getErrorStr()) $statusStr .= ' ('.$pHandler->getErrorStr().')';
+		if($pHandler->getErrorMessage()) $statusStr .= ' ('.$pHandler->getErrorMessage().')';
 	}
 }
 else{
-	$statusStr = $pHandler->getErrorStr();
+	$statusStr = $pHandler->getErrorMessage();
 }
 ?>
 <html>
@@ -207,7 +212,7 @@ include($SERVER_ROOT.'/includes/header.php');
 				<div id="emaildiv" style="display:none;margin:10px 0px 10px 40px;">
 					<fieldset>
 						<form id="retrieveloginform" name="retrieveloginform" action="index.php" method="post">
-							<div><?php echo (isset($LANG['YOUR_EMAIL'])?$LANG['YOUR_EMAIL']:'Your Email'); ?>: <input type="text" name="emailaddr" /></div>
+							<div><?php echo (isset($LANG['YOUR_EMAIL'])?$LANG['YOUR_EMAIL']:'Your Email'); ?>: <input type="text" name="email" /></div>
 							<div><button name="action" type="submit" value="Retrieve Login"><?php echo (isset($LANG['RETRIEVE'])?$LANG['RETRIEVE']:'Retrieve Login'); ?></button></div>
 						</form>
 					</fieldset>

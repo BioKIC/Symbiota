@@ -340,17 +340,18 @@ class TaxonProfile extends Manager {
 		$retArr = Array();
 		if($this->tid){
 			$rsArr = array();
-			$sql = 'SELECT d.tid, d.tdbid, d.caption, d.source, d.sourceurl, s.tdsid, s.heading, s.statement, s.displayheader, d.language, d.langid ';
+			$sql = 'SELECT p.tdProfileID, IFNULL(d.caption, p.caption) as caption, IFNULL(d.source, p.publication) AS source, IFNULL(d.sourceurl, p.urlTemplate) AS sourceurl,
+				IFNULL(d.displaylevel, p.defaultDisplayLevel) AS displaylevel, d.tid, d.tdbid, s.tdsid, s.heading, s.statement, s.displayheader, d.language, p.langid
+				FROM taxadescrprofile p INNER JOIN taxadescrblock d ON p.tdProfileID = d.tdProfileID
+				INNER JOIN taxadescrstmts s ON d.tdbid = s.tdbid
+				LEFT JOIN adminlanguages l ON p.langid = l.langid ';
 			if($this->acceptance){
-				$sql .= 'FROM taxstatus ts INNER JOIN taxadescrblock d ON ts.tid = d.tid '.
-					'INNER JOIN taxadescrstmts s ON d.tdbid = s.tdbid '.
-					'WHERE (ts.tidaccepted = '.$this->tid.') AND (ts.taxauthid = '.$this->taxAuthId.') ';
+				$sql .= 'INNER JOIN taxstatus ts ON ts.tid = d.tid WHERE (ts.tidaccepted = '.$this->tid.') AND (ts.taxauthid = '.$this->taxAuthId.') ';
 			}
 			else{
-				$sql .= 'FROM taxadescrblock d INNER JOIN taxadescrstmts s ON d.tdbid = s.tdbid WHERE (d.tid = '.$this->tid.') ';
+				$sql .= 'WHERE (d.tid = '.$this->tid.') ';
 			}
-			$sql .= 'ORDER BY d.displaylevel, s.sortsequence';
-			//echo $sql; exit;
+			$sql .= 'ORDER BY p.defaultDisplayLevel, d.displayLevel, s.sortsequence';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_assoc()){
 				$rsArr[] = $r;
@@ -479,6 +480,23 @@ class TaxonProfile extends Manager {
 	public function getLinkArr(){
 		if($this->linkArr === false) $this->setLinkArr();
 		return $this->linkArr;
+	}
+
+	public function getResourceLinkArr(){
+		$retArr = array();
+		if($this->tid){
+			$sql = 'SELECT taxaResourceID, sourceName, sourceIdentifier, sourceGuid, url, notes FROM taxaresourcelinks WHERE tid = '.$this->tid.' ORDER BY ranking, sourceName';
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$retArr[$r->taxaResourceID]['name'] = $r->sourceName;
+				$retArr[$r->taxaResourceID]['id'] = $r->sourceIdentifier;
+				$retArr[$r->taxaResourceID]['guid'] = $r->sourceGuid;
+				$retArr[$r->taxaResourceID]['url'] = $r->url;
+				$retArr[$r->taxaResourceID]['notes'] = $r->notes;
+			}
+			$rs->free();
+		}
+		return $retArr;
 	}
 
 	//Set children data for taxon higher than species level

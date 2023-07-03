@@ -17,8 +17,12 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	<script type="text/javascript">
 
 		$(document).ready(function() {
-			$("#taxonname").autocomplete({ source: "rpc/getassocspp.php" },
-			{ minLength: 4, autoFocus: true, delay: 200 });
+			$("#taxonname").autocomplete({
+				source: "rpc/getspeciessuggest.php",
+				minLength: 3,
+				autoFocus: true,
+				delay: 200
+			});
 
 			$("#taxonname").focus();
 		});

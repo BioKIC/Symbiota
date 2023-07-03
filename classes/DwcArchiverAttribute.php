@@ -43,7 +43,7 @@ class DwcArchiverAttribute{
 			$sql = 'SELECT '.trim($sqlFrag,', ').
 				' FROM tmtraits m INNER JOIN tmstates s ON m.traitid = s.traitid '.
 				'INNER JOIN tmattributes a ON s.stateid = a.stateid '.
-				'INNER JOIN userlogin u ON a.createduid = u.uid '.
+				'INNER JOIN users u ON a.createduid = u.uid '.
 				'INNER JOIN omoccurrences o ON a.occid = o.occid ';
 			if(strpos($conditionSql,'ts.taxauthid')){
 				$sql .= 'LEFT JOIN taxstatus ts ON o.tidinterpreted = ts.tid ';
@@ -51,9 +51,9 @@ class DwcArchiverAttribute{
 			if(stripos($conditionSql,'e.parenttid')){
 				$sql .= 'LEFT JOIN taxaenumtree e ON o.tidinterpreted = e.tid ';
 			}
-			if(strpos($conditionSql,'v.clid')){
+			if(strpos($conditionSql,'ctl.clid')){
 				//Search criteria came from custom search page
-				$sql .= 'LEFT JOIN fmvouchers v ON o.occid = v.occid ';
+				$sql .= 'LEFT JOIN fmvouchers v ON o.occid = v.occid LEFT JOIN fmchklsttaxalink ctl ON v.clTaxaID = ctl.clTaxaID ';
 			}
 			if(strpos($conditionSql,'p.point')){
 				//Search criteria came from map search page

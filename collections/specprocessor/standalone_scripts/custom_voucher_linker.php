@@ -122,7 +122,7 @@ class VoucherLinker {
 		asort($voucherArr);
 		$vouchersToLoad = array_slice($voucherArr,-1*$this->numberOfVouchersToLoad,null,true);
 		foreach($vouchersToLoad as $occid => $r){
-			$sql2 = 'INSERT INTO fmvouchers(tid,clid,occid) VALUES('.$targetTid.','.$this->clid.','.$occid.')';
+			//$sql2 = 'INSERT INTO fmvouchers(tid,clid,occid) VALUES('.$targetTid.','.$this->clid.','.$occid.')';
 			if(!$this->conn->query($sql2)){
 				echo 'ERROR loading voucher: '.$this->conn->error."\n";
 				echo "\tSQL: ".$sql2."\n";

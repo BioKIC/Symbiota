@@ -68,16 +68,8 @@ class OccurrenceIndividual extends Manager{
 	public function setGuid($guid){
 		$guid = $this->cleanInStr($guid);
 		if(!$this->occid){
-			$sql = 'SELECT occid FROM guidoccurrences WHERE guid = "'.$guid.'"';
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$this->occid = $r->occid;
-			}
-			$rs->free();
-		}
-		if(!$this->occid){
 			//Check occurrence recordID
-			$sql = 'SELECT occid FROM omoccurrences WHERE occurrenceid = "'.$guid.'"';
+			$sql = 'SELECT occid FROM omoccurrences WHERE (occurrenceid = "'.$guid.'") OR (recordID = "'.$guid.'") ';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->occid = $r->occid;
@@ -86,7 +78,7 @@ class OccurrenceIndividual extends Manager{
 		}
 		if(!$this->occid){
 			//Check image recordID
-			$sql = 'SELECT i.occid FROM guidimages g INNER JOIN images i ON g.imgid = i.imgid WHERE g.guid = "'.$guid.'" AND i.occid IS NOT NULL ';
+			$sql = 'SELECT occid FROM images WHERE recordID = "'.$guid.'"';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->occid = $r->occid;
@@ -95,7 +87,7 @@ class OccurrenceIndividual extends Manager{
 		}
 		if(!$this->occid){
 			//Check identification recordID
-			$sql = 'SELECT d.occid FROM guidoccurdeterminations g INNER JOIN omoccurdeterminations d ON g.detid = d.detid WHERE g.guid = "'.$guid.'" ';
+			$sql = 'SELECT occid FROM omoccurdeterminations WHERE recordID = "'.$guid.'" ';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->occid = $r->occid;
@@ -118,17 +110,17 @@ class OccurrenceIndividual extends Manager{
 
 	public function setOccurData(){
 		/*
-		$sql = 'SELECT o.occid, o.collid, o.institutioncode, o.collectioncode, '.
-			'o.occurrenceid, o.catalognumber, o.occurrenceremarks, o.tidinterpreted, o.family, o.sciname, '.
-			'o.scientificnameauthorship, o.identificationqualifier, o.identificationremarks, o.identificationreferences, o.taxonremarks, '.
-			'o.identifiedby, o.dateidentified, o.eventid, o.recordedby, o.associatedcollectors, o.recordnumber, o.eventdate, o.eventdate2, MAKEDATE(YEAR(o.eventDate),o.enddayofyear) AS eventdateend, '.
-			'o.verbatimeventdate, o.country, o.stateprovince, o.locationid, o.county, o.municipality, o.locality, o.localitysecurity, o.localitysecurityreason, '.
-			'o.decimallatitude, o.decimallongitude, o.geodeticdatum, o.coordinateuncertaintyinmeters, o.verbatimcoordinates, o.georeferenceremarks, '.
-			'o.minimumelevationinmeters, o.maximumelevationinmeters, o.verbatimelevation, o.minimumdepthinmeters, o.maximumdepthinmeters, o.verbatimdepth, '.
-			'o.verbatimattributes, o.locationremarks, o.lifestage, o.sex, o.individualcount, o.samplingprotocol, o.preparations, '.
-			'o.typestatus, o.dbpk, o.habitat, o.substrate, o.associatedtaxa, o.dynamicProperties, o.reproductivecondition, o.cultivationstatus, o.establishmentmeans, '.
-			'o.ownerinstitutioncode, o.othercatalognumbers, o.disposition, o.informationwithheld, o.modified, o.observeruid, o.recordenteredby, o.dateentered, o.datelastmodified '.
-			'FROM omoccurrences o ';
+		$sql = 'SELECT o.occid, o.collid, o.institutioncode, o.collectioncode,
+			o.occurrenceid, o.catalognumber, o.occurrenceremarks, o.tidinterpreted, o.family, o.sciname,
+			o.scientificnameauthorship, o.identificationqualifier, o.identificationremarks, o.identificationreferences, o.taxonremarks,
+			o.identifiedby, o.dateidentified, o.eventid, o.recordedby, o.associatedcollectors, o.recordnumber, o.eventdate, o.eventdate2, MAKEDATE(YEAR(o.eventDate),o.enddayofyear) AS eventdateend,
+			o.verbatimeventdate, o.country, o.stateprovince, o.locationid, o.county, o.municipality, o.locality, o.localitysecurity, o.localitysecurityreason,
+			o.decimallatitude, o.decimallongitude, o.geodeticdatum, o.coordinateuncertaintyinmeters, o.verbatimcoordinates, o.georeferenceremarks,
+			o.minimumelevationinmeters, o.maximumelevationinmeters, o.verbatimelevation, o.minimumdepthinmeters, o.maximumdepthinmeters, o.verbatimdepth,
+			o.verbatimattributes, o.locationremarks, o.lifestage, o.sex, o.individualcount, o.samplingprotocol, o.preparations, o.typestatus, o.dbpk, o.habitat,
+			o.substrate, o.associatedtaxa, o.dynamicProperties, o.reproductivecondition, o.cultivationstatus, o.establishmentmeans, o.ownerinstitutioncode,
+			o.othercatalognumbers, o.disposition, o.informationwithheld, o.modified, o.observeruid, o.recordenteredby, o.dateentered, o.recordid, o.datelastmodified
+			FROM omoccurrences o ';
 		*/
 		$sql = 'SELECT o.*, MAKEDATE(YEAR(o.eventDate),o.enddayofyear) AS eventdateend FROM omoccurrences o ';
 		if($this->occid) $sql .= 'WHERE (o.occid = '.$this->occid.')';
@@ -153,7 +145,6 @@ class OccurrenceIndividual extends Manager{
 					if(!$this->metadataArr['collectioncode']) $this->metadataArr['collectioncode'] = $this->occArr['institutioncode'];
 					elseif($this->metadataArr['collectioncode'] != $this->occArr['collectioncode']) $this->metadataArr['collectioncode'] .= '-'.$this->occArr['institutioncode'];
 				}
-				$this->setRecordID();
 				if(!$this->occArr['occurrenceid']){
 					//Set occurrence GUID based on GUID target, but only if occurrenceID field isn't already populated
 					if($this->metadataArr['guidtarget'] == 'catalogNumber'){
@@ -218,22 +209,6 @@ class OccurrenceIndividual extends Manager{
 			if(!$protectLocality && !$protectTaxon) $this->setImages();
 			if(!$protectLocality) $this->setExsiccati();
 		}
-	}
-
-	private function setRecordID(){
-		$guid = '';
-		$sql = 'SELECT guid FROM guidoccurrences WHERE (occid = '.$this->occid.')';
-		$rs = $this->conn->query($sql);
-		if($rs){
-			while($row = $rs->fetch_object()){
-				$guid = $row->guid;
-			}
-			$rs->free();
-		}
-		else{
-			trigger_error('Unable to setGUID; '.$this->conn->error,E_USER_NOTICE);
-		}
-		$this->occArr['recordid'] = $guid;
 	}
 
 	private function setDeterminations(){
@@ -453,17 +428,17 @@ class OccurrenceIndividual extends Manager{
 
 	private function setSource(){
 		if(isset($GLOBALS['ACTIVATE_PORTAL_INDEX']) && $GLOBALS['ACTIVATE_PORTAL_INDEX']){
-			$sql = 'SELECT o.targetOccid, o.refreshTimestamp, o.verification, i.urlRoot, i.portalName
+			$sql = 'SELECT o.remoteOccid, o.refreshTimestamp, o.verification, i.urlRoot, i.portalName
 				FROM portaloccurrences o INNER JOIN portalpublications p ON o.pubid = p.pubid
 				INNER JOIN portalindex i ON p.portalID = i.portalID
 				WHERE (o.occid = '.$this->occid.') AND (p.direction = "import")';
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
 					$this->occArr['source']['type'] = 'symbiota';
-					$this->occArr['source']['url'] = $r->urlRoot.'/collections/individual/index.php?occid='.$r->targetOccid;
+					$this->occArr['source']['url'] = $r->urlRoot.'/collections/individual/index.php?occid='.$r->remoteOccid;
 					$this->occArr['source']['sourceName'] = $r->portalName;
 					$this->occArr['source']['refreshTimestamp'] = $r->refreshTimestamp;
-					$this->occArr['source']['sourceID'] = $r->targetOccid;
+					$this->occArr['source']['sourceID'] = $r->remoteOccid;
 				}
 				$rs->free();
 			}
@@ -471,7 +446,7 @@ class OccurrenceIndividual extends Manager{
 				$sql2 = 'SELECT uploadDate FROM omcollectionstats WHERE collid = '.$this->collid;
 				if($rs2 = $this->conn->query($sql2)){
 					if($r2 = $rs2->fetch_object()){
-						if($r2->uploadDate > $this->occArr['source']['refreshTimestamp']) $this->occArr['source']['refreshTimestamp'] = $r->uploadDate.' (batch update)';
+						if($r2->uploadDate > $this->occArr['source']['refreshTimestamp']) $this->occArr['source']['refreshTimestamp'] = $r2->uploadDate.' (batch update)';
 					}
 					$rs2->free();
 				}
@@ -636,7 +611,7 @@ class OccurrenceIndividual extends Manager{
 	public function getCommentArr($isEditor){
 		$retArr = array();
 		if($this->occid){
-			$sql = 'SELECT c.comid, c.comment, u.username, c.reviewstatus, c.initialtimestamp FROM omoccurcomments c INNER JOIN userlogin u ON c.uid = u.uid WHERE (c.occid = '.$this->occid.') ';
+			$sql = 'SELECT c.comid, c.comment, u.username, c.reviewstatus, c.initialtimestamp FROM omoccurcomments c INNER JOIN users u ON c.uid = u.uid WHERE (c.occid = '.$this->occid.') ';
 			if(!$isEditor) $sql .= 'AND c.reviewstatus IN(1,3) ';
 			$sql .= 'ORDER BY c.initialtimestamp';
 			//echo $sql.'<br/><br/>';
@@ -774,9 +749,11 @@ class OccurrenceIndividual extends Manager{
 				$retArr[$k]['edits'][$r->appliedstatus][$r->ocedid]['old'] = $r->fieldvalueold;
 				$retArr[$k]['edits'][$r->appliedstatus][$r->ocedid]['new'] = $r->fieldvaluenew;
 				$currentCode = 0;
-				$fName = $this->occArr[strtolower($r->fieldname)];
-				if($fName == $r->fieldvaluenew) $currentCode = 1;
-				elseif($fName == $r->fieldvalueold) $currentCode = 2;
+				if(isset($this->occArr[strtolower($r->fieldname)])){
+					$fName = $this->occArr[strtolower($r->fieldname)];
+					if($fName == $r->fieldvaluenew) $currentCode = 1;
+					elseif($fName == $r->fieldvalueold) $currentCode = 2;
+				}
 				$retArr[$k]['edits'][$r->appliedstatus][$r->ocedid]['current'] = $currentCode;
 			}
 			$rs->free();
@@ -831,7 +808,10 @@ class OccurrenceIndividual extends Manager{
 	public function getVoucherChecklists(){
 		global $USER_RIGHTS;
 		$returnArr = Array();
-		$sql = 'SELECT c.name, c.clid, c.access, v.notes FROM fmchecklists c INNER JOIN fmvouchers v ON c.clid = v.clid WHERE v.occid = '.$this->occid.' ';
+		$sql = 'SELECT c.clid, c.name, c.access, v.voucherID
+			FROM fmchecklists c INNER JOIN fmchklsttaxalink cl ON c.clid = cl.clid
+			INNER JOIN fmvouchers v ON cl.clTaxaID = v.clTaxaID
+			WHERE v.occid = '.$this->occid.' ';
 		if(array_key_exists("ClAdmin",$USER_RIGHTS)){
 			$sql .= 'AND (c.access = "public" OR c.clid IN('.implode(',',$USER_RIGHTS['ClAdmin']).')) ';
 		}
@@ -842,10 +822,11 @@ class OccurrenceIndividual extends Manager{
 		//echo $sql;
 		$rs = $this->conn->query($sql);
 		if($rs){
-			while($row = $rs->fetch_object()){
-				$nameStr = $row->name;
-				if($row->access == 'private') $nameStr .= ' (private status)';
-				$returnArr[$row->clid] = $nameStr;
+			while($r = $rs->fetch_object()){
+				$nameStr = $r->name;
+				if($r->access == 'private') $nameStr .= ' (private status)';
+				$returnArr[$r->clid]['name'] = $nameStr;
+				$returnArr[$r->clid]['voucherID'] = $r->voucherID;
 			}
 			$rs->free();
 		}
@@ -856,27 +837,57 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	public function linkVoucher($postArr){
-		$status = true;
-		if(!$this->occid) return false;
-		if(!is_numeric($postArr['vclid'])) return false;
-		if($postArr['vtid'] && !is_numeric($postArr['vtid'])) return false;
-		$con = MySQLiConnectionFactory::getCon("write");
-		$sql = 'INSERT INTO fmvouchers(occid,clid,tid,notes,editornotes) '.
-			'VALUES('.$this->occid.','.$postArr['vclid'].','.($postArr['vtid']?$postArr['vtid']:'NULL').','.
-			($postArr['vnotes']?'"'.$this->cleanInStr($postArr['vnotes']).'"':'NULL').','.
-			($postArr['veditnotes']?'"'.$this->cleanInStr($postArr['veditnotes']).'"':'NULL').')';
-		if(!$con->query($sql)){
-			$this->errorMessage = 'ERROR linking voucher to checklist, err msg: '.$con->error;
-			$status = false;
+		$status = false;
+		if($this->occid){
+			if($clTaxaID = $this->getClTaxaID($postArr['vclid'], $postArr['vtid'])){
+				$status = $this->insertVoucher($clTaxaID, $this->occid, $postArr['veditnotes'], $postArr['vnotes']);
+			}
 		}
-		$con->close();
 		return $status;
 	}
 
-	public function deleteVoucher($occid,$clid){
+	private function getClTaxaID($clid, $tid, $morphoSpecies = ''){
+		$clTaxaID = 0;
+		if(is_numeric($clid) && is_numeric($tid)){
+			$sql = 'SELECT clTaxaID FROM fmchklsttaxalink WHERE clid = ? AND tid = ? AND morphospecies = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('iis', $clid, $tid, $morphoSpecies);
+				$stmt->execute();
+				$stmt->bind_result($clTaxaID);
+				$stmt->fetch();
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getSciname: '.$this->conn->error;
+		}
+		return $clTaxaID;
+	}
+
+	private function insertVoucher($clTaxaID, $occid, $editorNotes = null, $notes = null){
+		$status = false;
+		if(is_numeric($clTaxaID) && is_numeric($occid)){
+			if($editorNotes == '') $editorNotes = null;
+			if($notes == '') $notes = null;
+			$con = MySQLiConnectionFactory::getCon("write");
+			$sql = 'INSERT INTO fmvouchers(clTaxaID, occid, editorNotes, notes) VALUES (?,?,?,?)';
+			if($stmt = $con->prepare($sql)) {
+				$stmt->bind_param('iiss', $clTaxaID, $occid, $editorNotes, $notes);
+				$stmt->execute();
+				if($stmt->affected_rows && !$stmt->error){
+					$status = $stmt->insert_id;
+				}
+				elseif($stmt->error) $this->errorMessage = 'ERROR inserting voucher: '.$stmt->error;
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for voucher insert: '.$this->conn->error;
+			if(!($con === null)) $con->close();
+		}
+		return $status;
+	}
+
+	public function deleteVoucher($voucherID){
 		$status = true;
-		if(is_numeric($occid) && is_numeric($clid)){
-			$sql = 'DELETE FROM fmvouchers WHERE (occid = '.$occid.') AND (clid = '.$clid.') ';
+		if(is_numeric($voucherID)){
+			$sql = 'DELETE FROM fmvouchers WHERE (voucherID = '.$voucherID.') ';
  			$con = MySQLiConnectionFactory::getCon("write");
 			if(!$con->query($sql)){
 				$this->errorMessage = 'ERROR loading '.$con->error;
@@ -957,35 +968,34 @@ class OccurrenceIndividual extends Manager{
 		return $returnArr;
 	}
 
-	public function checkArchive(){
+	public function checkArchive($guid){
 		$retArr = array();
+		$archiveObject = '';
+		$notes = '';
+		$sql = 'SELECT archiveobj, remarks FROM omoccurarchive ';
 		if($this->occid){
-			$sql = 'SELECT archiveobj, notes FROM guidoccurrences WHERE occid = '.$this->occid.' AND archiveobj IS NOT NULL ';
-			//echo $sql;
-			if($rs = $this->conn->query($sql)){
-				if($r = $rs->fetch_object()){
-					$retArr['obj'] = json_decode($r->archiveobj,true);
-					$retArr['notes'] = $r->notes;
-				}
-				$rs->free();
+			$sql .= 'WHERE occid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('i', $this->occid);
+				$stmt->execute();
+				$stmt->bind_result($archiveObject, $notes);
+				$stmt->fetch();
+				$stmt->close();
 			}
-			else{
-				trigger_error('ERROR checking archive: '.$this->conn->error,E_USER_WARNING);
+		}
+		if(!$retArr && $guid){
+			$sql .= 'WHERE (occurrenceid = ?) OR (recordID = ?) ';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('ss', $guid, $guid);
+				$stmt->execute();
+				$stmt->bind_result($archiveObject, $notes);
+				$stmt->fetch();
+				$stmt->close();
 			}
-			if(!$retArr){
-				$sql = 'SELECT archiveobj, notes FROM guidoccurrences WHERE occid IS NULL AND archiveobj LIKE \'%"occid":"'.$this->occid.'"%\'';
-				//echo $sql;
-				if($rs = $this->conn->query($sql)){
-					if($r = $rs->fetch_object()){
-						$retArr['obj'] = json_decode($r->archiveobj,true);
-						$retArr['notes'] = $r->notes;
-					}
-					$rs->free();
-				}
-				else{
-					trigger_error('ERROR checking archive (step2): '.$this->conn->error,E_USER_WARNING);
-				}
-			}
+		}
+		if($archiveObject){
+			$retArr['obj'] = json_decode($archiveObject, true);
+			$retArr['notes'] = $notes;
 		}
 		return $retArr;
 	}
@@ -993,7 +1003,7 @@ class OccurrenceIndividual extends Manager{
 	public function restoreRecord(){
 		if($this->occid){
 			$jsonStr = '';
-			$sql = 'SELECT archiveobj FROM guidoccurrences WHERE (occid = '.$this->occid.')';
+			$sql = 'SELECT archiveobj FROM omoccurarchive WHERE (occid = '.$this->occid.')';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$jsonStr = $r->archiveobj;

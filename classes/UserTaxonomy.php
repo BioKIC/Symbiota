@@ -13,14 +13,12 @@ class UserTaxonomy {
 	function __destruct(){
  		if(!($this->conn === false)) $this->conn->close();
 	}
-	
+
 	public function getTaxonomyEditors(){
 		$retArr = array();
-		$sql = 'SELECT ut.idusertaxonomy, u.uid, CONCAT_WS(", ", lastname, firstname) as fullname, t.sciname, ut.editorstatus, '.
-			'ut.geographicscope, ut.notes, l.username '.
+		$sql = 'SELECT ut.idusertaxonomy, u.uid, CONCAT_WS(", ", u.lastname, u.firstname) as fullname, t.sciname, ut.editorstatus, ut.geographicscope, ut.notes, u.username '.
 			'FROM usertaxonomy ut INNER JOIN users u ON ut.uid = u.uid '.
 			'INNER JOIN taxa t ON ut.tid = t.tid '.
-			'INNER JOIN userlogin l ON u.uid = l.uid '.
 			'ORDER BY u.lastname, u.firstname, t.sciname';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
@@ -33,7 +31,7 @@ class UserTaxonomy {
 		}
 		$rs->free();
 		return $retArr;
-	} 
+	}
 
 	public function deleteUser($utid,$uid,$editorStatus){
 		$statusStr = '';
@@ -54,9 +52,7 @@ class UserTaxonomy {
 	//Get functions
 	public function getUserArr(){
 		$retArr = array();
-		$sql = 'SELECT u.uid, CONCAT_WS(", ",u.lastname,u.firstname,CONCAT(" (",l.username,")")) as fullname '.
-			'FROM users u INNER JOIN userlogin l ON u.uid = l.uid '.
-			'ORDER BY lastname,u.firstname,l.username ';
+		$sql = 'SELECT uid, CONCAT_WS(", ", lastname, firstname,CONCAT(" (", username,")")) as fullname FROM users ORDER BY lastname, firstname, username ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->uid] = $r->fullname;
@@ -71,7 +67,7 @@ class UserTaxonomy {
 		$str = str_replace("'","&apos;",$str);
 		return $str;
 	}
-	
+
 	private function cleanInStr($str){
 		$newStr = trim($str);
 		$newStr = preg_replace('/\s\s+/', ' ',$newStr);

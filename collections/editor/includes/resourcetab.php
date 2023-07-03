@@ -362,9 +362,8 @@ $dupClusterArr = $dupManager->getClusterArr($occid);
 				echo '<div style="margin:3px">';
 				echo '<a href="../../checklists/checklist.php?showvouchers=1&clid='.$vClid.'" target="_blank">'.$vClName.'</a> ';
 				if(array_key_exists($vClid, $userChecklists)){
-				?>
-					<a href="occurrenceeditor.php?submitaction=deletevoucher&delclid=<?php echo $vClid.'&occid='.$occid.'&tabtarget=3'; ?>" title="<?php echo $LANG['DELETE_VOUCHER_LINK']; ?>" onclick="return confirm('<?php echo $LANG['SURE_REMOVE_VOUCHER']; ?>">;
-				<?php
+					$href = 'occurrenceeditor.php?submitaction=deletevoucher&delclid='.$vClid.'&occid='.$occid.'&tabtarget=3';
+					echo '<a href="'.$href.'" title="'.$LANG['DELETE_VOUCHER_LINK'].'" onclick="return confirm(\''.$LANG['SURE_REMOVE_VOUCHER'].'\'">';
 					echo '<img src="../../images/drop.png" style="width:12px;" />';
 					echo '</a>';
 				}

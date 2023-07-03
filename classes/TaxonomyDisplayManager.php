@@ -485,8 +485,9 @@ class TaxonomyDisplayManager extends Manager{
 			echo '</div>';
 			ob_flush();
 			flush();
-			TaxonomyUtilities::buildHierarchyEnumTree($this->conn,$this->taxAuthId);
-			echo '<div style="color:green;margin:30px;">Done! Taxonomic hierarchy index has been created</div>';
+			$status = TaxonomyUtilities::buildHierarchyEnumTree(null, $this->taxAuthId);
+			if($status === true) echo '<div style="color:green;margin:30px;">Done! Taxonomic hierarchy index has been created</div>';
+			else echo $status;
 			ob_flush();
 			flush();
 		}

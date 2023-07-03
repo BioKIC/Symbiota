@@ -132,7 +132,9 @@ class OccurrenceSearchSupport {
 						<td style="width:25px;">
 							<div style="">
 								<?php
-								$catSelected = !$catSelArr || in_array($catid, $catSelArr);
+								$catSelected = false;
+								if(!$catSelArr && !$collSelArr) $catSelected = true;
+								elseif(in_array($catid, $catSelArr)) $catSelected = true;
 								echo '<input data-role="none" id="cat-'.$idStr.'-Input" name="cat[]" value="'.$catid.'" type="checkbox" onclick="selectAllCat(this,\'cat-'.$idStr.'\')" '.($catSelected?'checked':'').' />';
 								?>
 							</div>

@@ -13,10 +13,10 @@ class RpcUsers extends RpcBase{
 
 	public function getUserArr($term){
 		$retArr = array();
-		$sql = 'SELECT u.uid, CONCAT(CONCAT_WS(", ", u.lastname, u.firstname)," (",l.username,")") as uname
-			FROM users u INNER JOIN userlogin l ON u.uid = l.uid
-			WHERE u.lastname LIKE "%'.$term.'%" OR u.firstname LIKE "%'.$term.'%" OR l.username LIKE "%'.$term.'%"
-			ORDER BY u.lastname, u.firstname, l.username';
+		$sql = 'SELECT uid, CONCAT(CONCAT_WS(", ", lastname, firstname)," (", username,")") as uname
+			FROM users
+			WHERE lastname LIKE "%'.$term.'%" OR firstname LIKE "%'.$term.'%" OR username LIKE "%'.$term.'%"
+			ORDER BY lastname, firstname, username';
 		$rs = $this->conn->query($sql);
 		$cnt = 0;
 		while($r = $rs->fetch_object()){

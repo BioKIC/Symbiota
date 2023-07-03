@@ -43,9 +43,10 @@ if($IS_ADMIN || (array_key_exists('ClAdmin',$USER_RIGHTS) && in_array($clid,$USE
 		}
 	}
 	elseif($action == 'deleteChecklist'){
-		$status = $clManager->deleteChecklist($_POST['delclid']);
-		if($status === true) header('Location: ../index.php');
-		echo $statusStr = $clManager->getErrorMessage();
+		if($clManager->deleteChecklist($_POST['delclid'])){
+			header('Location: ../index.php');
+		}
+		else $statusStr = 'ERROR deleting checklist: '.$clManager->getErrorMessage();
 	}
 	elseif($action == 'addEditor'){
 		$statusStr = $clManager->addEditor($_POST['editoruid']);
@@ -102,8 +103,8 @@ $clArray = $clManager->getMetaData();
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script src="../js/jquery.js type="text/javascript""></script>
-	<script src="../js/jquery-ui.js type="text/javascript""></script>
+	<script src="../js/jquery.js" type="text/javascript"></script>
+	<script src="../js/jquery-ui.js" type="text/javascript"></script>
 	<script src="../js/tinymce/tinymce.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		var clid = <?php echo $clid; ?>;

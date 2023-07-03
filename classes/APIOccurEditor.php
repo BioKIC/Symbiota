@@ -194,7 +194,7 @@ class APIOccurEditor extends APIBase{
 	public function setRecordID($guid){
 		$status = false;
 		$guid = preg_replace("/[^A-Za-z0-9\-]/","",$guid);
-		$sql = 'SELECT occid FROM guidoccurrences WHERE guid = "'.$guid.'"';
+		$sql = 'SELECT occid FROM omoccurrences WHERE recordID = "'.$guid.'"';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$this->occidArr[] = $r->occid;

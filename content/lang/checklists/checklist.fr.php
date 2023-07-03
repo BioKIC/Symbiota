@@ -60,9 +60,6 @@ $LANG['FAMILIES'] = 'Familles';
 $LANG['GENERA'] = 'Genres';
 $LANG['SPECIES'] = 'Esp&egrave;ces';
 $LANG['TOTAL_TAXA'] = 'Taxons au Total';
-$LANG['DETAILS_EXPLANATION'] = 'Un nom d\'esp&egrave;ce et un seul taxon infrasp&eacute;cifique sont suppos&eacute;s faire r&eacute;f&eactue;rence &agrave; une relation parent-enfant d\'un taxon unique.
-                Les taxons infrabaissables n\'augmentent que les chiffres de taxa lorsque plus d\'un esp&egrave; ont &eacute;t&eacute; ajout&eacute;es aux listes de contr&ocirc;le pour une esp&egrave;ce donn&eacute;e.
-                Pour plus d\'informations, cliquez ici.';
 $LANG['DETAILS'] = 'd&eacute;tails';
 $LANG['IMAGE'] = 'Image';
 $LANG['NOTY'] = 'pas encore';
@@ -72,7 +69,7 @@ $LANG['VIEW_RELATED'] = 'Voir Sp&eacute;cimens Associe&eacute;s';
 $LANG['MORE'] = 'plus';
 $LANG['LESS'] = 'moins';
 $LANG['NOTAXA'] = 'Aucun Taxa Trouv&eacute;s';
-$LANG['CHECKNULL'] = 'ERREUR: Identification de Liste est Null';
+$LANG['CHECKNULL'] = 'ERREUR: identifiant de liste invalide';
 $LANG['DISPLAYNEXT'] = 'Afficher Prochain';
 $LANG['TAXA'] = 'taxa';
 $LANG['LOCALITY'] = 'Localit&eacute;';
@@ -80,5 +77,5 @@ $LANG['ABSTRACT'] = 'R&eacute;sum&eacute;';
 $LANG['COMMENTS'] = 'Commentaires';
 $LANG['PAGE'] = 'Page';
 $LANG['OF'] = 'des';
-$LANG['RESCHECK'] = 'Liste de la Recherche';
+$LANG['CHECKLIST'] = 'Liste';
 ?>

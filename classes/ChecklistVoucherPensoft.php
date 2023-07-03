@@ -101,10 +101,7 @@ class ChecklistVoucherPensoft extends ChecklistVoucherReport {
 	}
 
 	protected function getPensoftArr(){
-		$clidStr = $this->clid;
-		if($this->childClidArr){
-			$clidStr .= ','.implode(',',$this->childClidArr);
-		}
+		$clidStr = $this->getClidFullStr();
 
 		$clArr = array();
 		$kingdomArr = array();

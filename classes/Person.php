@@ -23,8 +23,6 @@ class Person{
 	private $email;
 	private $guid;
 	private $url;
-	private $biography;
-	private $isPublic = 0;
 	private $password;
 	private $userTaxonomy = array();		// = array($category => array($utid => array($fieldTitle => $fieldValue))); e.g. array("OccurrenceEditor" => array(24 => array("sciname" => "Asteraceae", "geographicScope" => "Maine")))
 	private $isTaxonomyEditor = false;
@@ -170,19 +168,6 @@ class Person{
 
 	public function getIsTaxonomyEditor(){
 		return $this->isTaxonomyEditor;
-	}
-
-	public function getIsPublic(){
-		if($this->isPublic == 1){
-			return 1;
-		}
-		else{
-			return 0;
-		}
-	}
-
-	public function setIsPublic($isPub){
-		$this->isPublic = $isPub;
 	}
 
 	public function getEmail(){

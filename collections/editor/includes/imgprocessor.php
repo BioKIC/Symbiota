@@ -52,6 +52,10 @@ else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imgpro
 		}
 	}
 </script>
+<style>
+	.ocr-box{ padding: 5px; float:left; }
+	.ocr-box button{ margin: 5px; }
+</style>
 <div id="labelProcDiv" style="width:100%;height:1050px;position:relative">
 	<fieldset id="labelProcFieldset" style="height:95%;background-color:white;">
 		<legend><b><?php echo $LANG['LABEL_PROCESSING']; ?></b></legend>
@@ -86,17 +90,29 @@ else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imgpro
 					}
 					?>
 					<div style="width:100%;clear:both;">
-						<div style="float:left;">
-							<button value="OCR Image" onclick="ocrImage(this,<?php echo $imgId.','.$imgCnt; ?>);" ><?php echo $LANG['OCR_IMAGE']; ?></button>
-							<img id="workingcircle-<?php echo $imgCnt; ?>" src="../../images/workingcircle.gif" style="display:none;" />
-						</div>
-						<div style="float:left;">
-							<fieldset style="width:200px;background-color:lightyellow;">
-								<legend><?php echo $LANG['OPTIONS']; ?></legend>
-								<input type="checkbox" id="ocrfull" value="1" /> <?php echo $LANG['OCR_WHOLE_IMG']; ?><br/>
-								<input type="checkbox" id="ocrbest" value="1" /> <?php echo $LANG['OCR_ANALYSIS']; ?>
+						<fieldset class="ocr-box">
+							<legend>Tesseract OCR</legend>
+							<input type="checkbox" id="ocrfull-tess" value="1" /> <?php echo $LANG['OCR_WHOLE_IMG']; ?><br/>
+							<input type="checkbox" id="ocrbest" value="1" /> <?php echo $LANG['OCR_ANALYSIS']; ?>
+							<div>
+								<button value="OCR Image" onclick="ocrImage(this,'tess', <?php echo $imgId.','.$imgCnt; ?>);" ><?php echo $LANG['OCR_IMAGE']; ?></button>
+								<img id="workingcircle-tess-<?php echo $imgCnt; ?>" src="../../images/workingcircle.gif" style="display:none;" />
+							</div>
+						</fieldset>
+						<?php
+						if(!empty($DIGILEAP_OCR_ACTIVATED)){
+							?>
+							<fieldset class="ocr-box">
+								<legend>DigiLeap OCR</legend>
+								<input type="checkbox" id="ocrfull-digi" value="1" /> <?php echo $LANG['OCR_WHOLE_IMG']; ?><br/>
+								<div>
+									<button value="OCR Image" onclick="ocrImage(this,'digi', <?php echo $imgId.','.$imgCnt; ?>);" ><?php echo $LANG['OCR_IMAGE']; ?></button>
+									<img id="workingcircle-digi-<?php echo $imgCnt; ?>" src="../../images/workingcircle.gif" style="display:none;" />
+								</div>
 							</fieldset>
-						</div>
+							<?php
+						}
+						?>
 						<div style="float:right;margin-right:20px;font-weight:bold;">
 							<?php echo $LANG['IMAGE'].' '.$imgCnt.' '.$LANG['OF'].' ';
 							echo count($imgArr);

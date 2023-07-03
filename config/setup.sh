@@ -15,10 +15,6 @@ echo "Creating head include: /includes/head.php"
 cp ../includes/head_template.php ../includes/head.php
 echo "Creating usage policy include: /includes/usagepolicy.php"
 cp ../includes/usagepolicy_template.php ../includes/usagepolicy.php
-echo "Creating About Project page: /misc/aboutproject.php"
-cp ../misc/aboutproject_template.php ../misc/aboutproject.php
-echo "Creating Contacts page: /misc/aboutproject.php"
-cp ../misc/contacts_template.php ../misc/contacts.php
 
 #Multilanguage support template files
 echo "Creating multilanguage translation files for header, e.g.: /content/lang/header.en.php"
@@ -27,12 +23,6 @@ cp ../content/lang/header.es_template.php ../content/lang/header.es.php
 echo "Creating multilanguage translation files for index, e.g.: /content/lang/index.en.php"
 cp ../content/lang/index.en_template.php ../content/lang/index.en.php
 cp ../content/lang/index.es_template.php ../content/lang/index.es.php
-echo "Creating multilanguage translation files for About Project, e.g.: /content/lang/misc/aboutproject.en.php"
-cp ../content/lang/aboutproject.en_template.php ../content/lang/aboutproject.en.php
-cp ../content/lang/aboutproject.es_template.php ../content/lang/aboutproject.es.php
-echo "Creating multilanguage translation files for Contacts, e.g.: /content/lang/misc/contacts.en.php"
-cp ../content/lang/contacts.en_template.php ../content/lang/contacts.en.php
-cp ../content/lang/contacts.es_template.php ../content/lang/contacts.es.php
 
 #Adjust file permission to give write access to certain folders and files
 echo "Adjusting file permissions"

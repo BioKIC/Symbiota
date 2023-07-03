@@ -230,7 +230,7 @@ if($action != "Update Statistics"){
 			<?php
 			include_once($SERVER_ROOT.'/includes/head.php');
 			?>
-			<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collection/listdisplay.css" type="text/css" rel="stylesheet" />
+			<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
             <script src="../../js/jquery.js" type="text/javascript"></script>
 			<script src="../../js/jquery-ui.js" type="text/javascript"></script>
 			<script src="../../js/symb/collections.index.js" type="text/javascript"></script>
@@ -726,7 +726,7 @@ if($action != "Update Statistics"){
 						?>
 						<div id="statsdiv">
 							<div style="min-height:300px;">
-								<div style="height:100%;">
+								<div>
 									<h1><?php echo (isset($LANG['SEL_COL_STATS'])?$LANG['SEL_COL_STATS']:'Selected Collection Statistics'); ?></h1>
 									<div style="font-weight:bold;font-size:105%;margin:10px;">
 										<div id="colllistlabel"><a href="#" onclick="toggle('colllist');toggle('colllistlabel');"><?php echo (isset($LANG['DISPLAY_LIST'])?$LANG['DISPLAY_LIST']:'Display List of Collections Analyzed'); ?></a></div>

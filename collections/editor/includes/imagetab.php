@@ -1,7 +1,6 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceEditorImages.php');
-include_once($SERVER_ROOT.'/classes/OccurrenceActionManager.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.en.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
@@ -11,7 +10,6 @@ $occIndex = filter_var($_GET['occindex'], FILTER_SANITIZE_NUMBER_INT);
 $crowdSourceMode = filter_var($_GET['csmode'], FILTER_SANITIZE_NUMBER_INT);
 
 $occManager = new OccurrenceEditorImages();
-$occActionManager = new OccurrenceActionManager();
 
 $occManager->setOccId($occId);
 $specImgArr = $occManager->getImageMap();
@@ -469,16 +467,6 @@ $photographerArr = $occManager->getPhotographerArr();
 				?>
 			</table>
 			<?php
-		}
-		else{
-			if(isset($REQUEST_TRACKING_IS_ACTIVE) && $REQUEST_TRACKING_IS_ACTIVE==1) {
-				echo '<div style="margin-left:15px;"><button onClick="requestImage()">'.$LANG['MAKE_REQUEST'].'</button></div><div id="imagerequestresult"></div>';
-				echo '<div>';
-				foreach ($occActionManager->listOccurrenceActionRequests($occId) as $request) {
-					echo $request.'<br/>';
-				}
-				echo '</div>';
-			}
 		}
 		?>
 	</div>

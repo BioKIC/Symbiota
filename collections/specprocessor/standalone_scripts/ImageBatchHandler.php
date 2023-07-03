@@ -39,12 +39,9 @@ if($webFileSizeLimit) $imageProcessor->setWebFileSizeLimit($webFileSizeLimit);
 if($lgFileSizeLimit) $imageProcessor->setLgFileSizeLimit($lgFileSizeLimit);
 $imageProcessor->setJpgQuality($jpgQuality);
 
-if(isset($webImg) && $webImg) $imageProcessor->setWebImg($webImg);
-elseif(isset($createWebImg) && $createWebImg) $imageProcessor->setCreateWebImg($createWebImg);
-if(isset($tnImg) && $tnImg) $imageProcessor->setTnImg($tnImg);
-elseif(isset($createTnImg) && $createTnImg) $imageProcessor->setCreateTnImg($createTnImg);
-if(isset($lgImg) && $lgImg) $imageProcessor->setLgImg($lgImg);
-elseif(isset($createLgImg) && $createLgImg) $imageProcessor->setCreateLgImg($createLgImg);
+if(isset($webImg) && $webImg) $imageProcessor->setMedProcessingCode($webImg);
+if(isset($tnImg) && $tnImg) $imageProcessor->setTnProcessingCode($tnImg);
+if(isset($lgImg) && $lgImg) $imageProcessor->setLgProcessingCode($lgImg);
 $imageProcessor->setKeepOrig($keepOrig);
 $imageProcessor->setCreateNewRec($createNewRec);
 if(isset($imgExists)) $imageProcessor->setImgExists($imgExists);

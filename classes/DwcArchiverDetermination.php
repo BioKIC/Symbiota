@@ -33,7 +33,7 @@ class DwcArchiverDetermination{
 		$termArr['identificationRemarks'] = 'http://rs.tdwg.org/dwc/terms/identificationRemarks';
 		$fieldArr['identificationRemarks'] = 'd.identificationRemarks';
 		$termArr['recordID'] = 'http://portal.idigbio.org/terms/recordID';
-		$fieldArr['recordID'] = 'g.guid AS recordID';
+		$fieldArr['recordID'] = 'd.recordID AS recordID';
 		$termArr['modified'] = 'http://purl.org/dc/terms/modified';
 		$fieldArr['modified'] = 'd.initialTimeStamp AS modified';
 		$termArr['detID'] = 'https://symbiota.org/terms/detID';
@@ -75,9 +75,7 @@ class DwcArchiverDetermination{
 				if($fieldSql) $sql .= $delimiter.$fieldSql;
 				$delimiter = ', ';
 			}
-			$sql .= ' FROM omoccurdeterminations d INNER JOIN omoccurrences o ON d.occid = o.occid
-				INNER JOIN guidoccurdeterminations g ON d.detid = g.detid
-				LEFT JOIN taxa t ON d.tidinterpreted = t.tid ';
+			$sql .= ' FROM omoccurdeterminations d INNER JOIN omoccurrences o ON d.occid = o.occid LEFT JOIN taxa t ON d.tidinterpreted = t.tid ';
 			$sql .= $tableJoins;
 			$sql .= $conditionSql.' AND d.appliedstatus = 1 ';
 			$sql .= 'ORDER BY o.collid';

@@ -9,25 +9,22 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Lumen\Auth\Authorizable;
 
-class User extends Model implements AuthenticatableContract, AuthorizableContract
-{
-    use Authenticatable, Authorizable, HasFactory;
+class User extends Model implements AuthenticatableContract, AuthorizableContract{
+	use Authenticatable, Authorizable, HasFactory;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email',
-    ];
+	protected $table = 'users';
+	protected $primaryKey = 'uid';
+	public $timestamps = false;
 
-    /**
-     * The attributes excluded from the model's JSON form.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password',
-    ];
+	protected $fillable = [  ];
+
+	protected $hidden = [ 'password' ];
+
+	public function roles(){
+		return $this->hasMany(UserRole::class, 'uid', 'uid');
+	}
+
+	public function accessTokens(){
+		return $this->hasMany(UserRole::class, 'uid', 'uid');
+	}
 }

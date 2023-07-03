@@ -908,9 +908,9 @@ class OccurrenceCleaner extends Manager{
 	public function getOccurrenceRankingArr($category, $ranking){
 		$retArr = array();
 		if(is_numeric($ranking)){
-			$sql = 'SELECT DISTINCT v.occid, l.username, v.initialtimestamp '.
+			$sql = 'SELECT DISTINCT v.occid, u.username, v.initialtimestamp '.
 				'FROM omoccurverification v INNER JOIN omoccurrences o ON v.occid = o.occid '.
-				'INNER JOIN userlogin l ON v.uid = l.uid '.
+				'INNER JOIN users u ON v.uid = u.uid '.
 				'WHERE (o.collid IN('.$this->collid.')) AND (v.category = "'.$this->cleanInStr($category).'") AND (ranking = '.$ranking.')';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){

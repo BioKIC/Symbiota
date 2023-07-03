@@ -8,7 +8,7 @@
         "php": "^7.3|^8.0",
         "darkaonline/swagger-lume": "8.*",
         "laravel/lumen-framework": "^8.0",
-        "symfony/http-kernel": "5.3.12"
+        "symfony/http-kernel": "5.4.20"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",

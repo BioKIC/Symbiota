@@ -46,7 +46,7 @@ if($collid && is_numeric($collid)){
 		if(substr($tPath,-1) != '/' && substr($tPath,-1) != '\\'){
 			$tPath .= '/';
 		}
-		$pathFrag = 'temp/data/geolocate/';
+		$pathFrag = 'temp/data/';
 		$tPath .= $pathFrag;
 		$dwcaHandler->setTargetPath($tPath);
 		$cnt = $dwcaHandler->getOccurrenceCnt();

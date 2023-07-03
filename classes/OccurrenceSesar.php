@@ -247,7 +247,7 @@ class OccurrenceSesar extends Manager {
 		$status = false;
 		//$this->logOrEcho('Submitting XML to SESAR Systems');
 		$baseUrl = 'https://app.geosamples.org/webservices/upload.php';
-		if(!$this->productionMode) $baseUrl = 'https://sesardev.geosamples.org/webservices/upload.php';		// TEST URI
+		if(!$this->productionMode) $baseUrl = 'https://app-sandbox.geosamples.org/webservices/upload.php';		// TEST URI
 		$contentStr = $this->igsnDom->saveXML();
 		$requestData = array ('username' => $this->sesarUser, 'password' => $this->sesarPwd, 'content' => $contentStr);
 		$resArr = $this->getSesarApiData($baseUrl, 'post', $requestData);
@@ -288,19 +288,34 @@ class OccurrenceSesar extends Manager {
 							else $sampleArr[$childNode->nodeName] = $childNode->nodeValue;
 						}
 						if(isset($sampleArr['valid'])){
-							$msgStr = 'valid = '.$sampleArr['valid'];
-							if(isset($sampleArr['catnum']) && $sampleArr['catnum']) $msgStr .= '; ID = '.$sampleArr['catnum'];
-							if(isset($sampleArr['status']) && $sampleArr['status']) $msgStr .= '; status = '.$sampleArr['status'];
-							if(isset($sampleArr['error']) && $sampleArr['error']) $msgStr .= '; error = '.$sampleArr['error'];
 							$status = false;
-							$this->logOrEcho('FAILED: '.$msgStr,1);
+							$occid = 0;
+							$igsn = '';
+							$msgStr = 'valid = '.$sampleArr['valid'];
+							if(isset($sampleArr['catnum']) && $sampleArr['catnum']){
+								$msgStr .= '; ID = '.$sampleArr['catnum'];
+								$occid = trim($sampleArr['catnum'], '[] ');
+							}
+							if(isset($sampleArr['error']) && $sampleArr['error']){
+								$msgStr .= '; error = '.$sampleArr['error'];
+								if(preg_match('/(NEON[A-Z0-9]{5})/', $sampleArr['error'],$m)){
+									$igsn = $m[1];
+								}
+							}
+							if($occid && $igsn){
+								$status = $this->updateOccurrenceID($igsn, $occid);
+							}
+							if(!$status) $this->logOrEcho('FAILED: '.$msgStr,1);
 						}
 						elseif(isset($sampleArr['igsn']) && $sampleArr['igsn']){
 							$occid = 0;
 							$dbStatus = false;
-							if(preg_match('/\[\s*(\d+)\s*\]\s*$/', $sampleArr['name'],$m)){
-								$occid = $m[1];
-								$dbStatus = $this->updateOccurrenceID($sampleArr['igsn'], $occid);
+							if(preg_match('/\[\s*(\d+)\s*\]\s*$/', $sampleArr['name'],$m1)){
+								$occid = $m1[1];
+								if(preg_match('/(NEON[A-Z0-9]{5})/', $sampleArr['igsn'],$m2)){
+									$igsn = $m2[1];
+									$dbStatus = $this->updateOccurrenceID($igsn, $occid);
+								}
 							}
 							else{
 								$this->errorMessage = 'WARNING: unable to extract occid to add igsn ('.$sampleArr['name'].')';
@@ -409,9 +424,9 @@ class OccurrenceSesar extends Manager {
 			}
 		}
 		else{
-			$this->errorMessage = 'ERROR adding IGSN to occurrence table: IGSN ('.$igsn.') not 9 digits';
+			$this->errorMessage = 'FATAL ERROR adding IGSN to occurrence table: IGSN ('.$igsn.') not 9 digits';
 			//$this->logOrEcho('ERROR adding IGSN to occurrence table: IGSN ('.$igsn.') not 9 digits',2);
-			$status = false;
+			exit;
 		}
 		return $status;
 	}

@@ -40,7 +40,6 @@ $template_dirs =
 	'\config',
 	'',
 	'\includes',
-	'\misc',
 	'\content\lang'
 
 Foreach($i in $template_dirs){				

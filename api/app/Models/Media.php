@@ -11,11 +11,12 @@ class Media extends Model{
 	public $timestamps = false;
 
 	protected $fillable = [
-		'url', ' thumbnailurl', 'originalurl', 'archiveurl', 'photographer', 'photographeruid', 'imagetype', 'format', 'caption', 'owner', 'sourceurl', 'referenceUrl', 'copyright',
-		'rights', 'accessrights', 'locality', 'occid', 'notes', 'anatomy', 'username', 'sourceIdentifier', 'mediaMD5', 'dynamicProperties', 'defaultDisplay', 'sortsequence', 'sortOccurrence'
+		'url', ' thumbnailUrl', 'originalUrl', 'archiveUrl', 'photographer', 'photographerUid', 'imageType', 'format', 'caption', 'owner', 'sourceUrl', 'referenceUrl', 'copyright',
+		'rights', 'accessRights', 'locality', 'occid', 'notes', 'anatomy', 'username', 'sourceIdentifier', 'hashFunction', 'hashValue', 'mediaMD5', 'dynamicProperties',
+		'defaultDisplay', 'sortSequence', 'sortOccurrence'
 	];
 
-	protected $hidden = ['dynamicProperties', 'username', 'sortOccurrence', 'defaultDisplay'];
+	protected $hidden = ['dynamicProperties', 'username', 'photographerUid', 'sortOccurrence', 'defaultDisplay'];
 	private $serverDomain;
 
 	public function __construct(){

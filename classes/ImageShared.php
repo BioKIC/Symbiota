@@ -503,7 +503,6 @@ class ImageShared{
 	private function databaseImage(){
 		$status = false;
 		if($this->imgLgUrl || $this->imgWebUrl){
-			$status = true;
 			$urlBase = $this->getUrlBase();
 			if($this->imgWebUrl && strtolower(substr($this->imgWebUrl,0,7)) != 'http://' && strtolower(substr($this->imgWebUrl,0,8)) != 'https://'){
 				$this->imgWebUrl = $urlBase.$this->imgWebUrl;
@@ -526,33 +525,26 @@ class ImageShared{
 			}
 
 			//Save currently loaded record
-			$sql = 'INSERT INTO images (tid, url, thumbnailurl, originalurl, photographer, photographeruid, format, caption, '.
-				'owner, sourceurl, copyright, locality, occid, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights) '.
-				'VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+			$guid = UuidFactory::getUuidV4();
+			$sql = 'INSERT INTO images (tid, url, thumbnailurl, originalurl, photographer, photographeruid, format, caption, owner, sourceurl,
+				copyright, locality, occid, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights, recordID)
+				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 			if($stmt = $this->conn->prepare($sql)) {
 				$userName = $this->cleanInStr($GLOBALS['USERNAME']);
-				$stmt->bind_param('issssissssssissiisss', $this->tid, $this->imgWebUrl, $this->imgTnUrl, $this->imgLgUrl, $this->photographer, $this->photographerUid, $this->format,
+				if($stmt->bind_param('issssissssssissiissss', $this->tid, $this->imgWebUrl, $this->imgTnUrl, $this->imgLgUrl, $this->photographer, $this->photographerUid, $this->format,
 					$this->caption, $this->owner, $this->sourceUrl, $this->copyright, $this->locality, $this->occid, $this->notes, $userName, $this->sortSeq, $this->sortOccurrence,
-					$this->sourceIdentifier, $this->rights, $this->accessRights);
-
-				$stmt->execute();
-				if($stmt->affected_rows == 1){
-					$status = true;
-					$this->activeImgId = $stmt->insert_id;
+					$this->sourceIdentifier, $this->rights, $this->accessRights, $guid)){
+					$stmt->execute();
+					if($stmt->affected_rows == 1){
+						$status = true;
+						$this->activeImgId = $stmt->insert_id;
+					}
+					else $this->errArr[] = 'ERROR adding image: '.$stmt->error;
+					$stmt->close();
 				}
-				else{
-					$this->errArr[] = 'ERROR adding image: '.$stmt->error;
-					$status = false;
-				}
-				$stmt->close();
+				else $this->errArr[] = 'ERROR binding parameters for image insert: '.$this->conn->error;
 			}
-			if($status){
-				//Create and insert Symbiota GUID for image(UUID)
-				$guid = UuidFactory::getUuidV4();
-				if(!$this->conn->query('INSERT INTO guidimages(guid,imgid) VALUES("'.$guid.'",'.$this->activeImgId.')')) {
-					$this->errArr[] = ' Warning: Symbiota GUID mapping failed';
-				}
-			}
+			else $this->errArr[] = 'ERROR preparing statement for image insert: '.$this->conn->error;
 		}
 		return $status;
 	}
@@ -568,26 +560,14 @@ class ImageShared{
 	public function deleteImage($imgIdDel, $removeImg){
 		if(is_numeric($imgIdDel)){
 			$imgUrl = ''; $imgThumbnailUrl = ''; $imgOriginalUrl = ''; $occid = 0;
-			$sqlQuery = 'SELECT * FROM images WHERE (imgid = '.$imgIdDel.')';
+			$sqlQuery = 'SELECT url, thumbnailUrl, originalUrl, tid, occid FROM images WHERE (imgid = '.$imgIdDel.')';
 			$rs = $this->conn->query($sqlQuery);
 			if($r = $rs->fetch_object()){
 				$imgUrl = $r->url;
-				$imgThumbnailUrl = $r->thumbnailurl;
-				$imgOriginalUrl = $r->originalurl;
+				$imgThumbnailUrl = $r->thumbnailUrl;
+				$imgOriginalUrl = $r->originalUrl;
 				$this->tid = $r->tid;
 				$occid = $r->occid;
-				//Archive image
-				$imgArr = array();
-				$imgObj = '';
-				foreach($r as $k => $v){
-					if($v) $imgArr[$k] = $v;
-					$imgObj .= '"'.$k.'":"'.$this->cleanInStr($v).'",';
-				}
-				$imgObj = json_encode($imgArr);
-				$sqlArchive = 'UPDATE guidimages '.
-				"SET archivestatus = 1, archiveobj = '{".trim($imgObj,',')."}' ".
-				'WHERE (imgid = '.$imgIdDel.')';
-				$this->conn->query($sqlArchive);
 			}
 			$rs->free();
 

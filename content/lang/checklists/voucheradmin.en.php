@@ -28,7 +28,7 @@ $LANG['POLYGON_SEARCH'] = 'Search based on polygon defining checklist research b
 $LANG['EXCLUDE'] = 'Exclude cultivated/captive occurrences';
 $LANG['SAVESEARCH'] = 'Save Search Terms';
 $LANG['REMOVESEARCH'] = 'Remove Search Statement';
-$LANG['NEWVOUCH'] = 'New Vouchers';
+$LANG['NON_VOUCHERED'] = 'Non-Vouchered Taxa';
 $LANG['MISSINGTAXA'] = 'Missing Taxa';
 $LANG['VOUCHCONF'] = 'Voucher Conflicts';
 $LANG['REPORTS'] = 'Reports';
@@ -45,10 +45,9 @@ $LANG['LISTEDBELOWARESPECINSTRUC'] = 'Listed below are species from the checklis
 Click on name to use the search statement above to dynamically query the occurrence dataset for
 possible voucher specimens. Use the pulldown to the right to display the specimens in a table format.';
 $LANG['ALLTAXACONTAINVOUCH'] = 'All taxa contain voucher links';
+$LANG['ADDITIONAL'] = 'See the Option Panel on the central page for more versatile export and print options that dynamically incorporate option selections';
 $LANG['FULLSPECLIST'] = 'Full species list (CSV)';
-$LANG['FULLPRINT'] = 'Full species list (Print Friendly)';
 $LANG['FULLSPECLISTVOUCHER'] = 'Full species list with linked vouchers (CSV)';
-$LANG['FULLPRINTVOUCHER'] = 'Full species list with linked vouchers (Print Friendly)';
 $LANG['VOUCHERONLY'] = 'Linked occurrence vouchers only (DwC-A, CSV, Tab-delimited)';
 $LANG['FULLSPECLISTALLOCCUR'] = 'Full species list with all occurrences matching search terms (CSV)';
 $LANG['PENSOFT_XLSX_EXPORT'] = 'Pensoft Excel Export';

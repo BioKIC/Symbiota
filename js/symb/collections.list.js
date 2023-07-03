@@ -13,15 +13,10 @@ function copyUrl(){
 function addVoucherToCl(occidIn,clidIn,tidIn){
 	$.ajax({
 		type: "POST",
-		url: "rpc/addvoucher.php",
-		data: { occid: occidIn, clid: clidIn, tid: tidIn }
+		url: "../checklists/rpc/linkvoucher.php",
+		data: { occid: occidIn, clid: clidIn, taxon: tidIn }
 	}).done(function( msg ) {
-		if(msg == "1"){
-			alert("Success! Voucher added to checklist.");
-		}
-		else{
-			alert(msg);
-		}
+		alert(msg);
 	});
 }
 

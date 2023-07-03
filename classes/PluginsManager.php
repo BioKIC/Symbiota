@@ -91,8 +91,7 @@ class PluginsManager extends Manager {
 				'LEFT JOIN omoccurrences o ON i.occid = o.occid '.
 				'LEFT JOIN taxa t ON i.tid = t.tid ';
 			if($clid){
-				$sql .= 'INNER JOIN fmchklsttaxalink v ON i.tid = v.TID ';
-				$sql .= 'WHERE v.CLID IN('.$clid.') ';
+				$sql .= 'INNER JOIN fmchklsttaxalink cl ON i.tid = cl.tid WHERE cl.clid IN('.$clid.') ';
 			}
 			else{
 				$sql .= 'WHERE i.InitialTimeStamp < "'.$sinceDate.'" AND i.tid IS NOT NULL ';

@@ -34,8 +34,8 @@ $imgExists = 2;
 $webPixWidth = 1400;
 $tnPixWidth = 200;
 $lgPixWidth = 3600;
-$webFileSizeLimit = 300000;
-$lgFileSizeLimit = 3000000;
+$webFileSizeLimit = 500000;
+$lgFileSizeLimit = 10000000;
 
 //Value between 0 and 100
 $jpgQuality = 80;

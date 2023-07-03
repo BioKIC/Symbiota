@@ -31,20 +31,16 @@ class SpecProcessorOcr extends Manager{
 		//unlink($this->imgUrlLocal);
 	}
 
-	public function ocrImageById($imgid,$getBest = 0,$sciName=''){
+	public function ocrImageById($imgid, $target = 'tess', $getBest = 0, $sciName=''){
 		$rawStr = '';
-		$sql = 'SELECT url, originalurl FROM images WHERE imgid = '.$imgid;
-		if($rs = $this->conn->query($sql)){
-			if($r = $rs->fetch_object()){
-				$imgUrl = ($r->originalurl?$r->originalurl:$r->url);
-				$rawStr = $this->ocrImageByUrl($imgUrl, $getBest, $sciName);
-			}
-			$rs->free();
+		if($imgUrl = $this->getImageUrl($imgid)){
+			if($target == 'digi') $rawStr = $this->ocrImageViaDigiLeap($imgid);
+			else $rawStr = $this->ocrImageByUrl($imgUrl, $getBest, $sciName);
 		}
 		return $rawStr;
 	}
 
-	private function ocrImageByUrl($imgUrl,$getBest = 0,$sciName=''){
+	private function ocrImageByUrl($imgUrl, $getBest = 0, $sciName=''){
 		$rawStr = '';
 		if($imgUrl){
 			if($this->loadImage($imgUrl)){
@@ -53,7 +49,7 @@ class SpecProcessorOcr extends Manager{
 					$rawStr = $this->getBestOCR($sciName);
 				}
 				else{
-					$rawStr = $this->ocrImage();
+					$rawStr = $this->ocrImageViaTesseract();
 				}
 				if(!$rawStr) {
 					//Check for and remove problematic boarder
@@ -62,7 +58,7 @@ class SpecProcessorOcr extends Manager{
 							$rawStr = $this->getBestOCR($sciName);
 						}
 						else{
-							$rawStr = $this->ocrImage();
+							$rawStr = $this->ocrImageViaTesseract();
 						}
 					}
 					if(!$rawStr) $rawStr = 'Failed OCR return';
@@ -85,7 +81,7 @@ class SpecProcessorOcr extends Manager{
 		return $rawStr;
 	}
 
-	private function ocrImage($url = ""){
+	private function ocrImageViaTesseract($url = ""){
 		global $TESSERACT_PATH;
 		$retStr = '';
 		if(!$url) $url = $this->imgUrlLocal;
@@ -125,12 +121,87 @@ class SpecProcessorOcr extends Manager{
 		return $retStr;//$this->cleanRawStr($retStr);
 	}
 
+	//DigiLeap functions
+	public function ocrImageViaDigiLeap($imgid){
+		$ocrStr = '';
+		if($imgUrl = $this->getImageUrl($imgid)){
+			if($this->loadImage($imgUrl)){
+				$this->cropImage();
+				if($resArr = $this->getDigiLeapOcr($this->imgUrlLocal)){
+					$ocrStr = $resArr['results'][0]['text'];
+				}
+				else{
+					$ocrStr = $this->getErrorMessage();
+				}
+			}
+		}
+		return $ocrStr;
+	}
+
+	private function getDigiLeapOcr($imgUrl){
+		$resJson = false;
+		$url = 'http://3.89.120.132/ocr-labels';
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_URL, $url);
+		$loginStr = $GLOBALS['PORTAL_GUID'].':'.$this->getConfigAttribute('DigiLeapApiKey');
+		curl_setopt($ch, CURLOPT_USERPWD, $loginStr);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_POST, true);
+		$headerArr = array (
+			'Accept: application/json',
+			'Content-Type: multipart/form-data'
+		);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $headerArr);
+		$cfile = new CURLFile($imgUrl, 'image/jpeg', basename($imgUrl));
+		$postData = array(
+			'labels' => '',
+			'extract' => 'typewritten'
+		);
+		$postData['sheet'] = $cfile;
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $postData);
+		$resJson = curl_exec($ch);
+		$retArr['retCode'] = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if($retArr['retCode'] != 200){
+			if(curl_errno($ch)) $this->errorMessage = 'FATAL CURL ERROR: '.curl_error($ch).' (#'.curl_errno($ch).') '.$retArr['retCode'];
+			$this->errorMessage = 'Problem retrieving OCR, HTTP code: '.$retArr['retCode'];
+			return false;
+		}
+		curl_close($ch);
+		return json_decode(json_decode($resJson), true);
+	}
+
+	public function digiLeapIsActive(){
+		if($this->getConfigAttribute('DigiLeapApiKey')) return true;
+		return false;
+	}
+
+	//Misc OCR support functions
+	private function getImageUrl($imgid){
+		$retUrl = false;
+		if(is_numeric($imgid)){
+			$sql = 'SELECT url, originalurl FROM images WHERE imgid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('i', $imgid);
+				$stmt->execute();
+				$url = '';
+				$stmt->bind_result($url, $retUrl);
+				$stmt->fetch();
+				$stmt->close();
+				if(!$retUrl) $retUrl = $url;
+			}
+		}
+		return $retUrl;
+	}
+
 	private function databaseRawStr($imgId,$rawStr,$notes,$source){
 		if(is_numeric($imgId) && $rawStr){
+			$rawStr = $this->cleanInStr($this->encodeString($rawStr));
 			$score = '';
 			if($rawStr == 'Failed OCR return') $score = 0;
 			$sql = 'INSERT INTO specprocessorrawlabels(imgid,rawstr,notes,source,score) '.
-				'VALUE ('.$imgId.',"'.$this->cleanInStr($rawStr).'",'.
+				'VALUE ('.$imgId.',"'.$rawStr.'",'.
 				($notes?'"'.$this->cleanInStr($notes).'"':'NULL').','.
 				($source?'"'.$this->cleanInStr($source).'"':'NULL').','.
 				($score?'"'.$this->cleanInStr($score).'"':'NULL').')';
@@ -215,7 +286,7 @@ class SpecProcessorOcr extends Manager{
 		}
 	}
 
-	// OCR upload functions
+	//OCR upload functions
 	public function harvestOcrText($postArr){
 		$status = true;
 		set_time_limit(3600);
@@ -470,7 +541,7 @@ class SpecProcessorOcr extends Manager{
 					$pH = $imgH*$this->cropH;
 					$dest = imagecreatetruecolor($pW,$pH);
 
-					// Copy
+					// Copy image
 					if(imagecopy($dest,$img,0,0,$pX,$pY,$pW,$pH)){
 						//$status = imagejpeg($dest,str_replace('_img.jpg','_crop.jpg',$this->imgUrlLocal));
 						$status = imagejpeg($dest,$this->imgUrlLocal);
@@ -581,12 +652,12 @@ class SpecProcessorOcr extends Manager{
 	//Roberts scoring and treatment functions
 	private function getBestOCR($sciName = ''){
 		//Base run
-		$rawStr_base = $this->ocrImage();
+		$rawStr_base = $this->ocrImageViaTesseract();
 		$score_base = $this->scoreOCR($rawStr_base, $sciName);
 		$urlTemp = str_replace('.jpg','_f1.jpg',$this->imgUrlLocal);
 		copy($this->imgUrlLocal,$urlTemp);
 		$this->filterImage($urlTemp);
-		$rawStr_treated = $this->ocrImage($urlTemp);
+		$rawStr_treated = $this->ocrImageViaTesseract($urlTemp);
 		$score_treated = $this->scoreOCR($rawStr_treated, $sciName);
 		unlink($urlTemp);
 		if($score_treated > $score_base) {
@@ -748,16 +819,22 @@ class SpecProcessorOcr extends Manager{
 
 	//General setters and getters
 	public function setCropX($x){
-		$this->cropX = $x;
+		$this->cropX = $this->cleanImageValue($x);
 	}
 	public function setCropY($y){
-		$this->cropY = $y;
+		$this->cropY = $this->cleanImageValue($y);
 	}
 	public function setCropW($w){
-		$this->cropW = $w;
+		$this->cropW = $this->cleanImageValue($w);
 	}
 	public function setCropH($h){
-		$this->cropH = $h;
+		$this->cropH = $this->cleanImageValue($h);
+	}
+
+	private function cleanImageValue($d){
+		if($d < 0) $d = 0;
+		elseif($d > 1) $d = 1;
+		return $d;
 	}
 
 	private function setTempPath(){

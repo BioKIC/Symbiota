@@ -43,24 +43,26 @@ class ImInventories extends Manager{
 				$retArr['datelastmodified'] = $row->datelastmodified;
 			}
 			$result->free();
-			if($retArr['type'] == 'excludespp'){
-				$sql = 'SELECT clid FROM fmchklstchildren WHERE clidchild = '.$this->clid;
-				$rs = $this->conn->query($sql);
-				while($r = $rs->fetch_object()){
-					$retArr['excludeparent'] = $r->clid;
-				}
-				$rs->free();
-			}
-			if($pid && is_numeric($pid)){
-				$sql = 'SELECT clNameOverride, mapChecklist, sortSequence, notes FROM fmchklstprojlink WHERE clid = '.$this->clid.' AND pid = '.$pid;
-				$rs = $this->conn->query($sql);
-				if($rs){
-					if($r = $rs->fetch_object()){
-						$retArr['clNameOverride'] = $this->cleanOutStr($r->clNameOverride);
-						$retArr['mapchecklist'] = $r->mapChecklist;
-						$retArr['sortsequence'] = $r->sortSequence;
+			if($retArr){
+				if($retArr['type'] == 'excludespp'){
+					$sql = 'SELECT clid FROM fmchklstchildren WHERE clidchild = '.$this->clid;
+					$rs = $this->conn->query($sql);
+					while($r = $rs->fetch_object()){
+						$retArr['excludeparent'] = $r->clid;
 					}
 					$rs->free();
+				}
+				if($pid && is_numeric($pid)){
+					$sql = 'SELECT clNameOverride, mapChecklist, sortSequence, notes FROM fmchklstprojlink WHERE clid = '.$this->clid.' AND pid = '.$pid;
+					$rs = $this->conn->query($sql);
+					if($rs){
+						if($r = $rs->fetch_object()){
+							$retArr['clNameOverride'] = $this->cleanOutStr($r->clNameOverride);
+							$retArr['mapchecklist'] = $r->mapChecklist;
+							$retArr['sortsequence'] = $r->sortSequence;
+						}
+						$rs->free();
+					}
 				}
 			}
 		}
@@ -91,7 +93,7 @@ class ImInventories extends Manager{
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('sssssssdddsssisi', $clName, $authors, $type, $locality, $publication, $abstract, $notes, $latCentroid, $longCentroid, $pointRadiusMeters, $access, $defaultSettings, $dynamicSql, $uid, $footprintWkt, $sortSequence);
 				if($stmt->execute()){
-					if($stmt->affected_rows || !$stmt->error){
+					if($stmt->affected_rows && !$stmt->error){
 						$clid = $stmt->insert_id;
 					}
 					else $this->errorMessage = 'ERROR inserting fmchecklists record (2): '.$stmt->error;
@@ -132,7 +134,7 @@ class ImInventories extends Manager{
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param($typeStr, ...$paramArr);
 				if($stmt->execute()){
-					if($stmt->affected_rows || !$stmt->error){
+					if(!$stmt->error){
 						$status = true;
 					}
 					else $this->errorMessage = 'ERROR updating fmchecklists record (2): '.$stmt->error;
@@ -168,23 +170,26 @@ class ImInventories extends Manager{
 	}
 
 	public function deleteChecklist(){
-		$status = true;
+		$status = false;
 		$roleArr = $this->getManagers('ClAdmin', 'fmchecklists', $this->clid);
 		unset($roleArr[$GLOBALS['SYMB_UID']]);
 		if(!$roleArr){
-			$sql = 'DELETE FROM fmchecklists WHERE (clid = '.$this->clid.')';
-			if($this->conn->query($sql)){
-				//Delete userpermissions reference once patch is submitted
-				$this->deleteUserRole('ClAdmin', $this->clid, $GLOBALS['SYMB_UID']);
-			}
-			else{
-				$this->errorMessage = 'ERROR attempting to delete checklist: '.$this->conn->error;
-				$status = false;
+			$this->deleteChecklistTaxaLinks();
+			$sql = 'DELETE FROM fmchecklists WHERE clid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('i', $this->clid);
+				$stmt->execute();
+				if($stmt->affected_rows && !$stmt->error){
+					$status = true;
+					//Delete userpermissions reference once patch is submitted
+					$this->deleteUserRole('ClAdmin', $this->clid, $GLOBALS['SYMB_UID']);
+				}
+				else $this->errorMessage = $stmt->error;
+				$stmt->close();
 			}
 		}
 		else{
 			$this->errorMessage = 'Checklist cannot be deleted until all editors are removed. Remove editors and then try again.';
-			$status = false;
 		}
 		return $status;
 	}
@@ -205,6 +210,22 @@ class ImInventories extends Manager{
 		return $retArr;
 	}
 
+	//Checklist taxa linkages
+	private function deleteChecklistTaxaLinks(){
+		$status = false;
+		if($this->clid){
+			$sql = 'DELETE FROM fmchklsttaxalink WHERE clid = ?';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('i', $this->clid);
+				$stmt->execute();
+				if($stmt->error) $this->errorMessage = $stmt->error;
+				else $status = true;
+				$stmt->close();
+			}
+		}
+		return $status;
+	}
+
 	//Child-Parent checklist functions
 	public function insertChildChecklist($clidChild, $modifiedUid){
 		$status = false;
@@ -212,7 +233,7 @@ class ImInventories extends Manager{
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('iii', $this->clid, $clidChild, $modifiedUid);
 			if($stmt->execute()){
-				if($stmt->affected_rows || !$stmt->error){
+				if($stmt->affected_rows && !$stmt->error){
 					$status = true;
 				}
 				else $this->errorMessage = 'ERROR inserting child checklist record (2): '.$stmt->error;
@@ -278,7 +299,7 @@ class ImInventories extends Manager{
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('ssssi', $projName, $managers, $fullDescription, $notes, $isPublic);
 			if($stmt->execute()){
-				if($stmt->affected_rows || !$stmt->error){
+				if($stmt->affected_rows && !$stmt->error){
 					$newPid = $stmt->insert_id;
 					$this->pid = $newPid;
 				}
@@ -302,7 +323,7 @@ class ImInventories extends Manager{
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('ssssii', $projName, $managers, $fullDescription, $notes, $isPublic, $this->pid);
 			if($stmt->execute()){
-				if($stmt->affected_rows || !$stmt->error){
+				if(!$stmt->error){
 					$status = true;
 				}
 				else $this->errorMessage = 'ERROR updating fmprojects record (2): '.$stmt->error;
@@ -365,9 +386,8 @@ class ImInventories extends Manager{
 	public function getManagers($role, $tableName, $tablePK){
 		$retArr = array();
 		if(is_numeric($tablePK)){
-			$sql = 'SELECT u.uid, CONCAT_WS(", ", u.lastname, u.firstname) as fullname, l.username '.
+			$sql = 'SELECT u.uid, CONCAT_WS(", ", u.lastname, u.firstname) as fullname, u.username '.
 				'FROM userroles r INNER JOIN users u ON r.uid = u.uid '.
-				'INNER JOIN userlogin l ON u.uid = l.uid '.
 				'WHERE r.role = "'.$this->cleanInStr($role).'" AND r.tableName = "'.$this->cleanInStr($tableName).'" AND r.tablepk = '.$tablePK;
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
@@ -385,7 +405,7 @@ class ImInventories extends Manager{
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('isssi', $uid, $role, $tableName, $tablePK, $uidAssignedBy);
 			if($stmt->execute()){
-				if($stmt->affected_rows || !$stmt->error){
+				if($stmt->affected_rows && !$stmt->error){
 					$status = true;
 				}
 				else $this->errorMessage = 'ERROR inserting user role record (2): '.$stmt->error;
@@ -405,9 +425,7 @@ class ImInventories extends Manager{
 
 	public function getUserArr(){
 		$retArr = array();
-		$sql = 'SELECT u.uid, CONCAT_WS(", ", u.lastname, u.firstname) as fullname, l.username '.
-			'FROM users u INNER JOIN userlogin l ON u.uid = l.uid '.
-			'ORDER BY u.lastname, u.firstname';
+		$sql = 'SELECT uid, CONCAT_WS(", ", lastname, firstname) as fullname, username FROM users ORDER BY lastname, firstname';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->uid] = $r->fullname.' ('.$r->username.')';

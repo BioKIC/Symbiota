@@ -23,6 +23,7 @@ $transferLarge = (array_key_exists('transferLarge', $_POST)?$_POST['transferLarg
 $matchTermThumbnail = (array_key_exists('matchTermThumbnail', $_POST)?$_POST['matchTermThumbnail']:'');
 $matchTermWeb = (array_key_exists('matchTermWeb', $_POST)?$_POST['matchTermWeb']:'');
 $matchTermLarge = (array_key_exists('matchTermLarge', $_POST)?$_POST['matchTermLarge']:'');
+$deleteSource = (array_key_exists('deleteSource', $_POST)?$_POST['deleteSource']:0);
 $imgRootUrl = (array_key_exists('imgRootUrl', $_POST)?$_POST['imgRootUrl']:'');
 $imgRootPath = (array_key_exists('imgRootPath', $_POST)?$_POST['imgRootPath']:'');
 $imgSubPath = (array_key_exists('imgSubPath', $_POST)?$_POST['imgSubPath']:'');
@@ -43,6 +44,7 @@ if(!is_numeric($transferLarge)) $transferLarge = 0;
 $matchTermThumbnail = filter_var($matchTermThumbnail,FILTER_SANITIZE_STRING);
 $matchTermWeb = filter_var($matchTermWeb,FILTER_SANITIZE_STRING);
 $matchTermLarge = filter_var($matchTermLarge,FILTER_SANITIZE_STRING);
+if(!is_numeric($deleteSource)) $deleteSource = 0;
 $imgRootUrl = filter_var($imgRootUrl,FILTER_SANITIZE_STRING);
 $imgRootPath = filter_var($imgRootPath,FILTER_SANITIZE_STRING);
 $imgSubPath = filter_var($imgSubPath,FILTER_SANITIZE_STRING);
@@ -106,6 +108,7 @@ if($IS_ADMIN) $isEditor = true;
 							$toolManager->setMatchTermThumbnail($matchTermThumbnail);
 							$toolManager->setMatchTermWeb($matchTermWeb);
 							$toolManager->setMatchTermLarge($matchTermLarge);
+							$toolManager->setDeleteSource($deleteSource);
 							$toolManager->setImgRootUrl($imgRootUrl);
 							$toolManager->setImgRootPath($imgRootPath);
 							$toolManager->setImgSubPath($imgSubPath);
@@ -233,6 +236,12 @@ if($IS_ADMIN) $isEditor = true;
 								<div class="fieldDiv">
 									<input name="transferLarge" type="checkbox" value="1" <?php echo ($transferLarge?'CHECKED':''); ?> />
 									<span class="fieldLabel">Transfer Large Image</span>
+								</div>
+							</div>
+							<div class="fieldRowDiv" style="padding-top:10px">
+								<div class="fieldDiv">
+									<input name="deleteSource" type="checkbox" value="1" <?php echo ($deleteSource?'CHECKED':''); ?> />
+									<span class="fieldLabel">Delete source images</span>
 								</div>
 							</div>
 						</fieldset>

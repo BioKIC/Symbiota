@@ -2,7 +2,7 @@
 
 namespace Faker;
 
-use Psr\Container\ContainerInterface;
+use Faker\Container\ContainerInterface;
 
 /**
  * @property string $citySuffix
@@ -255,7 +255,7 @@ use Psr\Container\ContainerInterface;
  *
  * @property string $timezone
  *
- * @method string timezone()
+ * @method string timezone($countryCode = null)
  *
  * @property void $setDefaultTimezone
  *
@@ -513,6 +513,10 @@ use Psr\Container\ContainerInterface;
  *
  * @method string chrome()
  *
+ * @property string $msedge
+ *
+ * @method string msedge()
+ *
  * @property string $firefox
  *
  * @method string firefox()
@@ -537,6 +541,10 @@ use Psr\Container\ContainerInterface;
  *
  * @method string macPlatformToken()
  *
+ * @property string $iosMobileToken
+ *
+ * @method string iosMobileToken()
+ *
  * @property string $linuxPlatformToken
  *
  * @method string linuxPlatformToken()
@@ -559,7 +567,7 @@ class Generator
 
     public function __construct(ContainerInterface $container = null)
     {
-        $this->container = $container ?: Extension\ContainerBuilder::getDefault();
+        $this->container = $container ?: Container\ContainerBuilder::getDefault();
     }
 
     /**
@@ -576,7 +584,7 @@ class Generator
         if (!$this->container->has($id)) {
             throw new Extension\ExtensionNotFound(sprintf(
                 'No Faker extension with id "%s" was loaded.',
-                $id
+                $id,
             ));
         }
 
@@ -885,7 +893,7 @@ class Generator
         return $this->ext(Extension\NumberExtension::class)->randomFloat(
             $nbMaxDecimals !== null ? (int) $nbMaxDecimals : null,
             (float) $min,
-            $max !== null ? (float) $max : null
+            $max !== null ? (float) $max : null,
         );
     }
 
@@ -903,7 +911,7 @@ class Generator
     {
         return $this->ext(Extension\NumberExtension::class)->randomNumber(
             $nbDigits !== null ? (int) $nbDigits : null,
-            (bool) $strict
+            (bool) $strict,
         );
     }
 

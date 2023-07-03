@@ -51,7 +51,7 @@ class ImageCleaner extends Manager{
 		return $retArr;
 	}
 
-	public function buildThumbnailImages(){
+	public function buildThumbnailImages($limit){
 		$this->imgManager = new ImageShared();
 		$this->imgManager->setTestOrientation($this->testOrientation);
 		//Get image recordset to be processed
@@ -59,8 +59,8 @@ class ImageCleaner extends Manager{
 		if($this->collid) $sql .= ', o.catalognumber FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid ';
 		else $sql .= 'FROM images i ';
 		if($this->tidArr) $sql .= 'INNER JOIN taxaenumtree e ON i.tid = e.tid ';
-		$sql .= $this->getSqlWhere().'ORDER BY RAND()';
-		//echo $sql; exit;
+		$sql .= $this->getSqlWhere() . 'ORDER BY RAND()';
+		if($limit) $sql .= 'LIMIT ' . $limit;
 		$result = $this->conn->query($sql);
 		$cnt = 0;
 		if($this->verboseMode > 1) echo '<ul style="margin-left:15px;">';
@@ -92,7 +92,9 @@ class ImageCleaner extends Manager{
 			$this->conn->autocommit(true);
 
 			$setFormat = ($row->format?false:true);
-			if(!$this->buildImageDerivatives($imgId, $row->catalognumber, $row->url, $row->thumbnailurl, $row->originalurl, $setFormat)){
+			$catNum = '';
+			if(isset($row->catalognumber)) $catNum = $row->catalognumber;
+			if(!$this->buildImageDerivatives($imgId, $catNum, $row->url, $row->thumbnailurl, $row->originalurl, $setFormat)){
 				$this->logOrEcho($this->errorMessage, 1);
 				//$tagSql = 'UPDATE images SET thumbnailurl = "" WHERE (imgid = '.$imgId.') AND thumbnailurl LIKE "processing %"';
 				//$this->conn->query($tagSql);
@@ -350,7 +352,7 @@ class ImageCleaner extends Manager{
 		$sql = 'SELECT COUNT(i.imgid) AS cnt '.
 			'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
 			'WHERE (o.collid = '.$this->collid.') AND (i.thumbnailurl LIKE "%'.$domain.'/%" OR i.thumbnailurl LIKE "/%") '.
-			'AND IFNULL(i.originalurl,url) LIKE "http%" AND (IFNULL(i.originalurl,url) NOT LIKE "%'.$domain.'/%") ';
+			'AND IFNULL(i.originalurl, i.url) LIKE "http%" AND (IFNULL(i.originalurl, i.url) NOT LIKE "%'.$domain.'/%") ';
 		//echo $sql;
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
@@ -427,25 +429,31 @@ class ImageCleaner extends Manager{
 	}
 
 	private function getRemoteImageSql($postArr){
-		$domain = $_SERVER['HTTP_HOST'];
+		$domain = $this->getDomain();
 		$sql = 'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
 			'WHERE (o.collid = '.$this->collid.') AND (i.thumbnailurl LIKE "%'.$domain.'/%" OR i.thumbnailurl LIKE "/%") '.
 			'AND IFNULL(i.originalurl,url) LIKE "http%" AND IFNULL(i.originalurl,url) NOT LIKE "%'.$domain.'/%" ';
-		if(array_key_exists('catNumHigh', $postArr) && $postArr['catNumHigh']){
+		$catNumLow = '';
+		if(isset($postArr['catNumLow'])) $catNumLow = filter_var($postArr['catNumLow']);
+		$catNumHigh = '';
+		if(isset($postArr['catNumHigh'])) $catNumHigh = filter_var($postArr['catNumHigh']);
+		$catNumList = '';
+		if(isset($postArr['catNumList'])) $catNumList = filter_var($postArr['catNumList']);
+		if($catNumHigh){
 			// Catalog numbers are given as a range
-			if(is_numeric($postArr['catNumLow']) && is_numeric($postArr['catNumHigh'])){
-				$sql .= 'AND (o.catalognumber BETWEEN '.$postArr['catNumLow'].' AND '.$postArr['catNumHigh'].') ';
+			if(is_numeric($catNumLow) && is_numeric($catNumHigh)){
+				$sql .= 'AND (o.catalognumber BETWEEN '.$catNumLow.' AND '.$catNumHigh.') ';
 			}
 			else{
-				$sql .= 'AND (o.catalognumber BETWEEN "'.$postArr['catNumLow'].'" AND "'.$postArr['catNumHigh'].'") ';
+				$sql .= 'AND (o.catalognumber BETWEEN "'.$catNumLow.'" AND "'.$catNumHigh.'") ';
 			}
 		}
-		elseif(array_key_exists('catNumLow', $postArr) && $postArr['catNumLow']){
+		elseif($catNumLow){
 			// Catalog numbers are given as a single value
-			$sql .= 'AND (o.catalognumber = "'.$postArr['catNumLow'].'") ';
+			$sql .= 'AND (o.catalognumber = "'.$catNumLow.'") ';
 		}
-		elseif(array_key_exists('catNumList', $postArr) && $postArr['catNumList']){
-			$catNumList = preg_replace('/\s+/','","',str_replace(array("\r\n","\r","\n",','),' ',trim($postArr['catNumList'])));
+		elseif($catNumList){
+			$catNumList = preg_replace('/\s+/', '","', str_replace(array("\r\n", "\r", "\n", ','), ' ', trim($catNumList)));
 			if($catNumList) $sql .= 'AND (o.catalognumber IN("'.$catNumList.'")) ';
 		}
 		return $sql;

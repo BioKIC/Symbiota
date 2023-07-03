@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceDataset.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/datasets/datasetmanager.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/datasets/datasetmanager.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/datasets/datasetmanager.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/datasets/datasetmanager.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -27,21 +29,21 @@ if($SYMB_UID == $mdArr['uid']){
 elseif(isset($mdArr['roles'])){
 	if(in_array('DatasetAdmin',$mdArr['roles'])){
 		$isEditor = 1;
-		$role = 'administrator';
+		$role = $LANG['ADMINISTRATOR'];
 	}
 	elseif(in_array('DatasetEditor',$mdArr['roles'])){
 		$isEditor = 2;
-		$role = 'editor';
-		$roleLabel = 'Can add and remove occurrences only';
+		$role = $LANG['EDITOR'];
+		$roleLabel = $LANG['ROLE_LABEL_EDITOR'];
 	}
 	elseif(in_array('DatasetReader',$mdArr['roles'])){
 		$isEditor = 3;
-		$role = 'read access only';
+		$role = $LANG['READ_ACCESS'];
 	}
 }
 elseif($IS_ADMIN){
 	$isEditor = 1;
-	$role = 'SuperAdmin';
+	$role = $LANG['SUPERADMIN'];
 }
 
 $statusStr = '';
@@ -61,7 +63,7 @@ if($isEditor){
 			$isPublic = (isset($_POST['ispublic'])&&is_numeric($_POST['ispublic'])?1:0);
 			if($datasetManager->editDataset($_POST['datasetid'],$_POST['name'],$_POST['notes'],$_POST['description'],$isPublic)){
 				$mdArr = $datasetManager->getDatasetMetadata($datasetId);
-				$statusStr = 'Success! Dataset edits saved. ';
+				$statusStr = $LANG['DS_EDITS_SAVED'];
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -69,7 +71,7 @@ if($isEditor){
 		}
 		elseif($action == 'Merge'){
 			if($datasetManager->mergeDatasets($_POST['dsids[]'])){
-				$statusStr = 'Datasets merged successfully';
+				$statusStr = $LANG['DS_MERGED'];
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -77,7 +79,7 @@ if($isEditor){
 		}
 		elseif($action == 'Clone (make copy)'){
 			if($datasetManager->cloneDatasets($_POST['dsids[]'])){
-				$statusStr = 'Datasets cloned successfully';
+				$statusStr = $LANG['DS_CLONED'];
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -85,7 +87,7 @@ if($isEditor){
 		}
 		elseif($action == 'Delete Dataset'){
 			if($datasetManager->deleteDataset($_POST['datasetid'])){
-				header("Location: index.php");
+				header('Location: index.php');
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -93,7 +95,7 @@ if($isEditor){
 		}
 		elseif($action == 'addUser'){
 			if($datasetManager->addUser($datasetId,$_POST['uid'],$_POST['role'])){
-				$statusStr = 'User added successfully';
+				$statusStr = $LANG['USER_ADDED'];
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -101,7 +103,7 @@ if($isEditor){
 		}
 		elseif($action == 'DelUser'){
 			if($datasetManager->deleteUser($datasetId,$_POST['uid'],$_POST['role'])){
-				$statusStr = 'User removed successfully';
+				$statusStr = $LANG['USER_REMOVED'];
 			}
 			else{
 				$statusStr = implode(',',$datasetManager->getErrorArr());
@@ -114,7 +116,7 @@ if($isEditor){
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>">
-		<title><?php echo $DEFAULT_TITLE; ?> Occurrence Dataset Manager</title>
+		<title><?php echo $DEFAULT_TITLE.' '.$LANG['DS_OCC_MANAGER']; ?></title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
@@ -156,7 +158,7 @@ if($isEditor){
 				$('#tabs').tabs({
 					active: <?php echo $tabIndex; ?>,
 					beforeLoad: function( event, ui ) {
-						$(ui.panel).html("<p>Loading...</p>");
+						$(ui.panel).html("<p><?php echo $LANG['LOADING']; ?>...</p>");
 					}
 				});
 
@@ -189,17 +191,17 @@ if($isEditor){
 					var dbElement = dbElements[i];
 					if(dbElement.checked) return true;
 				}
-				alert("Please select at least one dataset!");
+				alert("<?php echo $LANG['PLS_SELECT_DS']; ?>");
 
 				var confirmStr = '';
 				if(f.submitaction.value == "Merge"){
-					confirmStr = 'Are you sure you want to merge selected datasets?';
+					confirmStr = '<?php echo $LANG['SURE_MERGE_DS']; ?>';
 				}
 				else if(f.submitaction.value == "Clone (make copy)"){
-					confirmStr = 'Are you sure you want to clone selected datasets?';
+					confirmStr = '<?php echo $LANG['SURE_CLONE_DS']; ?>';
 				}
 				else if(f.submitaction.value == "Delete"){
-					confirmStr = 'Are you sure you want to delete selected datasets?';
+					confirmStr = '<?php echo $LANG['SURE_DEL_DS']; ?>';
 				}
 				if(confirmStr == '') return true;
 				return confirm(confirmStr);
@@ -207,7 +209,7 @@ if($isEditor){
 
 			function validateEditForm(f){
 				if(f.name.value == ''){
-					alert("Dataset name cannot be null");
+					alert("<?php echo $LANG['DS_NOT_NULL']; ?>");
 					return false;
 				}
 				return true;
@@ -224,7 +226,7 @@ if($isEditor){
 					}
 				}
 				if(!occidChecked){
-				   	alert("Please select at least one specimen!");
+				   	alert("<?php echo $LANG['PLS_SEL_SPC']; ?>");
 				   	return false;
 				}
 				if(isDownloadAction){
@@ -236,7 +238,7 @@ if($isEditor){
 
 			function validateUserAddForm(f){
 				if(f.uid.value == ""){
-					alert("Select a user from the list");
+					alert("<?php echo $LANG['SEL_USER_LIST']; ?>");
 					return false;
 				}
 				return true;
@@ -271,38 +273,38 @@ if($isEditor){
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href='../../index.php'>Home</a> &gt;&gt;
-		<a href="../../profile/viewprofile.php?tabindex=1">My Profile</a> &gt;&gt;
+		<a href='../../index.php'><?php echo $LANG['HOME']; ?></a> &gt;&gt;
+		<a href="../../profile/viewprofile.php?tabindex=1"><?php echo $LANG['MY_PROF']; ?></a> &gt;&gt;
 		<a href="index.php">
-			Return to Dataset Listing
+			<?php echo $LANG['RETURN_DS_LISTING']; ?>
 		</a> &gt;&gt;
-		<b>Dataset Manager</b>
+		<b><?php echo $LANG['DS_MANAGER']; ?></b>
 	</div>
 	<!-- This is inner text! -->
 	<div id="innertext">
 		<?php
 		if($statusStr){
 			$color = 'green';
-			if(strpos($statusStr,'ERROR') !== false) $color = 'red';
-			elseif(strpos($statusStr,'WARNING') !== false) $color = 'orange';
-			elseif(strpos($statusStr,'NOTICE') !== false) $color = 'yellow';
+			if(strpos($statusStr,$LANG['ERROR']) !== false) $color = 'red';
+			elseif(strpos($statusStr,$LANG['WARNING']) !== false) $color = 'orange';
+			elseif(strpos($statusStr,$LANG['NOTICE']) !== false) $color = 'yellow';
 			echo '<div style="margin:15px;color:'.$color.';">';
 			echo $statusStr;
 			echo '</div>';
 		}
 		if($datasetId){
 			echo '<div style="margin:10px 0px 5px 20px;font-weight:bold;font-size:130%;">'.$mdArr['name'].'</div>';
-			if($role) echo '<div style="margin-left:20px" title="'.$roleLabel.'">Role: '.$role.'</div>';
+			if($role) echo '<div style="margin-left:20px" title="'.$roleLabel.'">'.$LANG['ROLE'].': '.$role.'</div>';
 			if($isEditor){
 				?>
 				<div id="tabs" style="margin:10px;">
 					<ul>
-						<li><a href="#occurtab"><span>Occurrence List</span></a></li>
+						<li><a href="#occurtab"><span><?php echo $LANG['OCC_LIST']; ?></span></a></li>
 						<?php
 						if($isEditor == 1){
 							?>
-							<li><a href="#admintab"><span>General Management</span></a></li>
-							<li><a href="#accesstab"><span>User Access</span></a></li>
+							<li><a href="#admintab"><span><?php echo $LANG['GEN_MANAGEMENT']; ?></span></a></li>
+							<li><a href="#accesstab"><span><?php echo $LANG['USER_ACCESS']; ?></span></a></li>
 							<?php
 						}
 						?>
@@ -313,15 +315,15 @@ if($isEditor){
 							?>
 							<form name="occurform" action="datasetmanager.php" method="post" onsubmit="return validateOccurForm(this)">
 								<div style="float:right;margin-right:10px">
-									<b>Count: <?php echo count($occArr); ?> records</b>
+									<?php echo '<b>'.$LANG['COUNT'].': '.count($occArr).' '.$LANG['RECORDS'].'</b>'; ?>
 								</div>
 								<table class="styledtable" style="font-family:Arial;font-size:12px;">
 									<tr>
-										<th><input name="" value="" type="checkbox" onclick="selectAll(this);" title="Select/Deselect all Specimens" /></th>
-										<th>catalog #</th>
-										<th>Collector</th>
-										<th>Scientific Name</th>
-										<th>Locality</th>
+										<th><input name="" value="" type="checkbox" onclick="selectAll(this);" title="<?php echo $LANG['SEL_DESEL_SPCS']; ?>" /></th>
+										<th><?php echo $LANG['CAT_NUM']; ?></th>
+										<th><?php echo $LANG['COLLECTOR']; ?></th>
+										<th><?php echo $LANG['SCI_NAME']; ?></th>
+										<th><?php echo $LANG['LOCALITY']; ?></th>
 									</tr>
 									<?php
 									$trCnt = 0;
@@ -357,7 +359,7 @@ if($isEditor){
 									<?php
 									if($occArr && $isEditor < 3){
 										?>
-										<button type="submit" name="submitaction" value="Remove Selected Occurrences">Remove Selected Occurrences</button>
+										<button type="submit" name="submitaction" value="Remove Selected Occurrences"><?php echo $LANG['REM_SEL_OCCS']; ?></button>
 										<?php
 									}
 									?>
@@ -367,15 +369,15 @@ if($isEditor){
 								<form name="exportAllForm" action="../download/index.php" method="post" onsubmit="targetDownloadPopup(this)">
 									<input name="searchvar" type="hidden" value="datasetid=<?php echo $datasetId; ?>" />
 									<input name="dltype" type="hidden" value="specimen" />
-									<button type="submit" name="submitaction" value="exportAll">Export Dataset</button>
+									<button type="submit" name="submitaction" value="exportAll"><?php echo $LANG['EXPORT_DS']; ?></button>
 								</form>
 							</div>
 							<?php
 						}
 						else{
 							?>
-							<div style="font-weight:bold; margin:15px">There are not yet any occurrences linked to this dataset</div>
-							<div style="margin:15px">You can link occurrences via the <a href="../index.php">occurrence search page</a> or via any of the the occurrence profile pages</div>
+							<div style="font-weight:bold; margin:15px"><?php echo $LANG['NO_OCCS_DS']; ?></div>
+							<div style="margin:15px"><?php echo $LANG['LINK_OCCS_VIA'].' <a href="../index.php">'.$LANG['OCC_SEARCH'].'</a> '.$LANG['OR_VIA_OCC_PROF']; ?></div>
 							<?php
 						}
 						?>
@@ -385,40 +387,40 @@ if($isEditor){
 						?>
 						<div id="admintab">
 							<fieldset style="padding:15px;margin:15px;">
-								<legend><p><b>Editor</b></p></legend>
+								<legend><p><b><?php echo $LANG['EDITOR']; ?></b></p></legend>
 								<form name="editform" action="datasetmanager.php" method="post" onsubmit="return validateEditForm(this)">
 									<div>
-										<p><b>Name</p>
+										<p><b><?php echo $LANG['NAME']; ?></p>
 										<input name="name" type="text" value="<?php echo $mdArr['name']; ?>" style="width:70%" />
 									</div>
 									<div>
 										<p>
 											<input type="checkbox" name="ispublic" id="ispublic" value="1" <?php echo ($mdArr['ispublic']?'CHECKED':''); ?> />
-											<b>Publicly Visible</b>
+											<b><?php echo $LANG['PUB_VISIBLE']; ?></b>
 										</p>
 									</div>
 									<div>
-										<p><b>Notes (Internal usage, not displayed publicly)</b></p>
+										<p><b><?php echo $LANG['NOTES_INTERNAL']; ?></b></p>
 										<input name="notes" type="text" value="<?php echo $mdArr['notes']; ?>" style="width:70%" />
 									</div>
 									<div>
-										<p><b>Description</b></p>
+										<p><b><?php echo $LANG['DESCRIPTION']; ?></b></p>
 										<textarea name="description" id="description" cols="100" rows="10" width="70%"><?php echo $mdArr['description']; ?></textarea>
 									</div>
 									<div style="margin:15px;">
 										<input name="tabindex" type="hidden" value="1" />
 										<input name="datasetid" type="hidden" value="<?php echo $datasetId; ?>" />
-										<input name="submitaction" type="submit" value="Save Edits" />
+										<button name="submitaction" type="submit" value="Save Edits" ><?php echo $LANG['SAVE_EDITS']; ?></button>
 									</div>
 								</form>
 							</fieldset>
 							<fieldset style="padding:15px;margin:15px;">
-								<legend><b>Delete Dataset</b></legend>
-								<form name="editform" action="datasetmanager.php" method="post" onsubmit="return confirm('Are you sure you want to permanently delete this dataset?')">
+								<legend><b><?php echo $LANG['DEL_DS']; ?></b></legend>
+								<form name="editform" action="datasetmanager.php" method="post" onsubmit="return confirm('<?php echo $LANG['SURE_DEL_DS_PERM']; ?>')">
 									<div style="margin:15px;">
 										<input name="datasetid" type="hidden" value="<?php echo $datasetId; ?>" />
 										<input name="tabindex" type="hidden" value="1" />
-										<input name="submitaction" type="submit" value="Delete Dataset" />
+										<button name="submitaction" type="submit" value="Delete Dataset" ><?php echo $LANG['DEL_DS']; ?></button>
 									</div>
 								</form>
 							</fieldset>
@@ -442,7 +444,7 @@ if($isEditor){
 													?>
 													<li>
 														<?php echo $name; ?>
-														<form name="deluserform" method="post" action="datasetmanager.php" style="display:inline;" onsubmit="return confirm('Are you sure you want to remove <?php echo $name; ?>')">
+														<form name="deluserform" method="post" action="datasetmanager.php" style="display:inline;" onsubmit="return confirm('<?php echo $LANG['SURE_REM_USER'].' '.$name.'?'; ?>')">
 															<input name="submitaction" type="hidden" value="DelUser" />
 															<input name="role" type="hidden" value="<?php echo $roleStr; ?>" />
 															<input name="uid" type="hidden" value="<?php echo $uid; ?>" />
@@ -457,7 +459,7 @@ if($isEditor){
 											</ul>
 											<?php
 										}
-										else echo '<div style="margin:15px;">None Assigned</div>';
+										else echo '<div style="margin:15px;">'.$LANG['NONE_ASSIGNED'].'</div>';
 										?>
 									</div>
 									<?php
@@ -466,23 +468,23 @@ if($isEditor){
 							</div>
 							<div style="margin:15px;">
 								<fieldset>
-									<legend><p><b>Add User</b></legend>
+									<legend><p><b><?php echo $LANG['ADD_USER']; ?></b></legend>
 									<form name="addform" action="datasetmanager.php" method="post" onsubmit="return validateUserAddForm(this)">
-										<div title="Type login or last name and then select from list">
-											Login/Last Name:
+										<div title="<?php echo $LANG['TYPE_LOGIN']; ?>">
+											<?php echo $LANG['LOGIN_NAME']; ?>:
 											<input id="userinput" type="text" style="width:400px;" />
 											<input id="uid-add" name="uid" type="hidden" value="" />
 										</div>
-										Role:
+										<?php echo $LANG['ROLE']; ?>:
 										<select name="role">
-											<option value="DatasetAdmin">Full Access</option>
-											<option value="DatasetEditor">Read/Write Access</option>
-											<option value="DatasetReader">Read-Only Access</option>
+											<option value="DatasetAdmin"><?php echo $LANG['FULL_ACCESS']; ?></option>
+											<option value="DatasetEditor"><?php echo $LANG['READ_WRITE_ACCESS']; ?></option>
+											<option value="DatasetReader"><?php echo $LANG['READ_ACCESS']; ?></option>
 										</select>
 										<div style="margin:10px;">
 											<input name="tabindex" type="hidden" value="2" />
 											<input name="datasetid" type="hidden" value="<?php echo $datasetId; ?>" />
-											<button type="submit" name="submitaction" value="addUser">Add User</button>
+											<button type="submit" name="submitaction" value="addUser"><?php echo $LANG['ADD_USER']; ?></button>
 										</div>
 									</form>
 								</fieldset>
@@ -494,9 +496,9 @@ if($isEditor){
 				</div>
 				<?php
 			}
-			else echo '<div style="margin:30px">You are not authorized to view this dataset</div>';
+			else echo '<div style="margin:30px">'.$LANG['NOT_AUTH'].'</div>';
 		}
-		else echo '<div><b>ERROR: dataset id not identified</b></div>';
+		else echo '<div><b>'.$LANG['DS_NOT_IDENTIFIED'].'</b></div>';
 		?>
 	</div>
 	<?php

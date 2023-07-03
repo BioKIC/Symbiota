@@ -39,6 +39,7 @@ header {
   max-width: 100px;
   height: auto;
   object-fit: contain; /* scale image keeping proportions */
+  filter: brightness(1);
 }
 
 .top-brand .brand-name {
@@ -205,9 +206,8 @@ ul.menu {
   }
 
   .top-login {
-    grid-area: login;
-    justify-self: end;
-    padding-right: 3rem;
+    display: grid;
+    grid-template-columns: auto auto auto;
   }
 
   .top-brand {

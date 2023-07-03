@@ -1,6 +1,8 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCrowdSource.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/review.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/review.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/review.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../../profile/index.php?refurl=../collections/specprocessor/index.php?tabindex=1?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -39,7 +41,7 @@ $projArr = $csManager->getProjectDetails();
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE; ?> Crowdsourcing Reviewer</title>
+	<title><?php echo $DEFAULT_TITLE.' '.$LANG['CROWDSOURCING_REVIEW']; ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -83,12 +85,12 @@ $projArr = $csManager->getProjectDetails();
 </head>
 <body style="margin-left: 0px; margin-right: 0px;background-color:white;">
 	<div class='navpath'>
-		<a href="../../../index.php">Home</a> &gt;&gt;
-		<a href="index.php">Score Board</a> &gt;&gt;
+		<a href="../../../index.php"><?php echo $LANG['HOME']; ?></a> &gt;&gt;
+		<a href="index.php"><?php echo $LANG['SCORE_BOARD']; ?></a> &gt;&gt;
 		<?php
-		if($collid) echo '<a href="../index.php?tabindex=1&collid='.$collid.'">Control Panel</a> &gt;&gt;';
+		if($collid) echo '<a href="../index.php?tabindex=1&collid='.$collid.'">'.$LANG['CONTROL_PANEL'].'</a> &gt;&gt;';
 		?>
-		<b>Crowdsourcing Review</b>
+		<b><?php echo $LANG['CROWDSOURCING_REVIEW']; ?></b>
 	</div>
 	<div style="margin:10px;">
 		<?php
@@ -133,21 +135,21 @@ $projArr = $csManager->getProjectDetails();
 						<fieldset style="width:300px;text-align:left;">
 							<legend><b>Filter</b></legend>
 							<div style="margin:3px;">
-								<b>Review Status:</b>
+								<b><?php echo $LANG['REVIEW_STATUS']; ?>:</b>
 								<select name="rstatus" onchange="this.form.submit()">
-									<option value="5,10">All Records</option>
+									<option value="5,10"><?php echo $LANG['ALL_RECORDS']; ?></option>
 									<option value="5,10">----------------------</option>
-									<option value="5" <?php echo ($rStatus=='5'?'SELECTED':''); ?>>Not Reviewed</option>
-									<option value="10" <?php echo ($rStatus=='10'?'SELECTED':''); ?>>Reviewed and Approved)</option>
+									<option value="5" <?php echo ($rStatus=='5'?'SELECTED':''); ?>><?php echo $LANG['NOT_REVIEWED']; ?></option>
+									<option value="10" <?php echo ($rStatus=='10'?'SELECTED':''); ?>><?php echo $LANG['REVIEWED_APPROVED']; ?></option>
 								</select>
 							</div>
 							<?php
 							if($collid){
 								?>
 								<div style="margin:3px;">
-									<b>Editor:</b>
+									<b><?php echo $LANG['EDITOR']; ?>:</b>
 									<select name="uid" onchange="this.form.submit()">
-										<option value="">All Editors</option>
+										<option value=""><?php echo $LANG['ALL_EDITORS']; ?></option>
 										<option value="">----------------------</option>
 										<?php
 										$editorArr = $csManager->getEditorList();
@@ -193,11 +195,11 @@ $projArr = $csManager->getProjectDetails();
 							<table class="styledtable" style="font-family:Arial;font-size:12px;">
 								<tr>
 									<?php
-									if($collid) echo '<th><span title="Select All"><input name="selectall" type="checkbox" onclick="selectAll(this)" /></span></th>';
+									if($collid) echo '<th><span title="'.$LANG['SELECT_ALL'].'"><input name="selectall" type="checkbox" onclick="selectAll(this)" /></span></th>';
 									?>
-									<th>Points</th>
-									<th>Comments</th>
-									<th>Edit</th>
+									<th><?php echo $LANG['POINTS']; ?></th>
+									<th><?php echo $LANG['COMMENTS']; ?></th>
+									<th><?php echo $LANG['EDIT']; ?></th>
 									<?php
 									//Display table header
 									$header = $csManager->getHeaderArr();
@@ -221,7 +223,7 @@ $projArr = $csManager->getProjectDetails();
 											echo '<td><input id="o-'.$occid.'" name="occid[]" type="checkbox" value="'.$occid.'" /></td>';
 											if(isset($rArr['points'])){
 												echo '<td><input name="p-'.$occid.'" type="text" value="'.$points.'" style="width:40px;" DISABLED /></td>';
-												echo '<td><b>Reviewed and Approved</b></td>';
+												echo '<td><b>'.$LANG['REVIEWED_APPROVED'].'</b></td>';
 											}
 											else{
 												echo '<td><select name="p-'.$occid.'" style="width:45px;" onchange="selectCheckbox('.$occid.')">';
@@ -274,14 +276,14 @@ $projArr = $csManager->getProjectDetails();
 									if($collid){
 										?>
 										<div style="margin:10px;clear:both;">
-											<button name="action" type="submit" value="submitReviews" >Submit Reviews</button>
+											<button name="action" type="submit" value="submitReviews" ><?php echo $LANG['SUBMIT_REVIEWS']; ?></button>
 											<input name="updateProcessingStatus" type="checkbox" value="1" checked />
-											Set Processing Status to reviewed (unchecking will leave Processing Status as set by user for each record)
+											<?php echo $LANG['SET_PROC_TO_REVIEWED']; ?>
 										</div>
-										<div id="showAddDiv" style="margin:10px"><a href="#" onclick="showAdditionalActions();return false;">Show Additional Actions</a></div>
+										<div id="showAddDiv" style="margin:10px"><a href="#" onclick="showAdditionalActions();return false;"><?php echo $LANG['SHOW_ADD_ACTIONS']; ?></a></div>
 										<div id="addActionsDiv" style="display:none;margin:20px 10px;">
-											<div><button name="action" type="submit" value="resetToNotReviewed" onclick="return confirm('Are you sure you want to change review status? All points and review comments will be deleted.')">Remove points and change to Not Reviewed</button></div>
-											<div style="margin-top:5px"><button name="action" type="submit" value="resetToOpen" onclick="return confirm('Are you sure you want to reset status? Editor, points, and review comments will be deleted.')">Move back into crowdsourcing queue as Open Records</button></div>
+											<div><button name="action" type="submit" value="resetToNotReviewed" onclick="return confirm('<?php echo $LANG['SURE_CHANGE_STATUS']; ?>')"><?php echo $LANG['REMOVE_POINTS_CHANGE_NR']; ?></button></div>
+											<div style="margin-top:5px"><button name="action" type="submit" value="resetToOpen" onclick="return confirm('<?php echo $LANG['SURE_RESET_STATUS']; ?>')"><?php echo $LANG['MOVE_BACK_QUEUE']; ?></button></div>
 										</div>
 										<?php
 									}
@@ -297,13 +299,13 @@ $projArr = $csManager->getProjectDetails();
 						?>
 						<div style="clear:both;margin:30px 15px;font-weight:bold;">
 							<div style="font-size:120%;">
-								There are no more records to review for this user
+								<?php echo $LANG['NO_RECS_THIS_USER']; ?>
 							</div>
 							<div style="margin:15px;">
-								Return to <a href="../index.php?tabindex=1&collid=<?php echo $collid; ?>">Control Panel</a>
+								<?php echo $LANG['RETURN_TO']; ?> <a href="../index.php?tabindex=1&collid=<?php echo $collid; ?>"><?php echo $LANG['CONTROL_PANEL']; ?></a>
 							</div>
 							<div style="margin:15px;">
-								Return to <a href="index.php">Score Board</a>
+								<?php echo $LANG['RETURN_TO']; ?> <a href="index.php"><?php echo $LANG['SCORE_BOARD']; ?></a>
 							</div>
 						</div>
 						<?php
@@ -311,7 +313,7 @@ $projArr = $csManager->getProjectDetails();
 					else{
 						?>
 						<div style="clear:both;font-size:120%;padding-top:30px;font-weight:bold;">
-							There are no records matching search criteria
+							<?php echo $LANG['NO_RECS']; ?>
 						</div>
 						<?php
 					}

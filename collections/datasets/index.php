@@ -120,7 +120,7 @@ elseif($action == 'addAllToDataset'){
 	 		<a href="#" onclick="toggle('adddiv');return false;"><img src="../../images/add.png" style="width:14px;" /></a>
 		</div>
 		<h2>Occurrence Dataset Management</h2>
-		<div>These tools will allow you to define and manage datasets profiles. Once a profile is created, you can link occurrence records via the occurrence search and display pages.</div>
+		<div>These tools will allow you to define and manage dataset profiles. Once a profile is created, you can link occurrence records via the occurrence search and display pages.</div>
 		<div id=adddiv style="display:none">
 			<fieldset>
 				<legend><b>Create New Dataset</b></legend>

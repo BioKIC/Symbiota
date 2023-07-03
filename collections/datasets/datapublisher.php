@@ -80,7 +80,7 @@ if ($isEditor) {
 	</style>
 	<script type="text/javascript" src="../../js/jquery.js"></script>
 	<script type="text/javascript" src="../../js/jquery-ui.js"></script>
-	<script type="text/javascript" src="../../js/symb/collections.gbifpublisher.js?ver=4"></script>
+	<script type="text/javascript" src="../../js/symb/collections.gbifpublisher.js"></script>
 	<script type="text/javascript">
 		function toggle(target) {
 			var objDiv = document.getElementById(target);
@@ -122,7 +122,7 @@ if ($isEditor) {
 		}
 
 		function validateGbifForm(f) {
-			var keyValue = f.organizationKey.value.trim();
+			let keyValue = f.organizationKey.value.trim();
 			if (keyValue == "") {
 				return true;
 			} else {
@@ -131,20 +131,21 @@ if ($isEditor) {
 					return false;
 				}
 				if ((keyValue.substring(8, 9) != "-") || keyValue.substring(13, 14) != "-" || keyValue.substring(18, 19) != "-" || keyValue.substring(23, 24) != "-") {
-					alert("<?php echo $LANG['KEY_NOT_VALID'] . ' 7a989612-d0ff-407a-8aba-0a6d06f58dca)'; ?>");
+					alert("<?php echo $LANG['KEY_NOT_VALID']; ?> " + keyValue);
 					return false;
 				}
-				$.ajax({
-						method: "GET",
-						dataType: "json",
-						url: "https://api.gbif.org/v1/organization/" + keyValue
-					})
-					.done(function(retJson) {
-						f.submit();
-					})
-					.fail(function() {
-						alert("<?php echo $LANG['KEY_INVALID_CONTACT']; ?>");
-					});
+				let action = "organizationExists";
+				let data = JSON.stringify({
+					organizationKey: keyValue
+				});
+				let response = "";
+				response = callGbifCurl(data, action);
+				if(response.includes("key")){
+					f.submit();
+				}
+				else {
+					alert("<?php echo $LANG['KEY_INVALID_CONTACT']; ?>");
+				}
 				return false;
 			}
 			return false;

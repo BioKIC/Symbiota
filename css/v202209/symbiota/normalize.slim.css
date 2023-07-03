@@ -43,8 +43,8 @@ select,
 textarea {
   font-family: inherit;
   font-size: 100%;
-  line-height: 1.15;
-  margin: 0;
+  line-height: 1.15rem;
+  margin: 0 0 .5rem 0;
 }
 button,
 input {

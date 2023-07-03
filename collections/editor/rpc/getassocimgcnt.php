@@ -1,16 +1,11 @@
 <?php
-	include_once('../../../config/dbconnection.php');
-	$con = MySQLiConnectionFactory::getCon("readonly");
-	$retCnt = 0;
-	$occId = $con->real_escape_string($_REQUEST['occid']);
+include_once('../../../config/symbini.php');
+include_once($SERVER_ROOT.'/classes/RpcOccurrenceEditor.php');
 
-	$sql = 'SELECT count(*) AS imgcnt FROM images WHERE occid = '.$occId;
-	//echo $sql;
-	$result = $con->query($sql);
-	while($row = $result->fetch_object()) {
-		$retCnt = $row->imgcnt;
-	}
-	$result->close();
-	$con->close();
-	echo $retCnt;
+$occid = $_POST['occid'];
+
+$editorManager = new RpcOccurrenceEditor();
+$retStr = $editorManager->getImageCount($occid);
+
+echo $retStr;
 ?>

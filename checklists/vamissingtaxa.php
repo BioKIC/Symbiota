@@ -69,7 +69,7 @@ if($isEditor){
                         Use the form to add the names and link the vouchers as a batch action.'); ?>
 					</div>
 					<form name="batchmissingform" method="post" action="voucheradmin.php" onsubmit="return validateBatchMissingForm(this.form);">
-						<table class="styledtable" style="font-family:Arial;font-size:12px;">
+						<table class="styledtable" style="width: 100%">
 							<tr>
 								<th>
 									<span title="Select All">
@@ -132,7 +132,7 @@ if($isEditor){
 						The correct name must already be added to the checklist before voucher can be linked.');
 					?>
 					</div>
-					<table class="styledtable" style="font-family:Arial;font-size:12px;">
+					<table class="styledtable" style="width: 100%">
 						<tr>
 							<th><?php echo (isset($LANG['SPEC_ID'])?$LANG['SPEC_ID']:'Specimen ID'); ?></th>
 							<th><?php echo (isset($LANG['LINK_TO'])?$LANG['LINK_TO']:'Link to'); ?></th>
@@ -147,8 +147,8 @@ if($isEditor){
 								<tr>
 									<td><?php echo $sciname; ?></td>
 									<td>
-										<input id="tid-<?php echo $occid; ?>" name="sciname" type="text" value="" onfocus="initAutoComplete('tid-<?php echo $occid; ?>')" />
-										<input name="formsubmit" type="button" value="Link Voucher" onclick="linkVoucher(<?php echo $occid.','.$clid; ?>)" title="<?php echo (isset($LANG['LINK_VOUCHER'])?$LANG['LINK_VOUCHER']:'Link Voucher'); ?>" />
+										<input id="tid-<?php echo $occid; ?>" class="taxon-input" name="sciname" type="text" onfocus="initAutoComplete('tid-<?php echo $occid; ?>')" />
+										<button type="button" value="Link Voucher" onclick="linkVoucher(<?php echo $occid.','.$clid; ?>)"><?php echo (isset($LANG['LINK_VOUCHER'])?$LANG['LINK_VOUCHER']:'Link Voucher'); ?></button>
 									</td>
 									<?php
 									echo '<td>';

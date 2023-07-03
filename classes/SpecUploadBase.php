@@ -334,8 +334,9 @@ class SpecUploadBase extends SpecUpload{
 			'generalnotes'=>'occurrenceremarks','plantdescription'=>'verbatimattributes','description'=>'verbatimattributes','specimendescription'=>'verbatimattributes',
 			'phenology'=>'reproductivecondition','field:habitat'=>'habitat','habitatdescription'=>'habitat','sitedeschabitat'=>'habitat','captivecultivated'=>'cultivationstatus',
 			'ometid'=>'exsiccatiidentifier','exsiccataeidentifier'=>'exsiccatiidentifier','exsnumber'=>'exsiccatinumber','exsiccataenumber'=>'exsiccatinumber',
-			'group'=>'paleo-lithogroup','preparationdetails'=>'materialsample-preparationprocess','materialsampletype'=>'materialsample-sampletype',
-			'lithostratigraphic'=>'paleo-lithology','imageurl'=>'associatedmedia','subject_references'=>'tempfield01','subject_recordid'=>'tempfield02'
+			'group'=>'paleo-lithogroup','materialsample-materialsampleid'=>'materialsample-guid','preparationdetails'=>'materialsample-preparationprocess',
+			'materialsampletype'=>'materialsample-sampletype','lithostratigraphic'=>'paleo-lithology','imageurl'=>'associatedmedia','subject_references'=>'tempfield01',
+			'subject_recordid'=>'tempfield02'
 		);
 		$autoMapExclude = array('institutioncode','collectioncode');
 
@@ -553,10 +554,7 @@ class SpecUploadBase extends SpecUpload{
 		if($this->collMetadataArr["managementtype"] == 'Snapshot' || $this->collMetadataArr["managementtype"] == 'Aggregate'){
 			//If collection is a snapshot, map upload to existing records. These records will be updated rather than appended
 			$this->outputMsg('<li>Linking records (e.g. matching Primary Identifier)... </li>');
-			$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON (u.dbpk = o.dbpk) AND (u.collid = o.collid) '.
-				'SET u.occid = o.occid '.
-				'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.dbpk IS NOT NULL) AND (o.dbpk IS NOT NULL)';
-			$this->conn->query($sql);
+			$this->updateOccidMatchingDbpk();
 		}
 
 		$this->prepareAssociatedMedia();
@@ -572,36 +570,15 @@ class SpecUploadBase extends SpecUpload{
 			}
 		}
 
-		//Prefrom general cleaning and parsing tasks
-		$this->recordCleaningStage1();
-
 		if($this->collMetadataArr["managementtype"] == 'Live Data' || $this->uploadType == $this->SKELETAL){
 			if($this->matchCatalogNumber){
-				//Match records based on Catalog Number
-				$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON (u.catalogNumber = o.catalogNumber) AND (u.collid = o.collid) '.
-					'SET u.occid = o.occid '.
-					'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.catalogNumber IS NOT NULL) AND (o.catalogNumber IS NOT NULL) ';
-				if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql .= ' AND o.observeruid = '.$this->observerUid;
-				if(!$this->conn->query($sql)){
-					$this->outputMsg('<li><span style="color:red;">Warning: unable to match on catalog number: '.$this->conn->error.'</span></li>');
+				if(!$this->updateOccidMatchingCatalogNumber()){
+					$this->outputMsg('<li><span style="color:red;">Warning: unable to match on catalog number: '.$this->errorStr.'</span></li>');
 				}
 			}
 			if($this->matchOtherCatalogNumbers){
-				//Match records based on other Catalog Numbers fields
-				$sql2 = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.collid = o.collid '.
-					'SET u.occid = o.occid '.
-					'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.otherCatalogNumbers = o.otherCatalogNumbers) ';
-				if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql2 .= ' AND o.observeruid = '.$this->observerUid;
-				if(!$this->conn->query($sql2)){
-					$this->outputMsg('<li><span style="color:red;">Warning: unable to match on otherCatalogNumbers: '.$this->conn->error.'</span></li>');
-				}
-				$sql2b = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.collid = o.collid '.
-				    'INNER JOIN omoccuridentifiers i ON o.occid = i.occid '.
-				 	'SET u.occid = o.occid '.
-					'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.othercatalogNumbers = i.identifiervalue) ';
-				if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql2b .= ' AND o.observeruid = '.$this->observerUid;
-				if(!$this->conn->query($sql2b)){
-				    $this->outputMsg('<li><span style="color:red;">Warning: unable to match on omoccuridentifiers: '.$this->conn->error.'</span></li>');
+				if(!$this->updateOccidMatchingOtherCatalogNumbers()){
+					$this->outputMsg('<li><span style="color:red;">Warning: unable to match on otherCatalogNumbers/omoccuridentifiers: '.$this->errorStr.'</span></li>');
 				}
 			}
 		}
@@ -612,6 +589,9 @@ class SpecUploadBase extends SpecUpload{
 				$this->outputMsg('<li><span style="color:red;">Warning: issue attempting to preserve explicitly defined GUID (e.g. externally generated GUIDs) within a Live Managed collection: '.$this->conn->error.'</span></li>');
 			}
 		}
+
+		//Prefrom general cleaning and parsing tasks
+		$this->recordCleaningStage1();
 
 		$this->cleanImages();
 		//Reset $treansferCnt so that count is accurate since some records may have been deleted due to data integrety issues
@@ -645,8 +625,8 @@ class SpecUploadBase extends SpecUpload{
 		$this->conn->query($sql);
 
 		$sql = 'UPDATE uploadspectemp u '.
-			'SET u.endDayOfYear = DAYOFYEAR(u.LatestDateCollected) '.
-			'WHERE u.collid IN('.$this->collId.') AND u.endDayOfYear IS NULL AND u.LatestDateCollected IS NOT NULL';
+			'SET u.endDayOfYear = DAYOFYEAR(u.eventDate2) '.
+			'WHERE u.collid IN('.$this->collId.') AND u.endDayOfYear IS NULL AND u.eventDate2 IS NOT NULL';
 		$this->conn->query($sql);
 
 		$sql = 'UPDATE IGNORE uploadspectemp u '.
@@ -723,6 +703,25 @@ class SpecUploadBase extends SpecUpload{
 		$sql = 'UPDATE uploadspectemp '.
 			'SET localitySecurityReason = "Locked: set via import file" '.
 			'WHERE localitySecurity > 0 AND localitySecurityReason IS NULL AND collid IN('.$this->collId.')';
+		$this->conn->query($sql);
+
+		if($this->sourceDatabaseType == 'specify'){
+			$sql = 'UPDATE uploaddetermtemp SET isCurrent = 1 WHERE collid IN('.$this->collId.')';
+			$this->conn->query($sql);
+		}
+
+		$this->outputMsg('<li style="margin-left:10px;">Ensuring current identifications are set properly set within central occurrence table...</li>');
+		$sql = 'UPDATE uploadspectemp s INNER JOIN uploaddetermtemp d ON s.dbpk = d.dbpk
+			SET s.sciname = d.sciname, s.identifiedBy = if(d.identifiedBy="", NULL, d.identifiedBy), s.dateIdentified = if(d.dateIdentified="", NULL, d.dateIdentified),
+			s.scientificNameAuthorship = d.scientificNameAuthorship, s.identificationQualifier = d.identificationQualifier,
+			s.identificationReferences = d.identificationReferences, s.identificationRemarks = d.identificationRemarks
+			WHERE s.collid IN('.$this->collId.') AND d.collid IN('.$this->collId.') AND d.isCurrent = 1 AND s.sciname IS NULL AND s.identifiedBy IS NULL AND s.dateIdentified IS NULL ';
+		$this->conn->query($sql);
+
+		$this->outputMsg('<li style="margin-left:10px;">Setting basisOfRecord for new records, if not designated within import file...</li>');
+		$borValue = 'PreservedSpecimen';
+		if(strpos($this->collMetadataArr['colltype'], 'Observations') !== false) $borValue = 'HumanObservation';
+		$sql = 'UPDATE uploadspectemp SET basisOfRecord = "'.$borValue.'" WHERE basisOfRecord IS NULL AND occid IS NULL';
 		$this->conn->query($sql);
 	}
 
@@ -827,12 +826,6 @@ class SpecUploadBase extends SpecUpload{
 	protected function recordCleaningStage2(){
 		$this->outputMsg('<li>Starting Stage 2 cleaning</li>');
 
-		//Make sure default value, based on management type, is set for basisOfRecord
-		$borValue = 'HumanObservation';
-		if($this->collMetadataArr['colltype'] == 'Preserved Specimens') $borValue = 'HumanObservation';
-		$sql = 'UPDATE uploadspectemp SET basisOfRecord = "'.$borValue.'" WHERE basisOfRecord IS NULL AND occid IS NULL';
-		$this->conn->query($sql);
-
 		if($this->uploadType == $this->NFNUPLOAD){
 			//Remove specimens without links back to source
 			$sql = 'DELETE FROM uploadspectemp WHERE (occid IS NULL) AND (collid IN('.$this->collId.'))';
@@ -846,7 +839,7 @@ class SpecUploadBase extends SpecUpload{
 				$this->outputMsg('<li style="margin-left:10px;">Populating source identifiers (dbpk) to relink specimens processed within portal...</li>');
 				$sql = 'UPDATE IGNORE uploadspectemp u INNER JOIN omoccurrences o ON (u.catalogNumber = o.catalogNumber) AND (u.collid = o.collid) '.
 					'SET u.occid = o.occid, o.dbpk = u.dbpk '.
-					'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.catalogNumber IS NOT NULL) AND (o.catalogNumber IS NOT NULL) AND (o.dbpk IS NULL) ';
+					'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (o.dbpk IS NULL) AND (u.catalogNumber IS NOT NULL) ';
 				$this->conn->query($sql);
 			}
 
@@ -951,11 +944,8 @@ class SpecUploadBase extends SpecUpload{
 					$this->outputMsg('<li>FAILED! ERROR: '.$this->conn->error.'</li> ');
 					//$this->outputMsg($sql);
 				}
-				$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.dbpk = o.dbpk '.
-					'SET u.occid = o.occid '.
-					'WHERE o.collid = '.$this->collId.' AND u.collid = '.$this->collId.' AND u.occid IS NULL';
-				if(!$this->conn->query($sql)){
-					$this->outputMsg('<li>ERROR updating occid on recent Insert batch: '.$this->conn->error.'</li> ');
+				if(!$this->updateOccidMatchingDbpk()){
+					$this->outputMsg('<li>ERROR updating occid on recent Insert batch: '.$this->errorStr.'</li> ');
 				}
 				$this->outputMsg('<li style="margin-left:10px">'.$cnt.': '.$insertCnt.' inserted</li>');
 				$insertTarget -= $transactionInterval;
@@ -964,20 +954,13 @@ class SpecUploadBase extends SpecUpload{
 
 			//Link all newly intersted records back to uploadspectemp in prep for loading determiantion history and associatedmedia
 			$this->outputMsg('<li>Linking records in prep for loading extended data...</li>');
-			//Update occid by matching dbpk
-			$sqlOcc1 = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON (u.dbpk = o.dbpk) AND (u.collid = o.collid) '.
-				'SET u.occid = o.occid '.
-				'WHERE (u.occid IS NULL) AND (u.dbpk IS NOT NULL) AND (u.collid IN('.$this->collId.'))';
-			if(!$this->conn->query($sqlOcc1)){
-				$this->outputMsg('<li>ERROR updating occid after occurrence insert: '.$this->conn->error.'</li>');
+			if(!$this->updateOccidMatchingDbpk()){
+				$this->outputMsg('<li>ERROR updating occid after occurrence insert: '.$this->errorStr.'</li>');
 			}
 			//Update occid by linking catalognumbers
-			$sqlOcc2 = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON (u.catalogNumber = o.catalogNumber) AND (u.collid = o.collid) '.
-				'SET u.occid = o.occid '.
-				'WHERE (u.collid IN('.$this->collId.')) AND (u.occid IS NULL) AND (u.catalogNumber IS NOT NULL) AND (o.catalogNumber IS NOT NULL) ';
-			if(!$this->conn->query($sqlOcc2)){
-				$this->outputMsg('<li>ERROR updating occid (2nd step) after occurrence insert: '.$this->conn->error.'</li>');
-			}
+			//if(!$this->updateOccidMatchingCatalogNumber()){
+				//$this->outputMsg('<li>ERROR updating occid (2nd step) after occurrence insert: '.$this->errorStr.'</li>');
+			//}
 
 			$this->transferExsiccati();
 			$this->transferGeneticLinks();
@@ -985,8 +968,8 @@ class SpecUploadBase extends SpecUpload{
 			$this->transferMaterialSampleData();
 
 			//Setup and add datasets and link datasets to current user
-
 		}
+		$this->setDeterminations();
 	}
 
 	private function versionInternalEdits(){
@@ -1116,7 +1099,7 @@ class SpecUploadBase extends SpecUpload{
 
 	private function transferGeneticLinks(){
 		$this->outputMsg('<li>Linking genetic records (aka associatedSequences)...</li>');
-		$sql = 'SELECT occid, associatedSequences FROM uploadspectemp WHERE occid IS NOT NULL AND associatedSequences IS NOT NULL ';
+		$sql = 'SELECT occid, associatedSequences FROM uploadspectemp WHERE collid IN('.$this->collId.') AND occid IS NOT NULL AND associatedSequences IS NOT NULL ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$seqArr = explode(';', str_replace(array(',','|',''),';',$r->associatedSequences));
@@ -1243,6 +1226,41 @@ class SpecUploadBase extends SpecUpload{
 				}
 			}
 			$rs->free();
+		}
+	}
+
+	private function setDeterminations(){
+		if($this->collId){
+			if($this->uploadType == $this->FILEUPLOAD || $this->uploadType == $this->SKELETAL){
+				//Reset existing current determinations to match fields in the omoccurrences table (e.g. import data changes, will equal current determinations)
+				$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.occid = o.occid
+					INNER JOIN omoccurdeterminations d ON o.occid = d.occid
+					SET d.sciname = o.sciname, d.identifiedBy = o.identifiedBy, d.dateIdentified = o.dateIdentified, d.family = o.family,
+					d.scientificNameAuthorship = o.scientificNameAuthorship, d.tidInterpreted = o.tidInterpreted, d.identificationQualifier = o.identificationQualifier,
+					d.identificationReferences = o.identificationReferences, d.identificationRemarks = o.identificationRemarks, d.taxonRemarks = o.taxonRemarks
+					WHERE o.collid = ? AND d.isCurrent = 1';
+				if($stmt = $this->conn->prepare($sql)){
+					$stmt->bind_param('i', $this->collId);
+					$stmt->execute();
+					if($stmt->error) $this->outputMsg('<li>ERROR resetting determinations: '.$stmt->error.'</li>');
+					$stmt->close();
+				}
+
+				//Add new determinations to omoccurdetermination table
+				$sql = 'INSERT INTO omoccurdeterminations(occid, sciname, identifiedBy, dateIdentified, family, scientificNameAuthorship, tidInterpreted, identificationQualifier,
+					identificationReferences, identificationRemarks, taxonRemarks, isCurrent)
+					SELECT o.occid, IFNULL(o.sciname, "undetermined") AS sciname, IFNULL(o.identifiedBy, "unknown") AS identifiedBy, IFNULL(o.dateIdentified, "s.d.") AS dateIdentified, o.family, o.scientificNameAuthorship, o.tidInterpreted, o.identificationQualifier,
+					o.identificationReferences, o.identificationRemarks, o.taxonRemarks, 1 AS isCurrent
+					FROM uploadspectemp u INNER JOIN omoccurrences o ON u.occid = o.occid
+					LEFT JOIN omoccurdeterminations d ON o.occid = d.occid
+					WHERE o.collid = ? AND d.occid IS NULL;';
+				if($stmt = $this->conn->prepare($sql)){
+					$stmt->bind_param('i', $this->collId);
+					$stmt->execute();
+					if($stmt->error) $this->outputMsg('<li>ERROR adding determinations: '.$stmt->error.'</li>');
+					$stmt->close();
+				}
+			}
 		}
 	}
 
@@ -1481,8 +1499,9 @@ class SpecUploadBase extends SpecUpload{
 
 		//Do some more cleaning of the data after it has been indexed in the omoccurrences table
 		$occurMain = new OccurrenceMaintenance($this->conn);
+		$occurMain->setCollidStr($this->collId);
 
-		if(!$occurMain->generalOccurrenceCleaning($this->collId)){
+		if(!$occurMain->generalOccurrenceCleaning()){
 			$errorArr = $occurMain->getErrorArr();
 			foreach($errorArr as $errorStr){
 				$this->outputMsg('<li style="margin-left:20px;">'.$errorStr.'</li>',1);
@@ -1490,10 +1509,10 @@ class SpecUploadBase extends SpecUpload{
 		}
 
 		$this->outputMsg('<li style="margin-left:10px;">Protecting sensitive species...</li>');
-		$protectCnt = $occurMain->protectRareSpecies($this->collId);
+		$protectCnt = $occurMain->protectRareSpecies();
 
 		$this->outputMsg('<li style="margin-left:10px;">Updating statistics...</li>');
-		if(!$occurMain->updateCollectionStats($this->collId)){
+		if(!$occurMain->updateCollectionStatsFull()){
 			$errorArr = $occurMain->getErrorArr();
 			foreach($errorArr as $errorStr){
 				$this->outputMsg('<li style="margin-left:20px;">'.$errorStr.'</li>',1);
@@ -1623,12 +1642,20 @@ class SpecUploadBase extends SpecUpload{
 				//Do some cleaning
 				//Populate sciname if null
 				if(!array_key_exists('sciname',$recMap) || !$recMap['sciname']){
-					if(array_key_exists("genus",$recMap)){
+					if(array_key_exists('genus',$recMap) && array_key_exists('specificepithet',$recMap) && array_key_exists('infraspecificepithet',$recMap)){
 						//Build sciname from individual units supplied by source
-						$sciName = $recMap["genus"];
-						if(array_key_exists("specificepithet",$recMap) && $recMap["specificepithet"]) $sciName .= " ".$recMap["specificepithet"];
-						if(array_key_exists("taxonrank",$recMap) && $recMap["taxonrank"]) $sciName .= " ".$recMap["taxonrank"];
-						if(array_key_exists("infraspecificepithet",$recMap) && $recMap["infraspecificepithet"]) $sciName .= " ".$recMap["infraspecificepithet"];
+						$sciName = $recMap['genus'];
+						if(array_key_exists('specificepithet',$recMap) && $recMap['specificepithet']) $sciName .= ' '.$recMap['specificepithet'];
+						if(array_key_exists('infraspecificepithet',$recMap) && $recMap['infraspecificepithet']){
+							if(array_key_exists('taxonrank',$recMap) && $recMap['taxonrank']){
+								$infraStr = $recMap['taxonrank'];
+								if($infraStr == 'subspecies') $infraStr = 'subsp.';
+								elseif($infraStr == 'ssp.') $infraStr = 'subsp.';
+								elseif($infraStr == 'variety') $infraStr = 'var.';
+								$sciName .= ' '.$infraStr;
+							}
+							$sciName .= ' '.$recMap['infraspecificepithet'];
+						}
 						$recMap['sciname'] = trim($sciName);
 					}
 				}
@@ -1647,24 +1674,23 @@ class SpecUploadBase extends SpecUpload{
 						$recMap['sciname'] = trim($parsedArr['unitname1'].' '.$parsedArr['unitname2'].' '.$parsedArr['unitind3'].' '.$parsedArr['unitname3']);
 					}
 				}
+				if(!isset($recMap['sciname']) || !$recMap['sciname']) return false;
 
-				if((isset($recMap['identifiedby']) && $recMap['identifiedby']) || (isset($recMap['dateidentified']) && $recMap['dateidentified']) || (isset($recMap['sciname']) && $recMap['sciname'])){
-					if(!isset($recMap['identifiedby']) || !$recMap['identifiedby']) $recMap['identifiedby'] = 'not specified';
-					if(!isset($recMap['dateidentified']) || !$recMap['dateidentified']) $recMap['dateidentified'] = 'not specified';
-					$sqlFragments = $this->getSqlFragments($recMap,$this->identFieldMap);
-					if($sqlFragments){
-						$sql = 'INSERT INTO uploaddetermtemp(collid'.$sqlFragments['fieldstr'].') VALUES('.$this->collId.$sqlFragments['valuestr'].')';
-						//echo "<div>SQL: ".$sql."</div>";
-						if($this->conn->query($sql)){
-							$this->identTransferCount++;
-							if($this->identTransferCount%1000 == 0) $this->outputMsg('<li style="margin-left:10px;">Count: '.$this->identTransferCount.'</li>');
-						}
-						else{
-							$outStr = '<li>FAILED adding identification history record #'.$this->identTransferCount.'</li>';
-							$outStr .= '<li style="margin-left:10px;">Error: '.$this->conn->error.'</li>';
-							$outStr .= '<li style="margin:0px 0px 10px 10px;">SQL: '.$sql.'</li>';
-							$this->outputMsg($outStr);
-						}
+				if(!isset($recMap['identifiedby'])) $recMap['identifiedby'] = '';
+				if(!isset($recMap['dateidentified'])) $recMap['dateidentified'] = '';
+				$sqlFragments = $this->getSqlFragments($recMap, $this->identFieldMap);
+				if($sqlFragments){
+					$sql = 'INSERT INTO uploaddetermtemp(collid'.$sqlFragments['fieldstr'].') VALUES('.$this->collId.$sqlFragments['valuestr'].')';
+					//echo '<div>SQL: '.$sql.'</div>'; exit;
+					if($this->conn->query($sql)){
+						$this->identTransferCount++;
+						if($this->identTransferCount%1000 == 0) $this->outputMsg('<li style="margin-left:10px;">Count: '.$this->identTransferCount.'</li>');
+					}
+					else{
+						$outStr = '<li>FAILED adding identification history record #'.$this->identTransferCount.'</li>';
+						$outStr .= '<li style="margin-left:10px;">Error: '.$this->conn->error.'</li>';
+						$outStr .= '<li style="margin:0px 0px 10px 10px;">SQL: '.$sql.'</li>';
+						$this->outputMsg($outStr);
 					}
 				}
 			}
@@ -1851,6 +1877,9 @@ class SpecUploadBase extends SpecUpload{
 						if($valueStr){
 							$sqlValues .= ',"'.$valueStr.'"';
 						}
+						elseif($symbField == 'identifiedby' || $symbField == 'dateidentified'){
+							$sqlValues .= ',""';
+						}
 						else{
 							$sqlValues .= ",NULL";
 						}
@@ -1925,17 +1954,79 @@ class SpecUploadBase extends SpecUpload{
 			$tPath .= '/';
 		}
 		if(file_exists($tPath.'downloads')){
-			$tPath .= 'downloads/';
+			$tPath .= 'data/';
 		}
 		$this->uploadTargetPath = $tPath;
 	}
 
 	public function addFilterCondition($columnName, $condition, $value){
 		if($columnName && ($value || $condition == 'ISNULL' || $condition == 'NOTNULL')){
-			$this->filterArr[strtolower($columnName)][$condition][] = strtolower(trim($value));
+			$this->filterArr[strtolower($columnName)][$condition][] = strtolower(trim($value,'; '));
 		}
 	}
 
+	//Occurrence PK coordination functions
+	private function updateOccidMatchingDbpk(){
+		$status = false;
+		$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.dbpk = o.dbpk AND u.collid = o.collid
+			SET u.occid = o.occid
+			WHERE u.occid IS NULL AND u.dbpk IS NOT NULL AND o.collid = ?';
+		if($stmt = $this->conn->prepare($sql)){
+			$stmt->bind_param('i', $this->collId);
+			$stmt->execute();
+			if(!$stmt->error) $status = true;
+			else $this->errorStr = $stmt->error;
+			$stmt->close();
+		}
+		return $status;
+	}
+
+	private function updateOccidMatchingCatalogNumber(){
+		$status = false;
+		$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.catalogNumber = o.catalogNumber AND u.collid = o.collid
+			SET u.occid = o.occid
+			WHERE u.occid IS NULL AND u.catalogNumber IS NOT NULL AND o.collid = ? ';
+		if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql .= ' AND o.observeruid = '.$this->observerUid;
+		if($stmt = $this->conn->prepare($sql)){
+			$stmt->bind_param('i', $this->collId);
+			$stmt->execute();
+			if(!$stmt->error) $status = true;
+			else $this->errorStr = $stmt->error;
+			$stmt->close();
+		}
+		return $status;
+	}
+
+	private function updateOccidMatchingOtherCatalogNumbers(){
+		$status = false;
+		$sql = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.otherCatalogNumbers = o.otherCatalogNumbers AND u.collid = o.collid
+			SET u.occid = o.occid
+			WHERE u.occid IS NULL AND u.otherCatalogNumbers IS NOT NULL AND o.collid = ? ';
+		if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql .= 'AND o.observeruid = '.$this->observerUid;
+		if($stmt = $this->conn->prepare($sql)){
+			$stmt->bind_param('i', $this->collId);
+			$stmt->execute();
+			if(!$stmt->error) $status = true;
+			else $this->errorStr = $stmt->error;
+			$stmt->close();
+		}
+
+		$sql2 = 'UPDATE uploadspectemp u INNER JOIN omoccurrences o ON u.collid = o.collid
+			INNER JOIN omoccuridentifiers i ON (o.occid = i.occid) AND (u.othercatalogNumbers = i.identifiervalue)
+			SET u.occid = o.occid
+			WHERE u.occid IS NULL AND o.collid = ? ';
+		if($this->collMetadataArr['colltype'] == 'General Observations' && $this->observerUid) $sql2 .= 'AND o.observeruid = '.$this->observerUid;
+		if($stmt2 = $this->conn->prepare($sql2)){
+			$stmt2->bind_param('i', $this->collId);
+			$stmt2->execute();
+			if(!$stmt2->error) $status = true;
+			else $this->errorStr = $stmt2->error;
+			$stmt2->close();
+		}
+		return $status;
+	}
+
+	//Data functions
 	private function getPaleoTerms(){
 		$paleoTermArr = array_merge($this->getPaleoDwcTerms(),$this->getPaleoSymbTerms());
 		sort($paleoTermArr);
@@ -1944,22 +2035,22 @@ class SpecUploadBase extends SpecUpload{
 
 	private function getPaleoDwcTerms(){
 		$paleoTermArr = array('paleo-earliesteonorlowesteonothem','paleo-latesteonorhighesteonothem','paleo-earliesteraorlowesterathem',
-				'paleo-latesteraorhighesterathem','paleo-earliestperiodorlowestsystem','paleo-latestperiodorhighestsystem','paleo-earliestepochorlowestseries',
-				'paleo-latestepochorhighestseries','paleo-earliestageorloweststage','paleo-latestageorhigheststage','paleo-lowestbiostratigraphiczone','paleo-highestbiostratigraphiczone');
+			'paleo-latesteraorhighesterathem','paleo-earliestperiodorlowestsystem','paleo-latestperiodorhighestsystem','paleo-earliestepochorlowestseries',
+			'paleo-latestepochorhighestseries','paleo-earliestageorloweststage','paleo-latestageorhigheststage','paleo-lowestbiostratigraphiczone','paleo-highestbiostratigraphiczone');
 		return $paleoTermArr;
 	}
 
 	private function getPaleoSymbTerms(){
 		$paleoTermArr = array('paleo-geologicalcontextid','paleo-lithogroup','paleo-formation','paleo-member','paleo-bed','paleo-eon','paleo-era','paleo-period','paleo-epoch',
-				'paleo-earlyinterval','paleo-lateinterval','paleo-absoluteage','paleo-storageage','paleo-stage','paleo-localstage','paleo-biota','paleo-biostratigraphy',
-				'paleo-taxonenvironment','paleo-lithology','paleo-stratremarks','paleo-element','paleo-slideproperties');
+			'paleo-earlyinterval','paleo-lateinterval','paleo-absoluteage','paleo-storageage','paleo-stage','paleo-localstage','paleo-biota','paleo-biostratigraphy',
+			'paleo-taxonenvironment','paleo-lithology','paleo-stratremarks','paleo-element','paleo-slideproperties');
 		return $paleoTermArr;
 	}
 
 	private function getMaterialSampleTerms(){
-		$msTermArr = array('materialSample-materialSampleID','materialSample-sampleType','materialSample-catalogNumber','materialSample-sampleCondition','materialSample-disposition',
-				'materialSample-preservationType','materialSample-preparationProcess','materialSample-preparationDate','materialSample-individualCount',
-				'materialSample-sampleSize','materialSample-storageLocation','materialSample-remarks');
+		$msTermArr = array('materialSample-guid','materialSample-sampleType','materialSample-catalogNumber','materialSample-sampleCondition','materialSample-disposition',
+			'materialSample-preservationType','materialSample-preparationProcess','materialSample-preparationDate','materialSample-individualCount',
+			'materialSample-sampleSize','materialSample-storageLocation','materialSample-remarks');
 		//Get dynamic fields
 		$sql = 'SELECT t.term FROM ctcontrolvocab v INNER JOIN ctcontrolvocabterm t ON v.cvID = t.cvID WHERE v.tableName = "ommaterialsampleextended" AND v.fieldName = "fieldName"';
 		$rs = $this->conn->query($sql);
@@ -1974,8 +2065,8 @@ class SpecUploadBase extends SpecUpload{
 		$retArr = array();
 		if($this->collId){
 			$sql = 'SELECT u.uid, CONCAT_WS(", ",u.lastname, u.firstname) as user '.
-					'FROM users u INNER JOIN userroles r ON u.uid = r.uid '.
-					'WHERE r.tablepk = '.$this->collId.' AND r.role IN("CollEditor","CollAdmin")';
+				'FROM users u INNER JOIN userroles r ON u.uid = r.uid '.
+				'WHERE r.tablepk = '.$this->collId.' AND r.role IN("CollEditor","CollAdmin")';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$retArr[$r->uid] = $r->user;

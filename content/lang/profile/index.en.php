@@ -7,7 +7,7 @@ Language: English
 
 $LANG['INVALID_LOGIN'] = 'Invalid username';
 $LANG['INVALID_EMAIL'] = 'Invalid email';
-$LANG['INCORRECT'] = 'Your username or password was incorrect. Please try again.<br/> If you are unable to remember your login credentials,<br/> use the controls below to retrieve your login or reset your password.';
+$LANG['INCORRECT'] = 'Your username or password was incorrect. Please try again.<br/> If you are unable to remember your login credentials, use the controls below to retrieve your login or reset your password.';
 $LANG['EMAIL_ERROR'] = 'Error sending email, contact administrator';
 $LANG['LOGIN_EMAILED'] = 'Your username will be emailed to';
 $LANG['PWD_EMAILED'] = 'Your new password was just emailed to';

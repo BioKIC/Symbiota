@@ -1,10 +1,10 @@
 <?php
 include_once($SERVER_ROOT.'/config/dbconnection.php');
-  
+
 class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 
 	private $collId;
-	
+
 	public function __construct(){
  		parent::__construct();
 	}
@@ -13,22 +13,13 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
  		parent::__destruct();
 	}
 
-	public function linkSciNames($collId){
-		//First make sure that all tidinterpreted have been checked 
-		$sql = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.sciname = t.sciname '.
-			'SET o.tidinterpreted = t.tid '.
-			'WHERE o.tidinterpreted IS NULL ';
-		if($collId && is_numeric($collId)) $sql .= 'AND (o.collid = '.$collId.')';
-		$this->conn->query($sql);
-	}
-
 	public function verifyCollectionTaxa($collId){
 		//Grab list of taxa, check each one, add valid taxa to taxonomic thesaurus, return number added and number problematic remaining
 		$numGood = 0;
 		$numBad = 0;
 		$sql = 'SELECT DISTINCT o.sciname FROM omoccurrences o '.
 			'WHERE o.tidinterpreted IS NULL AND o.sciname IS NOT NULL ';
-		if($collId && is_numeric($collId)) $sql .= 'AND (o.collid = '.$collId.') '; 
+		if($collId && is_numeric($collId)) $sql .= 'AND (o.collid = '.$collId.') ';
 		$sql .= 'ORDER BY o.sciname LIMIT 1';
 		//echo '<div>'.$sql.'</div>';
 		$rs = $this->conn->query($sql);
@@ -42,22 +33,22 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 						//Default to internal system's taxonomy
 							//1. Go through external synonyms
 							//2. If one is found and taxonomically tested, add new name linked to the accepted name of that taxon
-							//3. Add and link rest of the Synonyms to this name 
+							//3. Add and link rest of the Synonyms to this name
 						//Default to external system's taxonomy
 							//1. Add name as accepted
 							//2. Go through synonyms and add linked to new name
-							//3. If synonym already exists, link to accetped name 
+							//3. If synonym already exists, link to accetped name
 					//External is not accepted
 						//1. Grab and test external accepted name
 						//Default to internal system's taxonomy
-							//2a. Accepted name does not exist: Go through synonyms and test, 
+							//2a. Accepted name does not exist: Go through synonyms and test,
 								//3a. If one exists, map all to this accepted taxon
 								//3b. If not, add accepted name and link all to it (including synonyms)
-							//2b. Accepted name exists: Link all to it (including synonyms) 
+							//2b. Accepted name exists: Link all to it (including synonyms)
 						//Default to external system's taxonomy
 							//4a. External accepted does not exist: add name and link all to it (including synonyms that don't exist)
 							//4b. External accepted does exists...
-								
+
 				}
 				else{
 					//Name is not good, mark as so
@@ -95,7 +86,7 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 			if($targetTid == $parentTid) break;
 			$targetTid = $parentTid;
 		}while($targetTid && $parCnt < 16);
-		
+
 		return implode(",",array_reverse($parentArr));
 	}
 
@@ -112,7 +103,7 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 		}
 		return $retStr;
 	}
-	
+
 	public function getTaxaList($index = 0){
 		$retArr = array();
 		$sql = 'SELECT sciname '.
@@ -128,7 +119,7 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 		}
 		return $retArr;
 	}
-	
+
 	public function analyzeTaxa($startIndex = 0, $limit = 10){
 		$retArr = array();
 		$sql = 'SELECT sciname '.
@@ -141,11 +132,11 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 				$sn = $row->sciname;
 				$sxArr[$sn] = $sn;
 				//Check name through Catalog of Life
-				
+
 				//Check for near match using SoundEx
 				$sxArr = $this->getSoundexMatch($sn);
 				if($sxArr) $retArr[$sn]['soundex'] = $sxArr;
-				
+
 			}
 			$rs->close();
 		}
@@ -167,7 +158,7 @@ class TaxonomyCleanerOccurrences extends TaxonomyCleaner{
 		}
 		return $retStr;
 	}
-	
+
 	public function setCollId($id){
 		if(is_numeric($id)){
 			$this->collId = $id;

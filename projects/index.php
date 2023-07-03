@@ -67,7 +67,7 @@ if($isEditor && $projSubmit){
 $projArr = $projManager->getProjectMetadata();
 $researchList = $projManager->getChecklistArr($pid);
 foreach($researchList as $clid => $clArr){
-	if($clArr['access'] == 'private' && !in_array($clid, $USER_RIGHTS['ClAdmin'])) unset($clArr[$clid]);
+	if($clArr['access'] == 'private' && (!isset($USER_RIGHTS['ClAdmin']) || !in_array($clid, $USER_RIGHTS['ClAdmin']))) unset($clArr[$clid]);
 }
 
 $managerArr = $projManager->getManagers('ProjAdmin', 'fmprojects', 'fmprojects', $pid);

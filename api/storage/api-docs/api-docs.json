@@ -414,6 +414,247 @@
                 }
             }
         },
+        "/api/v2/media/{identifier}": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/media/identifier",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "primary key or record GUID (UUID) associated with target media object",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns single media record",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Media identifier is required."
+                    }
+                }
+            }
+        },
+        "/api/v2/media": {
+            "post": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/media",
+                "parameters": [
+                    {
+                        "name": "apiToken",
+                        "in": "path",
+                        "description": "API security token to authenicate post action",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "format",
+                        "in": "query",
+                        "description": "Media Type (MIME type)",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 45
+                        }
+                    },
+                    {
+                        "name": "originalUrl",
+                        "in": "query",
+                        "description": "URL returning original large image; image should be a web-ready JPG  ",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "mediumUrl",
+                        "in": "query",
+                        "description": "URL returning medium sized image of original large image; image should be a web-ready JPG  ",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "thumbnailUrl",
+                        "in": "query",
+                        "description": "URL returning thumbnail derivative of original large image; image should be a web-ready JPG  ",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "archiveUrl",
+                        "in": "query",
+                        "description": "URL returning large archival image (e.g. DNG, TIFF, etc), if web accessible ",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "referenceUrl",
+                        "in": "query",
+                        "description": "",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "occid",
+                        "in": "query",
+                        "description": "Primary Key of occurrence record that media object is associated with. Should be left null if record is not associated with an occurrence.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "description": "Primary Key of taxon record (e.g. scientific name reference) associated with media object. Should be left NULL if record is associated with an occurrence, since media will inherit occurrence identification. Required if media is not associated with an occurrence record (e.g. field image)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "photographer",
+                        "in": "query",
+                        "description": "Verbatim name of author/photographer media object. Leave NULL if photographerUid is supplied",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100
+                        }
+                    },
+                    {
+                        "name": "photographerUid",
+                        "in": "query",
+                        "description": "User Primary Key of photographer, who must have a user account register in the portal",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "imageType",
+                        "in": "query",
+                        "description": "Term name of image type (e.g. stillImage)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 45
+                        }
+                    },
+                    {
+                        "name": "caption",
+                        "in": "query",
+                        "description": "Consist, free-form text describing content of media object",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 100
+                        }
+                    },
+                    {
+                        "name": "copyright",
+                        "in": "query",
+                        "description": "Copyright Owner",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "rights",
+                        "in": "query",
+                        "description": "A URI pointing to structured information about rights held in and over the resource (e.g. https://creativecommons.org/publicdomain/zero/1.0/, https://creativecommons.org/licenses/by/4.0/legalcode)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "accessRights",
+                        "in": "query",
+                        "description": "Information about who can access the resource or an indication of its security status",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 255
+                        }
+                    },
+                    {
+                        "name": "locality",
+                        "in": "query",
+                        "description": "Short description of locality. Leave null if locality is available via the occurrence record",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 250
+                        }
+                    },
+                    {
+                        "name": "notes",
+                        "in": "query",
+                        "description": "General notes",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 350
+                        }
+                    },
+                    {
+                        "name": "sourceIdentifier",
+                        "in": "query",
+                        "description": "The source identifier, if media was harvested from an external resource",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "maxLength": 150
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns UUID recordID (GUID)",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request."
+                    }
+                }
+            }
+        },
         "/api/v2/occurrence/annotation/search": {
             "get": {
                 "tags": [
@@ -759,6 +1000,174 @@
                     },
                     "400": {
                         "description": "Error: Bad request. Occurrence identifier is required."
+                    }
+                }
+            }
+        },
+        "/api/v2/taxonomy": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy",
+                "parameters": [
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of inventories registered within system",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. "
+                    }
+                }
+            }
+        },
+        "/api/v2/taxonomy/{identifier}": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy/identifier",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Identifier (PK = tid) associated with taxonomic target",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns metabase on inventory registered within system with matching ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Inventory identifier is required."
+                    }
+                }
+            }
+        },
+        "/api/v2/taxonomy/{identifier}/description": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy/identifier/description",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "PK, GUID, or recordID associated with target taxonomic unit",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of taxonomic descriptions for a given taxon",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. "
+                    }
+                }
+            }
+        },
+        "/api/v2/taxonomy/{identifier}/description/{identifier}": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy/identifier/description/identifier",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "PK, GUID, or recordID associated with target taxonomic unit",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Identifier (PK, tdbid) associated with taxonomic description",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns metabase on inventory registered within system with matching ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Inventory identifier is required."
                     }
                 }
             }

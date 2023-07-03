@@ -6,8 +6,13 @@ Language: English
 */
 
 $LANG['EDIT_REVIEWER'] = 'Specimen Edit Reviewer';
+$LANG['PREVIOUS'] = 'Previous';
+$LANG['RECORDS1'] = 'records';
 $LANG['FIELDS_EDITED'] = 'fields edited';
+$LANG['NEXT'] = 'Next';
+$LANG['RECORDS2'] = 'records'; //this is necessary because in some languages (e.g., Spanish), the word order is different than in English
 $LANG['DATE_PROBLEM'] = 'Start date cannot be after end date';
+$LANG['NO_ACTION'] = 'No actions are selected!';
 $LANG['PLEASE_CHECK_EDIT'] = 'Please check at least one edit from list below!';
 $LANG['SURE_DELETE_HISTORY'] = 'Are you sure you want to permanently remove selected edits from history?';
 $LANG['PERS_SPEC_MNG'] = 'Personal Specimen Management';
@@ -36,10 +41,10 @@ $LANG['APPLY_EDITS_IF'] = 'Apply Edits, if not already done';
 $LANG['APPLY_EDITS'] = 'Apply Edits';
 $LANG['REVERT_EDITS'] = 'Revert Edits';
 $LANG['REVIEW_STATUS'] = 'Review Status';
-$LANG['LEAVE_AS_IS'] = 'LEAVE AS IS';
-$LANG['OPEN'] = 'OPEN';
-$LANG['PENDING'] = 'PENDING';
-$LANG['C_CLOSED'] = 'CLOSED';
+$LANG['LEAVE_AS_IS'] = 'Leave As Is';
+$LANG['OPEN'] = 'Open';
+$LANG['PENDING'] = 'Pending';
+$LANG['C_CLOSED'] = 'Closed';
 $LANG['UPDATE_SELECTED'] = 'Update Selected Records';
 $LANG['ADDITIONAL_ACTIONS'] = 'Additional Actions';
 $LANG['DELETE_SELECTED'] = 'Delete Selected Edits';
@@ -57,5 +62,15 @@ $LANG['NEW_VALUE'] = 'New Value';
 $LANG['UNKNOWN'] = 'UNKNOWN';
 $LANG['NONE_FOUND'] = 'There are no Edits matching search criteria.';
 $LANG['ERROR'] = 'Error!';
+
+$LANG['ERROR_APPLYING_EDITS'] = 'ERROR applying occurrence edits';
+$LANG['ERROR_REVERTING_EDITS'] = 'ERROR reverting occurrence edits';
+$LANG['ERROR_APPLYING_ID'] = 'ERROR applying omoccuridentifiers edits';
+$LANG['ERROR_REVERTING_ID'] = 'ERROR reverting omoccuridentifiers edits';
+$LANG['ERROR_APPLYING_PALEO'] = 'ERROR applying omoccurpaleo edits';
+$LANG['ERROR_REVERTING_PALEO'] = 'ERROR reverting omoccurpaleo edits';
+$LANG['ERROR_APPLYING_REVISIONS'] = 'ERROR applying revisions';
+$LANG['ERROR_REVERTING_REVISIONS'] = 'ERROR reverting revisions';
+$LANG['ERROR_DEL_EDITS'] = 'ERROR deleting edits';
 
 ?>

@@ -1,6 +1,8 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCrowdSource.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/index.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/index.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $action = array_key_exists('action',$_REQUEST)?$_REQUEST['action']:'';
@@ -22,7 +24,7 @@ $statusStr = '';
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE; ?> Crowdsourcing Score Board</title>
+	<title><?php echo $DEFAULT_TITLE.' '.$LANG['CROWDSOURCE_SCORE_BOARD']; ?></title>
 	<?php
 
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -43,19 +45,19 @@ $statusStr = '';
 	else{
 		echo "<div class='navpath'>";
 		echo "<a href='../../../index.php'>Home</a> &gt;&gt; ";
-		echo "<b>Crowdsourcing Score Board</b>";
+		echo "<b>".$LANG['CROWDSOURCE_SCORE_BOARD']."</b>";
 		echo "</div>";
 	}
 	?>
 
 	<!-- inner text -->
 	<div id="innertext">
-		<h1>Crowdsourcing Score Board</h1>
+		<h1><?php echo $LANG['CROWDSOURCE_SCORE_BOARD']; ?></h1>
 
 		<div style="margin:20px;">
-			<h2>Top Scores</h2>
+			<h2><?php echo $LANG['TOP_SCORES']; ?></h2>
 			<table class="styledtable" style="font-family:Arial;font-size:12px;width:300px;">
-				<tr><th style="min-width: 150px"><b>User</b></th><th style="text-align:center"><b>Approved Score</b></th><th style="text-align:center"><b>Pending Score</b></th></tr>
+				<tr><th style="min-width: 150px"><b>User</b></th><th style="text-align:center"><b><?php echo $LANG['APPROVED_SCORE']; ?></b></th><th style="text-align:center"><b><?php echo $LANG['PENDING_SCORE']; ?></b></th></tr>
 				<?php
 				$topScoreArr = $csManager->getTopScores($catid);
 				if($topScoreArr){
@@ -69,7 +71,7 @@ $statusStr = '';
 						echo '<td style="text-align:center">'.number_format($pending).'</td></tr>';
 					}
 				}
-				else echo '<tr><td>Top scores not yet available</td><td>------</td></tr>';
+				else echo '<tr><td>'.$LANG['TOP_SCORES_NOT_AVAIL'].'</td><td>------</td></tr>';
 				?>
 			</table>
 		</div>
@@ -79,25 +81,25 @@ $statusStr = '';
 			$userStats = $csManager->getUserStats($catid);
 			?>
 			<fieldset style="background-color:white;margin-bottom:15px;width:600px;padding:15px;">
-				<legend><b>Your Current Standing</b></legend>
+				<legend><b><?php echo $LANG['YOUR_STANDING']; ?></b></legend>
 				<?php
 				if($SYMB_UID){
 					echo '<div style="margin-top:5px">Specimens processed as volunteer: '.number_format($userStats['totalcnt']);
 					if($userStats['nonvolcnt']) echo '<span style="margin-left:25px">(Additional as non-volunteer: '.number_format($userStats['nonvolcnt']).'*)</span>';
 					echo '</div>';
 					echo '<div style="margin-top:5px">Pending points: '.number_format($userStats['ppoints']);
-					if($userStats['ppoints']) echo ' (<a href="review.php?rstatus=5&uid='.$SYMB_UID.'">view records</a>)';
+					if($userStats['ppoints']) echo ' (<a href="review.php?rstatus=5&uid='.$SYMB_UID.'">'.$LANG['VIEW_RECORDS'].'</a>)';
 					echo '</div>';
 					echo '<div style="margin-top:5px">Approved points: '.number_format($userStats['apoints']);
-					if($userStats['apoints']) echo ' (<a href="review.php?rstatus=10&uid='.$SYMB_UID.'">view records</a>)';
+					if($userStats['apoints']) echo ' (<a href="review.php?rstatus=10&uid='.$SYMB_UID.'">'.$LANG['VIEW_RECORDS'].'</a>)';
 					echo '</div>';
 					echo '<div style="margin-top:5px">Total possible score: '.number_format($userStats['ppoints']+$userStats['apoints']).'</div>';
-					if($userStats['nonvolcnt']) echo '<div style="margin-top:10px">* Only specimens processed as a volunteer are eligible for points</div>';
+					if($userStats['nonvolcnt']) echo '<div style="margin-top:10px">* '.$LANG['ONLY_PROCESSED_SPECIMENS_ELIGIBLE'].'</div>';
 				}
 				else{
 					?>
 					<div>
-						<a href="../../../profile/index.php?refurl=../collections/specprocessor/crowdsource/index.php">Login</a> to View Current Stats
+						<a href="../../../profile/index.php?refurl=../collections/specprocessor/crowdsource/index.php"><?php echo $LANG['LOGIN']; ?></a> <?php echo $LANG['TO_VIEW_CURRENT']; ?>
 					</div>
 					<?php
 				}
@@ -105,14 +107,14 @@ $statusStr = '';
 			</fieldset>
 		</div>
 		<div style="padding:20px;clear:both;">
-			<h2>Your Stats by Collections</h2>
+			<h2><?php echo $LANG['YOUR_STATS_BY_COLL']; ?></h2>
 			<table class="styledtable" style="font-family:Arial;font-size:12px;">
 				<tr>
-					<th><b>Collection</b></th>
-					<th><b>Specimen<br/>Count</b></th>
-					<th><b>Pending<br/>Points</b></th>
-					<th><b>Approved<br/>Points</b></th>
-					<th><b>Open<br/>Records</b></th>
+					<th><b><?php echo $LANG['COLLECTION']; ?></b></th>
+					<th><b><?php echo $LANG['SPEC_COUNTS']; ?></b></th>
+					<th><b><?php echo $LANG['PENDING_POINTS']; ?></b></th>
+					<th><b><?php echo $LANG['APPROVED_POINTS']; ?></b></th>
+					<th><b><?php echo $LANG['OPEN_RECORDS']; ?></b></th>
 				</tr>
 				<?php
 				unset($userStats['totalcnt']);
@@ -140,10 +142,7 @@ $statusStr = '';
 		if(isset($USER_RIGHTS['CollAdmin']) || isset($USER_RIGHTS['CollEditor'])){
 			?>
 			<div style="clear:both;margin:30px;">
-				<b>Note:</b> You have been identified as an official editor for one or more collections.
-				Your points will not be counted in the Top Score table for specimens
-				that belong to collection to which you have edit rights.
-				Top scores are posted only for specimens entered on a volunteer basis.
+				<?php echo $LANG['NOTE_EDITOR']; ?>
 			</div>
 			<?php
 		}

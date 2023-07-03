@@ -186,7 +186,6 @@ class GamesManager extends Manager{
 		}
 		if($this->taxonFilter) $sql .= 'AND (ts.Family = "'.$this->taxonFilter.'" OR t.sciname Like "'.$this->taxonFilter.'%") ';
 		$sql .= 'ORDER BY RAND() LIMIT 1000 ';
-		//echo 'sql: '.$sql; exit;
 		if($rs = $this->conn->query($sql)){
 			while($r = $rs->fetch_object()){
 				$retArr[$r->tidaccepted]['tid'] = $r->tid;
@@ -393,9 +392,7 @@ class GamesManager extends Manager{
 	}
 
 	public function setTaxonFilter($tValue){
-		if(preg_match('/^[\D\s]+$/',$tValue)){
-			$this->taxonFilter = $tValue;
-		}
+		$this->taxonFilter = $tValue;
 	}
 
 	public function setShowCommon($sc){

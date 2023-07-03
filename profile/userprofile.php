@@ -155,7 +155,7 @@ if($isEditor){
 				<fieldset style="padding:15px;width:200px;">
 					<legend><b><?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?></b></legend>
 					<input type="hidden" name="userid" value="<?php echo $userId;?>" />
-					<input type="submit" name="action" value="<?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?>" />
+					<button type="submit" name="action" value="deleteProfile"><?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?></button>
 				</fieldset>
 			</form>
 		</div>

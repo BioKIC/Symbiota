@@ -1,396 +1,399 @@
 /*
+ * This file is maintained for compatibility with legacy portals 
+ * that have not been updated to the v202209 responsive design.  This file will be depracated.
+ *
  * Do not modify styles within this file
  * Instead, modify styles within the symb/main.css file to override the default styles declared within this file 
 */
 
 body {
-  margin: 8px;
-  margin-left: auto;
-  margin-right: auto;
-  /* font-size: 12px; */
-}
-
-/*Main table framework*/
-
-#maintable {
-  border-spacing: 0px;
-  height: 500px;
-}
-
-#maintable td {
-  vertical-align: top;
-}
-
-#middleleft {
-  width: 160px;
-}
-
-#middleleftnomenu {
-  width: 20px;
-}
-
-#middlecenter {
-  height: 350px;
-}
-
-#middleright {
-  width: 15px;
-}
-
-/*Central div and general components */
-
-#innertext {
-  margin: 10px;
-  background-color: #ffffff;
-  min-height: 400px;
-  padding-top: 15px;
-}
-
-#innertext a {
-  color: #215078;
-}
-
-#innertext a:hover {
-  color: #337ab7;
-}
-
-form input {
-  margin-top: 2px;
-}
-
-/* Spans that use javascript to add clickable link behaviors */
-span[class='link'] {
-  color: #2c405e;
-  text-decoration: none;
-}
-
-span[class='link']:hover {
-  color: black;
-  text-decoration: underline;
-}
-
-/*  navpath styles */
-.navpath {
-  color: #000000;
-  font-size: 12px;
-}
-
-.navpath a {
-  color: #000000;
-}
-
-.navpath a:hover {
-  color: #c0c0c0;
-}
-
-button {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 1em;
-  margin: 2px;
-  padding: 3px 8px;
-  cursor: pointer;
-  border-bottom-right-radius: 4px;
-  border-bottom-left-radius: 4px;
-  border-top-right-radius: 4px;
-  border-top-left-radius: 4px;
-}
-
-button:hover {
-  background: #e4f2fb;
-}
-
-button.icon-button {
-  margin: 5px;
-  padding: 5px;
-}
-
-/* /collections/ folder pages */
-
-.collectiontable {
-  float: left;
-}
-
-.collectiontable td {
-  vertical-align: middle;
-}
-
-.categorytitle {
-}
-
-.categorytitle a {
-  font-weight: bold;
-  font-size: 110%;
-}
-
-.collectiontitle {
-  font-size: 12px;
-  margin-top: 8px;
-}
-
-.collectiontitle a {
-  font-size: 80%;
-  margin-left: 3px;
-}
-
-.collectiontitle a:hover {
-  font-weight: bold;
-  color: grey;
-}
-
-.collectionname {
-  float: left;
-  font-weight: bold;
-  margin-left: 3px;
-}
-
-.collectioncode {
-  float: left;
-  margin-left: 3px;
-}
-
-#omlisttable {
-  width: 90%;
-}
-
-#omlisttable img {
-  border: medium double #990000;
-}
-
-/*Download buttons on the search display pages*/
-div.button {
-  background-color: #ffffd7;
-  padding: 3px;
-  border: 1px outset #a0a0a0;
-}
-
-div.button img {
-  border: 0px;
-}
-
-div.button:hover {
-  border: 1px inset #a0a0a0;
-}
-
-/* Species list component */
-
-#taxalist-div {
-  line-height: 1em;
-}
-
-.family-div {
-  margin: 20px 0px 10px 0px;
-  font-weight: bold;
-}
-
-.taxon-container {
-  margin: 0px 0px 8px 10px;
-}
-
-.taxon-div {
-  clear: left;
-  margin-bottom: 5px;
-}
-
-.view-specimen-span {
-  margin: 0px 10px;
-}
-
-.syn-div {
-  margin-left: 15px;
-}
-
-.note-div {
-  margin-left: 25px;
-  font-size: 95%;
-}
-
-#cloptiondiv {
-  margin: 5px;
-  width: 250px;
-  text-align: left;
-  float: right;
-  max-width: 20% !important;
-  min-height: 325px;
-}
-
-#taxonfilterdiv {
-  padding: 5px;
-  background-color: #ffffcc;
-  border: 1px solid;
-}
-
-#taxonfilterdiv {
-  margin: 3px;
-}
-
-#img-container {
-  width: 80%;
-}
-
-/* General Image thumbnails   */
-
-div.tndiv {
-  float: left;
-  text-align: center;
-  width: 165px;
-  height: 230px;
-  page-break-before: auto;
-  page-break-inside: avoid;
-}
-
-div.tnimg {
-  position: relative;
-  overflow: hidden;
-  width: 160px;
-  height: 160px;
-  border: 1px solid gray;
-}
-
-div.tnimg a {
-}
-
-div.tnimg img {
-  position: absolute;
-  max-height: 160px;
-  max-width: 160px;
-  width: expression(this.width >=this.height ? 160: true);
-  height: expression(this.height >=this.width ? 160: true);
-  top: -9999px;
-  bottom: -9999px;
-  left: -9999px;
-  right: -9999px;
-  margin: auto;
-}
-
-/* styled table */
-
-table.styledtable {
-  table-layout: auto;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table.styledtable th {
-  text-align: left;
-  padding: 4px;
-  border: 1px solid gray;
-  background-color: #dbe5f1;
-  color: black;
-}
-
-table.styledtable td {
-  padding: 3px;
-  border: 1px solid gray;
-  background-color: #efefef;
-}
-
-table.styledtable tr.alt td {
-  color: #000000;
-  /*background-color:	#FCFCFC; */
-  background-color: #dfdfdf;
-}
-
-/* misc */
-
-div.genericpopup {
-  position: absolute;
-  display: none;
-  width: 300px;
-  background-color: #efefef;
-  padding: 10px;
-  -moz-border-radius: 5px;
-  -webkit-border-radius: 5px;
-  border: black solid 3px;
-}
-
-/* JQuery Manifest alterations */
-
-div.mf_container {
-  border: 1px solid #aaa;
-  cursor: text;
-  display: inline-block;
-  padding: 2px;
-  margin-left: 0px;
-  padding-left: 0px;
-  width: 494px;
-}
-
-div.mf_container ol.mf_list {
-  display: inline;
-  margin-left: 0px;
-  padding-left: 0px;
-}
-
-div.mf_container ol.mf_list li.mf_item {
-  border: 1px solid #c0c0c0;
-  cursor: pointer;
-  display: inline-block;
-  margin: 2px;
-  padding: 4px 4px 5px;
-}
-
-div.mf_container ol.mf_list li.mf_item.mf_highlighted {
-  background-color: #e0e0e0;
-}
-
-div.mf_container ol.mf_list li.mf_item.mf_selected {
-  background-color: #c0c0c0;
-}
-
-div.mf_container ol.mf_list li.mf_item a.mf_remove {
-  color: #e0e0e0;
-  margin-left: 10px;
-  text-decoration: none;
-}
-
-div.mf_container ol.mf_list li.mf_item.mf_highlighted a.mf_remove {
-  color: #ffffff;
-}
-
-div.mf_container ol.mf_list li.mf_item.mf_selected a.mf_remove {
-  color: #ffffff;
-}
-
-div.mf_container input.mf_input {
-  border: 0;
-  font: inherit;
-  font-size: 100%;
-  margin: 2px;
-  outline: none;
-  padding: 4px;
-}
-
-ol.mp_list {
-  background: #fff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  overflow: hidden;
-  color: #222;
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 15px;
-  position: absolute;
-  width: 498px;
-  z-index: 99999;
-  margin-top: 0px;
-  margin-bottom: 0px;
-  margin-left: 0px;
-  padding-left: 0px;
-}
-
-ol.mp_list li {
-  padding: 4px 4px 5px 9px;
-  list-style-type: none;
-}
-
-ol.mp_list li.mp_selectable {
-  cursor: pointer;
-}
-
-ol.mp_list li.mp_highlighted {
-  border: 1px solid #999;
-  background: #dadada url(../images/css/images/ui-bg_glass_75_dadada_1x400.png)
-    50% 50% repeat-x;
-  font-weight: normal;
-  color: #212121;
-  border-radius: 4px;
-}
+    margin: 8px;
+    margin-left: auto;
+    margin-right: auto;
+    /* font-size: 12px; */
+  }
+  
+  /*Main table framework*/
+  
+  #maintable {
+    border-spacing: 0px;
+    height: 500px;
+  }
+  
+  #maintable td {
+    vertical-align: top;
+  }
+  
+  #middleleft {
+    width: 160px;
+  }
+  
+  #middleleftnomenu {
+    width: 20px;
+  }
+  
+  #middlecenter {
+    height: 350px;
+  }
+  
+  #middleright {
+    width: 15px;
+  }
+  
+  /*Central div and general components */
+  
+  #innertext {
+    margin: 10px;
+    background-color: #ffffff;
+    min-height: 400px;
+    padding-top: 15px;
+  }
+  
+  #innertext a {
+    color: #215078;
+  }
+  
+  #innertext a:hover {
+    color: #337ab7;
+  }
+  
+  form input {
+    margin-top: 2px;
+  }
+  
+  /* Spans that use javascript to add clickable link behaviors */
+  span[class='link'] {
+    color: #2c405e;
+    text-decoration: none;
+  }
+  
+  span[class='link']:hover {
+    color: black;
+    text-decoration: underline;
+  }
+  
+  /*  navpath styles */
+  .navpath {
+    color: #000000;
+    font-size: 12px;
+  }
+  
+  .navpath a {
+    color: #000000;
+  }
+  
+  .navpath a:hover {
+    color: #c0c0c0;
+  }
+  
+  button {
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 1em;
+    margin: 2px;
+    padding: 3px 8px;
+    cursor: pointer;
+    border-bottom-right-radius: 4px;
+    border-bottom-left-radius: 4px;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+  }
+  
+  button:hover {
+    background: #e4f2fb;
+  }
+  
+  button.icon-button {
+    margin: 5px;
+    padding: 5px;
+  }
+  
+  /* /collections/ folder pages */
+  
+  .collectiontable {
+    float: left;
+  }
+  
+  .collectiontable td {
+    vertical-align: middle;
+  }
+  
+  .categorytitle {
+  }
+  
+  .categorytitle a {
+    font-weight: bold;
+    font-size: 110%;
+  }
+  
+  .collectiontitle {
+    font-size: 12px;
+    margin-top: 8px;
+  }
+  
+  .collectiontitle a {
+    font-size: 80%;
+    margin-left: 3px;
+  }
+  
+  .collectiontitle a:hover {
+    font-weight: bold;
+    color: grey;
+  }
+  
+  .collectionname {
+    float: left;
+    font-weight: bold;
+    margin-left: 3px;
+  }
+  
+  .collectioncode {
+    float: left;
+    margin-left: 3px;
+  }
+  
+  #omlisttable {
+    width: 90%;
+  }
+  
+  #omlisttable img {
+    border: medium double #990000;
+  }
+  
+  /*Download buttons on the search display pages*/
+  div.button {
+    background-color: #ffffd7;
+    padding: 3px;
+    border: 1px outset #a0a0a0;
+  }
+  
+  div.button img {
+    border: 0px;
+  }
+  
+  div.button:hover {
+    border: 1px inset #a0a0a0;
+  }
+  
+  /* Species list component */
+  
+  #taxalist-div {
+    line-height: 1em;
+  }
+  
+  .family-div {
+    margin: 20px 0px 10px 0px;
+    font-weight: bold;
+  }
+  
+  .taxon-container {
+    margin: 0px 0px 8px 10px;
+  }
+  
+  .taxon-div {
+    clear: left;
+    margin-bottom: 5px;
+  }
+  
+  .view-specimen-span {
+    margin: 0px 10px;
+  }
+  
+  .syn-div {
+    margin-left: 15px;
+  }
+  
+  .note-div {
+    margin-left: 25px;
+    font-size: 95%;
+  }
+  
+  #cloptiondiv {
+    margin: 5px;
+    width: 250px;
+    text-align: left;
+    float: right;
+    max-width: 20% !important;
+    min-height: 325px;
+  }
+  
+  #taxonfilterdiv {
+    padding: 5px;
+    background-color: #ffffcc;
+    border: 1px solid;
+  }
+  
+  #taxonfilterdiv {
+    margin: 3px;
+  }
+  
+  #img-container {
+    width: 80%;
+  }
+  
+  /* General Image thumbnails   */
+  
+  div.tndiv {
+    float: left;
+    text-align: center;
+    width: 165px;
+    height: 230px;
+    page-break-before: auto;
+    page-break-inside: avoid;
+  }
+  
+  div.tnimg {
+    position: relative;
+    overflow: hidden;
+    width: 160px;
+    height: 160px;
+    border: 1px solid gray;
+  }
+  
+  div.tnimg a {
+  }
+  
+  div.tnimg img {
+    position: absolute;
+    max-height: 160px;
+    max-width: 160px;
+    width: expression(this.width >=this.height ? 160: true);
+    height: expression(this.height >=this.width ? 160: true);
+    top: -9999px;
+    bottom: -9999px;
+    left: -9999px;
+    right: -9999px;
+    margin: auto;
+  }
+  
+  /* styled table */
+  
+  table.styledtable {
+    table-layout: auto;
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table.styledtable th {
+    text-align: left;
+    padding: 4px;
+    border: 1px solid gray;
+    background-color: #dbe5f1;
+    color: black;
+  }
+  
+  table.styledtable td {
+    padding: 3px;
+    border: 1px solid gray;
+    background-color: #efefef;
+  }
+  
+  table.styledtable tr.alt td {
+    color: #000000;
+    /*background-color:	#FCFCFC; */
+    background-color: #dfdfdf;
+  }
+  
+  /* misc */
+  
+  div.genericpopup {
+    position: absolute;
+    display: none;
+    width: 300px;
+    background-color: #efefef;
+    padding: 10px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    border: black solid 3px;
+  }
+  
+  /* JQuery Manifest alterations */
+  
+  div.mf_container {
+    border: 1px solid #aaa;
+    cursor: text;
+    display: inline-block;
+    padding: 2px;
+    margin-left: 0px;
+    padding-left: 0px;
+    width: 494px;
+  }
+  
+  div.mf_container ol.mf_list {
+    display: inline;
+    margin-left: 0px;
+    padding-left: 0px;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item {
+    border: 1px solid #c0c0c0;
+    cursor: pointer;
+    display: inline-block;
+    margin: 2px;
+    padding: 4px 4px 5px;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item.mf_highlighted {
+    background-color: #e0e0e0;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item.mf_selected {
+    background-color: #c0c0c0;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item a.mf_remove {
+    color: #e0e0e0;
+    margin-left: 10px;
+    text-decoration: none;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item.mf_highlighted a.mf_remove {
+    color: #ffffff;
+  }
+  
+  div.mf_container ol.mf_list li.mf_item.mf_selected a.mf_remove {
+    color: #ffffff;
+  }
+  
+  div.mf_container input.mf_input {
+    border: 0;
+    font: inherit;
+    font-size: 100%;
+    margin: 2px;
+    outline: none;
+    padding: 4px;
+  }
+  
+  ol.mp_list {
+    background: #fff url(images/ui-bg_flat_75_ffffff_40x100.png) 50% 50% repeat-x;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    overflow: hidden;
+    color: #222;
+    font-family: Verdana, Arial, sans-serif;
+    font-size: 15px;
+    position: absolute;
+    width: 498px;
+    z-index: 99999;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    margin-left: 0px;
+    padding-left: 0px;
+  }
+  
+  ol.mp_list li {
+    padding: 4px 4px 5px 9px;
+    list-style-type: none;
+  }
+  
+  ol.mp_list li.mp_selectable {
+    cursor: pointer;
+  }
+  
+  ol.mp_list li.mp_highlighted {
+    border: 1px solid #999;
+    background: #dadada url(../images/css/images/ui-bg_glass_75_dadada_1x400.png)
+      50% 50% repeat-x;
+    font-weight: normal;
+    color: #212121;
+    border-radius: 4px;
+  }

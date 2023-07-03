@@ -19,6 +19,8 @@ use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
 
+trigger_deprecation('symfony/http-kernel', '5.4', '"%s" is deprecated use "%s" instead.', AbstractTestSessionListener::class, AbstractSessionListener::class);
+
 /**
  * TestSessionListener.
  *
@@ -28,6 +30,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * @author Fabien Potencier <fabien@symfony.com>
  *
  * @internal
+ *
+ * @deprecated since Symfony 5.4, use AbstractSessionListener instead
  */
 abstract class AbstractTestSessionListener implements EventSubscriberInterface
 {
@@ -46,7 +50,9 @@ abstract class AbstractTestSessionListener implements EventSubscriberInterface
         }
 
         // bootstrap the session
-        if (!$session = $this->getSession()) {
+        if ($event->getRequest()->hasSession()) {
+            $session = $event->getRequest()->getSession();
+        } elseif (!$session = $this->getSession()) {
             return;
         }
 
@@ -100,7 +106,7 @@ abstract class AbstractTestSessionListener implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
-            KernelEvents::REQUEST => ['onKernelRequest', 192],
+            KernelEvents::REQUEST => ['onKernelRequest', 127], // AFTER SessionListener
             KernelEvents::RESPONSE => ['onKernelResponse', -128],
         ];
     }
@@ -108,7 +114,7 @@ abstract class AbstractTestSessionListener implements EventSubscriberInterface
     /**
      * Gets the session object.
      *
-     * @return SessionInterface|null A SessionInterface instance or null if no session is available
+     * @return SessionInterface|null
      */
     abstract protected function getSession();
 }

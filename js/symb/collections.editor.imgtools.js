@@ -128,23 +128,23 @@ function rotateImage(rotationAngle){
 	$(imgObj).imagetool("reset");
 }
 
-function ocrImage(ocrButton,imgidVar,imgCnt){
+function ocrImage(ocrButton, target, imgidVar, imgCnt){
 	ocrButton.disabled = true;
-	document.getElementById("workingcircle-"+imgCnt).style.display = "inline";
+	let wcElem = document.getElementById("workingcircle-"+target+"-"+imgCnt);
+	wcElem.style.display = "inline";
 	
-	var imgObj = document.getElementById("activeimg-"+imgCnt);
+	let imgObj = document.getElementById("activeimg-"+imgCnt);
+	let xVar = 0;
+	let yVar = 0;
+	let wVar = 1;
+	let hVar = 1;
+	let ocrBestVar = 0;
 
-	var xVar = 0;
-	var yVar = 0;
-	var wVar = 1;
-	var hVar = 1;
-	var ocrBestVar = 0;
-	
-	if(document.getElementById("ocrfull").checked == false){
-		xVar = $(imgObj).imagetool('properties').x;
-		yVar = $(imgObj).imagetool('properties').y;
-		wVar = $(imgObj).imagetool('properties').w;
-		hVar = $(imgObj).imagetool('properties').h;
+	if(document.getElementById("ocrfull-"+target).checked == false){
+		xVar = $(imgObj).imagetool("properties").x;
+		yVar = $(imgObj).imagetool("properties").y;
+		wVar = $(imgObj).imagetool("properties").w;
+		hVar = $(imgObj).imagetool("properties").h;
 	}
 	if(document.getElementById("ocrbest").checked == true){
 		ocrBestVar = 1;
@@ -153,24 +153,26 @@ function ocrImage(ocrButton,imgidVar,imgCnt){
 	$.ajax({
 		type: "POST",
 		url: "rpc/ocrimage.php",
-		data: { imgid: imgidVar, ocrbest: ocrBestVar, x: xVar, y: yVar, w: wVar, h: hVar }
+		data: { imgid: imgidVar, target: target, ocrbest: ocrBestVar, x: xVar, y: yVar, w: wVar, h: hVar }
 	}).done(function( msg ) {
-		var rawStr = msg;
+		let rawStr = msg;
 		document.getElementById("tfeditdiv-"+imgCnt).style.display = "none";
 		document.getElementById("tfadddiv-"+imgCnt).style.display = "block";
-		var addform = document.getElementById("ocraddform-"+imgCnt);
+		let addform = document.getElementById("ocraddform-"+imgCnt);
 		addform.rawtext.innerText = rawStr;
 		addform.rawtext.textContent = rawStr;
 		//Add OCR source with date
-		var today = new Date();
-		var dd = today.getDate();
-		var mm = today.getMonth()+1; //January is 0!
-		var yyyy = today.getFullYear();
+		let today = new Date();
+		let dd = today.getDate();
+		let mm = today.getMonth()+1; //January is 0!
+		let yyyy = today.getFullYear();
 		if(dd<10) dd='0'+dd;
 		if(mm<10) mm='0'+mm;
-		addform.rawsource.value = "Tesseract: "+yyyy+"-"+mm+"-"+dd;
+		if(target == "tess") target = "Tesseract";
+		else target = "Digi-Leap";
+		addform.rawsource.value = target+": "+yyyy+"-"+mm+"-"+dd;
 		
-		document.getElementById("workingcircle-"+imgCnt).style.display = "none";
+		wcElem.style.display = "none";
 		ocrButton.disabled = false;
 	});
 }

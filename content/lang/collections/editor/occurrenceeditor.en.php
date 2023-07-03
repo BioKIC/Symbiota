@@ -153,7 +153,6 @@ $LANG['FAILED_TO_EDIT_OCC'] = 'ERROR: failed to edit occurrence record';
 $LANG['EDIT_SUBMITTED_NOT_ACTIVATED'] = 'Edits submitted, but not activated.<br/>Once edits are reviewed and approved by a data manager, they will be activated.<br/>Thank you for aiding us in improving the data.';
 $LANG['ERROR_EDITS_EMPTY'] = 'ERROR: edits empty for occid';
 $LANG['SUCCESS_NEW_OCC_SUBMITTED'] = 'SUCCESS: new occurrence record submitted successfully';
-$LANG['GUID_FAILED'] = 'WARNING: Symbiota GUID mapping failed';
 $LANG['WARNING_ADD_EXS_NO'] = 'WARNING adding exsiccati number';
 $LANG['WARNING_ADD_EXS'] = 'WARNING adding exsiccati';
 $LANG['FAILED_ADD_OCC'] = "ERROR - failed to add occurrence record";

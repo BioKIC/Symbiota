@@ -104,19 +104,17 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			var utmStr = zValue;
 			if(isNumeric(zValue)) utmStr = utmStr + hValue;
 			utmStr = utmStr + " " + eValue + "E " + nValue + "N ";
-			//targetForm..verbatimcoordinates.value = vcStr + utmStr;
+			//targetForm.verbatimcoordinates.value = vcStr + utmStr;
 			alert(vcStr + utmStr);
 			//Convert to Lat/Lng values
 			var zNum = parseInt(zValue);
 			if(isNumeric(zNum)){
-				var latLngStr = utm2LatLng(zNum,eValue,nValue,datum);
+				var latLngStr = utm2LatLng(zNum, eValue, nValue, datum, hValue);
 				var llArr = latLngStr.split(',');
 				if(llArr){
-					var latFact = 1;
-					if(hValue == "S") latFact = -1;
-					//targetForm..decimallatitude.value = latFact*Math.round(llArr[0]*1000000)/1000000;
-					//targetForm..decimallongitude.value = Math.round(llArr[1]*1000000)/1000000;
-					alert(latFact*Math.round(llArr[0]*1000000)/1000000 + " " + Math.round(llArr[1]*1000000)/1000000);
+					//targetForm.decimallatitude.value = llArr[0];
+					//targetForm.decimallongitude.value = llArr[1];
+					alert(llArr[0] + " " + llArr[1]);
 				}
 			}
 			try{

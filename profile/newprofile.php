@@ -8,7 +8,7 @@ header('Pragma: no-cache'); // HTTP 1.0.
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 
 $login = array_key_exists('login',$_POST)?$_POST['login']:'';
-$emailAddr = array_key_exists('emailaddr',$_POST)?$_POST['emailaddr']:'';
+$emailAddr = array_key_exists('email',$_POST)?$_POST['email']:'';
 $action = array_key_exists("submit",$_REQUEST)?$_REQUEST["submit"]:'';
 
 $pHandler = new ProfileManager();
@@ -53,16 +53,18 @@ if($action == "Create Login"){
 	}
 
 	if($okToCreateLogin){
-		if($pHandler->checkLogin($emailAddr)){
-			if($pHandler->register($_POST)){
-				header("Location: ../index.php");
+		if($pHandler->validateEmailAddress($emailAddr)){
+			if($pHandler->loginExists($emailAddr)){
+				$displayStr = $pHandler->getErrorMessage();
 			}
 			else{
-				$displayStr = (isset($LANG['FAILED_1'])?$LANG['FAILED_1']:'FAILED: Unable to create user').'.<div style="margin-left:55px;">'.(isset($LANG['FAILED_2'])?$LANG['FAILED_2']:'Please contact system administrator for assistance').'.</div>';
+				if($pHandler->register($_POST)){
+					header("Location: ../index.php");
+				}
+				else{
+					$displayStr = (isset($LANG['FAILED_1'])?$LANG['FAILED_1']:'FAILED: Unable to create user').'.<div style="margin-left:55px;">'.(isset($LANG['FAILED_2'])?$LANG['FAILED_2']:'Please contact system administrator for assistance').'.</div>';
+				}
 			}
-		}
-		else{
-			$displayStr = $pHandler->getErrorStr();
 		}
 	}
 }
@@ -108,27 +110,10 @@ if($action == "Create Login"){
 				f.pwd2.focus();
 				return false;
 			}
-			if(f.login.value.trim() == ""){
-				alert("<?php echo (isset($LANG['NEED_NAME'])?$LANG['NEED_NAME']:'Username must contain a value'); ?>");
-				return false;
-			}
 			if( /[^0-9A-Za-z_!@#$-+.]/.test( f.login.value ) ) {
 		        alert("<?php echo (isset($LANG['NO_SPECIAL_CHARS'])?$LANG['NO_SPECIAL_CHARS']:'Username should only contain 0-9A-Za-z_.!@ (spaces are not allowed)'); ?>");
 		        return false;
 		    }
-			if(f.emailaddr.value.trim() == ""){
-				alert("<?php echo (isset($LANG['EMAIL_REQUIRED'])?$LANG['EMAIL_REQUIRED']:'Email address is required'); ?>");
-				return false;
-			}
-			if(f.firstname.value.trim() == ""){
-				alert("<?php echo (isset($LANG['FIRST_NAME_EMPTY'])?$LANG['FIRST_NAME_EMPTY']:'First Name must contain a value'); ?>");
-				return false;
-			}
-			if(f.lastname.value.trim() == ""){
-				alert("<?php echo (isset($LANG['LAST_NAME_EMPTY'])?$LANG['LAST_NAME_EMPTY']:'Last Name must contain a value'); ?>");
-				return false;
-			}
-
 			return true;
 		}
 	</script>
@@ -166,7 +151,7 @@ if($action == "Create Login"){
 				(isset($LANG['USE_BUTTON'])?$LANG['USE_BUTTON']:'Use button below to have login emailed to').' '.$emailAddr; ?>
 				<div style="margin:15px">
 					<form name="retrieveLoginForm" method="post" action="index.php">
-						<input name="emailaddr" type="hidden" value="<?php echo $emailAddr; ?>" />
+						<input name="email" type="hidden" value="<?php echo $emailAddr; ?>" />
 						<button name="action" type="submit" value="Retrieve Login"><?php echo (isset($LANG['RETRIEVE_LOGIN'])?$LANG['RETRIEVE_LOGIN']:'Retrieve Login'); ?></button>
 					</form>
 				</div>
@@ -233,7 +218,7 @@ if($action == "Create Login"){
 					<tr>
 						<td><span style="font-weight:bold;"><?php echo (isset($LANG['EMAIL'])?$LANG['EMAIL']:'Email Address'); ?>:</span></td>
 						<td>
-							<span class="profile"><input name="emailaddr" type="email" size="40" value="<?php echo $emailAddr; ?>" required /></span>
+							<span class="profile"><input name="email" type="email" size="40" value="<?php echo $emailAddr; ?>" required /></span>
 							<span style="color:red;">*</span>
 						</td>
 					</tr>

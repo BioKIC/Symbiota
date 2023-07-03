@@ -35,10 +35,10 @@ class PermissionsManager{
 	public function getUser($uid){
 		$returnArr = Array();
 		if(is_numeric($uid)){
-			$sql = 'SELECT u.uid, u.firstname, u.lastname, u.title, u.institution, u.city, u.state, u.zip, u.country, '.
-				'u.email, u.url, u.guid, u.notes, ul.username, IFNULL(ul.lastlogindate,ul.initialTimestamp) AS lastlogindate '.
-				'FROM users u LEFT JOIN userlogin ul ON u.uid = ul.uid '.
-				'WHERE (u.uid = '.$uid.')';
+			$sql = 'SELECT uid, firstname, lastname, title, institution, city, state, zip, country, '.
+				'email, url, guid, notes, username, IFNULL(lastlogindate, initialTimestamp) AS lastlogindate '.
+				'FROM users '.
+				'WHERE (uid = '.$uid.')';
 			//echo "<div>$sql</div>";
 			$result = $this->conn->query($sql);
 			if($row = $result->fetch_object()){
@@ -244,10 +244,9 @@ class PermissionsManager{
 		$rs2->free();
 		//Get editors
 		$retArr = array();
-		$sql = 'SELECT ut.idusertaxonomy, u.uid, CONCAT_WS(", ", lastname, firstname) as fullname, t.sciname, l.username '.
+		$sql = 'SELECT ut.idusertaxonomy, u.uid, CONCAT_WS(", ", u.lastname, u.firstname) as fullname, t.sciname, u.username '.
 			'FROM usertaxonomy ut INNER JOIN users u ON ut.uid = u.uid '.
 			'INNER JOIN taxa t ON ut.tid = t.tid '.
-			'INNER JOIN userlogin l ON u.uid = l.uid '.
 			'WHERE ut.editorstatus = "OccurrenceEditor" ';
 		if($limitByColl && $pArr){
 			$sql .= 'AND ut.uid IN('.implode(',',array_keys($pArr)).') ';
@@ -332,13 +331,13 @@ class PermissionsManager{
 
 	public function getUsers($searchTerm=''){
 		$retArr = Array();
-		$sql = 'SELECT u.uid, CONCAT_WS(", ",u.lastname,u.firstname) AS uname, l.username FROM users u LEFT JOIN userlogin l ON u.uid = l.uid ';
+		$sql = 'SELECT uid, CONCAT_WS(", ", lastname, firstname) AS uname, username FROM users ';
 		if($searchTerm){
 			$searchTerm = $this->cleanInStr($searchTerm);
-			$sql .= 'WHERE (u.lastname LIKE "'.$searchTerm.'%") ';
-			if(strlen($searchTerm) > 1) $sql .= 'OR (l.username LIKE "'.$searchTerm.'%") ';
+			$sql .= 'WHERE (lastname LIKE "'.$searchTerm.'%") ';
+			if(strlen($searchTerm) > 1) $sql .= 'OR (username LIKE "'.$searchTerm.'%") ';
 		}
-		$sql .= 'ORDER BY u.lastname, u.firstname';
+		$sql .= 'ORDER BY lastname, firstname';
 		//echo "<div>".$sql."</div>";
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){

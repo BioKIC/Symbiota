@@ -28,7 +28,7 @@ $LANG['POLYGON_SEARCH'] = 'Recherche basée sur un polygone définissant les lim
 $LANG['EXCLUDE'] = 'Exclure occurrences cultivées/captives';
 $LANG['SAVESEARCH'] = 'Enregistrer Termes de Recherche';
 $LANG['REMOVESEARCH'] = 'Supprimer Instruction de Recherche';
-$LANG['NEWVOUCH'] = 'Nouveaux Échantillons';
+$LANG['NON_VOUCHERED'] = 'Taxons sans Échantillons';
 $LANG['MISSINGTAXA'] = 'Taxons Manquants';
 $LANG['VOUCHCONF'] = 'Conflits Échantillons';
 $LANG['REPORTS'] = 'Rapports';
@@ -45,10 +45,9 @@ $LANG['LISTEDBELOWARESPECINSTRUC'] = "Ci-dessous figurent les espèces de la lis
 Cliquez sur le nom pour utiliser l'instruction de recherche ci-dessus pour interroger dynamiquement l'ensemble de données
 pour des échantillons possibles. Utilisez le menu déroulant à droite pour afficher les échantillons sous forme de tableau.";
 $LANG['ALLTAXACONTAINVOUCH'] = 'Tous les taxons contiennent des échantillons';
+$LANG['ADDITIONAL'] = "Voir le panneau d'options sur la page centrale pour des options d'exportation et d'impression supplémentaires qui intègrent dynamiquement des sélections d'options";
 $LANG['FULLSPECLIST'] = 'Liste complète des espèces (CSV)';
-$LANG['FULLPRINT'] = 'Liste complète des espèces (Version Imprimable)';
 $LANG['FULLSPECLISTVOUCHER'] = 'Liste complète des espèces avec des échantillons liés (CSV)';
-$LANG['FULLPRINTVOUCHER'] = 'Liste complète des espèces avec des échantillons liés (Version Imprimable)';
 $LANG['VOUCHERONLY'] = 'Échantillons liés uniquement (DwC-A, CSV, délimité par des tabulations)';
 $LANG['FULLSPECLISTALLOCCUR'] = 'Liste complète des espèces avec toutes les occurrences correspondant aux termes de recherche (CSV)';
 $LANG['PENSOFT_XLSX_EXPORT'] = 'Exportation Pensoft Excel';

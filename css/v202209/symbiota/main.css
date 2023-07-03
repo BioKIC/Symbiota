@@ -22,6 +22,7 @@
 
 /* Global variables and components
    ========================================================================== */
+@import 'base.css';
 @import 'variables.css';
 @import 'header.css';
 @import 'footer.css';
@@ -93,6 +94,7 @@ button {
   letter-spacing: 1px;
   cursor: pointer;
   transition: all 0.2s ease-in-out;
+  white-space: nowrap;
 }
 
 button:hover {
@@ -170,6 +172,33 @@ hr {
 .ui-tabs .ui-tabs-panel {
   padding: 10px 4px;
 }
+
+/* styled table */
+table.styledtable {
+  table-layout: auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.styledtable th {
+  text-align: left;
+  padding: 4px;
+  border: 1px solid gray;
+  background-color: #dbe5f1;
+  color: black;
+}
+
+table.styledtable td {
+  padding: 3px;
+  border: 1px solid gray;
+  background-color: #efefef;
+}
+
+table.styledtable tr.alt td {
+  color: #000000;
+  background-color: #dfdfdf;
+}
+
 
 /***********************************************************************/
 

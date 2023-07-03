@@ -22,7 +22,7 @@ class ChecklistAdmin extends Manager{
 			$inventoryManager = new ImInventories();
 			$inventoryManager->setClid($this->clid);
 			$retArr = $inventoryManager->getChecklistMetadata($pid);
-			$this->clName = $retArr['name'];
+			if($retArr) $this->clName = $retArr['name'];
 		}
 		return $retArr;
 	}
@@ -230,12 +230,11 @@ class ChecklistAdmin extends Manager{
 	//Editor management
 	public function getEditors(){
 		$editorArr = array();
-		$sql = 'SELECT u.uid, CONCAT_WS(", ",u.lastname,u.firstname) AS uname, l.username, CONCAT_WS(", ",u2.lastname,u2.firstname) AS assignedby '.
+		$sql = 'SELECT u.uid, CONCAT_WS(", ",u.lastname,u.firstname) AS uname, u.username, CONCAT_WS(", ",u2.lastname,u2.firstname) AS assignedby '.
 			'FROM userroles ur INNER JOIN users u ON ur.uid = u.uid '.
-			'LEFT JOIN userlogin l ON u.uid = l.uid '.
 			'LEFT JOIN users u2 ON ur.uidassignedby = u2.uid '.
 			'WHERE (ur.role = "ClAdmin") AND (ur.tablepk = '.$this->clid.') '.
-			'ORDER BY u.lastname,u.firstname';
+			'ORDER BY u.lastname, u.firstname';
 		if($rs = $this->conn->query($sql)){
 			while($r = $rs->fetch_object()){
 				$uName = $r->uname;
@@ -312,9 +311,7 @@ class ChecklistAdmin extends Manager{
 
 	public function getUserList(){
 		$returnArr = Array();
-		$sql = 'SELECT u.uid, CONCAT(CONCAT_WS(", ",u.lastname,u.firstname)," (",l.username,")") AS uname '.
-			'FROM users u INNER JOIN userlogin l ON u.uid = l.uid '.
-			'ORDER BY u.lastname,u.firstname';
+		$sql = 'SELECT uid, CONCAT(CONCAT_WS(", ", lastname, firstname)," (", username,")") AS uname FROM users ORDER BY lastname, firstname';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$returnArr[$r->uid] = $r->uname;

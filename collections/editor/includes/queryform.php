@@ -20,56 +20,52 @@ $qDateLastModified = (array_key_exists('dm',$qryArr)?$qryArr['dm']:'');
 $qExsiccatiId = (array_key_exists('exsid',$qryArr)?$qryArr['exsid']:'');
 $qImgOnly = (array_key_exists('io',$qryArr)?$qryArr['io']:0);
 $qWithoutImg = (array_key_exists('woi',$qryArr)?$qryArr['woi']:0);
-$qCustomOpenParen1 = (array_key_exists('cop1',$qryArr)?$qryArr['cop1']:'');
-$qCustomField1 = (array_key_exists('cf1',$qryArr)?$qryArr['cf1']:'');
-$qCustomType1 = (array_key_exists('ct1',$qryArr)?$qryArr['ct1']:'');
-$qCustomValue1 = (array_key_exists('cv1',$qryArr)?htmlentities($qryArr['cv1'], ENT_COMPAT, $CHARSET):'');
-$qCustomCloseParen1 = (array_key_exists('ccp1',$qryArr)?$qryArr['ccp1']:'');
-$qCustomAndOr2 = (array_key_exists('cao2',$qryArr)?$qryArr['cao2']:'');
-$qCustomOpenParen2 = (array_key_exists('cop2',$qryArr)?$qryArr['cop2']:'');
-$qCustomField2 = (array_key_exists('cf2',$qryArr)?$qryArr['cf2']:'');
-$qCustomType2 = (array_key_exists('ct2',$qryArr)?$qryArr['ct2']:'');
-$qCustomValue2 = (array_key_exists('cv2',$qryArr)?htmlentities($qryArr['cv2'], ENT_COMPAT, $CHARSET):'');
-$qCustomCloseParen2 = (array_key_exists('ccp2',$qryArr)?$qryArr['ccp2']:'');
-$qCustomAndOr3 = (array_key_exists('cao3',$qryArr)?$qryArr['cao3']:'');
-$qCustomOpenParen3 = (array_key_exists('cop3',$qryArr)?$qryArr['cop3']:'');
-$qCustomField3 = (array_key_exists('cf3',$qryArr)?$qryArr['cf3']:'');
-$qCustomType3 = (array_key_exists('ct3',$qryArr)?$qryArr['ct3']:'');
-$qCustomValue3 = (array_key_exists('cv3',$qryArr)?htmlentities($qryArr['cv3'], ENT_COMPAT, $CHARSET):'');
-$qCustomCloseParen3 = (array_key_exists('ccp3',$qryArr)?$qryArr['ccp3']:'');
-$qCustomAndOr4 = (array_key_exists('cao4',$qryArr)?$qryArr['cao4']:'');
-$qCustomOpenParen4 = (array_key_exists('cop4',$qryArr)?$qryArr['cop4']:'');
-$qCustomField4 = (array_key_exists('cf4',$qryArr)?$qryArr['cf4']:'');
-$qCustomType4 = (array_key_exists('ct4',$qryArr)?$qryArr['ct4']:'');
-$qCustomValue4 = (array_key_exists('cv4',$qryArr)?htmlentities($qryArr['cv4']):'');
-$qCustomCloseParen4 = (array_key_exists('ccp4',$qryArr)?$qryArr['ccp4']:'');
-$qCustomAndOr5 = (array_key_exists('cao5',$qryArr)?$qryArr['cao5']:'');
-$qCustomOpenParen5 = (array_key_exists('cop5',$qryArr)?$qryArr['cop5']:'');
-$qCustomField5 = (array_key_exists('cf5',$qryArr)?$qryArr['cf5']:'');
-$qCustomType5 = (array_key_exists('ct5',$qryArr)?$qryArr['ct5']:'');
-$qCustomValue5 = (array_key_exists('cv5',$qryArr)?htmlentities($qryArr['cv5']):'');
-$qCustomCloseParen5 = (array_key_exists('ccp5',$qryArr)?$qryArr['ccp5']:'');
-$qCustomAndOr6 = (array_key_exists('cao6',$qryArr)?$qryArr['cao6']:'');
-$qCustomOpenParen6 = (array_key_exists('cop6',$qryArr)?$qryArr['cop6']:'');
-$qCustomField6 = (array_key_exists('cf6',$qryArr)?$qryArr['cf6']:'');
-$qCustomType6 = (array_key_exists('ct6',$qryArr)?$qryArr['ct6']:'');
-$qCustomValue6 = (array_key_exists('cv6',$qryArr)?htmlentities($qryArr['cv6']):'');
-$qCustomCloseParen6 = (array_key_exists('ccp6',$qryArr)?$qryArr['ccp6']:'');
-$qCustomAndOr7 = (array_key_exists('cao7',$qryArr)?$qryArr['cao7']:'');
-$qCustomOpenParen7 = (array_key_exists('cop7',$qryArr)?$qryArr['cop7']:'');
-$qCustomField7 = (array_key_exists('cf7',$qryArr)?$qryArr['cf7']:'');
-$qCustomType7 = (array_key_exists('ct7',$qryArr)?$qryArr['ct7']:'');
-$qCustomValue7 = (array_key_exists('cv7',$qryArr)?htmlentities($qryArr['cv7']):'');
-$qCustomCloseParen7 = (array_key_exists('ccp7',$qryArr)?$qryArr['ccp7']:'');
-$qCustomAndOr8 = (array_key_exists('cao8',$qryArr)?$qryArr['cao8']:'');
-$qCustomOpenParen8 = (array_key_exists('cop8',$qryArr)?$qryArr['cop8']:'');
-$qCustomField8 = (array_key_exists('cf8',$qryArr)?$qryArr['cf8']:'');
-$qCustomType8 = (array_key_exists('ct8',$qryArr)?$qryArr['ct8']:'');
-$qCustomValue8 = (array_key_exists('cv8',$qryArr)?htmlentities($qryArr['cv8']):'');
-$qCustomCloseParen8 = (array_key_exists('ccp8',$qryArr)?$qryArr['ccp8']:'');
 $qOcrFrag = (array_key_exists('ocr',$qryArr)?htmlentities($qryArr['ocr'], ENT_COMPAT, $CHARSET):'');
 $qOrderBy = (array_key_exists('orderby',$qryArr)?$qryArr['orderby']:'');
 $qOrderByDir = (array_key_exists('orderbydir',$qryArr)?$qryArr['orderbydir']:'');
+
+$customFieldArr = array();
+if($crowdSourceMode){
+	$customFieldArr = array('family'=>$LANG['FAMILY'],'sciname'=>$LANG['SCI_NAME'],'othercatalognumbers'=>$LANG['OTHER_CAT_NUMS'],
+			'country'=>$LANG['COUNTRY'],'stateProvince'=>$LANG['STATE_PROVINCE'],'county'=>$LANG['COUNTY'],'municipality'=>$LANG['MUNICIPALITY'],
+			'recordedby'=>$LANG['COLLECTOR'],'recordnumber'=>$LANG['COL_NUMBER'],'eventdate'=>$LANG['COL_DATE']);
+}
+else{
+	$customFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],'associatedOccurrences'=>$LANG['ASSOC_OCCS'],
+			'associatedTaxa'=>$LANG['ASSOC_TAXA'],'attributes'=>$LANG['ATTRIBUTES'],'scientificNameAuthorship'=>$LANG['AUTHOR'],
+			'basisOfRecord'=>$LANG['BASIS_OF_RECORD'],'behavior'=>$LANG['BEHAVIOR'],'catalogNumber'=>$LANG['CAT_NUM'],'collectionCode'=>$LANG['COL_CODE'],'recordNumber'=>$LANG['COL_NUMBER'],
+			'recordedBy'=>$LANG['COL_OBS'],'coordinateUncertaintyInMeters'=>$LANG['COORD_UNCERT_M'],'country'=>$LANG['COUNTRY'],
+			'county'=>$LANG['COUNTY'],'cultivationStatus'=>$LANG['CULT_STATUS'],'dataGeneralizations'=>$LANG['DATA_GEN'],'eventDate'=>$LANG['DATE'],
+			'dateEntered'=>$LANG['DATE_ENTERED'],'dateLastModified'=>$LANG['DATE_LAST_MODIFIED'],'dbpk'=>$LANG['DBPK'],'decimalLatitude'=>$LANG['DEC_LAT'],
+			'decimalLongitude'=>$LANG['DEC_LONG'],'maximumDepthInMeters'=>$LANG['DEPTH_MAX'],'minimumDepthInMeters'=>$LANG['DEPTH_MIN'],
+			'verbatimAttributes'=>$LANG['DESCRIPTION'],'disposition'=>$LANG['DISPOSITION'],'dynamicProperties'=>$LANG['DYNAMIC_PROPS'],
+			'maximumElevationInMeters'=>$LANG['ELEV_MAX_M'],'minimumElevationInMeters'=>$LANG['ELEV_MIN_M'],
+			'establishmentMeans'=>$LANG['ESTAB_MEANS'],'family'=>$LANG['FAMILY'],'fieldNotes'=>$LANG['FIELD_NOTES'],'fieldnumber'=>$LANG['FIELD_NUMBER'],
+			'geodeticDatum'=>$LANG['GEO_DATUM'],'georeferenceProtocol'=>$LANG['GEO_PROTOCOL'],
+			'georeferenceRemarks'=>$LANG['GEO_REMARKS'],'georeferenceSources'=>$LANG['GEO_SOURCES'],
+			'georeferenceVerificationStatus'=>$LANG['GEO_VERIF_STATUS'],'georeferencedBy'=>$LANG['GEO_BY'],'habitat'=>$LANG['HABITAT'],
+			'identificationQualifier'=>$LANG['ID_QUALIFIER'],'identificationReferences'=>$LANG['ID_REFERENCES'],
+			'identificationRemarks'=>$LANG['ID_REMARKS'],'identifiedBy'=>$LANG['IDED_BY'],'individualCount'=>$LANG['IND_COUNT'],
+			'informationWithheld'=>$LANG['INFO_WITHHELD'],'institutionCode'=>$LANG['INST_CODE'],'labelProject'=>$LANG['LAB_PROJECT'],
+			'language'=>$LANG['LANGUAGE'],'lifeStage'=>$LANG['LIFE_STAGE'],'locationid'=>$LANG['LOCATION_ID'],'locality'=>$LANG['LOCALITY'],
+			'localitySecurity'=>$LANG['LOC_SEC'],'localitySecurityReason'=>$LANG['LOC_SEC_REASON'],'locationRemarks'=>$LANG['LOC_REMARKS'],
+			'username'=>$LANG['MODIFIED_BY'],'municipality'=>$LANG['MUNICIPALITY'],'occurrenceRemarks'=>$LANG['NOTES_REMARKS'],'ocrFragment'=>$LANG['OCR_FRAGMENT'],
+			'otherCatalogNumbers'=>$LANG['OTHER_CAT_NUMS'],'ownerInstitutionCode'=>$LANG['OWNER_CODE'],'preparations'=>$LANG['PREPARATIONS'],
+			'reproductiveCondition'=>$LANG['REP_COND'],'samplingEffort'=>$LANG['SAMP_EFFORT'],'samplingProtocol'=>$LANG['SAMP_PROTOCOL'],
+			'sciname'=>$LANG['SCI_NAME'],'sex'=>$LANG['SEX'],'stateProvince'=>$LANG['STATE_PROVINCE'],
+			'substrate'=>$LANG['SUBSTRATE'],'taxonRemarks'=>$LANG['TAXON_REMARKS'],'typeStatus'=>$LANG['TYPE_STATUS'],'verbatimCoordinates'=>$LANG['VERBAT_COORDS'],
+			'verbatimEventDate'=>$LANG['VERBATIM_DATE'],'verbatimDepth'=>$LANG['VERBATIM_DEPTH'],'verbatimElevation'=>$LANG['VERBATIM_ELE']);
+}
+$customTermArr = array('EQUALS', 'NOT_EQUALS', 'STARTS', 'LIKE', 'NOT_LIKE', 'GREATER', 'LESS', 'NULL', 'NOTNULL');
+$customArr = array();
+for($x=1; $x<9; $x++){
+	if(array_key_exists('cao'.$x, $qryArr) && ($qryArr['cao'.$x] == 'AND' || $qryArr['cao'.$x] == 'OR')) $customArr[$x]['andor'] = $qryArr['cao'.$x];
+	if(array_key_exists('cop'.$x, $qryArr) && preg_match('/^\({1,3}$/', $qryArr['cop'.$x])) $customArr[$x]['openparen'] = $qryArr['cop'.$x];
+	if(array_key_exists('cf'.$x, $qryArr) && array_key_exists($qryArr['cf'.$x], $customFieldArr)) $customArr[$x]['field'] = $qryArr['cf'.$x];
+	if(array_key_exists('ct'.$x, $qryArr) && in_array($qryArr['ct'.$x], $customTermArr)) $customArr[$x]['term'] = $qryArr['ct'.$x];
+	if(array_key_exists('cv'.$x, $qryArr)) $customArr[$x]['value'] = htmlspecialchars($qryArr['cv'.$x], HTML_SPECIAL_CHARS_FLAGS);
+	if(array_key_exists('ccp'.$x, $qryArr) && preg_match('/^\){1,3}$/', $qryArr['ccp'.$x])) $customArr[$x]['closeparen'] = $qryArr['ccp'.$x];
+}
 
 //Set processing status
 $processingStatusArr = array();
@@ -196,371 +192,71 @@ else{
 					}
 				}
 			}
-			$advFieldArr = array();
-			if($crowdSourceMode){
-				$advFieldArr = array('family'=>$LANG['FAMILY'],'sciname'=>$LANG['SCI_NAME'],'othercatalognumbers'=>$LANG['OTHER_CAT_NUMS'],
-					'country'=>$LANG['COUNTRY'],'stateProvince'=>$LANG['STATE_PROVINCE'],'county'=>$LANG['COUNTY'],'municipality'=>$LANG['MUNICIPALITY'],
-					'recordedby'=>$LANG['COLLECTOR'],'recordnumber'=>$LANG['COL_NUMBER'],'eventdate'=>$LANG['COL_DATE']);
+			// sort($customFieldArr);
+			for($x=1; $x<9; $x++){
+				$cAndOr = ''; $cOpenParen = ''; $cCloseParen = ''; $cField = ''; $cTerm = ''; $cValue = '';
+				if(isset($customArr[$x]['andor'])) $cAndOr = $customArr[$x]['andor'];
+				if(isset($customArr[$x]['openparen'])) $cOpenParen = $customArr[$x]['openparen'];
+				if(isset($customArr[$x]['closeparen'])) $cCloseParen = $customArr[$x]['closeparen'];
+				if(isset($customArr[$x]['field'])) $cField = $customArr[$x]['field'];
+				if(isset($customArr[$x]['term'])) $cTerm = $customArr[$x]['term'];
+				if(isset($customArr[$x]['value'])) $cValue = $customArr[$x]['value'];
+
+				$divDisplay = 'none';
+				if($x == 1 || $cValue != '' || $cTerm == 'NULL' || $cTerm == 'NOTNULL') $divDisplay = 'block';
+				?>
+				<div id="customdiv<?php echo $x; ?>" class="fieldGroupDiv" style="display:<?php echo $divDisplay; ?>;">
+					<?php echo $LANG['CUSTOM_FIELD'].' '.$x; ?>:
+					<?php
+					if($x > 1){
+						?>
+						<select name="q_customandor<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)">
+							<option value="AND"><?php echo $LANG['AND']; ?></option>
+							<option <?php echo ($cAndOr == 'OR' ? 'SELECTED' : ''); ?> value="OR"><?php echo $LANG['OR']; ?></option>
+						</select>
+						<?php
+					}
+					?>
+					<select name="q_customopenparen<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)">
+						<option value="">---</option>
+						<?php
+						echo '<option '.($cOpenParen == '(' ? 'SELECTED' : '').' value="(">(</option>';
+						if($x < 7) echo '<option '.($cOpenParen == '((' ? 'SELECTED' : '').' value="((">((</option>';
+						if($x < 8) echo '<option '.($cOpenParen == '(((' ? 'SELECTED' : '').' value="(((">(((</option>';
+						?>
+					</select>
+					<select name="q_customfield<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)">
+						<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
+						<option value="">---------------------------------</option>
+						<?php
+						foreach($customFieldArr as $k => $v){
+							echo '<option value="'.$k.'" '.($k == $cField ? 'SELECTED' : '').'>'.$v.'</option>';
+						}
+						?>
+					</select>
+					<select name="q_customtype<?php echo $x; ?>">
+						<?php
+						foreach($customTermArr as $term){
+							echo '<option '.($cTerm == $term ? 'SELECTED' : '').' value="'.$term.'">'.$LANG[$term].'</option>';
+						}
+						?>
+					</select>
+					<input name="q_customvalue<?php echo $x; ?>" type="text" value="<?php echo $cValue; ?>" style="width:200px;" />
+					<select name="q_customcloseparen<?php echo $x; ?>" onchange="customSelectChanged(<?php echo $x; ?>)">
+						<option value="">---</option>
+						<?php
+						echo '<option '.($cCloseParen == ')' ? 'SELECTED' : '').' value=")">)</option>';
+						if($x > 1) echo '<option '.($cCloseParen == '))' ? 'SELECTED' : '').' value="))">))</option>';
+						if($x > 2) echo '<option '.($cCloseParen == ')))' ? 'SELECTED' : '').' value=")))">)))</option>';
+						?>
+					</select>
+					<a href="#" onclick="toggleCustomDiv(<?php echo ($x+1); ?>);return false;">
+						<img class="editimg" src="../../images/editplus.png" />
+					</a>
+				</div>
+				<?php
 			}
-			else{
-				$advFieldArr = array('associatedCollectors'=>$LANG['ASSOC_COLLECTORS'],'associatedOccurrences'=>$LANG['ASSOC_OCCS'],
-					'associatedTaxa'=>$LANG['ASSOC_TAXA'],'attributes'=>$LANG['ATTRIBUTES'],'scientificNameAuthorship'=>$LANG['AUTHOR'],
-					'basisOfRecord'=>$LANG['BASIS_OF_RECORD'],'behavior'=>$LANG['BEHAVIOR'],'catalogNumber'=>$LANG['CAT_NUM'],'collectionCode'=>$LANG['COL_CODE'],'recordNumber'=>$LANG['COL_NUMBER'],
-					'recordedBy'=>$LANG['COL_OBS'],'coordinateUncertaintyInMeters'=>$LANG['COORD_UNCERT_M'],'country'=>$LANG['COUNTRY'],
-					'county'=>$LANG['COUNTY'],'cultivationStatus'=>$LANG['CULT_STATUS'],'dataGeneralizations'=>$LANG['DATA_GEN'],'eventDate'=>$LANG['DATE'],
-					'dateEntered'=>$LANG['DATE_ENTERED'],'dateLastModified'=>$LANG['DATE_LAST_MODIFIED'],'dbpk'=>$LANG['DBPK'],'decimalLatitude'=>$LANG['DEC_LAT'],
-					'decimalLongitude'=>$LANG['DEC_LONG'],'maximumDepthInMeters'=>$LANG['DEPTH_MAX'],'minimumDepthInMeters'=>$LANG['DEPTH_MIN'],
-					'verbatimAttributes'=>$LANG['DESCRIPTION'],'disposition'=>$LANG['DISPOSITION'],'dynamicProperties'=>$LANG['DYNAMIC_PROPS'],
-					'maximumElevationInMeters'=>$LANG['ELEV_MAX_M'],'minimumElevationInMeters'=>$LANG['ELEV_MIN_M'],
-					'establishmentMeans'=>$LANG['ESTAB_MEANS'],'family'=>$LANG['FAMILY'],'fieldNotes'=>$LANG['FIELD_NOTES'],'fieldnumber'=>$LANG['FIELD_NUMBER'],
-					'geodeticDatum'=>$LANG['GEO_DATUM'],'georeferenceProtocol'=>$LANG['GEO_PROTOCOL'],
-					'georeferenceRemarks'=>$LANG['GEO_REMARKS'],'georeferenceSources'=>$LANG['GEO_SOURCES'],
-					'georeferenceVerificationStatus'=>$LANG['GEO_VERIF_STATUS'],'georeferencedBy'=>$LANG['GEO_BY'],'habitat'=>$LANG['HABITAT'],
-					'identificationQualifier'=>$LANG['ID_QUALIFIER'],'identificationReferences'=>$LANG['ID_REFERENCES'],
-					'identificationRemarks'=>$LANG['ID_REMARKS'],'identifiedBy'=>$LANG['IDED_BY'],'individualCount'=>$LANG['IND_COUNT'],
-					'informationWithheld'=>$LANG['INFO_WITHHELD'],'institutionCode'=>$LANG['INST_CODE'],'labelProject'=>$LANG['LAB_PROJECT'],
-					'language'=>$LANG['LANGUAGE'],'lifeStage'=>$LANG['LIFE_STAGE'],'locationid'=>$LANG['LOCATION_ID'],'locality'=>$LANG['LOCALITY'],
-					'localitySecurity'=>$LANG['LOC_SEC'],'localitySecurityReason'=>$LANG['LOC_SEC_REASON'],'locationRemarks'=>$LANG['LOC_REMARKS'],
-					'username'=>$LANG['MODIFIED_BY'],'municipality'=>$LANG['MUNICIPALITY'],'occurrenceRemarks'=>$LANG['NOTES_REMARKS'],'ocrFragment'=>$LANG['OCR_FRAGMENT'],
-					'otherCatalogNumbers'=>$LANG['OTHER_CAT_NUMS'],'ownerInstitutionCode'=>$LANG['OWNER_CODE'],'preparations'=>$LANG['PREPARATIONS'],
-					'reproductiveCondition'=>$LANG['REP_COND'],'samplingEffort'=>$LANG['SAMP_EFFORT'],'samplingProtocol'=>$LANG['SAMP_PROTOCOL'],
-					'sciname'=>$LANG['SCI_NAME'],'sex'=>$LANG['SEX'],'stateProvince'=>$LANG['STATE_PROVINCE'],
-					'substrate'=>$LANG['SUBSTRATE'],'taxonRemarks'=>$LANG['TAXON_REMARKS'],'typeStatus'=>$LANG['TYPE_STATUS'],'verbatimCoordinates'=>$LANG['VERBAT_COORDS'],
-					'verbatimEventDate'=>$LANG['VERBATIM_DATE'],'verbatimDepth'=>$LANG['VERBATIM_DEPTH'],'verbatimElevation'=>$LANG['VERBATIM_ELE']);
-			}
-			// sort($advFieldArr);
 			?>
-			<div class="fieldGroupDiv">
-				<?php echo $LANG['CUSTOM_FIELD_1']; ?>:
-				<select name="q_customopenparen1" onchange="customSelectChanged(1)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen1=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen1=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen1=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield1" onchange="customSelectChanged(1)">
-					<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField1?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype1">
-					<option><?php echo $LANG['EQUALS']; ?></option>
-					<option <?php echo ($qCustomType1=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS"><?php echo $LANG['NOT_EQUALS']; ?></option>
-					<option <?php echo ($qCustomType1=='STARTS'?'SELECTED':''); ?> value="STARTS"><?php echo $LANG['STARTS_WITH']; ?></option>
-					<option <?php echo ($qCustomType1=='LIKE'?'SELECTED':''); ?> value="LIKE"><?php echo $LANG['CONTAINS']; ?></option>
-					<option <?php echo ($qCustomType1=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE"><?php echo $LANG['DOESNT_CONTAIN']; ?></option>
-					<option <?php echo ($qCustomType1=='GREATER'?'SELECTED':''); ?> value="GREATER"><?php echo $LANG['GREATER_THAN']; ?></option>
-					<option <?php echo ($qCustomType1=='LESS'?'SELECTED':''); ?> value="LESS"><?php echo $LANG['LESS_THAN']; ?></option>
-					<option <?php echo ($qCustomType1=='NULL'?'SELECTED':''); ?> value="NULL"><?php echo $LANG['IS_NULL']; ?></option>
-					<option <?php echo ($qCustomType1=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL"><?php echo $LANG['IS_NOT_NULL']; ?></option>
-				</select>
-				<input name="q_customvalue1" type="text" value="<?php echo $qCustomValue1; ?>" style="width:200px;" />
-				<select name="q_customcloseparen1" onchange="customSelectChanged(1)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen1==')'?'SELECTED':''); ?> value=")">)</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv2();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv2" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue2||$qCustomType2=='NULL'||$qCustomType2=='NOTNULL'?'block':'none');?>;">
-				<?php echo $LANG['CUSTOM_FIELD_2']; ?>:
-				<select name="q_customandor2" onchange="customSelectChanged(2)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr2=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen2" onchange="customSelectChanged(2)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen2=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen2=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen2=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield2" onchange="customSelectChanged(2)">
-					<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField2?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype2">
-					<option><?php echo $LANG['EQUALS']; ?></option>
-					<option <?php echo ($qCustomType2=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS"><?php echo $LANG['NOT_EQUALS']; ?></option>
-					<option <?php echo ($qCustomType2=='STARTS'?'SELECTED':''); ?> value="STARTS"><?php echo $LANG['STARTS_WITH']; ?></option>
-					<option <?php echo ($qCustomType2=='LIKE'?'SELECTED':''); ?> value="LIKE"><?php echo $LANG['CONTAINS']; ?></option>
-					<option <?php echo ($qCustomType2=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE"><?php echo $LANG['DOESNT_CONTAIN']; ?></option>
-					<option <?php echo ($qCustomType2=='GREATER'?'SELECTED':''); ?> value="GREATER"><?php echo $LANG['GREATER_THAN']; ?></option>
-					<option <?php echo ($qCustomType2=='LESS'?'SELECTED':''); ?> value="LESS"><?php echo $LANG['LESS_THAN']; ?></option>
-					<option <?php echo ($qCustomType2=='NULL'?'SELECTED':''); ?> value="NULL"><?php echo $LANG['IS_NULL']; ?></option>
-					<option <?php echo ($qCustomType2=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL"><?php echo $LANG['IS_NOT_NULL']; ?></option>
-				</select>
-				<input name="q_customvalue2" type="text" value="<?php echo $qCustomValue2; ?>" style="width:200px;" />
-				<select name="q_customcloseparen2" onchange="customSelectChanged(2)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen2==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen2=='))'?'SELECTED':''); ?> value="))">))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv3();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv3" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue3||$qCustomType3=='NULL'||$qCustomType3=='NOTNULL'?'block':'none');?>;">
-				<?php echo $LANG['CUSTOM_FIELD_3']; ?>:
-				<select name="q_customandor3" onchange="customSelectChanged(3)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr3=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen3" onchange="customSelectChanged(3)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen3=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen3=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen3=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield3" onchange="customSelectChanged(3)">
-					<option value=""><?php echo $LANG['SELECT_FIELD_NAME']; ?></option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField3?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype3">
-					<option><?php echo $LANG['EQUALS']; ?></option>
-					<option <?php echo ($qCustomType3=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS"><?php echo $LANG['NOT_EQUALS']; ?></option>
-					<option <?php echo ($qCustomType3=='STARTS'?'SELECTED':''); ?> value="STARTS"><?php echo $LANG['STARTS_WITH']; ?></option>
-					<option <?php echo ($qCustomType3=='LIKE'?'SELECTED':''); ?> value="LIKE"><?php echo $LANG['CONTAINS']; ?></option>
-					<option <?php echo ($qCustomType3=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE"><?php echo $LANG['DOESNT_CONTAIN']; ?></option>
-					<option <?php echo ($qCustomType3=='GREATER'?'SELECTED':''); ?> value="GREATER"><?php echo $LANG['GREATER_THAN']; ?></option>
-					<option <?php echo ($qCustomType3=='LESS'?'SELECTED':''); ?> value="LESS"><?php echo $LANG['LESS_THAN']; ?></option>
-					<option <?php echo ($qCustomType3=='NULL'?'SELECTED':''); ?> value="NULL"><?php echo $LANG['IS_NULL']; ?></option>
-					<option <?php echo ($qCustomType3=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL"><?php echo $LANG['IS_NOT_NULL']; ?></option>
-				</select>
-				<input name="q_customvalue3" type="text" value="<?php echo $qCustomValue3; ?>" style="width:200px;" />
-				<select name="q_customcloseparen3" onchange="customSelectChanged(3)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen3==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen3=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen3==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv4();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv4" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue4||$qCustomType4=='NULL'||$qCustomType4=='NOTNULL'?'block':'none');?>;">
-				Custom Field 4:
-				<select name="q_customandor4" onchange="customSelectChanged(4)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr4=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen4" onchange="customSelectChanged(4)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen4=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen4=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen4=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield4" onchange="customSelectChanged(4)">
-					<option value="">Select Field Name</option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField4?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype4">
-					<option>EQUALS</option>
-					<option <?php echo ($qCustomType4=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS">NOT EQUALS</option>
-					<option <?php echo ($qCustomType4=='STARTS'?'SELECTED':''); ?> value="STARTS">STARTS WITH</option>
-					<option <?php echo ($qCustomType4=='LIKE'?'SELECTED':''); ?> value="LIKE">CONTAINS</option>
-					<option <?php echo ($qCustomType4=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE">DOES NOT CONTAIN</option>
-					<option <?php echo ($qCustomType4=='GREATER'?'SELECTED':''); ?> value="GREATER">GREATER THAN</option>
-					<option <?php echo ($qCustomType4=='LESS'?'SELECTED':''); ?> value="LESS">LESS THAN</option>
-					<option <?php echo ($qCustomType4=='NULL'?'SELECTED':''); ?> value="NULL">IS NULL</option>
-					<option <?php echo ($qCustomType4=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL">IS NOT NULL</option>
-				</select>
-				<input name="q_customvalue4" type="text" value="<?php echo $qCustomValue4; ?>" style="width:200px;" />
-				<select name="q_customcloseparen4" onchange="customSelectChanged(4)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen4==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen4=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen4==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv5();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv5" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue5||$qCustomType5=='NULL'||$qCustomType5=='NOTNULL'?'block':'none');?>;">
-				Custom Field 5:
-				<select name="q_customandor5" onchange="customSelectChanged(5)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr5=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen5" onchange="customSelectChanged(5)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen5=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen5=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen5=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield5" onchange="customSelectChanged(5)">
-					<option value="">Select Field Name</option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField5?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype5">
-					<option>EQUALS</option>
-					<option <?php echo ($qCustomType5=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS">NOT EQUALS</option>
-					<option <?php echo ($qCustomType5=='STARTS'?'SELECTED':''); ?> value="STARTS">STARTS WITH</option>
-					<option <?php echo ($qCustomType5=='LIKE'?'SELECTED':''); ?> value="LIKE">CONTAINS</option>
-					<option <?php echo ($qCustomType5=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE">DOES NOT CONTAIN</option>
-					<option <?php echo ($qCustomType5=='GREATER'?'SELECTED':''); ?> value="GREATER">GREATER THAN</option>
-					<option <?php echo ($qCustomType5=='LESS'?'SELECTED':''); ?> value="LESS">LESS THAN</option>
-					<option <?php echo ($qCustomType5=='NULL'?'SELECTED':''); ?> value="NULL">IS NULL</option>
-					<option <?php echo ($qCustomType5=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL">IS NOT NULL</option>
-				</select>
-				<input name="q_customvalue5" type="text" value="<?php echo $qCustomValue5; ?>" style="width:200px;" />
-				<select name="q_customcloseparen5" onchange="customSelectChanged(5)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen5==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen5=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen5==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv6();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv6" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue6||$qCustomType6=='NULL'||$qCustomType6=='NOTNULL'?'block':'none');?>;">
-				Custom Field 6:
-				<select name="q_customandor6" onchange="customSelectChanged(6)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr6=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen6" onchange="customSelectChanged(6)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen6=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen6=='(('?'SELECTED':''); ?> value="((">((</option>
-					<option <?php echo ($qCustomOpenParen6=='((('?'SELECTED':''); ?> value="(((">(((</option>
-				</select>
-				<select name="q_customfield6" onchange="customSelectChanged(6)">
-					<option value="">Select Field Name</option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField6?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype6">
-					<option>EQUALS</option>
-					<option <?php echo ($qCustomType6=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS">NOT EQUALS</option>
-					<option <?php echo ($qCustomType6=='STARTS'?'SELECTED':''); ?> value="STARTS">STARTS WITH</option>
-					<option <?php echo ($qCustomType6=='LIKE'?'SELECTED':''); ?> value="LIKE">CONTAINS</option>
-					<option <?php echo ($qCustomType6=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE">DOES NOT CONTAIN</option>
-					<option <?php echo ($qCustomType6=='GREATER'?'SELECTED':''); ?> value="GREATER">GREATER THAN</option>
-					<option <?php echo ($qCustomType6=='LESS'?'SELECTED':''); ?> value="LESS">LESS THAN</option>
-					<option <?php echo ($qCustomType6=='NULL'?'SELECTED':''); ?> value="NULL">IS NULL</option>
-					<option <?php echo ($qCustomType6=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL">IS NOT NULL</option>
-				</select>
-				<input name="q_customvalue6" type="text" value="<?php echo $qCustomValue6; ?>" style="width:200px;" />
-				<select name="q_customcloseparen6" onchange="customSelectChanged(6)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen6==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen6=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen6==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv7();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv7" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue7||$qCustomType7=='NULL'||$qCustomType7=='NOTNULL'?'block':'none');?>;">
-				Custom Field 7:
-				<select name="q_customandor7" onchange="customSelectChanged(7)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr7=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen7" onchange="customSelectChanged(7)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen7=='('?'SELECTED':''); ?> value="(">(</option>
-					<option <?php echo ($qCustomOpenParen7=='(('?'SELECTED':''); ?> value="((">((</option>
-				</select>
-				<select name="q_customfield7" onchange="customSelectChanged(7)">
-					<option value="">Select Field Name</option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField7?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype7">
-					<option>EQUALS</option>
-					<option <?php echo ($qCustomType7=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS">NOT EQUALS</option>
-					<option <?php echo ($qCustomType7=='STARTS'?'SELECTED':''); ?> value="STARTS">STARTS WITH</option>
-					<option <?php echo ($qCustomType7=='LIKE'?'SELECTED':''); ?> value="LIKE">CONTAINS</option>
-					<option <?php echo ($qCustomType7=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE">DOES NOT CONTAIN</option>
-					<option <?php echo ($qCustomType7=='GREATER'?'SELECTED':''); ?> value="GREATER">GREATER THAN</option>
-					<option <?php echo ($qCustomType7=='LESS'?'SELECTED':''); ?> value="LESS">LESS THAN</option>
-					<option <?php echo ($qCustomType7=='NULL'?'SELECTED':''); ?> value="NULL">IS NULL</option>
-					<option <?php echo ($qCustomType7=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL">IS NOT NULL</option>
-				</select>
-				<input name="q_customvalue7" type="text" value="<?php echo $qCustomValue7; ?>" style="width:200px;" />
-				<select name="q_customcloseparen7" onchange="customSelectChanged(7)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen7==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen7=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen7==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-				<a href="#" onclick="toggleCustomDiv8();return false;">
-					<img class="editimg" src="../../images/editplus.png" />
-				</a>
-			</div>
-			<div id="customdiv8" class="fieldGroupDiv" style="display:<?php echo ($qCustomValue8||$qCustomType8=='NULL'||$qCustomType8=='NOTNULL'?'block':'none');?>;">
-				Custom Field 8:
-				<select name="q_customandor8" onchange="customSelectChanged(8)">
-					<option>AND</option>
-					<option <?php echo ($qCustomAndOr8=='OR'?'SELECTED':''); ?> value="OR">OR</option>
-				</select>
-				<select name="q_customopenparen8" onchange="customSelectChanged(8)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomOpenParen8=='('?'SELECTED':''); ?> value="(">(</option>
-				</select>
-				<select name="q_customfield8" onchange="customSelectChanged(8)">
-					<option value="">Select Field Name</option>
-					<option value="">---------------------------------</option>
-					<?php
-					foreach($advFieldArr as $k => $v){
-						echo '<option value="'.$k.'" '.($k==$qCustomField8?'SELECTED':'').'>'.$v.'</option>';
-					}
-					?>
-				</select>
-				<select name="q_customtype8">
-					<option>EQUALS</option>
-					<option <?php echo ($qCustomType8=='NOT EQUALS'?'SELECTED':''); ?> value="NOT EQUALS">NOT EQUALS</option>
-					<option <?php echo ($qCustomType8=='STARTS'?'SELECTED':''); ?> value="STARTS">STARTS WITH</option>
-					<option <?php echo ($qCustomType8=='LIKE'?'SELECTED':''); ?> value="LIKE">CONTAINS</option>
-					<option <?php echo ($qCustomType8=='NOT LIKE'?'SELECTED':''); ?> value="NOT LIKE">DOES NOT CONTAIN</option>
-					<option <?php echo ($qCustomType8=='GREATER'?'SELECTED':''); ?> value="GREATER">GREATER THAN</option>
-					<option <?php echo ($qCustomType8=='LESS'?'SELECTED':''); ?> value="LESS">LESS THAN</option>
-					<option <?php echo ($qCustomType8=='NULL'?'SELECTED':''); ?> value="NULL">IS NULL</option>
-					<option <?php echo ($qCustomType8=='NOTNULL'?'SELECTED':''); ?> value="NOTNULL">IS NOT NULL</option>
-				</select>
-				<input name="q_customvalue8" type="text" value="<?php echo $qCustomValue8; ?>" style="width:200px;" />
-				<select name="q_customcloseparen8" onchange="customSelectChanged(8)">
-					<option value="">---</option>
-					<option <?php echo ($qCustomCloseParen8==')'?'SELECTED':''); ?> value=")">)</option>
-					<option <?php echo ($qCustomCloseParen8=='))'?'SELECTED':''); ?> value="))">))</option>
-					<option <?php echo ($qCustomCloseParen8==')))'?'SELECTED':''); ?> value=")))">)))</option>
-				</select>
-			</div>
 			<div class="fieldGroupDiv">
 				<?php
 				if($isGenObs && ($IS_ADMIN || ($collId && array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collId,$USER_RIGHTS["CollAdmin"])))){
@@ -711,74 +407,14 @@ else{
 		f.q_processingstatus.value = "";
 		if(f.q_exsiccatiid) f.q_exsiccatiid.value = "";
 
-		// Reset all of the custom fields
-		f.q_customopenparen1.options[0].selected = true;
-		f.q_customfield1.options[0].selected = true;
-		f.q_customtype1.options[0].selected = true;
-		f.q_customvalue1.value = "";
-		f.q_customcloseparen1.options[0].selected = true;
-
-		f.q_customandor2.options[0].selected = true;
-		f.q_customopenparen2.options[0].selected = true;
-		f.q_customfield2.options[0].selected = true;
-		f.q_customtype2.options[0].selected = true;
-		f.q_customvalue2.value = "";
-		f.q_customcloseparen2.options[0].selected = true;
-
-		f.q_customandor3.options[0].selected = true;
-		f.q_customopenparen3.options[0].selected = true;
-		f.q_customfield3.options[0].selected = true;
-		f.q_customtype3.options[0].selected = true;
-		f.q_customvalue3.value = "";
-		f.q_customcloseparen3.options[0].selected = true;
-
-		f.q_customandor4.options[0].selected = true;
-		f.q_customopenparen4.options[0].selected = true;
-		f.q_customfield4.options[0].selected = true;
-		f.q_customtype4.options[0].selected = true;
-		f.q_customvalue4.value = "";
-		f.q_customcloseparen4.options[0].selected = true;
-
-		f.q_customandor5.options[0].selected = true;
-		f.q_customopenparen5.options[0].selected = true;
-		f.q_customfield5.options[0].selected = true;
-		f.q_customtype5.options[0].selected = true;
-		f.q_customvalue5.value = "";
-		f.q_customcloseparen5.options[0].selected = true;
-
-		f.q_customandor6.options[0].selected = true;
-		f.q_customopenparen6.options[0].selected = true;
-		f.q_customfield6.options[0].selected = true;
-		f.q_customtype6.options[0].selected = true;
-		f.q_customvalue6.value = "";
-		f.q_customcloseparen6.options[0].selected = true;
-
-		f.q_customandor7.options[0].selected = true;
-		f.q_customopenparen7.options[0].selected = true;
-		f.q_customfield7.options[0].selected = true;
-		f.q_customtype7.options[0].selected = true;
-		f.q_customvalue7.value = "";
-		f.q_customcloseparen7.options[0].selected = true;
-
-		f.q_customandor8.options[0].selected = true;
-		f.q_customopenparen8.options[0].selected = true;
-		f.q_customfield8.options[0].selected = true;
-		f.q_customtype8.options[0].selected = true;
-		f.q_customvalue8.value = "";
-		f.q_customcloseparen8.options[0].selected = true;
+		for(let x = 1; x < 9; x++){
+			resetCustomElements(x);
+			if(x > 1) document.getElementById("customdiv"+x).style.display = "none";
+		}
 
 		f.q_imgonly.checked = false;
 		f.q_withoutimg.checked = false;
 		f.orderby.value = "";
 		f.orderbydir.value = "ASC";
-
-		// Hide all the custom field divs except the first on reset
-		document.getElementById('customdiv2').style.display = "none";
-		document.getElementById('customdiv3').style.display = "none";
-		document.getElementById('customdiv4').style.display = "none";
-		document.getElementById('customdiv5').style.display = "none";
-		document.getElementById('customdiv6').style.display = "none";
-		document.getElementById('customdiv7').style.display = "none";
-		document.getElementById('customdiv8').style.display = "none";
 	}
 </script>

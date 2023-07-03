@@ -10,15 +10,16 @@
 namespace SebastianBergmann\CodeCoverage\StaticAnalysis;
 
 use function array_merge;
+use function assert;
 use function range;
 use function strpos;
 use PhpParser\Node;
+use PhpParser\Node\Attribute;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
 use PhpParser\Node\Stmt\Function_;
 use PhpParser\Node\Stmt\Interface_;
 use PhpParser\Node\Stmt\Trait_;
-use PhpParser\NodeTraverser;
 use PhpParser\NodeVisitorAbstract;
 
 /**
@@ -47,39 +48,58 @@ final class IgnoredLinesFindingVisitor extends NodeVisitorAbstract
         $this->ignoreDeprecated              = $ignoreDeprecated;
     }
 
-    public function enterNode(Node $node): ?int
+    public function enterNode(Node $node): void
     {
         if (!$node instanceof Class_ &&
             !$node instanceof Trait_ &&
             !$node instanceof Interface_ &&
             !$node instanceof ClassMethod &&
-            !$node instanceof Function_) {
-            return null;
+            !$node instanceof Function_ &&
+            !$node instanceof Attribute) {
+            return;
         }
 
         if ($node instanceof Class_ && $node->isAnonymous()) {
-            return null;
+            return;
         }
 
-        // Workaround for https://bugs.xdebug.org/view.php?id=1798
         if ($node instanceof Class_ ||
             $node instanceof Trait_ ||
-            $node instanceof Interface_) {
+            $node instanceof Interface_ ||
+            $node instanceof Attribute) {
             $this->ignoredLines[] = $node->getStartLine();
+
+            assert($node->name !== null);
+
+            // Workaround for https://github.com/nikic/PHP-Parser/issues/886
+            $this->ignoredLines[] = $node->name->getStartLine();
         }
 
         if (!$this->useAnnotationsForIgnoringCode) {
-            return null;
+            return;
         }
 
         if ($node instanceof Interface_) {
-            return null;
+            return;
         }
 
+        $this->processDocComment($node);
+    }
+
+    /**
+     * @psalm-return list<int>
+     */
+    public function ignoredLines(): array
+    {
+        return $this->ignoredLines;
+    }
+
+    private function processDocComment(Node $node): void
+    {
         $docComment = $node->getDocComment();
 
         if ($docComment === null) {
-            return null;
+            return;
         }
 
         if (strpos($docComment->getText(), '@codeCoverageIgnore') !== false) {
@@ -95,19 +115,5 @@ final class IgnoredLinesFindingVisitor extends NodeVisitorAbstract
                 range($node->getStartLine(), $node->getEndLine())
             );
         }
-
-        if ($node instanceof ClassMethod || $node instanceof Function_) {
-            return NodeTraverser::DONT_TRAVERSE_CHILDREN;
-        }
-
-        return null;
-    }
-
-    /**
-     * @psalm-return list<int>
-     */
-    public function ignoredLines(): array
-    {
-        return $this->ignoredLines;
     }
 }

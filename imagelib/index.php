@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImageLibraryBrowser.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/index.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/imagelib/index.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/imagelib/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $taxon = array_key_exists('taxon',$_REQUEST)?htmlspecialchars(strip_tags($_REQUEST['taxon'])):'';
@@ -11,7 +13,7 @@ $imgManager->setSearchTerm($taxon);
 ?>
 <html>
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> Image Library</title>
+	<title><?php echo $DEFAULT_TITLE.' '.$LANG['IMG_LIBRARY']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
@@ -24,24 +26,23 @@ $imgManager->setSearchTerm($taxon);
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class="navpath">
-		<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Home</a> &gt;&gt;
-		<b>Image Library</b>
+		<a href="<?php echo $CLIENT_ROOT; ?>/index.php"><?php echo $LANG['HOME']; ?></a> &gt;&gt;
+		<b><?php echo $LANG['IMG_LIBRARY']; ?></b>
 	</div>
 	<!-- This is inner text! -->
 	<div id="innertext">
-		<h1>Species with Images</h1>
-		<div style="margin:0px 0px 5px 20px;">This page provides a complete list to taxa that have images.
-		Use the controls below to browse and search for images by family, genus, or species.
+		<h1><?php echo $LANG['TAXA_W_IMGS']; ?></h1>
+		<div style="margin:0px 0px 5px 20px;"><?php echo $LANG['TAXA_IMG_EXPLAIN']; ?>
 		</div>
 		<div style="float:left;margin:10px 0px 10px 30px;">
 			<div style=''>
-				<a href='index.php?target=family'>Browse by Family</a>
+				<a href='index.php?target=family'><?php echo $LANG['BROWSE_FAMILY']; ?></a>
 			</div>
 			<div style='margin-top:10px;'>
-				<a href='index.php?target=genus'>Browse by Genus</a>
+				<a href='index.php?target=genus'><?php echo $LANG['BROWSE_GENUS']; ?></a>
 			</div>
 			<div style='margin-top:10px;'>
-				Browse by Species
+				<?php echo $LANG['BROWSE_SPECIES']; ?>
 			</div>
 			<div style='margin:2px 0px 0px 10px;'>
 				<div><a href='index.php?taxon=A'>A</a>|<a href='index.php?taxon=B'>B</a>|<a href='index.php?taxon=C'>C</a>|<a href='index.php?taxon=D'>D</a>|<a href='index.php?taxon=E'>E</a>|<a href='index.php?taxon=F'>F</a>|<a href='index.php?taxon=G'>G</a>|<a href='index.php?taxon=H'>H</a></div>
@@ -53,21 +54,21 @@ $imgManager->setSearchTerm($taxon);
 			<div style="margin:10px 0px 0px 0px;">
 				<form name="searchform1" action="index.php" method="post">
 					<fieldset style="background-color:#FFFFCC;padding:10px;">
-						<legend style="font-weight:bold;">Scientific Name Search</legend>
-						<input type="text" name="taxon" value="<?php echo $taxon; ?>" title="Enter family, genus, or scientific name" />
-						<input name="submit" value="Search" type="submit">
+						<legend style="font-weight:bold;"><?php echo $LANG['SCINAME_SEARCH']; ?></legend>
+						<input type="text" name="taxon" value="<?php echo $taxon; ?>" title="<?php echo $LANG['ENTER_TAXON_NAME']; ?>" />
+						<button name="submit" value="Search" type="submit"><?php echo $LANG['SEARCH']; ?></button>
 					</fieldset>
 				</form>
 			</div>
 			<div style="font-weight:bold;margin:15px 10px 0px 20px;">
 				<div>
-					<a href="../includes/usagepolicy.php#images">Image Copyright Policy</a>
+					<a href="../includes/usagepolicy.php#images"><?php echo $LANG['IMG_CP_POLICY']; ?></a>
 				</div>
 				<div>
-					<a href="contributors.php">Image Contributors</a>
+					<a href="contributors.php"><?php echo $LANG['IMG_CONTRIBUTORS']; ?></a>
 				</div>
 				<div>
-					<a href="search.php">Image Search</a>
+					<a href="search.php"><?php echo $LANG['IMG_SEARCH']; ?></a>
 				</div>
 			</div>
 		</div>
@@ -77,19 +78,19 @@ $imgManager->setSearchTerm($taxon);
 			if($target == 'genus'){
 				$taxaList = $imgManager->getGenusList($taxon);
 				if($taxaList){
-					echo '<h2>Select a Genus to see species list.</h2>';
+					echo '<h2>'.$LANG['SELECT_GENUS'].'</h2>';
 					foreach($taxaList as $value){
 						echo "<div style='margin-left:30px;'><a href='index.php?taxon=".$value."'>".$value."</a></div>";
 					}
 				}
 				else{
-					echo '<h2>No taxa returned matching search results</h2>';
+					echo '<h2>'.$LANG['NO_TAXA_RETURNED'].'</h2>';
 				}
 			}
 			elseif($target == 'species' || $taxon){
 				$taxaList = $imgManager->getSpeciesList($taxon);
 				if($taxaList){
-					echo '<h2>Select a species to access available images</h2>';
+					echo '<h2>'.$LANG['SELECT_SPECIES'].'</h2>';
 					foreach($taxaList as $key => $value){
 						echo '<div style="margin-left:30px;font-style:italic;">';
 						echo '<a href="#" onclick="openTaxonPopup('.$key.');return false;">'.$value.'</a> ';
@@ -98,19 +99,19 @@ $imgManager->setSearchTerm($taxon);
 					}
 				}
 				else{
-					echo '<h2>No taxa returned matching search results</h2>';
+					echo '<h2>'.$LANG['NO_TAXA_RETURNED'].'</h2>';
 				}
 			}
 			else{ //Family display
 				$taxaList = $imgManager->getFamilyList();
 				if($taxaList){
-					echo '<h2>Select a family to see species list.</h2>';
+					echo '<h2>'.$LANG['SELECT_FAMILY'].'.</h2>';
 					foreach($taxaList as $value){
 						echo '<div style="margin-left:30px;"><a href="index.php?target=genus&taxon='.$value.'">'.strtoupper($value).'</a></div>';
 					}
 				}
 				else{
-					echo '<h2>No taxa returned matching search results</h2>';
+					echo '<h2>'.$LANG['NO_TAXA_RETURNED'].'</h2>';
 				}
 			}
 	?>

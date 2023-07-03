@@ -173,13 +173,11 @@ else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/geotoo
 				//Convert to Lat/Lng values
 				var zNum = parseInt(zValue);
 				if(isNumeric(zNum)){
-					var latLngStr = utm2LatLng(zNum,eValue,nValue,f.geodeticdatum.value);
+					var latLngStr = utm2LatLng(zNum, eValue, nValue, f.geodeticdatum.value, hValue);
 					var llArr = latLngStr.split(',');
 					if(llArr){
-						var latFact = 1;
-						if(hValue == "S") latFact = -1;
-						f.decimallatitude.value = latFact*Math.round(llArr[0]*1000000)/1000000;
-						f.decimallongitude.value = Math.round(llArr[1]*1000000)/1000000;
+						f.decimallatitude.value = llArr[0];
+						f.decimallongitude.value = llArr[1];
 					}
 				}
 				fieldChanged("decimallatitude");

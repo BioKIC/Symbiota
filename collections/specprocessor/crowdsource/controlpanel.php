@@ -1,6 +1,8 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCrowdSource.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/controlpanel.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/controlpanel.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/crowdsource/controlpanel.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid= array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -40,26 +42,25 @@ $projArr = $csManager->getProjectDetails();
 		<div style="float:right;"><a href="#" onclick="toggle('projFormDiv')"><img src="../../images/edit.png" /></a></div>
 		<div style="font-weight:bold;font-size:130%;"><?php echo (($omcsid && $projArr)?$projArr['name']:''); ?></div>
 		<div>
-			This module can be used to submit and manage records for data entry by the
-			general public. For more information, see the <a href="https://symbiota.org/crowdsourcing-within-symbiota-2/">Symbiota documentation on crowdsourcing</a>.
+			<?php echo $LANG['CROWDSOURCE_EXPLAIN']; ?>
 		</div>
 		<div id="projFormDiv" style="display:none">
 			<fieldset style="margin:15px;">
-				<legend><b>Edit Project</b></legend>
+				<legend><b><?php echo $LANG['EDIT_PROJECT']; ?></b></legend>
 				<form name="csprojform" action="index.php" method="post">
 					<div style="margin:3px;">
-						<b>General Instructions:</b><br/>
+						<b><?php echo $LANG['GENERAL_INSTRUCTIONS']; ?>:</b><br/>
 						<textarea name="instr" style="width:500px;height:100px;"><?php echo (($omcsid && $projArr)?$projArr['instr']:''); ?></textarea>
 					</div>
 					<div style="margin:3px;">
-						<b>Training Url:</b><br/>
+						<b><?php echo $LANG['TRAINING_URL']; ?>:</b><br/>
 						<input name="url" type="text" value="<?php echo (($omcsid && $projArr)?$projArr['url']:''); ?>" style="width:500px;" />
 					</div>
 					<div>
 						<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 						<input name="omcsid" type="hidden" value="<?php echo $omcsid; ?>" />
 						<input name="tabindex" type="hidden" value="1" />
-						<input name="submitaction" type="submit" value="Edit Crowdsource Project" />
+						<button name="submitaction" type="submit" value="Edit Crowdsource Project" ><?php echo $LANG['EDIT_CROWD_PROJ']; ?></button>
 					</div>
 				</form>
 			</fieldset>
@@ -72,10 +73,10 @@ $projArr = $csManager->getProjectDetails();
 			<?php
 			if($statsArr = $csManager->getProjectStats()){
 				?>
-				<div style="font-weight:bold;text-decoration:underline">Total Counts:</div>
+				<div style="font-weight:bold;text-decoration:underline"><?php echo $LANG['TOTAL_COUNTS']; ?>:</div>
 				<div style="margin:15px 0px 25px 15px;">
 					<div>
-						<b>Records in Queue:</b>
+						<b><?php echo $LANG['RECS_IN_QUEUE']; ?>:</b>
 						<?php
 						$unprocessedCnt = 0;
 						if(isset($statsArr[0]) && $statsArr[0]) $unprocessedCnt = $statsArr[0];
@@ -84,7 +85,7 @@ $projArr = $csManager->getProjectDetails();
 							echo $unprocessedCnt;
 							echo '</a> ';
 							echo '<a href="index.php?submitaction=delqueue&tabindex=1&collid='.$collid.'&omcsid='.$omcsid.'">';
-							echo '<img src="../../images/drop.png" style="width:12px;" title="Delete all unprocessed records from queue" />';
+							echo '<img src="../../images/drop.png" style="width:12px;" title="'.$LANG['DEL_UNPROCESSED'].'" />';
 							echo '</a>';
 						}
 						else{
@@ -93,7 +94,7 @@ $projArr = $csManager->getProjectDetails();
 						?>
 					</div>
 					<div>
-						<b>Pending Approval:</b>
+						<b><?php echo $LANG['PENDING_APPROVAL']; ?>:</b>
 						<?php
 						$pendingCnt = 0;
 						if(isset($statsArr[5])) $pendingCnt = $statsArr[5];
@@ -104,7 +105,7 @@ $projArr = $csManager->getProjectDetails();
 						?>
 					</div>
 					<div>
-						<b>Closed (Approved):</b>
+						<b><?php echo $LANG['CLOSED_APPROVED']; ?>:</b>
 						<?php
 						$reviewedCnt = 0;
 						if(isset($statsArr[10])) $reviewedCnt = $statsArr[10];
@@ -115,19 +116,19 @@ $projArr = $csManager->getProjectDetails();
 						?>
 					</div>
 					<div>
-						<b>Available to Add:</b>
+						<b><?php echo $LANG['AVAILABLE_TO_ADD']; ?>:</b>
 						<?php
 						echo $statsArr['toadd'];
 						if($statsArr['toadd']){
 							$criteriaArr = $csManager->getQueueLimitCriteria()
 							?>
-							(<a href="#" onclick="toggle('addQueueDiv'); return false;">Add to Queue</a>)
+							(<a href="#" onclick="toggle('addQueueDiv'); return false;"><?php echo $LANG['ADD_TO_QUEUE']; ?></a>)
 							<div id="addQueueDiv" style="display:none;margin-left:30px;">
 								<form method="post" action="index.php">
 									<fieldset>
-										<legend><b>Criteria</b></legend>
+										<legend><b><?php echo $LANG['CRITERIA']; ?></b></legend>
 										<div>
-											<b>Family:</b>
+											<b><?php echo $LANG['FAMILY']; ?>:</b>
 											<select name="family">
 												<option value="">---------------------</option>
 												<?php
@@ -140,7 +141,7 @@ $projArr = $csManager->getProjectDetails();
 											</select>
 										</div>
 										<div>
-											<b>Genus/Species:</b>
+											<b><?php echo $LANG['GENUS_SP']; ?>:</b>
 											<select name="taxon">
 												<option value="">---------------------</option>
 												<?php
@@ -153,7 +154,7 @@ $projArr = $csManager->getProjectDetails();
 											</select>
 										</div>
 										<div>
-											<b>Country:</b>
+											<b><?php echo $LANG['COUNTRY']; ?>:</b>
 											<select name="country">
 												<option value="">---------------------</option>
 												<?php
@@ -166,7 +167,7 @@ $projArr = $csManager->getProjectDetails();
 											</select>
 										</div>
 										<div>
-											<b>State/Province:</b>
+											<b><?php echo $LANG['STATE_PROV']; ?>:</b>
 											<select name="stateprovince">
 												<option value="">---------------------</option>
 												<?php
@@ -179,13 +180,13 @@ $projArr = $csManager->getProjectDetails();
 											</select>
 										</div>
 										<div>
-											<b>Record limit:</b> <input name="limit" type="text" value="1000" />
+											<b><?php echo $LANG['RECORD_LIMIT']; ?>:</b> <input name="limit" type="text" value="1000" />
 										</div>
 										<div>
 											<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 											<input name="omcsid" type="hidden" value="<?php echo $omcsid; ?>" />
 											<input name="tabindex" type="hidden" value="1" />
-											<input name="submitaction" type="submit" value="Add to Queue" />
+											<button name="submitaction" type="submit" value="Add to Queue" ><?php echo $LANG['ADD_TO_QUEUE']; ?></button>
 										</div>
 									</fieldset>
 								</form>
@@ -201,13 +202,13 @@ $projArr = $csManager->getProjectDetails();
 				$editStats = (array_key_exists('e',$stats)?$stats['e']:null);
 				?>
 				<div style="margin:15px;">
-					<div style="font-weight:bold;text-decoration:underline;margin-bottom:15px;">Volunteers</div>
+					<div style="font-weight:bold;text-decoration:underline;margin-bottom:15px;"><?php echo $LANG['VOLUNTEERS']; ?></div>
 					<table class="styledtable" style="font-family:Arial;font-size:12px;width:500px;">
 						<tr>
-							<th>User</th>
-							<th>Score</th>
-							<th>Pending Review</th>
-							<th>Approved</th>
+							<th><?php echo $LANG['USER']; ?></th>
+							<th><?php echo $LANG['SCORE']; ?></th>
+							<th><?php echo $LANG['PENDING_REVIEW']; ?></th>
+							<th><?php echo $LANG['APPROVED']; ?></th>
 						</tr>
 						<?php
 						if($volStats){
@@ -218,31 +219,31 @@ $projArr = $csManager->getProjectDetails();
 								$pendingCnt = (isset($uArr[5])?$uArr[5]:0);
 								echo '<td>';
 								echo $pendingCnt;
-								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">Review</a>)';
+								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
 								echo '</td>';
 								//Closed
 								$closeCnt = (isset($uArr[10])?$uArr[10]:0);
 								echo '<td>';
 								echo $closeCnt;
-								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">Review</a>)';
+								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
 								echo '</td>';
 								echo '</tr>';
 							}
 						}
 						else{
-							echo '<tr><td colspan="5">No records processed</td></tr>';
+							echo '<tr><td colspan="5">'.$LANG['NO_RECS_PROCESSED'].'</td></tr>';
 						}
 						?>
 					</table>
 				</div>
 				<div style="margin:25px 15px">
-					<div style="font-weight:bold;text-decoration:underline;margin-bottom:15px;">Approved Editors</div>
+					<div style="font-weight:bold;text-decoration:underline;margin-bottom:15px;"><?php echo $LANG['APPROVED_EDITORS']; ?></div>
 					<table class="styledtable" style="font-family:Arial;font-size:12px;width:500px;">
 						<tr>
-							<th>User</th>
-							<th>Score</th>
-							<th>Pending Review</th>
-							<th>Approved</th>
+							<th><?php echo $LANG['USER']; ?></th>
+							<th><?php echo $LANG['SCORE']; ?></th>
+							<th><?php echo $LANG['PENDING_REVIEW']; ?></th>
+							<th><?php echo $LANG['APPROVED']; ?></th>
 						</tr>
 						<?php
 						if($editStats){
@@ -253,25 +254,25 @@ $projArr = $csManager->getProjectDetails();
 								$pendingCnt = (isset($uArr[5])?$uArr[5]:0);
 								echo '<td>';
 								echo $pendingCnt;
-								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">Review</a>)';
+								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
 								echo '</td>';
 								//Closed
 								$closeCnt = (isset($uArr[10])?$uArr[10]:0);
 								echo '<td>';
 								echo $closeCnt;
-								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">Review</a>)';
+								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
 								echo '</td>';
 								echo '</tr>';
 							}
 						}
 						else{
-							echo '<tr><td colspan="5">No records processed</td></tr>';
+							echo '<tr><td colspan="5">'.$LANG['NO_RECS_PROCESSED'].'</td></tr>';
 						}
 						?>
 					</table>
 				</div>
 				<div style="clear:both;margin-top:50px;font-weight:bold;">
-					Visit <a href="crowdsource/index.php">Score Board</a>
+					Visit <a href="crowdsource/index.php"><?php echo $LANG['SCORE_BOARD']; ?></a>
 				</div>
 				<?php
 			}
@@ -280,7 +281,7 @@ $projArr = $csManager->getProjectDetails();
 		<?php
 	}
 	else{
-		echo 'ERROR: collection id not supplied';
+		echo $LANG['NO_COLLID'];
 	}
 	?>
 </div>

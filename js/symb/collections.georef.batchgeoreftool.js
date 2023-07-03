@@ -323,19 +323,11 @@ function insertUtm(f) {
 	if(zValue && eValue && nValue){
 		if(isNumeric(eValue) && isNumeric(nValue)){
 			//Convert to Lat/Lng values
-			var zNum = parseInt(zValue);
-			if(isNumeric(zNum)){
-				var latLngStr = utm2LatLng(zNum,eValue,nValue,f.geodeticdatum.value);
-				var llArr = latLngStr.split(',');
-				if(llArr){
-					var latFact = 1;
-					if(hValue == "Southern") latFact = -1;
-					f.decimallatitude.value = latFact*Math.round(llArr[0]*1000000)/1000000;
-					f.decimallongitude.value = Math.round(llArr[1]*1000000)/1000000;
-				}
-			}
-			else{
-				alert("Zone fields must contain numeric values only");
+			var latLngStr = utm2LatLng(zValue, eValue, nValue, f.geodeticdatum.value, hValue);
+			var llArr = latLngStr.split(',');
+			if(llArr){
+				f.decimallatitude.value = llArr[0];
+				f.decimallongitude.value = llArr[1];
 			}
 		}
 		else{

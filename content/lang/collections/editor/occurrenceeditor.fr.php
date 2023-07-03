@@ -153,7 +153,6 @@ $LANG['FAILED_TO_EDIT_OCC'] = "ERREUR: échec de la modification de l'enregistre
 $LANG['EDIT_SUBMITTED_NOT_ACTIVATED'] = 'Modifications soumises, mais non activées.<br/>Une fois les modifications examinées et approuvées par un gestionnaire de données, elles seront activées.<br/>Merci de nous aider à améliorer les données.';
 $LANG['ERROR_EDITS_EMPTY'] = 'ERREUR: éditions vides pour occid';
 $LANG['SUCCESS_NEW_OCC_SUBMITTED'] = "SUCCÈS: nouvel enregistrement d'événement soumis avec succès";
-$LANG['GUID_FAILED'] = 'AVERTISSEMENT: le mappage du GUID Symbiota a échoué';
 $LANG['WARNING_ADD_EXS_NO'] = 'ATTENTION ajout du numéro exsiccati';
 $LANG['WARNING_ADD_EXS'] = "ATTENTION ajout d'exsiccati";
 $LANG['FAILED_ADD_OCC'] = "ERREUR - échec de l'ajout de l'enregistrement d'occurrence";

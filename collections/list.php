@@ -35,7 +35,7 @@ $_SESSION['citationvar'] = $searchVar;
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
 	?>
-	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collection/listdisplay.css" type="text/css" rel="stylesheet" />
+	<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 	<script src="../js/jquery-3.2.1.min.js" type="text/javascript"></script>
 	<script src="../js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
 	<link href="../js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
@@ -96,7 +96,7 @@ $_SESSION['citationvar'] = $searchVar;
 			});
 		}
 	</script>
-	<script src="../js/symb/collections.list.js?ver=9" type="text/javascript"></script>
+	<script src="../js/symb/collections.list.js?ver=10" type="text/javascript"></script>
 	<style type="text/css">
 		fieldset {
 			padding: 15px;

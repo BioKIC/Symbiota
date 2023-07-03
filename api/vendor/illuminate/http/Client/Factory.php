@@ -18,7 +18,7 @@ use PHPUnit\Framework\Assert as PHPUnit;
  * @method \Illuminate\Http\Client\PendingRequest asJson()
  * @method \Illuminate\Http\Client\PendingRequest asMultipart()
  * @method \Illuminate\Http\Client\PendingRequest async()
- * @method \Illuminate\Http\Client\PendingRequest attach(string|array $name, string $contents = '', string|null $filename = null, array $headers = [])
+ * @method \Illuminate\Http\Client\PendingRequest attach(string|array $name, string|resource $contents = '', string|null $filename = null, array $headers = [])
  * @method \Illuminate\Http\Client\PendingRequest baseUrl(string $url)
  * @method \Illuminate\Http\Client\PendingRequest beforeSending(callable $callback)
  * @method \Illuminate\Http\Client\PendingRequest bodyFormat(string $format)
@@ -123,7 +123,7 @@ class Factory
 
         $response = new Psr7Response($status, $headers, $body);
 
-        return class_exists(GuzzleHttp\Promise\Create::class)
+        return class_exists(\GuzzleHttp\Promise\Create::class)
             ? \GuzzleHttp\Promise\Create::promiseFor($response)
             : \GuzzleHttp\Promise\promise_for($response);
     }
@@ -148,6 +148,8 @@ class Factory
     public function fake($callback = null)
     {
         $this->record();
+
+        $this->recorded = [];
 
         if (is_null($callback)) {
             $callback = function () {

@@ -96,7 +96,7 @@ class ReflectionClosure extends ReflectionFunction
         $builtin_types = self::getBuiltinTypes();
         $class_keywords = ['self', 'static', 'parent'];
 
-        $ns = $this->getNamespaceName();
+        $ns = $this->getClosureNamespaceName();
         $nsf = $ns == '' ? '' : ($ns[0] == '\\' ? $ns : '\\'.$ns);
 
         $_file = var_export($fileName, true);
@@ -676,6 +676,30 @@ class ReflectionClosure extends ReflectionFunction
         $this->isShortClosure = $isShortClosure;
         $this->isBindingRequired = $isUsingThisObject;
         $this->isScopeRequired = $isUsingScope;
+
+        if (PHP_VERSION_ID >= 80100) {
+            $attributesCode = array_map(function ($attribute) {
+                $arguments = $attribute->getArguments();
+
+                $name = $attribute->getName();
+                $arguments = implode(', ', array_map(function ($argument, $key) {
+                    $argument = sprintf("'%s'", str_replace("'", "\\'", $argument));
+
+                    if (is_string($key)) {
+                        $argument = sprintf('%s: %s', $key, $argument);
+                    }
+
+                    return $argument;
+                }, $arguments, array_keys($arguments)));
+
+                return "#[$name($arguments)]";
+            }, $this->getAttributes());
+
+            if (! empty($attributesCode)) {
+                $code = implode("\n", array_merge($attributesCode, [$code]));
+            }
+        }
+
         $this->code = $code;
 
         return $this->code;
@@ -1131,6 +1155,23 @@ class ReflectionClosure extends ReflectionFunction
         static::$functions[$key] = $functions;
         static::$constants[$key] = $constants;
         static::$structures[$key] = $structures;
+    }
+
+    /**
+     * Returns the namespace associated to the closure.
+     *
+     * @return string
+     */
+    protected function getClosureNamespaceName()
+    {
+        $ns = $this->getNamespaceName();
+
+        // First class callables...
+        if ($this->getName() !== '{closure}' && empty($ns) && ! is_null($this->getClosureScopeClass())) {
+            $ns = $this->getClosureScopeClass()->getNamespaceName();
+        }
+
+        return $ns;
     }
 
     /**

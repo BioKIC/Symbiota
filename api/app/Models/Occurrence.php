@@ -46,10 +46,6 @@ class Occurrence extends Model{
 		return $this->hasMany(OccurrenceAnnotationInternal::class, 'occid', 'occid')->where('collid', 1);
 	}
 
-	public function guid(){
-	    return $this->hasOne(OccurrenceGuid::class, 'occid', 'occid');
-	}
-
 	public function portalPublications(){
 		return $this->belongsToMany(PortalPublication::class, 'portaloccurrences', 'occid', 'pubid')->withPivot('remoteOccid');;
 	}

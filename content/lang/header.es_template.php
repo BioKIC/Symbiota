@@ -7,14 +7,15 @@ Language: Español (Spanish)
 
 $LANG['H_HOME'] = 'Inicio';
 
-$LANG['H_SEARCH'] = 'B&uacute;squeda';
+$LANG['H_SEARCH'] = 'Búsqueda';
 $LANG['H_COLLECTIONS'] = 'Colecciones';
 $LANG['H_MAP'] = 'Mapa';
+$LANG['H_MAP_SEARCH'] = 'Búsqueda Mapa';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Explorador Taxon&oacute;mico';
 
 $LANG['H_IMAGES'] = 'Im&aacute;genes';
 $LANG['H_IMAGE_BROWSER'] = 'Navegador de Im&aacute;genes';
-$LANG['H_IMAGE_SEARCH'] = 'B&uacute;squeda de Im&aacute;genes';
+$LANG['H_IMAGE_SEARCH'] = 'Búsqueda de Im&aacute;genes';
 
 $LANG['H_INVENTORIES'] = 'Lista de Especies';
 $LANG['H_PROJECT_1'] = 'Proyecto 1';
@@ -36,6 +37,7 @@ $LANG['H_PARTNERS'] = 'Socios';
 $LANG['H_CONTACTS'] = 'Contactos';
 $LANG['H_HELP'] = 'Ayuda de Symbiota';
 $LANG['H_SITEMAP'] = 'Mapa del Sitio';
+$LANG['H_DATA_USAGE'] = 'Uso de Datos';
 
 $LANG['H_WELCOME'] = 'Bienvenido';
 $LANG['H_MY_PROFILE'] = 'Mi Perfil';

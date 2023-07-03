@@ -26,7 +26,7 @@ class DwcArchiverImage{
 		$termArr['comments'] = 'http://rs.tdwg.org/ac/terms/comments';
 		$fieldArr['comments'] = 'i.notes';
 		$termArr['providerManagedID'] = 'http://rs.tdwg.org/ac/terms/providerManagedID';	//GUID
-		$fieldArr['providerManagedID'] = 'g.guid AS providermanagedid';
+		$fieldArr['providerManagedID'] = 'i.recordID AS providermanagedid';
 		$termArr['MetadataDate'] = 'http://ns.adobe.com/xap/1.0/MetadataDate';	//timestamp
 		$fieldArr['MetadataDate'] = 'i.initialtimestamp AS metadatadate';
 		$termArr['format'] = 'http://purl.org/dc/terms/format';		//jpg
@@ -67,17 +67,16 @@ class DwcArchiverImage{
 			$sql = 'SELECT '.trim($sqlFrag,', ').
 				' FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
 				'LEFT JOIN omcollections c ON o.collid = c.collid '.
-				'LEFT JOIN users u ON i.photographeruid = u.uid '.
-				'INNER JOIN guidimages g ON i.imgid = g.imgid ';
+				'LEFT JOIN users u ON i.photographeruid = u.uid ';
 			if(strpos($conditionSql,'ts.taxauthid')){
 				$sql .= 'LEFT JOIN taxstatus ts ON o.tidinterpreted = ts.tid ';
 			}
 			if(stripos($conditionSql,'e.parenttid')){
 				$sql .= 'LEFT JOIN taxaenumtree e ON o.tidinterpreted = e.tid ';
 			}
-			if(strpos($conditionSql,'v.clid')){
+			if(strpos($conditionSql,'ctl.clid')){
 				//Search criteria came from custom search page
-				$sql .= 'LEFT JOIN fmvouchers v ON o.occid = v.occid ';
+				$sql .= 'LEFT JOIN fmvouchers v ON o.occid = v.occid LEFT JOIN fmchklsttaxalink ctl ON v.clTaxaID = ctl.clTaxaID ';
 			}
 			if(strpos($conditionSql,'p.point')){
 				//Search criteria came from map search page

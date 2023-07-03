@@ -334,10 +334,9 @@ class OccurrenceDataset {
 	//General setters and getters
 	public function getUserList($term){
 		$retArr = array();
-		$sql = 'SELECT u.uid, CONCAT(CONCAT_WS(", ",u.lastname, u.firstname)," - ",l.username," [#",u.uid,"]") AS username '.
-			'FROM users u INNER JOIN userlogin l ON u.uid = l.uid '.
-			'WHERE u.lastname LIKE "%'.$this->cleanInStr($term).'%" OR l.username LIKE "%'.$this->cleanInStr($term).'%" '.
-			'ORDER BY u.lastname,u.firstname';
+		$sql = 'SELECT uid, CONCAT(CONCAT_WS(", ", lastname, firstname)," - ", username," [#", uid,"]") AS username '.
+			'FROM users WHERE lastname LIKE "%'.$this->cleanInStr($term).'%" OR username LIKE "%'.$this->cleanInStr($term).'%" '.
+			'ORDER BY lastname, firstname';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()) {
 			$retArr[] = array('id'=>$r->uid,'label'=>$r->username);

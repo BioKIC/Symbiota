@@ -25,8 +25,8 @@ class SpecProcessorManager {
 	protected $tnPixWidth = '';
 	protected $lgPixWidth = '';
 	protected $jpgQuality = 80;
-	protected $webMaxFileSize = 300000;
-	protected $lgMaxFileSize = 3000000;
+	protected $webMaxFileSize = 500000;
+	protected $lgMaxFileSize = 10000000;
 	protected $webImg = 1;
 	protected $createTnImg = 1;
 	protected $createLgImg = 2;
@@ -447,9 +447,7 @@ class SpecProcessorManager {
 		}
 		$rs->free();
 
-		$sql = 'SELECT DISTINCT u.uid, CONCAT(CONCAT_WS(", ",u.lastname, u.firstname)," (",l.username,")") AS username '.
-			'FROM users u INNER JOIN userlogin l ON u.uid = l.uid '.
-			'WHERE (u.uid IN('.implode(',', array_keys($retArr)).')) ';
+		$sql = 'SELECT DISTINCT uid, CONCAT(CONCAT_WS(", ", lastname, firstname)," (", username,")") AS username FROM users WHERE (uid IN('.implode(',', array_keys($retArr)).')) ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->uid] = $r->username;
@@ -493,7 +491,7 @@ class SpecProcessorManager {
 			$sql .= ', COUNT(DISTINCT CASE WHEN e.editType = 0 THEN o.occid ELSE NULL END) as cntexcbatch ';
 		}
 		$sql .= 'FROM omoccurrences o INNER JOIN omoccuredits e ON o.occid = e.occid '.
-			'INNER JOIN userlogin u ON e.uid = u.uid '.
+			'INNER JOIN users u ON e.uid = u.uid '.
 			'WHERE (o.collid = '.$this->collid.') ';
 		if($startDate && $endDate){
 			$sql .= 'AND (e.initialtimestamp BETWEEN "'.$startDate.'" AND "'.$endDate.'") ';

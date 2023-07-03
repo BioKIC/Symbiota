@@ -17,7 +17,6 @@ $LANG['ROTATE'] = 'Rotate';
 $LANG['HIGH_RES'] = 'High Res';
 $LANG['MED_RES'] = 'Med Res';
 $LANG['OCR_IMAGE'] = 'OCR Image';
-$LANG['OPTIONS'] = 'Options';
 $LANG['OCR_WHOLE_IMG'] = 'OCR whole image';
 $LANG['OCR_ANALYSIS'] = 'OCR w/ analysis';
 $LANG['IMAGE'] = 'Image';

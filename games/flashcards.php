@@ -2,18 +2,17 @@
 //error_reporting(E_ALL);
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GamesManager.php');
-header("Content-Type: text/html; charset=".$CHARSET);
+header('Content-Type: text/html; charset='.$CHARSET);
 
-$clid = array_key_exists("clid",$_REQUEST)?$_REQUEST["clid"]:0;
-$dynClid = array_key_exists("dynclid",$_REQUEST)?$_REQUEST["dynclid"]:0;
-$taxonFilter = array_key_exists("taxonfilter",$_REQUEST)?$_REQUEST["taxonfilter"]:0;
-$showCommon = array_key_exists("showcommon",$_REQUEST)?$_REQUEST["showcommon"]:0;
-$lang = array_key_exists("lang",$_REQUEST)?$_REQUEST["lang"]:$defaultLang;
+$clid = array_key_exists('clid', $_REQUEST) ? $_REQUEST['clid'] : 0;
+$dynClid = array_key_exists('dynclid', $_REQUEST) ? $_REQUEST['dynclid'] : 0;
+$taxonFilter = array_key_exists('taxonfilter', $_REQUEST) ? htmlspecialchars($_REQUEST['taxonfilter'], HTML_SPECIAL_CHARS_FLAGS) : '';
+$showCommon = array_key_exists('showcommon', $_REQUEST) ? $_REQUEST['showcommon'] : 0;
+$lang = array_key_exists('lang', $_REQUEST) ? htmlspecialchars($_REQUEST['lang'], HTML_SPECIAL_CHARS_FLAGS) : $defaultLang;
 
 //Sanitation
 if(!is_numeric($clid)) $clid = 0;
 if(!is_numeric($dynClid)) $dynClid = 0;
-if(!is_numeric($taxonFilter)) $taxonFilter = 0;
 if(!is_numeric($showCommon)) $showCommon = 0;
 
 $fcManager = new GamesManager();

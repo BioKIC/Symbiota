@@ -8,7 +8,7 @@
  *
  * uploadtype (required): $FILEUPLOAD = 3; $DWCAUPLOAD = 6
  * key (required): security key used to authorize
- * filepath: URI path to locality where DWCA file was placed for retrieval (file must have read accessible to portal)
+ * filepath: URI path to locality where DWCA file was placed for retrieval (file must be read accessible to portal)
  * uploadfile: file streamed in for upload; POST protocol must be used when streaming file
  * importident (default = false): 0 = identification history NOT included for ingestion, 1 = identification history included for ingestion
  * importimage (default = false): 0 = image URLs NOT included for ingestion, 1 = image URLs included for ingestion
@@ -20,14 +20,14 @@ require_once($SERVER_ROOT.'/classes/SpecUploadBase.php');
 require_once($SERVER_ROOT.'/classes/SpecUploadFile.php');
 require_once($SERVER_ROOT.'/classes/SpecUploadDwca.php');
 
-$uploadType = isset($_REQUEST['uploadtype'])?preg_replace('/[^0-9]/','',$_REQUEST['uploadtype']):'';
-$securityKey = isset($_REQUEST['key'])?preg_replace('/[^A-Za-z0-9\-]/','',$_REQUEST['key']):'';
-$filePath = array_key_exists('filepath',$_REQUEST)?$_REQUEST['filepath']:false;
-$importIdent = array_key_exists('importident',$_REQUEST)?$_REQUEST['importident']:false;
-$importImage = array_key_exists('importimage',$_REQUEST)?$_REQUEST['importimage']:false;
-$sourceType = array_key_exists('sourcetype',$_REQUEST)?$_REQUEST['sourcetype']:'';
+$uploadType = isset($_REQUEST['uploadtype']) ? filter_var($_REQUEST['uploadtype'], FILTER_SANITIZE_NUMBER_INT) : '';
+$securityKey = isset($_REQUEST['key']) ? filter_var($_REQUEST['key'], FILTER_SANITIZE_STRING):'';
+$filePath = array_key_exists('filepath', $_REQUEST) ? filter_var($_REQUEST['filepath'], FILTER_SANITIZE_STRING) : false;
+$importIdent = array_key_exists('importident', $_REQUEST) ? filter_var($_REQUEST['importident'], FILTER_SANITIZE_NUMBER_INT) : 1;
+$importImage = array_key_exists('importimage', $_REQUEST) ? filter_var($_REQUEST['importimage'], FILTER_SANITIZE_NUMBER_INT) : 1;
+$sourceType = array_key_exists('sourcetype', $_REQUEST) ? filter_var($_REQUEST['sourcetype'], FILTER_SANITIZE_STRING) : '';
 
-if(!$uploadType) exit("ERROR: uploadtype is required and is null ");
+if(!$uploadType) exit('ERROR: uploadtype is required and is null ');
 
 $duManager = null;
 $FILEUPLOAD = 3; $DWCAUPLOAD = 6;
@@ -39,6 +39,7 @@ elseif($uploadType == $DWCAUPLOAD){
 	$duManager = new SpecUploadDwca();
 	$duManager->setIncludeIdentificationHistory($importIdent);
 	$duManager->setIncludeImages($importImage);
+	$duManager->setUploadType($uploadType);
 	if($filePath) $duManager->setPath($filePath);
 	//For now, assume DWCA import is a specfy database
 	if(!$sourceType) $sourceType = 'specify';
@@ -58,12 +59,12 @@ if(!$duManager->validateSecurityKey($securityKey)){
 }
 if($sourceType) $duManager->setSourceDatabaseType($sourceType);
 
-$duManager->loadFieldMap(true);
 $ulPath = $duManager->uploadFile();
 if(!$ulPath){
 	$errStr = 'ERROR uploading file: '.$duManager->getErrorStr();
 	exit($errStr);
 }
+$duManager->loadFieldMap(true);
 
 if(!$duManager->analyzeUpload()) exit('ERROR analyzing upload file: '.$duManager->getErrorStr());
 if(!$duManager->uploadData(false)) exit('ERROR uploading file: '.$duManager->getErrorStr());

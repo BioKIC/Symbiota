@@ -137,6 +137,7 @@ if($isEditor){
 										<input name='displaylevel' style='width:40px;' type='text' value='<?php echo $dArr['displaylevel'];?>' />
 									</div>
 									<div style="margin:10px;">
+										<input name="tdProfileID" type="hidden" value="<?php echo $dArr['tdProfileID'];?>" />
 										<input name="tdbid" type="hidden" value="<?php echo $tdbid;?>" />
 										<input name="tid" type="hidden" value="<?php echo $descEditor->getTid();?>" />
 										<input name="tabindex" type="hidden" value="4" />

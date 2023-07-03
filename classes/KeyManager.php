@@ -22,16 +22,8 @@ class KeyManager{
 			if($charStr) $sqlWhere .= 'AND (CID IN ('.$charStr.'))';
 			if($csStr) $sqlWhere .= 'AND (cs IN ('.$csStr.'))';
 
-			//Version deletes
-			$sqlTrans = 'INSERT INTO kmdescrdeletions ( TID, CID, Modifier, CS, X, TXT, Inherited, Source, Seq, Notes, InitialTimeStamp, DeletedBy ) '.
-				'SELECT TID, CID, Modifier, CS, X, TXT, Inherited, Source, Seq, d.Notes, d.DateEntered, "'.$GLOBALS['USERNAME'].'" '.
-				'FROM kmdescr d WHERE (Inherited Is Not Null) AND '.$sqlWhere;
-			//echo "<div>".$sqlTrans."</div>";
-			$this->conn->query($sqlTrans);
-
 			//Delete descriptions
 			$sql = 'DELETE FROM kmdescr WHERE '.$sqlWhere;
-			//echo "<div>".$sql."</div>";
 			$this->conn->query($sql);
 		}
 	}

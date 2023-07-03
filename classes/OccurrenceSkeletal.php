@@ -54,19 +54,14 @@ class OccurrenceSkeletal {
 					$sql2 .= ',NULL';
 				}
 			}
-			$sql = 'INSERT INTO omoccurrences('.trim($sql1,' ,').',recordenteredby,dateentered) VALUES('.trim($sql2,' ,').',"'.$GLOBALS['USERNAME'].'","'.date('Y-m-d H:i:s').'")';
-			//echo $sql;
+			$guid = UuidFactory::getUuidV4();
+			$sql = 'INSERT INTO omoccurrences('.trim($sql1,' ,').',recordEnteredBy,dateEntered,recordID) VALUES('.trim($sql2,' ,').',"'.$GLOBALS['USERNAME'].'","'.date('Y-m-d H:i:s').'","'.$guid.'")';
 			if($this->conn->query($sql)){
 				$status = true;
 				$occid = $this->conn->insert_id;
 				$this->occidArr[] = $occid;
 				//Update collection stats
 				$this->conn->query('UPDATE omcollectionstats SET recordcnt = recordcnt + 1 WHERE collid = '.$this->collid);
-				//Create and insert Symbiota GUID (UUID)
-				$guid = UuidFactory::getUuidV4();
-				if(!$this->conn->query('INSERT INTO guidoccurrences(guid,occid) VALUES("'.$guid.'",'.$occid.')')){
-					$this->errorStr = '(WARNING: Symbiota GUID mapping failed) ';
-				}
 				if(isset($postArr['ometid']) && $postArr['ometid'] && isset($postArr['exsnumber']) && $postArr['exsnumber']){
 					$this->addExsiccate($occid, $postArr['ometid'], $postArr['exsnumber']);
 				}

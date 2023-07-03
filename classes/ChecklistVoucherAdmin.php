@@ -6,7 +6,7 @@ class ChecklistVoucherAdmin extends Manager {
 	protected $clid;
 	protected $clName;
 	protected $clMetadata;
-	protected $childClidArr = array();
+	private $childClidArr = array();
 	private $footprintWkt;
 	private $queryVariablesArr = array();
 
@@ -19,7 +19,8 @@ class ChecklistVoucherAdmin extends Manager {
 	}
 
 	public function setClid($clid){
-		if(is_numeric($clid)){
+		$clid = filter_var($clid, FILTER_SANITIZE_NUMBER_INT);
+		if($clid){
 			$this->clid = $clid;
 			$this->setMetaData();
 			//Get children checklists
@@ -193,7 +194,7 @@ class ChecklistVoucherAdmin extends Manager {
 		$sql = 'UPDATE fmchecklists c SET c.dynamicsql = '.($jsonArr?'"'.$this->cleanInStr(json_encode($jsonArr)).'"':'NULL').' WHERE (c.clid = '.$this->clid.')';
 		//echo $sql; exit;
 		if(!$this->conn->query($sql)){
-			$statusStr = 'ERROR: unable to create or modify search statement ('.$this->conn->error.')';
+			$this->errorMessage = 'ERROR: unable to create or modify search statement ('.$this->conn->error.')';
 		}
 	}
 
@@ -339,56 +340,33 @@ class ChecklistVoucherAdmin extends Manager {
 
 	//Voucher loading functions
 	public function linkVouchers($occidArr){
-		$retStatus = '';
-		$sqlFrag = '';
+		$statusCnt = 0;
 		foreach($occidArr as $v){
 			$vArr = explode('-',$v);
-			if(count($vArr) == 2 && $vArr[0] && $vArr[1]) $sqlFrag .= ',('.$this->clid.','.$vArr[0].','.$vArr[1].')';
+			if(count($vArr) == 2 && $vArr[0] && $vArr[1]){
+				$occid = $vArr[0];
+				$clTaxaID = $vArr[1];
+				if($this->insertVoucher($clTaxaID, $occid)){
+					$statusCnt++;
+				}
+			}
 		}
-		$sql = 'INSERT IGNORE INTO fmvouchers(clid,occid,tid) VALUES '.substr($sqlFrag,1);
-		//echo $sql;
-		if(!$this->conn->query($sql)){
-			trigger_error('Unable to link voucher; '.$this->conn->error,E_USER_WARNING);
-		}
-		return $retStatus;
+		return $statusCnt;
 	}
 
-	public function linkVoucher($taxa,$occid,$morphoSpecies=""){
-		if(!is_numeric($taxa)){
-			$rs = $this->conn->query('SELECT tid FROM taxa WHERE (sciname = "'.$this->conn->real_escape_string($taxa).'")');
-			if($r = $rs->fetch_object()){
-				$taxa = $r->tid;
-			}
+	public function linkVoucher($taxa, $occid, $morphoSpecies=''){
+		$status = false;
+		if($this->voucherIsLinked($occid)){
+			$this->errorMessage = 'voucherAlreadyLinked';
+			return false;
 		}
-		$sql = 'INSERT INTO fmvouchers(clid,tid,occid) VALUES ('.$this->clid.','.$taxa.','.$occid.')';
-		if($this->conn->query($sql)){
-			return 1;
+		if(!is_numeric($taxa)) $taxa = $this->getTid($taxa);
+		$clTaxaID = $this->getClTaxaID($taxa, $morphoSpecies);
+		if(!$clTaxaID) $clTaxaID = $this->insertChecklistTaxaLink($taxa);
+		if($clTaxaID){
+			$status = $this->insertVoucher($clTaxaID, $occid);
 		}
-		else{
-			if($this->conn->errno == 1062){
-				//trigger_error('Specimen already a voucher for checklist ');
-				return 'Specimen already a voucher for checklist';
-			}
-			else{
-				//trigger_error('Attempting to resolve by adding species to checklist; '.$this->conn->error,E_USER_WARNING);
-				$sql2 = 'INSERT INTO fmchklsttaxalink(tid,clid,morphospecies) VALUES('.$taxa.','.$this->clid.',"'.$morphoSpecies.'")';
-				if($this->conn->query($sql2)){
-					if($this->conn->query($sql)){
-						return 1;
-					}
-					else{
-						//echo 'Name added to list, though still unable to link voucher';
-						//trigger_error('Name added to checklist, though still unable to link voucher": '.$this->conn->error,E_USER_WARNING);
-						return 'Name added to checklist, though unable to link voucher: '.$this->conn->error;
-					}
-				}
-				else{
-					//echo 'Unable to link voucher; unknown error';
-					//trigger_error('Unable to link voucher; '.$this->conn->error,E_USER_WARNING);
-					return 'Unable to link voucher: '.$this->conn->error;
-				}
-			}
-		}
+		return $status;
 	}
 
 	public function linkTaxaVouchers($occidArr, $useCurrentTaxon = true, $linkVouchers = true){
@@ -398,83 +376,240 @@ class ChecklistVoucherAdmin extends Manager {
 			$tid = $vArr[1];
 			$occid = $vArr[0];
 			if(count($vArr) == 2 && is_numeric($occid) && is_numeric($tid)){
-				if($useCurrentTaxon){
-					$sql = 'SELECT tidaccepted FROM taxstatus WHERE taxauthid = 1 AND tid = '.$tid;
-					$rs = $this->conn->query($sql);
-					if($r = $rs->fetch_object()){
-						$tid = $r->tidaccepted;
-					}
-					$rs->free();
-				}
-				if(!in_array($tid,$tidsUsed)){
+				if($useCurrentTaxon) $tid = $this->getTidAccepted($tid);
+				if(!in_array($tid, $tidsUsed)){
 					//Add name to checklist
-					$sql = 'INSERT INTO fmchklsttaxalink(clid,tid) VALUES('.$this->clid.','.$tid.')';
+					$clTaxaID = $this->insertChecklistTaxaLink($tid);
 					$tidsUsed[] = $tid;
-					//echo $sql;
-					if(!$this->conn->query($sql)){
-						trigger_error('Unable to add taxon; '.$this->conn->error,E_USER_WARNING);
-					}
-				}
-				if($linkVouchers){
-					$sql = 'INSERT INTO fmvouchers(clid,occid,tid) VALUES ('.$this->clid.','.$occid.','.$tid.')';
-					if(!$this->conn->query($sql)){
-						trigger_error('Unable to link taxon voucher; '.$this->conn->error,E_USER_WARNING);
+					if($clTaxaID && $linkVouchers){
+						$this->insertVoucher($clTaxaID, $occid);
 					}
 				}
 			}
 		}
 	}
 
-	public function batchAdjustChecklist($postArr){
-		$occidArr = $postArr['occid'];
-		$removeTidArr = array();
+	public function batchTransferConflicts($occidArr, $removeTaxa){
 		foreach($occidArr as $occid){
-			//Get checklist tid
-			$tidChecklist = 0;
-			$sql = 'SELECT tid FROM fmvouchers WHERE (clid = '.$this->clid.') AND (occid = '.$occid.')';
-			$rs = $this->conn->query($sql);
-			if($r = $rs->fetch_object()){
-				$removeTidArr[] = $r->tid;
+			if(is_numeric($occid)){
+				$voucherID = 0;
+				$oldClTaxaID = 0;
+				//Get checklist voucher and clTaxa IDs
+				$sql = 'SELECT v.voucherID, v.cltaxaid FROM fmchklsttaxalink c INNER JOIN fmvouchers v ON c.cltaxaid = v.cltaxaid WHERE (c.clid = ?) AND (v.occid = ?)';
+				if($stmt = $this->conn->prepare($sql)) {
+					$stmt->bind_param('ii', $this->clid, $occid);
+					$stmt->execute();
+					$stmt->bind_result($voucherID, $oldClTaxaID);
+					$stmt->fetch();
+					$stmt->close();
+				}
+
+				//Get voucher tid
+				$tidTarget = $this->getTidInterpreted($occid);
+				if($oldClTaxaID && $tidTarget){
+					//Make sure target name is already linked to checklist
+					$sql2 = 'INSERT IGNORE INTO fmchklsttaxalink(tid, clid, morphospecies, familyoverride, habitat, abundance, notes, explicitExclude, source, internalnotes, dynamicProperties) '.
+						'SELECT '.$tidTarget.' as tid, c.clid, c.morphospecies, c.familyoverride, c.habitat, c.abundance, c.notes, c.explicitExclude, c.source, c.internalnotes, c.dynamicProperties '.
+						'FROM fmchklsttaxalink WHERE (cltaxaid = ?)';
+					if($stmt2 = $this->conn->prepare($sql2)) {
+						$stmt2->bind_param('i', $oldClTaxaID);
+						$stmt2->execute();
+						$stmt2->close();
+					}
+					//Transfer voucher to new taxon
+					$sql3 = 'UPDATE fmvouchers v INNER JOIN fmchklsttaxalink s ON v.cltaxaid = s.cltaxaid
+						INNER JOIN fmchklsttaxalink t ON s.clid = t.clid AND s.morphospecies = t.morphospecies
+						SET v.cltaxaid = t.cltaxaid
+						WHERE v.voucherID = ? AND t.tid = ?';
+					if($stmt3 = $this->conn->prepare($sql3)) {
+						$stmt3->bind_param('ii', $voucherID, $tidTarget);
+						$stmt3->execute();
+						$stmt3->close();
+					}
+					if($removeTaxa){
+						//Remove old taxa if there are no longer any linked vouchers
+						$sql4 = 'DELETE c.* FROM fmchklsttaxalink c LEFT JOIN fmvouchers v ON c.cltaxaid = v.cltaxaid WHERE c.cltaxaid = ? AND v.voucherID IS NULL';
+						if($stmt4 = $this->conn->prepare($sql4)) {
+							$stmt4->bind_param('i', $oldClTaxaID);
+							$stmt4->execute();
+							$stmt4->close();
+						}
+					}
+				}
 			}
-			$rs->free();
-			//Get voucher tid
-			$tidVoucher = 0;
-			$sql1 = 'SELECT tidinterpreted FROM omoccurrences WHERE (occid = '.$occid.')';
-			$rs1 = $this->conn->query($sql1);
-			if($r1 = $rs1->fetch_object()){
-				$tidVoucher = $r1->tidinterpreted;
+		}
+	}
+
+	//Data mod functions
+	protected function insertChecklistTaxaLink($tid, $clid = null, $morpho = ''){
+		$status = false;
+		if(!$clid) $clid = $this->clid;
+		if(is_numeric($tid) && is_numeric($clid)){
+			$sql = 'INSERT INTO fmchklsttaxalink(tid,clid,morphospecies) VALUES(?,?,?)';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('iis', $tid, $clid, $morpho);
+				$stmt->execute();
+				if($stmt->affected_rows && !$stmt->error){
+					$status = $stmt->insert_id;
+				}
+				elseif($stmt->error) $this->errorMessage = 'ERROR inserting checklist-taxa-link: '.$stmt->error;
+				$stmt->close();
 			}
-			$rs1->free();
-			//Make sure target name is already linked to checklist
-			$sql2 = 'INSERT IGNORE INTO fmchklsttaxalink(tid, clid, morphospecies, familyoverride, habitat, abundance, notes, explicitExclude, source, internalnotes, dynamicProperties) '.
-				'SELECT '.$tidVoucher.' as tid, c.clid, c.morphospecies, c.familyoverride, c.habitat, c.abundance, c.notes, c.explicitExclude, c.source, c.internalnotes, c.dynamicProperties '.
-				'FROM fmchklsttaxalink c INNER JOIN fmvouchers v ON c.tid = v.tid AND c.clid = v.clid '.
-				'WHERE (c.clid = '.$this->clid.') AND (v.occid = '.$occid.')';
-			$this->conn->query($sql2);
-			//Transfer voucher to new name
-			$sql3 = 'UPDATE fmvouchers SET tid = '.$tidVoucher.' WHERE (clid = '.$this->clid.') AND (occid = '.$occid.')';
-			$this->conn->query($sql3);
+			else $this->errorMessage = 'ERROR preparing statement for checklist-taxa-link insert: '.$this->conn->error;
 		}
-		if(array_key_exists('removetaxa',$postArr)){
-			//Remove taxa where all vouchers have been removed
-			$sql4 = 'DELETE c.* FROM fmchklsttaxalink c LEFT JOIN fmvouchers v ON c.clid = v.clid AND c.tid = v.tid '.
-				'WHERE (c.clid = '.$this->clid.') AND (c.tid IN('.implode(',', $removeTidArr).')) AND (v.clid IS NULL)';
-			$this->conn->query($sql4);
+		return $status;
+	}
+
+	protected function insertVoucher($clTaxaID, $occid, $editorNotes = null, $notes = null){
+		$status = false;
+		if(is_numeric($clTaxaID) && is_numeric($occid)){
+			if($editorNotes == '') $editorNotes = null;
+			if($notes == '') $notes = null;
+			$sql = 'INSERT INTO fmvouchers(clTaxaID, occid, editorNotes, notes) VALUES (?,?,?,?)';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('iiss', $clTaxaID, $occid, $editorNotes, $notes);
+				$stmt->execute();
+				if($stmt->affected_rows){
+					$status = $stmt->insert_id;
+				}
+				elseif($stmt->error) $this->errorMessage = 'ERROR inserting voucher: '.$stmt->error;
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for voucher insert: '.$this->conn->error;
 		}
+		return $status;
+	}
+
+	private function transferVouchers($target, $source){
+		$status = false;
+		if(is_numeric($target) && is_numeric($source)){
+			$sql = 'UPDATE fmvouchers SET clTaxaID = ? WHERE clTaxaID = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('ii', $target, $source);
+				$stmt->execute();
+				if($stmt->error) $this->errorMessage = 'ERROR transferring vouchers: '.$stmt->error;
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for voucher transfer: '.$this->conn->error;
+		}
+		return $status;
+	}
+
+	//Misc support and data functions
+	protected function getClTaxaID($tid, $morphoSpecies = ''){
+		$clTaxaID = 0;
+		if(is_numeric($tid)){
+			$sql = 'SELECT clTaxaID FROM fmchklsttaxalink WHERE clid = ? AND tid = ? AND morphospecies = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				if($stmt->bind_param('iis', $this->clid, $tid, $morphoSpecies)){
+					$stmt->execute();
+					$stmt->bind_result($clTaxaID);
+					$stmt->fetch();
+					$stmt->close();
+				}
+				else $this->errorMessage = 'ERROR binding params for getClTaxaID: '.$this->conn->error;
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getClTaxaID: '.$this->conn->error;
+		}
+		return $clTaxaID;
+	}
+
+	private function getSciname($tid){
+		$sciname = '';
+		if(is_numeric($tid)){
+			$sql = 'SELECT sciname FROM taxa WHERE tid = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('i', $tid);
+				$stmt->execute();
+				$stmt->bind_result($sciname);
+				$stmt->fetch();
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getSciname: '.$this->conn->error;
+		}
+		return $sciname;
+	}
+
+	private function getTid($sciname){
+		$tid = 0;
+		if($sciname){
+			$sql = 'SELECT tid FROM taxa WHERE sciname = (?)';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('s', $sciname);
+				$stmt->execute();
+				$stmt->bind_result($tid);
+				$stmt->fetch();
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getTid: '.$this->conn->error;
+		}
+		return $tid;
+	}
+
+	private function getTidAccepted($tid){
+		$tidAccepted = 0;
+		if(is_numeric($tid)){
+			$sql = 'SELECT tidaccepted FROM taxstatus WHERE taxauthid = 1 AND tid = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('i', $tid);
+				$stmt->execute();
+				$stmt->bind_result($tidAccepted);
+				$stmt->fetch();
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getTidAccepted: '.$this->conn->error;
+		}
+		return $tidAccepted;
+	}
+
+	protected function getTidInterpreted($occid){
+		$tidInterpreted = 0;
+		if(is_numeric($occid)){
+			$sql = 'SELECT tidinterpreted FROM omoccurrences WHERE occid = ?';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('i', $occid);
+				$stmt->execute();
+				$stmt->bind_result($tidInterpreted);
+				$stmt->fetch();
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for getTidInterpreted: '.$this->conn->error;
+		}
+		return $tidInterpreted;
+	}
+
+	public function voucherIsLinked($occid){
+		$bool = false;
+		if($this->clid && is_numeric($occid)){
+			$sql = 'SELECT v.voucherID FROM fmvouchers v INNER JOIN fmchklsttaxalink c ON v.cltaxaid = c.cltaxaid WHERE (c.clid = ?) AND (occid = ?)';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('ii', $this->clid, $occid);
+				$stmt->execute();
+				$stmt->store_result();
+				if($stmt->num_rows) $bool = true;
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for voucherIsLinked: '.$this->conn->error;
+		}
+		return $bool;
 	}
 
 	public function vouchersExist(){
 		$bool = false;
 		if($this->clid){
-			$sql = 'SELECT tid FROM fmvouchers WHERE (clid = '.$this->clid.') LIMIT 1';
-			$rs = $this->conn->query($sql);
-			if($rs->num_rows) $bool = true;
-			$rs->free();
+			$sql = 'SELECT c.tid FROM fmvouchers v INNER JOIN fmchklsttaxalink c ON v.cltaxaid = c.cltaxaid WHERE (c.clid = ?) LIMIT 1';
+			if($stmt = $this->conn->prepare($sql)) {
+				$stmt->bind_param('i', $this->clid);
+				$stmt->execute();
+				$stmt->store_result();
+				if($stmt->num_rows) $bool = true;
+				$stmt->close();
+			}
+			else $this->errorMessage = 'ERROR preparing statement for vouchersExist: '.$this->conn->error;
 		}
 		return $bool;
 	}
 
-	//Misc data functions
 	public function getCollectionList($collId = 0){
 		$retArr = array();
 		$sql = 'SELECT collid, collectionname FROM omcollections ';
@@ -486,30 +621,6 @@ class ChecklistVoucherAdmin extends Manager {
 		$rs->free();
 		asort($retArr);
 		return $retArr;
-	}
-
-	private function getSciname($tid){
-		$retStr = '';
-		if(is_numeric($tid)){
-			$sql = 'SELECT sciname FROM taxa WHERE tid = '.$tid;
-			$rs = $this->conn->query($sql);
-			if($r = $rs->fetch_object()){
-				$retStr = $r->sciname;
-			}
-			$rs->free();
-		}
-		return $retStr;
-	}
-
-	private function getTid($sciname){
-		$tidRet = 0;
-		$sql = 'SELECT tid FROM taxa WHERE sciname = ("'.$sciname.'")';
-		$rs = $this->conn->query($sql);
-		if($r = $rs->fetch_object()){
-			$tidRet = $r->tid;
-		}
-		$rs->free();
-		return $tidRet;
 	}
 
 	public function getVoucherProjects(){
@@ -540,10 +651,13 @@ class ChecklistVoucherAdmin extends Manager {
 				}
 				$rs->free();
 			}
-			if($retArr){
+			if($retArr && $this->clid){
 				//Tag collection most likely to be target
-				$sql = 'SELECT o.collid, COUNT(v.occid) as cnt FROM fmvouchers v INNER JOIN omoccurrences o ON v.occid = o.occid '.
-					'WHERE v.clid = '.$this->clid.' AND o.collid IN('.implode(',', array_keys($retArr)).') GROUP BY o.collid ORDER BY cnt DESC';
+				$sql = 'SELECT o.collid, COUNT(v.occid) as cnt
+					FROM fmvouchers v INNER JOIN omoccurrences o ON v.occid = o.occid
+					INNER JOIN fmchklsttaxalink c ON v.cltaxaid = c.cltaxaid
+					WHERE c.clid = '.$this->clid.' AND o.collid IN('.implode(',', array_keys($retArr)).')
+					GROUP BY o.collid ORDER BY cnt DESC';
 				if($rs = $this->conn->query($sql)){
 					if($r = $rs->fetch_object()) $retArr['target'] = $r->collid;
 					$rs->free();
@@ -592,6 +706,12 @@ class ChecklistVoucherAdmin extends Manager {
 
 	public function getChildClidArr(){
 		return $this->childClidArr;
+	}
+
+	public function getClidFullStr(){
+		$clidStr = $this->clid;
+		if($this->childClidArr) $clidStr .= ','.implode(',',$this->childClidArr);
+		return $clidStr;
 	}
 
 	public function getClName(){

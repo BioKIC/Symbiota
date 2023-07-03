@@ -176,7 +176,10 @@ class OccurrenceEditorResource extends OccurrenceEditorManager {
 	//Checklist voucher functions
 	public function getVoucherChecklists(){
 		$retArr = array();
-		$sql = 'SELECT c.clid, c.name FROM fmchecklists c INNER JOIN fmvouchers v ON c.clid = v.clid WHERE v.occid = '.$this->occid;
+		$sql = 'SELECT c.clid, c.name
+			FROM fmchecklists c INNER JOIN fmchklsttaxalink ctl ON c.clid = ctl.clid
+			INNER JOIN fmvouchers v ON ctl.clTaxaID = v.clTaxaID
+			WHERE v.occid = '.$this->occid;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[$r->clid] = $r->name;

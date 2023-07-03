@@ -3,6 +3,7 @@ include_once($SERVER_ROOT.'/config/dbconnection.php');
 include_once($SERVER_ROOT.'/classes/Manager.php');
 include_once($SERVER_ROOT.'/classes/TaxonomyUtilities.php');
 include_once($SERVER_ROOT.'/classes/TaxonomyHarvester.php');
+include_once($SERVER_ROOT.'/classes/OccurrenceMaintenance.php');
 
 class TaxonomyCleaner extends Manager{
 
@@ -93,27 +94,27 @@ class TaxonomyCleaner extends Manager{
 				$sciname = $r->sciname;
 				$tid = 0;
 				$manualCheck = true;
-				$taxonArr = TaxonomyUtilities::parseScientificName($r->sciname,$this->conn,0,$this->targetKingdomName);
-				if(isset($taxonArr['sciname']) && $taxonArr['sciname']){
-					$sciname = $taxonArr['sciname'];
-					if($sciname != $r->sciname){
-						$this->logOrEcho('Interpreted base name: <b>'.$sciname.'</b>',1);
-					}
-					$tid = $taxonHarvester->getTid($taxonArr);
-					if($tid && $this->autoClean){
-						$this->remapOccurrenceTaxon($this->collid, $r->sciname, $tid, (isset($taxonArr['identificationqualifier'])?$taxonArr['identificationqualifier']:''));
-						$this->logOrEcho('Taxon remapped to <b>'.$sciname.'</b>',1);
+				if($tid = $taxonHarvester->processSciname($sciname)){
+					$taxaAdded= true;
+					if($taxonHarvester->isFullyResolved()){
 						$manualCheck = false;
 					}
+					else{
+						$this->logOrEcho('Taxon not fully resolved...',1);
+					}
 				}
-				if(!$tid){
-					if($taxonHarvester->processSciname($sciname)){
-						$taxaAdded= true;
-						if($taxonHarvester->isFullyResolved()){
-							$manualCheck = false;
+				$taxonArr = TaxonomyUtilities::parseScientificName($r->sciname,$this->conn,0,$this->targetKingdomName);
+				if(!$tid && $this->autoClean){
+					if(isset($taxonArr['sciname']) && $taxonArr['sciname']){
+						$sciname = $taxonArr['sciname'];
+						if($sciname != $r->sciname){
+							$this->logOrEcho('Interpreted base name: <b>'.$sciname.'</b>',1);
 						}
-						else{
-							$this->logOrEcho('Taxon not fully resolved...',1);
+						$tid = $taxonHarvester->getTid($taxonArr);
+						if($tid){
+							$this->remapOccurrenceTaxon($this->collid, $r->sciname, $tid, (isset($taxonArr['identificationqualifier'])?$taxonArr['identificationqualifier']:''));
+							$this->logOrEcho('Taxon remapped to <b>'.$sciname.'</b>',1);
+							$manualCheck = false;
 						}
 					}
 				}
@@ -128,14 +129,14 @@ class TaxonomyCleaner extends Manager{
 						for($x=1; $x <= 3; $x++){
 							if(isset($taxonArr['unitname'.$x]) && $taxonArr['unitname'.$x]) $strTestArr[] = $taxonArr['unitname'.$x];
 						}
-						foreach($matchArr as $tid => $scinameMatch){
+						foreach($matchArr as $tidMatch => $scinameMatch){
 							$snTokens = explode(' ',$scinameMatch);
 							foreach($snTokens as $k => $v){
 								if(in_array($v, $strTestArr)) $snTokens[$k] = '<b>'.$v.'</b>';
 							}
 							$idQual = (isset($taxonArr['identificationqualifier'])?str_replace("'", '', $taxonArr['identificationqualifier']):'');
 							$echoStr = '<i>'.implode(' ',$snTokens).'</i> =&gt; <span class="hideOnLoad">wait for page to finish loading...</span><span class="displayOnLoad" style="display:none">'.
-								'<a href="#" onclick="return remappTaxon(\''.urlencode($r->sciname).'\','.$tid.',\''.$idQual.'\','.$itemCnt.')" style="color:blue"> remap to this taxon</a>'.
+								'<a href="#" onclick="return remappTaxon(\''.urlencode($r->sciname).'\','.$tidMatch.',\''.$idQual.'\','.$itemCnt.')" style="color:blue"> remap to this taxon</a>'.
 								'<span id="remapSpan-'.$itemCnt.'"></span></span>';
 							$this->logOrEcho($echoStr,2);
 							$itemCnt++;
@@ -298,7 +299,7 @@ class TaxonomyCleaner extends Manager{
 			'SET ts.family = t2.sciname '.
 			'WHERE (e.taxauthid = '.$this->taxAuthId.') AND (ts.taxauthid = '.$this->taxAuthId.') AND (t2.rankid = 140) AND (ts.family IS NULL)';
 		if($this->conn->query($sql)){
-			$this->logOrEcho('Populating null family lookuk tags within thesaurus... '.$this->conn->affected_rows.' taxon records updated', 1);
+			$this->logOrEcho('Populating null family lookup tags within thesaurus... '.$this->conn->affected_rows.' taxon records updated', 1);
 		}
 		else{
 			$this->logOrEcho('ERROR updating family lookup field: '.$this->conn->error, 1);
@@ -306,42 +307,10 @@ class TaxonomyCleaner extends Manager{
 		flush();
 		ob_flush();
 
-		$sql = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.sciname = t.sciname '.
-			'SET o.tidinterpreted = t.tid '.
-			'WHERE (o.collid IN('.$this->collid.')) AND (o.tidinterpreted IS NULL) ';
-		//echo $sql;
-		if($this->conn->query($sql)){
-			$this->logOrEcho('Indexing names based on exact matches... ' . $this->conn->affected_rows.' occurrence records mapped', 1);
-		}
-		else{
-			$this->logOrEcho('ERROR linking new data to occurrences: '.$this->conn->error, 1);
-		}
-		flush();
-		ob_flush();
-
-		$sql = 'UPDATE omoccurrences o INNER JOIN taxa t ON o.tidinterpreted = t.tid
-			SET o.scientificNameAuthorship = t.author
-			WHERE (o.collid IN('.$this->collid.')) AND (o.scientificNameAuthorship IS NULL) AND (t.author IS NOT NULL) ';
-		if($this->conn->query($sql)){
-			$this->logOrEcho('Populating null scientific authors within occurrence tables... ' . $this->conn->affected_rows.' occurrence records populated', 1);
-		}
-		else{
-			$this->logOrEcho('ERROR updating authors: '.$this->conn->error, 1);
-		}
-		flush();
-		ob_flush();
-
-		$sql = 'UPDATE omoccurrences o INNER JOIN taxstatus ts ON o.tidinterpreted = ts.tid
-			SET o.family = ts.family
-			WHERE (o.collid IN('.$this->collid.')) AND (o.family IS NULL) AND (ts.family IS NOT NULL) ';
-		if($this->conn->query($sql)){
-			$this->logOrEcho('Populating null family names within occurrence tables... ' . $this->conn->affected_rows . ' occurrence records populated', 1);
-		}
-		else{
-			$this->logOrEcho('ERROR updating family occurrences: '.$this->conn->error, 1);
-		}
-		flush();
-		ob_flush();
+		$occurMaintenance = new OccurrenceMaintenance($this->conn);
+		$occurMaintenance->setCollidStr($this->collid);
+		$occurMaintenance->setVerbose(true);
+		$occurMaintenance->generalOccurrenceCleaning();
 	}
 
 	public function remapOccurrenceTaxon($collid, $oldSciname, $tid, $idQualifier = ''){

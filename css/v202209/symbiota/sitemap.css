@@ -1,0 +1,50 @@
+#innertext ul {
+        margin-left: 1.5rem;
+        padding: .25rem 0 .5rem 0;
+}
+
+li {
+        padding: 0 0 .2rem 0
+}
+div#sitemap {
+        margin: 1rem;
+}
+
+div#imglib {
+        margin-top: 1rem;
+}
+
+div#keymodule {
+        color:red;
+        margin-left: 1rem;
+}
+
+#admin{
+        margin: 2rem 0 1rem 1rem;
+        padding-left: 1rem;
+        padding-right: 1rem;
+}
+
+div#admincollection{
+        margin: 0 0 0 1rem;
+}
+
+div#adminobservation{
+        margin: 0 0 0 1rem;
+}
+
+div#symbiotaschema{
+        margin: 1.5rem 0 0 1rem;
+}
+
+div#symbiotaschema img{
+        display: block;
+        clear:left;
+        float:left;
+        margin: 0 0 .5rem 0;
+        padding: 0;
+}
+
+.description{
+        margin-left: .5rem;
+}

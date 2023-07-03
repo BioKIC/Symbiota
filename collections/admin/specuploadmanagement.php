@@ -62,7 +62,7 @@ $duManager->readUploadParameters();
 <html>
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE.(isset($LANG['UP_PROF_MAN'])?$LANG['UP_PROF_MAN']:'Specimen Upload Profile Manager'); ?></title>
+	<title><?php echo $DEFAULT_TITLE.' '.(isset($LANG['UP_PROF_MAN'])?$LANG['UP_PROF_MAN']:'Specimen Upload Profile Manager'); ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>

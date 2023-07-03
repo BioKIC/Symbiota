@@ -57,7 +57,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 			$sql = 'SELECT o.occid, CONCAT_WS(" ",o.recordedby,IFNULL(o.recordnumber,o.eventdate)) AS identifier, '.
 				'o.sciname, o.family, o.tidinterpreted, o.DecimalLatitude, o.DecimalLongitude, o.collid, o.catalognumber, '.
 				'o.othercatalognumbers, c.institutioncode, c.collectioncode, c.CollectionName '.
-				'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid ';
+				'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid ';
 			$sql .= $this->getTableJoins($this->sqlWhere);
 			$sql .= $this->sqlWhere;
 			if(is_numeric($start) && $limit){
@@ -294,35 +294,32 @@ class OccurrenceMapManager extends OccurrenceManager {
 		if($this->getSearchTerm('polycoords')){
 			$wkt = $this->getSearchTerm('polycoords');
 			if(substr($wkt,0,7) == 'POLYGON') $wkt = substr($wkt,7);
-			$wkt = trim($wkt,' (),');
-			$coordArr = explode(',',$wkt);
-			if($coordArr){
-				$shapeBounds = 'var queryShapeBounds = new google.maps.LatLngBounds();';
-				$queryShape = 'var queryPolygon = new google.maps.Polygon({';
-				$points = '';
-				foreach($coordArr as $k => $ptStr){
-					$ptArr = explode(' ',$ptStr);
-					$points .= ',new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].')';
-					$shapeBounds .= 'queryShapeBounds.extend(new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].'));';
+			else if(substr($wkt,0,12) == 'MULTIPOLYGON') $wkt = substr($wkt,12);
+			$coordArr = explode('),(', $wkt);
+			$shapeBounds = 'var queryShapeBounds = new google.maps.LatLngBounds();'."\n";
+			foreach($coordArr as $k => $polyFrag){
+				if($pointArr = explode(',', trim($polyFrag,' (),'))){
+					$queryShape .= 'var queryPolygon'.$k.' = new google.maps.Polygon({';
+					$points = '';
+					foreach($pointArr as $ptStr){
+						$ptArr = explode(' ',$ptStr);
+						$points .= ',new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].')';
+						$shapeBounds .= 'queryShapeBounds.extend(new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].'));'."\n";
+					}
+					$queryShape .= 'paths: ['.substr($points,1).'],';
+					$queryShape .= $properties;
+					$queryShape .= 'queryPolygon'.$k.'.type = "polygon";';
+					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.', "click", function() { setSelection(queryPolygon'.$k.');});';
+					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.', "dragend", function() { setSelection(queryPolygon'.$k.');});';
+					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "insert_at", function() { setSelection(queryPolygon'.$k.');});';
+					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "remove_at", function() { setSelection(queryPolygon'.$k.');});';
+					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "set_at", function() { setSelection(queryPolygon'.$k.');});';
+					$queryShape .= 'setSelection(queryPolygon'.$k.');';
 				}
-				$queryShape .= 'paths: ['.substr($points,1).'],';
-				$queryShape .= $properties;
-				$queryShape .= "queryPolygon.type = 'polygon';";
-				$queryShape .= "google.maps.event.addListener(queryPolygon, 'click', function() {";
-				$queryShape .= 'setSelection(queryPolygon);});';
-				$queryShape .= "google.maps.event.addListener(queryPolygon, 'dragend', function() {";
-				$queryShape .= 'setSelection(queryPolygon);});';
-				$queryShape .= "google.maps.event.addListener(queryPolygon.getPath(), 'insert_at', function() {";
-				$queryShape .= 'setSelection(queryPolygon);});';
-				$queryShape .= "google.maps.event.addListener(queryPolygon.getPath(), 'remove_at', function() {";
-				$queryShape .= 'setSelection(queryPolygon);});';
-				$queryShape .= "google.maps.event.addListener(queryPolygon.getPath(), 'set_at', function() {";
-				$queryShape .= 'setSelection(queryPolygon);});';
-				$queryShape .= 'setSelection(queryPolygon);';
-				$queryShape .= $shapeBounds;
-				$queryShape .= 'map.fitBounds(queryShapeBounds);';
-				$queryShape .= 'map.panToBounds(queryShapeBounds);';
 			}
+			$queryShape .= $shapeBounds;
+			$queryShape .= 'map.fitBounds(queryShapeBounds);';
+			$queryShape .= 'map.panToBounds(queryShapeBounds);'."\n";
 		}
 		return $queryShape;
 	}

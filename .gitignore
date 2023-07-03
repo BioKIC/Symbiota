@@ -6,8 +6,10 @@
 /index.php
 content/lang/header.en.php
 content/lang/header.es.php
+content/lang/header.fr.php
 content/lang/index.en.php
 content/lang/index.es.php
+content/lang/index.fr.php
 includes/header.php
 includes/footer.php
 includes/head.php
@@ -20,5 +22,4 @@ includes/citationdataset.php
 includes/citationportal.php
 .project
 .settings/org.eclipse.core.resources.prefs
-content/lang/header.fr.php
 .settings/org.eclipse.php.ui.prefs

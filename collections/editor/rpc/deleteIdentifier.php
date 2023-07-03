@@ -7,7 +7,7 @@ $occid = $_REQUEST['occid'];
 
 $retStr = 0;
 if($identifierID && is_numeric($occid)){
-	$editorManager = new RpcOccurrenceEditor();
+	$editorManager = new RpcOccurrenceEditor('write');
 	if($editorManager->deleteIdentifier($identifierID, $occid)) $retStr = 1;
 }
 echo $retStr;
