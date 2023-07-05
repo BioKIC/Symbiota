@@ -62,7 +62,7 @@ class OccurrenceController extends Controller{
 	 *		 in="query",
 	 *		 description="collid - collection identifier in portal",
 	 *		 required=false,
-	 *		 @OA\Schema(type="string")
+	 *		 @OA\Schema(type="integer")
 	 *	 ),
 	 *	 @OA\Parameter(
 	 *		 name="datasetID",
@@ -93,6 +93,20 @@ class OccurrenceController extends Controller{
 	 *		 @OA\Schema(type="string")
 	 *	 ),
 	 *	 @OA\Parameter(
+	 *		 name="modifiedFromDate",
+	 *		 in="query",
+	 *		 description="The start date of a date range the occurrence was modified (e.g. 2022-02-05) ",
+	 *		 required=false,
+	 *		 @OA\Schema(type="date")
+	 *	 ),
+	 *	 @OA\Parameter(
+	 *		 name="modifiedToDate",
+	 *		 in="query",
+	 *		 description="The end date of a date range the occurrence was modified (e.g. 2022-02-05) ",
+	 *		 required=false,
+	 *		 @OA\Schema(type="date")
+	 *	 ),
+	 *	 @OA\Parameter(
 	 *		 name="limit",
 	 *		 in="query",
 	 *		 description="Controls the number of results per page",
@@ -119,35 +133,41 @@ class OccurrenceController extends Controller{
 	 */
 	public function showAllOccurrences(Request $request){
 		$this->validate($request, [
-			'limit' => ['integer', 'max:300'],
+			'collid' => ['integer'],
+			'family' => 'alpha',
+			'sciname' => 'alpha',
+			'modifiedFromDate' => 'date',
+			'modifiedToDate' => 'date',
+			'limit' => ['integer', 'max:500'],
 			'offset' => 'integer'
 		]);
 		$limit = $request->input('limit',100);
 		$offset = $request->input('offset',0);
 
 		$conditions = [];
-		if($request->has('catalogNumber')) $conditions[] = ['catalogNumber',$request->catalogNumber];
-		if($request->has('occurrenceID')) $conditions[] = ['occurrenceID',$request->occurrenceID];
-		if($request->has('country')) $conditions[] = ['country',$request->country];
-		if($request->has('stateProvince')) $conditions[] = ['stateProvince',$request->stateProvince];
-		if($request->has('county')) $conditions[] = ['county','LIKE',$request->county.'%'];
-		if($request->has('collid')) $conditions[] = ['collid',$request->collid];
-		if($request->has('family')) $conditions[] = ['family',$request->family];
-		if($request->has('sciname')) $conditions[] = ['sciname','LIKE',$request->sciname.'%'];
-		if($request->has('datasetID')) $conditions[] = ['datasetID',$request->datasetID];
-		if($request->has('eventDate')) $conditions[] = ['eventDate','LIKE',$request->eventDate.'%'];
-
+		if($request->has('catalogNumber')) $conditions[] = ['catalogNumber', $request->catalogNumber];
+		if($request->has('occurrenceID')) $conditions[] = ['occurrenceID', $request->occurrenceID];
+		if($request->has('country')) $conditions[] = ['country', $request->country];
+		if($request->has('stateProvince')) $conditions[] = ['stateProvince', $request->stateProvince];
+		if($request->has('county')) $conditions[] = ['county', 'LIKE', $request->county.'%'];
+		if($request->has('collid')) $conditions[] = ['collid', $request->collid];
+		if($request->has('datasetID')) $conditions[] = ['datasetID', $request->datasetID];
+		if($request->has('family')) $conditions[] = ['family', $request->family];
+		if($request->has('sciname')) $conditions[] = ['sciname', 'LIKE', $request->sciname.'%'];
+		if($request->has('eventDate')) $conditions[] = ['eventDate', 'LIKE', $request->eventDate.'%'];
+		if($request->has('modifiedFromDate')) $conditions[] = ['dateLastModified', '>', $request->modifiedFromDate];
+		if($request->has('modifiedToDate')) $conditions[] = ['dateLastModified', '<', $request->modifiedToDate];
 
 		$fullCnt = Occurrence::where($conditions)->count();
 		$result = Occurrence::where($conditions)->skip($offset)->take($limit)->get();
 
 		$eor = false;
 		$retObj = [
-			"offset" => (int)$offset,
-			"limit" => (int)$limit,
-			"endOfRecords" => $eor,
-			"count" => $fullCnt,
-			"results" => $result
+			'offset' => (int)$offset,
+			'limit' => (int)$limit,
+			'endOfRecords' => $eor,
+			'count' => $fullCnt,
+			'results' => $result
 		];
 		return response()->json($retObj);
 	}
