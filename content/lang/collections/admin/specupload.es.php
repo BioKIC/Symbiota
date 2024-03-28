@@ -30,6 +30,7 @@ $LANG['LIST_UPLOAD'] = 'Lista de Perfiles de Carga';
 $LANG['UP_MODULE'] = 'Módulo de Carga de Datos';
 $LANG['CAUTION'] = 'Precaución';
 $LANG['REC_REPLACE'] = 'Los registros que coincidan serán reemplazados por los registros cargados';
+$LANG['LAST_UPLOAD_DATE'] = 'Fecha de Última Carga';
 $LANG['NOT_REC'] = 'no registrado';
 $LANG['UP_STATUS'] = 'Estado de Carga';
 $LANG['PENDING_REPORT'] = 'Reporte de Datos Pendientes de Transferir';
