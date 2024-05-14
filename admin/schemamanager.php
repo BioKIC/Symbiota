@@ -3,13 +3,13 @@ include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SchemaManager.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$username = isset($_POST['username']) ? filter_var($_POST['username'], FILTER_SANITIZE_STRING) : '';
-$schemaCode = isset($_POST['schemaCode']) ? filter_var($_POST['schemaCode'], FILTER_SANITIZE_STRING) : '';
+$username = isset($_POST['username']) ? $_POST['username'] : '';
+$schemaCode = isset($_POST['schemaCode']) ? $_POST['schemaCode'] : '';
 $action = isset($_POST['action']) ? $_POST['action'] : '';
 
-$host = filter_var(MySQLiConnectionFactory::$SERVERS[0]['host'], FILTER_SANITIZE_STRING);
-$database = filter_var(MySQLiConnectionFactory::$SERVERS[0]['database'], FILTER_SANITIZE_STRING);
-$port = filter_var(MySQLiConnectionFactory::$SERVERS[0]['port'], FILTER_SANITIZE_NUMBER_INT);
+$host = MySQLiConnectionFactory::$SERVERS[0]['host'];
+$database = MySQLiConnectionFactory::$SERVERS[0]['database'];
+$port = MySQLiConnectionFactory::$SERVERS[0]['port'];
 
 $schemaManager = new SchemaManager();
 $verHistory = $schemaManager->getVersionHistory();
@@ -18,7 +18,7 @@ $curentVersion = $schemaManager->getCurrentVersion();
 //if(!$IS_ADMIN && $curentVersion) header('Location: ../profile/index.php?refurl=../admin/schemamanager.php');
 $IS_ADMIN = true;
 ?>
-<html>
+<html lang="en">
 	<head>
 		<title>Database Schema Manager</title>
 		<?php
@@ -37,7 +37,7 @@ $IS_ADMIN = true;
 		<?php
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
-		<div id="innertext">
+		<div role="main" id="innertext">
 			<h1>Database Schema Manager</h1>
 			<?php
 			if($IS_ADMIN || !$curentVersion){
@@ -53,6 +53,8 @@ $IS_ADMIN = true;
 							$schemaManager->setPort($port);
 							$schemaManager->setUsername($username);
 							$schemaManager->installPatch();
+							$verHistory = $schemaManager->getVersionHistory();
+							$curentVersion = $schemaManager->getCurrentVersion();
 						}
 						?>
 					</fieldset>
@@ -95,12 +97,12 @@ $IS_ADMIN = true;
 							</select>
 						</div>
 						<div class="form-section">
-							<label>Username:</label>
-							<input name="username" type="text" value="<?php echo $username; ?>" required autocomplete="off">
+							<label for="username">Username: </label>
+							<input id="username" name="username" type="text" value="<?= htmlspecialchars($username, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?>" required autocomplete="off">
 						</div>
 						<div class="form-section">
-							<label>Password: </label>
-							<input name="password" type="password" value="" required autocomplete="off">
+							<label for="password">Password: </label>
+							<input id="password" name="password" type="password" value="" required autocomplete="off">
 						</div>
 						<div class="form-section">
 							<label>Host:</label>

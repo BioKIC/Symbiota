@@ -1,5 +1,6 @@
 /config/dbconnection.php
 /config/symbini.php
+/config/auth_config.php
 /footer.php
 /header.php
 /leftmenu.php
@@ -7,6 +8,7 @@
 content/lang/header.en.php
 content/lang/header.es.php
 content/lang/header.fr.php
+content/lang/header.pt.php
 content/lang/index.en.php
 content/lang/index.es.php
 content/lang/index.fr.php
@@ -23,3 +25,4 @@ includes/citationportal.php
 .project
 .settings/org.eclipse.core.resources.prefs
 .settings/org.eclipse.php.ui.prefs
+.DS_Store

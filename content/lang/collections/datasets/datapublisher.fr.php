@@ -82,7 +82,8 @@ $LANG['IDIGBIO_DATASET'] = 'Page du Jeu de Données iDigBio';
 $LANG['PUBLISH_REFRESH'] = 'Publier/Actualiser Fichier DwC-A';
 $LANG['INCLUDE_DETS'] = 'Inclure Historique des Déterminations';
 $LANG['INCLUDE_IMGS'] = 'Inclure URLs des Images';
-$LANG['INCLUDE_MATSAMPLE'] = 'Inclure Material Sample';
+$LANG['INCLUDE_ATTRIBUTES'] = 'Incluir atributos de rasgos de ocurrencia';
+$LANG['INCLUDE_MATSAMPLE'] = "Inclure les attributs des traits d'occurrence";
 $LANG['REDACT_LOC'] = 'Supprimer Localités Sensibles';
 $LANG['CREATE_REFRESH'] = 'Créer/Actualiser Archive Darwin Core';
 $LANG['NOTE_LACKING_EXCLUDED'] = 'REMARQUE: tous les enregistrements dépourvus de GUID occurrenceID seront exclus';
@@ -96,5 +97,6 @@ $LANG['METADATA'] = 'Métadonnées';
 $LANG['PUB_DATE'] = 'Date de Pub';
 $LANG['NO_PUBLISHABLE'] = "Il n'y a pas de collections publiables";
 $LANG['ADDIT_SOURCES'] = "Sources de données supplémentaires au sein du Réseau de Portails";
+$LANG['EDIT'] = 'Modifier';
 
 ?>

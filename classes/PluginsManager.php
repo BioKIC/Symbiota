@@ -165,7 +165,7 @@ class PluginsManager extends Manager {
 	}
 
 	public function getSlideshowStyle($width){
-		$html = '<link rel="stylesheet" href="'.$GLOBALS['CLIENT_ROOT'].'/css/slideshowstyle.css">
+		$html = '<link rel="stylesheet" href="' . htmlspecialchars($GLOBALS['CLIENT_ROOT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/css/slideshowstyle.css">
 			<style>
 				@font-face{
 					font-family:"FontAwesome";
@@ -236,10 +236,10 @@ class PluginsManager extends Manager {
 			$hideCaptionClick = "$('.slideshowCaptionDiv').hide();$('.slideshowShowLink').show();return false;";
 			$html .= '<div class="slideshowBaseDiv">
 				<div class="slideshowCaptionDiv">
-					<a class="slideshowHideLink" href="#" onclick="'.$hideCaptionClick.'">'.(isset($LANG['HIDE_CAPTION'])?$LANG['HIDE_CAPTION']:'HIDE CAPTION').'</a>';
+					<a class="slideshowHideLink" href="#" onclick="' . $hideCaptionClick . '">' . htmlspecialchars((isset($LANG['HIDE_CAPTION'])?$LANG['HIDE_CAPTION']:'HIDE CAPTION'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 			$html .= '<div class="slideshowCitationDiv">';
 			if($imgIdArr["sciname"] || $imgIdArr["identifier"]){
-				$html .= '<a href="'.$linkUrl.'" target="_blank">'.($imgIdArr["identifier"]?$imgIdArr["identifier"]:$imgIdArr["sciname"]).'</a>. ';
+				$html .= '<a href="' . htmlspecialchars($linkUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars(($imgIdArr["identifier"]?$imgIdArr["identifier"]:$imgIdArr["sciname"]), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>. ';
 			}
 			if($imgIdArr["photographer"] || $imgIdArr["photographerName"]){
 				$html .= (isset($LANG['IMAGE_BY'])?$LANG['IMAGE_BY']:'Image by').': '.($imgIdArr["photographer"]?$imgIdArr["photographer"]:$imgIdArr["photographerName"]).'. ';
@@ -249,7 +249,7 @@ class PluginsManager extends Manager {
 			}
 			$html .= "</div></div>\n";
 			$showCaptionClick = "$('.slideshowCaptionDiv').show();$('.slideshowShowLink').hide();return false;";
-			$html .= '<a class="slideshowShowLink" href="#" onclick="'.$showCaptionClick.'">'.(isset($LANG['SHOW_CAPTION'])?$LANG['SHOW_CAPTION']:'SHOW CAPTION').'</a>';
+			$html .= '<a class="slideshowShowLink" href="#" onclick="' . $showCaptionClick . '">' . htmlspecialchars((isset($LANG['SHOW_CAPTION'])?$LANG['SHOW_CAPTION']:'SHOW CAPTION'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 			$html .= "</div></div>\n";
 		}
 		return $html;

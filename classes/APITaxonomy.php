@@ -13,7 +13,7 @@ class APITaxonomy extends Manager{
 
 	public function getTaxon($sciname){
 		$retArr = array();
-		$sciname = preg_replace('/[^a-zA-Z\-\.× ]+/', '', $sciname);
+		$sciname = preg_replace('/[^a-zA-Z\-\.× ()]+/', '', $sciname);
 		$sql = 'SELECT tid, sciname, author FROM taxa WHERE (sciname = "'.$sciname.'")';
 		if(preg_match('/\s{1}\D{1}\s{1}/i',$sciname)){
 			$sciname = preg_replace('/\s{1}x{1}\s{1}|\s{1}×{1}\s{1}/i', ' _ ', $sciname);

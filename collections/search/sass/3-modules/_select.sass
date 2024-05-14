@@ -1,0 +1,30 @@
+/* Select control ***********************************/
+.select-container
+  label
+    font-size: $font-size-small
+    postion: relative
+    top: 22px
+    background-color: white
+    padding: 2px 4px
+    
+    span
+      content: attr(data-label)
+      left: 16px
+      top: 0
+      bottom: 0
+      margin: auto
+      pointer-events: none
+      // height: var(--fz)
+      // font-size: var(--fz)
+      color: gray
+      line-height: 1
+  select 
+    margin-top: 14px
+    height: $input-height
+    border: 2px solid $neon-light-gray
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.17)
+    font-family: inherit
+    font-size: $font-size
+    width: 100%
+    &:active, &:focus
+      border-color: $accent-color

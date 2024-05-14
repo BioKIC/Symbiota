@@ -104,8 +104,28 @@ class Manager  {
 		return $domain;
 	}
 
-	protected function cleanOutStr($str){
-		$str = htmlspecialchars($str);
+	public function sanitizeInt($int){
+		return filter_var($int, FILTER_SANITIZE_NUMBER_INT);
+	}
+
+	public function cleanOutArray($inputArray){
+		if(is_array($inputArray)){
+			foreach($inputArray as $key => $value){
+				if(is_array($value)){
+					$inputArray[$key] = $this->cleanOutArray($value);
+				}
+				else{
+					$inputArray[$key] = $this->cleanOutStr($value);
+				}
+			}
+		}
+		return $inputArray;
+	}
+
+	public function cleanOutStr($str){
+		//Sanitize output
+		if(!is_string($str) && !is_numeric($str) && !is_bool($str)) $str = '';
+		$str = htmlspecialchars($str, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 		return $str;
 	}
 
@@ -126,10 +146,11 @@ class Manager  {
 		return $newArray;
 	}
 
-	protected function encodeString($inStr){
+	protected function encodeString($inStr, $charsetOut = ''){
 		$retStr = '';
+		if(!$charsetOut && !empty($GLOBALS['CHARSET'])) $charsetOut = $GLOBALS['CHARSET'];
 		if($inStr){
-			$retStr = $inStr;
+			$retStr = trim($inStr);
 			//Get rid of UTF-8 curly smart quotes and dashes
 			$badwordchars=array("\xe2\x80\x98", // left single quote
 								"\xe2\x80\x99", // right single quote
@@ -139,23 +160,9 @@ class Manager  {
 								"\xe2\x80\xa6" // elipses
 			);
 			$fixedwordchars=array("'", "'", '"', '"', '-', '...');
-			$inStr = str_replace($badwordchars, $fixedwordchars, $inStr);
-
-			if($inStr){
-				if(strtolower($GLOBALS['CHARSET']) == "utf-8" || strtolower($GLOBALS['CHARSET']) == "utf8"){
-					if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1',true) == "ISO-8859-1"){
-						$retStr = utf8_encode($inStr);
-						//$retStr = iconv("ISO-8859-1//TRANSLIT","UTF-8",$inStr);
-					}
-				}
-				elseif(strtolower($GLOBALS['CHARSET']) == "iso-8859-1"){
-					if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1') == "UTF-8"){
-						$retStr = utf8_decode($inStr);
-						//$retStr = iconv("UTF-8","ISO-8859-1//TRANSLIT",$inStr);
-					}
-				}
-				//$line = iconv('macintosh', 'UTF-8', $line);
-				//mb_detect_encoding($buffer, 'windows-1251, macroman, UTF-8');
+			$retStr = str_replace($badwordchars, $fixedwordchars, $retStr);
+			if($retStr){
+				$retStr = mb_convert_encoding($retStr, $charsetOut, mb_detect_encoding($retStr));
 	 		}
 		}
 		return $retStr;

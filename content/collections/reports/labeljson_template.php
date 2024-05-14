@@ -32,7 +32,7 @@ $LABEL_FORMAT_JSON = '{"labelFormats": [
 					},
 					{"fieldBlock":[{"field":"family","styles":["float:right"]}]}
 				]}},
-				{"fieldBlock":[{"field":"identifiedby","prefix":"Det by: "},{"field":"dateidentified"}]},
+				{"fieldBlock":[{"field":"identifiedby","prefix":"Det by: "},{"field":"dateidentified"}],"delimiter":" "},
 				{"fieldBlock":[{"field":"identificationreferences"}]},
 				{"fieldBlock":[{"field":"identificationremarks"}]},
 				{"fieldBlock":[{"field":"taxonremarks"}]},

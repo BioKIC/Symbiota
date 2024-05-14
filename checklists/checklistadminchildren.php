@@ -1,7 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ChecklistAdmin.php');
-@include_once($SERVER_ROOT.'/content/lang/checklists/checklistadminchildren.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/checklists/checklistadminchildren.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/checklists/checklistadminchildren.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT.'/content/lang/checklists/checklistadminchildren.en.php');
 
 $clid = array_key_exists('clid',$_REQUEST)?$_REQUEST['clid']:0;
 $pid = array_key_exists('pid',$_REQUEST)?$_REQUEST['pid']:'';
@@ -26,9 +27,10 @@ $clManager->setClid($clid);
 $clArr = $clManager->getUserChecklistArr();
 $childArr = $clManager->getChildrenChecklist()
 ?>
-<script src="../js/jquery-3.2.1.min.js?ver=3" type="text/javascript"></script>
-<script src="../js/jquery-ui/jquery-ui.min.js?ver=3" type="text/javascript"></script>
-<link href="../js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
+<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
+<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+
 <script>
 	$("#taxon").autocomplete({
 		source: function( request, response ) {
@@ -58,26 +60,23 @@ $childArr = $clManager->getChildrenChecklist()
 	button{ margin:20px; }
 </style>
 <!-- inner text -->
-<div id="innertext" style="background-color:white;">
+<div role="main" id="innertext" style="background-color:white;">
 	<div style="float:right;">
-		<a href="#" onclick="toggle('addchilddiv')"><img src="../images/add.png" /></a>
+		<a href="#" onclick="toggle('addchilddiv')"><img src="../images/add.png" style="width:1.5em;" /></a>
 	</div>
 	<div style="margin:15px;font-weight:bold;font-size:120%;">
-		<u><?php echo (isset($LANG['CHILD_CHECKLIST'])?$LANG['CHILD_CHECKLIST']:'Children Checklists'); ?></u>
+		<u><?php echo $LANG['CHILD_CHECKLIST']; ?></u>
 	</div>
 	<div style="margin:25px;clear:both;">
-		<?php echo (isset($LANG['CHILD_DESCRIBE'])?$LANG['CHILD_DESCRIBE']:'Checklists will inherit scientific names, vouchers, notes, etc from all children checklists.
-		Adding a new taxon or voucher to a child checklist will automatically add it to all parent checklists.
-		The parent child relationship can transcend multiple levels (e.g. country &lt;- state &lt;- county).
-		Note that only direct child can be removed.'); ?>
+		<?php echo $LANG['CHILD_DESCRIBE']; ?>
 	</div>
 	<div id="addchilddiv" style="margin:15px;display:none;">
 		<fieldset style="padding:15px;">
-			<legend><b><?php echo (isset($LANG['LINK_NEW'])?$LANG['LINK_NEW']:'Link New Checklist'); ?></b></legend>
+			<legend><b><?php echo $LANG['LINK_NEW']; ?></b></legend>
 			<form name="addchildform" target="checklistadmin.php" method="post" onsubmit="validateAddChildForm(this)">
 				<div style="margin:10px;">
 					<select name="clidadd">
-						<option value=""><?php echo (isset($LANG['SELECT_CHILD'])?$LANG['SELECT_CHILD']:'Select Child Checklist'); ?></option>
+						<option value=""><?php echo $LANG['SELECT_CHILD']; ?></option>
 						<option value="">-------------------------------</option>
 						<?php
 						foreach($clArr as $k => $name){
@@ -87,7 +86,7 @@ $childArr = $clManager->getChildrenChecklist()
 					</select>
 				</div>
 				<div style="margin:10px;">
-					<button name="submitaction" type="submit" value="addChildChecklist"><?php echo (isset($LANG['ADD_CHILD'])?$LANG['ADD_CHILD']:'Add Child Checklist'); ?></button>
+					<button name="submitaction" type="submit" value="addChildChecklist"><?php echo $LANG['ADD_CHILD']; ?></button>
 					<input name="clid" type="hidden" value="<?php echo $clid; ?>" />
 					<input name="pid" type="hidden" value="<?php echo $pid; ?>" />
 					<input name="tabindex" type="hidden" value="2" />
@@ -102,12 +101,12 @@ $childArr = $clManager->getChildrenChecklist()
 				foreach($childArr as $k => $cArr){
 					?>
 					<li>
-						<a href="checklist.php?clid=<?php echo $k; ?>" target="_blank"><?php echo $cArr['name']; ?></a>
+						<a href="checklist.php?clid=<?php echo htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><?php echo htmlspecialchars($cArr['name'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 						<?php
 						if($cArr['pclid'] == $clid){
-							$confirmStr = (isset($LANG['SURE'])?$LANG['SURE']:'Are you sure you want to remove').$cArr['name'].(isset($LANG['AS_CHILD'])?$LANG['AS_CHILD']:'as a child checklist');
-							echo '<a href="checklistadmin.php?submitaction=delchild&tabindex=2&cliddel='.$k.'&clid='.$clid.'&pid='.$pid.'" onclick="return confirm(\''.$confirmStr.'\')">';
-							echo '<img src="../images/del.png" style="width:14px;" /></a>';
+							$confirmStr = $LANG['SURE'] . $cArr['name'] . $LANG['AS_CHILD'];
+							echo '<a href="checklistadmin.php?submitaction=delchild&tabindex=2&cliddel=' . htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" onclick="return confirm(\'' . htmlspecialchars($confirmStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '\')">';
+							echo '<img src="../images/del.png" style="width:1em;" /></a>';
 							echo '</a>';
 						}
 						?>
@@ -116,13 +115,13 @@ $childArr = $clManager->getChildrenChecklist()
 				}
 			}
 			else{
-				echo '<div style="font-size:110%;">'.(isset($LANG['NO_CHILDREN'])?$LANG['NO_CHILDREN']:'There are no Children Checklists').'</div>';
+				echo '<div style="font-size:110%;">' . $LANG['NO_CHILDREN'] . '</div>';
 			}
 			?>
 		</ul>
 	</div>
 	<div style="margin:30px 15px;font-weight:bold;font-size:120%;">
-		<u><?php echo (isset($LANG['PARENTS'])?$LANG['PARENTS']:'Parent Checklists'); ?></u>
+		<u><?php echo $LANG['PARENTS']; ?></u>
 	</div>
 		<ul>
 			<?php
@@ -130,13 +129,13 @@ $childArr = $clManager->getChildrenChecklist()
 				foreach($parentArr as $k => $name){
 					?>
 					<li>
-						<a href="checklist.php?clid=<?php echo $k; ?>" target="_blank"><?php echo $name; ?></a>
+						<a href="checklist.php?clid=<?php echo htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><?php echo htmlspecialchars($name, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 					</li>
 					<?php
 				}
 			}
 			else{
-				echo '<div style="font-size:110%;">'.(isset($LANG['NO_PARENTS'])?$LANG['NO_PARENTS']:'There are no Parent Checklists').'</div>';
+				echo '<div style="font-size:110%;">' . $LANG['NO_PARENTS'] . '</div>';
 			}
 			?>
 		</ul>
@@ -144,19 +143,20 @@ $childArr = $clManager->getChildrenChecklist()
 	<hr>
 	<div style="margin:20px 0px;">
 		<fieldset>
-			<legend>Batch Parse Species List</legend>
-			<div style="margin:10px 0px;">Use the following tool to parse a list into multiple children checklists based on taxonomic nodes (Liliopsida, Eudicots, Pinopsida, etc)</div>
+			<legend><?php echo $LANG['BATCH_PARSE_SP_LIST']; ?></legend>
+			<div style="margin:10px 0px;"><?php echo $LANG['BATCH_PARSE_DESCRIBE']; ?></div>
 			<form name="parsechecklistform" target="checklistadmin.php" method="post" onsubmit="validateParseChecklistForm(this)">
 				<div class="section-div">
-					<label>Taxonomic node:</label>
+					<label for="taxon"><?php echo $LANG['TAXONOMICNODE'] ?>:</label>
 					<input id="taxon" name="taxon" type="text" required />
+					<label for="parsetid"><?php echo $LANG['PARSETID'] ?>:</label>
 					<input id="parsetid" name="parsetid" type="text" required >
 				</div>
 				<div class="section-div">
-					<label>Target checklist:</label>
-					<select name="targetclid" required>
-						<option value="">Select Target Checklist</option>
-						<option value="0">Create New Checklist</option>
+					<label for="targetclid"><?php echo $LANG['TARGETCHECKLIST'] ?>:</label>
+					<select name="targetclid" id="targetclid" required>
+						<option value=""><?php echo $LANG['SELECTTARGETCHECKLIST'] ?></option>
+						<option value="0"><?php echo $LANG['CREATENEWCHECKLIST'] ?></option>
 						<option value="">--------------------------</option>
 						<?php
 						foreach($clArr as $k => $name){
@@ -166,28 +166,30 @@ $childArr = $clManager->getChildrenChecklist()
 					</select>
 				</div>
 				<div class="section-div">
-					<label>Transfer method:</label>
-					<input name="transmethod" type="radio" value="0" <?php if(!$transferMethod) echo 'checked'; ?>> transfer taxa
-					<input name="transmethod" type="radio" value="1" <?php if($transferMethod == 1) echo 'checked'; ?>> copy taxa
+					<label><?php echo $LANG['TRANSFER_METHOD'] ?>:</label>
+					<input name="transmethod" id="transtaxa" type="radio" value="0" <?php if(!$transferMethod) echo 'checked'; ?>> 
+					<label for="transtaxa"><?php echo $LANG['TRANSFERTAXA'] ?></label>
+					<input name="transmethod" id="copytaxa" type="radio" value="1" <?php if($transferMethod == 1) echo 'checked'; ?>> 
+					<label for="copytaxa"><?php echo $LANG['COPYTAXA'] ?></label>
 				</div>
 				<div class="section-div">
-					<label>Link to parent checklist:</label>
+					<label><?php echo $LANG['LINK_PARENT_CHECKLIST'] ?>:</label>
 					<select name="parentclid">
-						<option value="">No Parent Checklist</option>
-						<option value="0" <?php if($parentClid === 0) echo 'SELECTED'; ?>>Create New Checklist</option>
+						<option value=""><?php echo $LANG['NOPARENTCHECKLIST'] ?></option>
+						<option value="0" <?php if($parentClid === 0) echo 'SELECTED'; ?>><?php echo $LANG['CREATENEWCHECKLIST'] ?></option>
 						<option value="">--------------------------</option>
 						<?php
 						foreach($clArr as $k => $name){
-							if(!isset($childArr[$k])) echo '<option value="'.$k.'" '.($parentClid == $k?'SELECTED':'').'>'.$name.'</option>';
+							if(!isset($childArr[$k])) echo '<option value="' . $k . '" ' . ($parentClid == $k?'SELECTED':'') . '>' . $name . '</option>';
 						}
 						?>
 					</select>
 				</div>
 				<div class="section-div">
-					<label>Add to project:</label>
+					<label><?php echo $LANG['ADD_TO_PROJECT'] ?>:</label>
 					<select name="targetpid">
-						<option value="">--no action--</option>
-						<option value="0">New Project</option>
+						<option value="">--<?php echo $LANG['NO_ACTION'] ?>--</option>
+						<option value="0"><?php echo $LANG['NEWPROJECT'] ?></option>
 						<option value="">--------------------------</option>
 						<?php
 						$projArr = $clManager->getUserProjectArr();
@@ -198,15 +200,15 @@ $childArr = $clManager->getChildrenChecklist()
 					</select>
 				</div>
 				<div class="section-div">
-					<input name="copyattributes" type="checkbox" value="1" <?php if($copyAttributes) echo 'checked'; ?>>
-					<label>copy over permission and general attributes</label>
+					<input name="copyattributes" id="copyattributes" type="checkbox" value="1" <?php if($copyAttributes) echo 'checked'; ?>>
+					<label for="copyattributes"><?php echo $LANG['COPYPERMISSIONANDGENERAL'] ?></label>
 				</div>
 				<div class="section-div">
 					<input name="tabindex" type="hidden" value="2" >
-					<button name="submitaction" type="submit" value="parseChecklist">Parse Checklist</button>
+					<button name="submitaction" type="submit" value="parseChecklist"><?php echo $LANG['PARSE_CHECKLIST'] ?></button>
 				</div>
 			</form>
-			<div><a href="<?php echo $CLIENT_ROOT; ?>/taxa/taxonomy/taxonomydisplay.php" target="_blank">Open Taxonomic Thesaurus Explorer</a></div>
+			<div><a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/taxa/taxonomy/taxonomydisplay.php" target="_blank"><?php echo $LANG['OPEN_TAX_THES_EXPLORE'] ?></a></div>
 		</fieldset>
 	</div>
 </div>

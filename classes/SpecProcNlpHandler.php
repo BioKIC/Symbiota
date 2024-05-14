@@ -30,8 +30,8 @@ class SpecProcNlpHandler {
 		if($this->printMode == 1){
 			$this->printSummary();
 			$this->outToReport('Processing finished: '.date('Y-m-d h:i:s A')."\n\n");
-			echo '<div style="margin-left:10px;">Output file: <a href="'.$this->outFilePath.'.txt">'.$this->outFilePath.'.txt</a></div>';
-			echo '<div style="margin-left:10px;">Log file: <a href="'.$this->outFilePath.'.log">'.$this->outFilePath.'.log</a></div>';
+			echo '<div style="margin-left:10px;">Output file: <a href="' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.txt">' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.txt</a></div>';
+			echo '<div style="margin-left:10px;">Log file: <a href="' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.log">' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.log</a></div>';
 			if($this->outFH) fclose($this->outFH);
 		}
 		elseif($this->printMode == 2){
@@ -50,7 +50,7 @@ class SpecProcNlpHandler {
 			fclose($outFinalFH);
 
 			$this->logMsg($this->totalStats['collmeta']['totalcnt'].' records output to CSV');
-			echo '<div style="margin-left:10px;">Output file: <a href="'.$this->outFilePath.'.csv">'.$this->outFilePath.'.csv</a></div>';
+			echo '<div style="margin-left:10px;">Output file: <a href="' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE)  .'.csv">' . htmlspecialchars($this->outFilePath, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.csv</a></div>';
 		}
 		elseif($this->printMode === 0){
 			$this->logMsg($this->totalStats['collmeta']['totalcnt'].' records processed and databased');

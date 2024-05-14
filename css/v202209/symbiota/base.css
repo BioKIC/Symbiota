@@ -3,15 +3,13 @@
  * Instead, modify styles within the symb/main.css file to override the default styles declared within this file 
 */
 
-
-
 /* Spans that use javascript to add clickable link behaviors */
-span[class='link'] {
+span[class="link"] {
   color: #2c405e;
   text-decoration: none;
 }
 
-span[class='link']:hover {
+span[class="link"]:hover {
   color: black;
   text-decoration: underline;
 }
@@ -69,9 +67,7 @@ span[class='link']:hover {
   margin-left: 3px;
 }
 
-
 /* Species list component */
-
 #taxalist-div {
   line-height: 1em;
 }
@@ -159,7 +155,6 @@ div.tnimg img {
 }
 
 /* styled table */
-
 table.styledtable {
   table-layout: auto;
   width: 100%;
@@ -187,7 +182,6 @@ table.styledtable tr.alt td {
 }
 
 /* misc */
-
 div.genericpopup {
   position: absolute;
   display: none;
@@ -289,4 +283,296 @@ ol.mp_list li.mp_highlighted {
   font-weight: normal;
   color: #212121;
   border-radius: 4px;
+}
+
+/*
+* OccurrenceSearchSupport
+*/
+.search-button-div {
+  float: right;
+  margin-top: 20px;
+}
+.sticky-buttons {
+  position: sticky;
+  top: 1rem;
+  float: right;
+}
+.fieldset-like {
+  /* borrowed from: https://www.geeksforgeeks.org/how-to-achieve-fieldset-like-effect-without-using-fieldset-tag/ */
+  border: 0.2em solid;
+  border-top: none;
+  margin: 2rem 0 1rem 1rem;
+  padding: 0.8rem;
+}
+
+.fieldset-like h1,
+.fieldset-like h2,
+.fieldset-like h3 {
+  font: 1.5rem normal;
+  margin: -1.6rem -0.8rem 0rem;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2 span,
+.fieldset-like h3 span {
+  float: left;
+}
+
+.fieldset-like h1:before,
+.fieldset-like h2:before,
+.fieldset-like h3:before {
+  border-top: 0.15em solid;
+  content: " ";
+  float: left;
+  margin: 0.8rem 0.1rem 0 -0.2rem;
+  width: 1.2rem;
+}
+
+.fieldset-like h1:after,
+.fieldset-like h2:after,
+.fieldset-like h3:after {
+  border-top: 0.15em solid;
+  content: " ";
+  display: block;
+  height: 2.4rem;
+  left: 0.3rem;
+  margin: 0 0.1rem 0 0;
+  overflow: hidden;
+  position: relative;
+  top: 0.8rem;
+}
+
+/* The section below addresses CSS reset recommended by USDA 508 compliance:  https://github.com/BioKIC/Symbiota/pull/881 https://www.usda.gov/digital-strategy/development/plays#development3*/
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
+}
+
+h1 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+}
+
+blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
+}
+
+select {
+  text-rendering: auto;
+  color: fieldtext;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  appearance: auto;
+  box-sizing: border-box;
+  align-items: center;
+  -webkit-rtl-ordering: logical;
+  background-color: field;
+  cursor: default;
+  margin: 0em;
+  white-space: pre;
+  border-width: 1px;
+  border-style: solid;
+  border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  border-image: initial;
+  border-radius: 0px;
+}
+
+fieldset {
+  display: block;
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.35em;
+  padding-inline-start: 0.75em;
+  padding-inline-end: 0.75em;
+  padding-block-end: 0.625em;
+  min-inline-size: min-content;
+  border-width: 2px;
+  border-style: groove;
+  border-color: rgb(192, 192, 192);
+  border-image: initial;
+}
+
+i {
+  font-style: italic;
+}
+
+b {
+  font-weight: bold;
+}
+
+.gridlike-form {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gridlike-form-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.screen-reader-only {
+  position: absolute;
+  left: -10000px;
+}
+
+.welcome-text {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.page-heading {
+  font-size: 3rem;
+}
+
+/* Base Button Button CSS
+========================================================================== */
+button {
+  appearance: auto;
+  text-rendering: auto;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: center;
+  align-items: flex-start;
+  cursor: default;
+  box-sizing: border-box;
+  margin: 0em;
+  padding-block: 1px;
+  padding-inline: 6px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonborder;
+  border-image: initial;
+}
+
+button.icon-button {
+  margin: 2px 5px;
+  padding: 6px;
+  border-width: 1px;
+  border-style: outset;
+  border-color: buttonborder;
+}
+
+button.icon-button:hover {
+  background: var(--medium-color);
+}
+
+.button {
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem 1rem;
+  font-family: var(--heading-font-family);
+  letter-spacing: 1px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  width: fit-content;
+}
+
+.button > a {
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.button-primary {
+  background-color: var(--darkest-color);
+}
+
+.button-danger {
+  background-color: var(--danger-color, var(--darkest-color));
+}
+
+.button-primary:hover,
+.button-secondary:hover,
+.button-danger:hover 
+{
+  background-color: var(--medium-color);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled,
+.button-danger:disabled
+{
+	opacity: 50%;
+	pointer-events: none;
+}
+
+.button-primary:hover > a,
+.button-secondary:hover > a {
+  color: var(--light-color);
+}
+
+.button-primary > a {
+  color: var(--light-color);
+}
+
+.button-secondary {
+  background-color: var(--bright-color);
+}
+
+.button-secondary > a {
+  color: var(--darkest-color);
+}
+
+.button-tertiary {
+  background-color: none;
+  border: 1px solid var(--bright-color);
+  padding: 0.5rem 0.9rem;
 }

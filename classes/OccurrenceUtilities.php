@@ -8,6 +8,10 @@ class OccurrenceUtilities {
 	static $monthNames = array('jan'=>'01','ene'=>'01','feb'=>'02','mar'=>'03','abr'=>'04','apr'=>'04','may'=>'05','jun'=>'06','jul'=>'07','ago'=>'08',
 		'aug'=>'08','sep'=>'09','oct'=>'10','nov'=>'11','dec'=>'12','dic'=>'12');
 
+	// Current version for associatedOccurrences JSON
+	// TODO: is this the best place for it? No other obvious landing spot.
+	public static $assocOccurVersion = '1.0';
+
  	public function __construct(){
  	}
 
@@ -704,37 +708,47 @@ class OccurrenceUtilities {
 			}
 		}
 		else{
-			if(array_key_exists('genus',$recMap) && array_key_exists('specificepithet',$recMap) && array_key_exists('infraspecificepithet',$recMap)){
+			if(array_key_exists('genus',$recMap) && array_key_exists('specificepithet',$recMap)){
 				//Build sciname from individual units supplied by source
 				$sciName = trim($recMap['genus'].' '.$recMap['specificepithet']);
-				if(array_key_exists('taxonrank',$recMap)) $sciName .= ' '.$recMap['taxonrank'];
-				$sciName .= ' '.$recMap['infraspecificepithet'];
+				if(array_key_exists('infraspecificepithet',$recMap)){
+					if(array_key_exists('taxonrank',$recMap)) $sciName .= ' '.$recMap['taxonrank'];
+					$sciName .= ' '.$recMap['infraspecificepithet'];
+				}
 				$recMap['sciname'] = trim($sciName);
 			}
 			elseif(array_key_exists('scientificname',$recMap)){
 				//Clean and parse scientific name
 				$parsedArr = TaxonomyUtilities::parseScientificName($recMap['scientificname']);
 				$scinameStr = '';
+				if(array_key_exists('unitind1', $parsedArr)){
+					$scinameStr .= $parsedArr['unitind1'];
+					if($parsedArr['unitind1'] != '×' || $parsedArr['unitind1'] != '†') $scinameStr .= ' ';
+				}
 				if(array_key_exists('unitname1',$parsedArr)){
-					$scinameStr = $parsedArr['unitname1'];
+					$scinameStr = $parsedArr['unitname1'].' ';
 					if(!array_key_exists('genus',$recMap) || $recMap['genus']){
 						$recMap['genus'] = $parsedArr['unitname1'];
 					}
 				}
+				if(array_key_exists('unitind2', $parsedArr)){
+					$scinameStr .= $parsedArr['unitind2'];
+					if($parsedArr['unitind2'] != '×') $scinameStr .= ' ';
+				}
 				if(array_key_exists('unitname2',$parsedArr)){
-					$scinameStr .= ' '.$parsedArr['unitname2'];
+					$scinameStr .= $parsedArr['unitname2'].' ';
 					if(!array_key_exists('specificepithet',$recMap) || !$recMap['specificepithet']){
 						$recMap['specificepithet'] = $parsedArr['unitname2'];
 					}
 				}
 				if(array_key_exists('unitind3',$parsedArr)){
-					$scinameStr .= ' '.$parsedArr['unitind3'];
+					$scinameStr .= $parsedArr['unitind3'].' ';
 					if((!array_key_exists('taxonrank',$recMap) || !$recMap['taxonrank'])){
 						$recMap['taxonrank'] = $parsedArr['unitind3'];
 					}
 				}
 				if(array_key_exists('unitname3',$parsedArr)){
-					$scinameStr .= ' '.$parsedArr['unitname3'];
+					$scinameStr .= $parsedArr['unitname3'];
 					if(!array_key_exists('infraspecificepithet',$recMap) || !$recMap['infraspecificepithet']){
 						$recMap['infraspecificepithet'] = $parsedArr['unitname3'];
 					}
@@ -755,6 +769,111 @@ class OccurrenceUtilities {
 		}
 		unset($recMap['authorinfraspecific']);
 		unset($recMap['authorspecies']);
+
+		// Deal with associatedOccurrence fields, if they exist
+		// Check if they exist, and then check if any of the fields are non-empty
+		if (count($check = preg_grep('/^associatedOccurrence:.*/', array_keys($recMap))) &&
+			strlen(implode(array_intersect_key($recMap, array_flip($check))))) {
+
+			// Check if there is already data in the associatedOccurrences field.
+			if (isset($recMap['associatedOccurrences']) && $recMap['associatedOccurrences']) {
+
+				// Check if the contents of the field already is JSON
+				if ($assocOccArr = json_decode($recMap['associatedOccurrences'], true)) {
+
+					// There's already JSON here
+					// TODO: What should we do? Perform some checks?
+					// Currently, it will just append any data specified by associatedOccurrence:* fields
+				} else {
+
+					// no JSON content, store what is already in associatedOccurrences in verbatimText array
+					$verbatimText = array();
+
+					// Add whatever text is mapped to associatedOccurrences to verbatimText
+					$verbatimText['type'] = 'verbatimText';
+					$verbatimText['verbatimText'] = $recMap['associatedOccurrences'];
+
+				}
+			}
+
+			// No associatedOccurrences array exists, so build one
+			if (!isset($assocOccArr)) {
+				$assocOccArr = array();
+
+				$symbiotaAssociations = array();
+				$symbiotaAssociations['type'] = 'symbiotaAssociations';
+				$symbiotaAssociations['version'] = self::$assocOccurVersion;
+				$symbiotaAssociations['associations'] = array();
+
+				// Add the symbiotaAssociations array
+				array_push($assocOccArr, $symbiotaAssociations);
+
+				// Add the verbatimText array, if it exists
+				if (isset($verbatimText)) array_push($assocOccArr, $verbatimText);
+			}
+
+			// Create associated occurrence array
+			$assocArr = array();
+
+			// Establish the associated occurrence type, check first to see if it's already set (and valid)
+			if (isset($recMap['associatedOccurrence:type'])) {
+
+				// Valid type, so use it
+				if ($recMap['associatedOccurrence:type'] == 'internalOccurrence' ||
+					$recMap['associatedOccurrence:type'] == 'externalOccurrence' ||
+					$recMap['associatedOccurrence:type'] == 'genericObservation') {
+					$assocArr['type'] = $recMap['associatedOccurrence:type'];
+				} else {
+
+					// Invalid type, fall back to genericObservation
+					$assocArr['type'] = 'genericObservation';
+				}
+			}
+
+			// No association type set, try to guess
+			if (!isset($assocArr['type'])) {
+
+				if (isset($recMap['associatedOccurrence:occidAssociate']) && $recMap['associatedOccurrence:occidAssociate']) {
+					$assocArr['type'] = 'internalOccurrence';
+				} else if ((isset($recMap['associatedOccurrence:identifier']) && $recMap['associatedOccurrence:identifier']) ||
+					(isset($recMap['associatedOccurrence:resourceUrl']) && $recMap['associatedOccurrence:resourceUrl'])) {
+					$assocArr['type'] = 'externalOccurrence';
+				} else if (isset($recMap['associatedOccurrence:verbatimSciname']) && $recMap['associatedOccurrence:verbatimSciname']) {
+					$assocArr['type'] = 'genericObservation';
+				} else {
+					// Should not happen, but if so, this seems to be the best fit
+					$assocArr['type'] = 'genericObservation';
+				}
+			}
+
+			// Finished with the type field, so unset it
+			unset($recMap['associatedOccurrence:type']);
+
+			// TODO: restrict fields to controlled vocab for relationship and subtype?
+
+			// Iterate through each remaining associated occurrence field
+			foreach (preg_grep('/^associatedOccurrence:.*/', array_keys($recMap)) as $field) {
+
+				// Save it to the associated occurrence array if it's not empty
+				if ($recMap[$field]) $assocArr[str_replace('associatedOccurrence:', '', $field)] = $recMap[$field];
+
+				// Unset the temporary field as the data is saved in the array
+				unset($recMap[$field]);
+			}
+
+			// Add associated occurrence array to the full associatedOccurrences array
+			array_push($assocOccArr[0]['associations'], $assocArr);
+
+			// Convert to JSON and store in the associatedOccurrences field
+			$recMap['associatedOccurrences'] = json_encode($assocOccArr, JSON_UNESCAPED_SLASHES);
+
+		} else {
+
+			// Unset any remaining associatedOccurrence fields, they are empty
+			$recMap = array_diff_key($recMap, array_flip(preg_grep('/^associatedOccurrence:.*/', array_keys($recMap))));
+
+		}
+
 		//Deal with Specify specific fields
 		if(isset($recMap['specify:forma']) && $recMap['specify:forma']){
 			$recMap['taxonrank'] = 'f.';
@@ -937,6 +1056,33 @@ class OccurrenceUtilities {
 			unset($recMap['specify:cataloged_date']);
 		}
 		return $recMap;
+	}
+
+	public static function verifyUser($user, $conn){
+		//If input is numberic, verify against uid, or convert username or email to uid
+		$uid = null;
+		$paramArr = array();
+		$typeStr = '';
+		$sql = 'SELECT uid FROM users WHERE ';
+		if(is_numeric($user)){
+			$sql .= 'uid = ?';
+			$paramArr[] = $user;
+			$typeStr = 'i';
+		}
+		else{
+			$sql .= 'username = ? OR email = ?';
+			$paramArr[] = $user;
+			$paramArr[] = $user;
+			$typeStr = 'ss';
+		}
+		if($stmt = $conn->prepare($sql)){
+			$stmt->bind_param($typeStr, ...$paramArr);
+			$stmt->execute();
+			$stmt->bind_result($uid);
+			$stmt->fetch();
+			$stmt->close();
+		}
+		return $uid;
 	}
 
 	private static function dateCheck($inStr){

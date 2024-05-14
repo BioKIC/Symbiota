@@ -54,10 +54,10 @@ if($chars){
 	unset($chars["Languages"]);
 }
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE.$LANG['WEBKEY'].preg_replace('/\<[^\>]+\>/','',$dataManager->getClName()); ?></title>
+	<title><?php echo $DEFAULT_TITLE . ' ' . $LANG['WEBKEY'] . ' ' . preg_replace('/\<[^\>]+\>/','',$dataManager->getClName()); ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
@@ -79,7 +79,7 @@ if($chars){
 			echo '<div class="navpath">';
 			if($dynClid){
 				if($dataManager->getClType() == 'Specimen Checklist'){
-					echo '<a href="'.$CLIENT_ROOT.'/collections/list.php?tabindex=0">';
+					echo '<a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/collections/list.php?tabindex=0">';
 					echo 'Occurrence Checklist';
 					echo '</a> &gt; ';
 				}
@@ -93,21 +93,21 @@ if($chars){
 	}
 	else{
 		echo '<div class="navpath">';
-		echo '<a href="../index.php">'.$LANG['HOME'].'</a> &gt;&gt; ';
+		echo '<a href="../index.php">' . htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
 		if($dynClid){
 			if($dataManager->getClType() == 'Specimen Checklist'){
-				echo '<a href="'.$CLIENT_ROOT.'/collections/list.php?tabindex=0">';
+				echo '<a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/collections/list.php?tabindex=0">';
 				echo 'Occurrence Checklist';
 				echo '</a> &gt;&gt; ';
 			}
 		}
 		elseif($clid){
-			echo '<a href="'.$CLIENT_ROOT.'/checklists/checklist.php?clid='.$clid.'&pid='.$pid.'">';
+			echo '<a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/checklists/checklist.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 			echo 'Checklist: '.$dataManager->getClName();
 			echo '</a> &gt;&gt; ';
 		}
 		elseif($pid){
-			echo '<a href="'.$CLIENT_ROOT.'/projects/index.php?pid='.$pid.'">';
+			echo '<a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/projects/index.php?pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 			echo 'Project Checklists';
 			echo '</a> &gt;&gt; ';
 		}
@@ -116,12 +116,13 @@ if($chars){
 	}
 
 ?>
-<div id="innertext">
+<div role="main" id="innertext">
+	<h1 class="page-heading screen-reader-only">Key</h1>
 	<?php
 	if($isEditor){
 		?>
 		<div style="float:right;margin:15px;" title="Edit Character Matrix">
-			<a href="tools/matrixeditor.php?clid=<?php echo $clid; ?>"><img src="../images/edit.png" /><span style="font-size:70%;">CM</span></a>
+			<a href="tools/matrixeditor.php?clid=<?php echo htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><img src="../images/edit.png" style="width:1.2em" /><span style="font-size:70%;">CM</span></a>
 		</div>
 		<?php
 	}
@@ -149,7 +150,7 @@ if($chars){
 						<input type="hidden" id="dynclid" name="dynclid" value="<?php echo $dynClid; ?>" />
 						<input type="hidden" id="pid" name="pid" value="<?php echo $pid; ?>" />
 						<input type="hidden" id="rv" name="rv" value="<?php echo $dataManager->getRelevanceValue(); ?>" />
-						<input type="submit" name="submitbutton" id="submitbutton" value="<?php echo $LANG['DISPRESSPEC'];?>"/>
+						<button type="submit" name="submitbutton" id="submitbutton" value="displaySpeciesList"><?php echo $LANG['DISPRESSPEC'];?></button>
 					</div>
 					<hr size="2" />
 
@@ -186,7 +187,7 @@ if($chars){
 								<h2>
 									<?php
 									if($FLORA_MOD_IS_ACTIVE){
-										echo '<a href="../checklists/checklist.php?clid='.$clid.'&dynclid='.$dynClid.'&pid='.$pid.'">';
+										echo '<a href="../checklists/checklist.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&dynclid=' . htmlspecialchars($dynClid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 									}
 									echo $dataManager->getClName()." ";
 									if($FLORA_MOD_IS_ACTIVE){
@@ -212,10 +213,10 @@ if($chars){
 								natcasesort($species);
 								foreach($species as $tid => $disName){
 									$newSpLink = '../taxa/index.php?taxon='.$tid."&clid=".($dataManager->getClType()=="static"?$dataManager->getClid():"");
-									echo "<tr><td><div style='margin:0px 5px 0px 10px;'><a href='".$newSpLink."' target='_blank'><i>$disName</i></a></div></td>\n";
+									echo "<tr><td><div style='margin:0px 5px 0px 10px;'><a href='" . htmlspecialchars($newSpLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "' target='_blank'><i>$disName</i></a></div></td>\n";
 									echo "<td align='right'>\n";
 									if($isEditor){
-										echo "<a href='tools/editor.php?tid=$tid&lang=".$DEFAULT_LANG."' target='_blank'><img src='../images/edit.png' width='15px' border='0' title='".$LANG['EDITMORP']."' /></a>\n";
+										echo "<a href='tools/editor.php?tid=$tid&lang=" . htmlspecialchars($DEFAULT_LANG, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "' target='_blank'><img src='../images/edit.png' width='1.2em' border='0' title='" . htmlspecialchars($LANG['EDITMORP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "' /></a>\n";
 									}
 									echo "</td></tr>\n";
 								}

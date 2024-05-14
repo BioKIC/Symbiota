@@ -27,7 +27,9 @@ if ($schema == 'backup') {
 			$archiveFile = $dwcaHandler->createDwcArchive();
 
 			if ($archiveFile) {
-				//ob_start();
+				ob_start();
+				ob_clean();
+				ob_end_flush();
 				header('Content-Description: Symbiota Occurrence Backup File (DwC-Archive data package)');
 				header('Content-Type: application/zip');
 				header('Content-Disposition: attachment; filename=' . basename($archiveFile));
@@ -82,8 +84,8 @@ if ($schema == 'backup') {
 		$dlManager->setCharSetOut($cSet);
 		$dlManager->setDelimiter($format);
 		$dlManager->setZipFile($zip);
-		$dlManager->addCondition('decimalLatitude', 'NOTNULL', '');
-		$dlManager->addCondition('decimalLongitude', 'NOTNULL', '');
+		$dlManager->addCondition('decimalLatitude', 'NOT_NULL', '');
+		$dlManager->addCondition('decimalLongitude', 'NOT_NULL', '');
 		if (array_key_exists('targetcollid', $_POST) && $_POST['targetcollid']) {
 			$dlManager->addCondition('collid', 'EQUALS', $_POST['targetcollid']);
 		}
@@ -119,8 +121,8 @@ if ($schema == 'backup') {
 			$dwcaHandler->setIncludeImgs(0);
 			$dwcaHandler->setIncludeAttributes(0);
 			$dwcaHandler->setOverrideConditionLimit(true);
-			$dwcaHandler->addCondition('catalognumber', 'NOTNULL');
-			$dwcaHandler->addCondition('locality', 'NOTNULL');
+			$dwcaHandler->addCondition('catalognumber', 'NOT_NULL');
+			$dwcaHandler->addCondition('locality', 'NOT_NULL');
 			if (array_key_exists('processingstatus', $_POST) && $_POST['processingstatus']) {
 				$dwcaHandler->addCondition('processingstatus', 'EQUALS', $_POST['processingstatus']);
 			}
@@ -144,7 +146,7 @@ if ($schema == 'backup') {
 				$dwcaHandler->setCustomWhereSql($occurManager->getSqlWhere());
 			} else {
 				//Request is coming from exporter.php for collection manager tools
-				$dwcaHandler->setCollArr($_POST['targetcollid']);
+				if(isset($_POST['targetcollid'])) $dwcaHandler->setCollArr($_POST['targetcollid']);
 				if (array_key_exists('processingstatus', $_POST) && $_POST['processingstatus']) {
 					$dwcaHandler->addCondition('processingstatus', 'EQUALS', $_POST['processingstatus']);
 				}
@@ -163,8 +165,8 @@ if ($schema == 'backup') {
 					$dwcaHandler->addCondition('traitid', 'EQUALS', $_POST['traitid']);
 				}
 				if (array_key_exists('newrecs', $_POST) && $_POST['newrecs'] == 1) {
-					$dwcaHandler->addCondition('dbpk', 'NULL');
-					$dwcaHandler->addCondition('catalognumber', 'NOTNULL');
+					$dwcaHandler->addCondition('dbpk', 'IS_NULL');
+					$dwcaHandler->addCondition('catalognumber', 'NOT_NULL');
 				}
 			}
 		}
@@ -198,6 +200,9 @@ if ($schema == 'backup') {
 				$contentDesc .= 'Archive ';
 			}
 			$contentDesc .= 'File';
+			ob_start();
+			ob_clean();
+			ob_end_flush();
 			header('Content-Description: ' . $contentDesc);
 
 			if ($zip) {

@@ -56,7 +56,6 @@ $LANG['DESCRIPTION'] = 'Description';
 $LANG['SAVE_EDITS'] = 'Save Edits';
 $LANG['DEL_DS'] = 'Delete Dataset';
 $LANG['SURE_DEL_DS_PERM'] = 'Are you sure you want to permanently delete this dataset?';
-$LANG['DEL_DS'] = 'Delete Dataset';
 $LANG['SURE_REM_USER'] = 'Are you sure you want to remove';
 $LANG['NONE_ASSIGNED'] = 'None Assigned';
 $LANG['ADD_USER'] = 'Add User';
@@ -68,5 +67,7 @@ $LANG['READ_ACCESS'] = 'Read-Only Access';
 $LANG['ADD_USER'] = 'Add User';
 $LANG['NOT_AUTH'] = 'You are not authorized to view this dataset';
 $LANG['DS_NOT_IDENTIFIED'] = 'ERROR: dataset id not identified';
+
+$LANG['DROP_ICON'] = 'Drop Icon';
 
 ?>

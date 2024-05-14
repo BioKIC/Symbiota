@@ -43,17 +43,16 @@ class Controller extends BaseController{
 	 * Input: security token
 	 * Return: user object with role/permission settings
 	 */
-	public function authenicate(Request $request){
+	public function authenticate(Request $request){
 		$this->validate($request, [
 			'apiToken' => 'required'
 		]);
 		$apiToken = $request->input('apiToken');
-
 		//TODO: convert to an actual user object
 		$userArr = false;
 
 		if($_ENV['SECURITY_KEY'] == $apiToken){
-			//Matches portal's global security key set by administrator, which provides administrative level access
+			//Matches portal's global security key set by administrator within the symbini.php, which provides administrative level access
 			$userArr = array();
 			$userArr['roles'][] = array('role' => 'SuperAdmin');
 		}

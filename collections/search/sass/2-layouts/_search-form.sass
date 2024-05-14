@@ -1,0 +1,127 @@
+/* Search Form Layout ********************/
+
+$gap: 10px
+
+body 
+  font-size: 14px
+
+input:invalid 
+  border: 1px solid red !important
+
+input[type='checkbox']
+  width: 16px
+  height: 16px
+  vertical-align: baseline !important
+
+#all-neon-colls-quick
+  margin-top: 1em
+
+select 
+  width: 100%
+
+// Apagar depois que resolver o lance de expandir
+.material-icons
+  width: 16px
+  height: 16px
+  margin: 0 0.25em
+  font-size: 16px !important
+  cursor: pointer
+
+.collapsed
+  display: none
+
+.modal
+  ul
+    list-style-type: none
+    padding-left: 20px
+
+.box 
+  padding: 20px
+  display: none
+  background-color: $neon-lightest-gray
+     
+.tab 
+  margin-right: 15px
+  padding: 10px 15px 15px 15px
+
+.tab-active
+    background-color: $neon-lightest-gray
+    font-weight: 600
+    
+
+#params-form
+  display: grid
+  grid-template-columns: 3fr 1fr
+  grid-gap: $gap
+
+#criteria-panel
+  display: block
+  background-color: $neon-lightest-gray // Move these to a seaparate panel module
+  padding: 0.5rem 1rem // Move these to a seaparate panel module
+
+#search-form-taxonomy
+  display: grid
+  grid-template-columns: 2fr 1fr
+  grid-gap: $gap
+  align-items: self-start
+
+#search-form-colls
+  display: grid
+  grid-template-columns: 1fr 2fr
+  grid-gap: $gap
+
+  ul
+    list-style-type: none
+    padding-left: 20px
+
+#search-form-locality
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-gap: $gap
+    
+  ul
+    list-style-type: none
+    padding-left: 20px
+
+#search-form-latlong
+  display: grid
+  grid-template-columns: 1fr 1fr 1fr
+  grid-gap: $gap
+
+#search-form-coll-event
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-gap: $gap
+
+#search-form-sample
+  display: grid
+  grid-template-columns: 1fr 1fr
+  grid-gap: $gap
+
+// Errors from Form Validation
+.errors 
+  position: fixed
+  left: 0
+  right: 0
+  bottom: 0
+  z-index: 1
+  padding: 15px
+  pointer-events: none
+  
+  .error 
+   padding: 15px
+   border-radius: 4px
+   background-color: rgba(230, 20, 20, 0.8)
+   color: #FFF
+   font-size: 14px
+   transform: translateY(300px)
+   pointer-events: all
+   margin-bottom: 10px
+   
+   animation: slide-in 1s ease-out forwards
+  
+  
+  @keyframes slide-in 
+   to 
+    transform: translateY(0px)
+  

@@ -31,8 +31,10 @@ $_SESSION['colldata'] = $collArr;
 
 $includeDets = 1;
 $includeImgs = 1;
+$includeAttributes = 1;
 $includeMatSample = 1;
 $redactLocalities = 1;
+
 if ($action == 'savekey' || (isset($_REQUEST['datasetKey']) && $_REQUEST['datasetKey'])) {
 	$collManager->setAggKeys($_POST);
 	$collManager->updateAggKeys();
@@ -42,6 +44,8 @@ elseif ($action) {
 	$dwcaManager->setIncludeDets($includeDets);
 	if (!array_key_exists('imgs', $_POST)) $includeImgs = 0;
 	$dwcaManager->setIncludeImgs($includeImgs);
+	if (!array_key_exists('attributes', $_POST)) $includeAttributes = 0;
+	$dwcaManager->setIncludeAttributes($includeAttributes);
 	if (!array_key_exists('matsample', $_POST)) $includeMatSample = 0;
 	$dwcaManager->setIncludeMaterialSample($includeMatSample);
 	if (!array_key_exists('redact', $_POST)) $redactLocalities = 0;
@@ -62,24 +66,31 @@ if ($isEditor) {
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<meta http-equiv="Cache-control" content="no-cache, no-store, must-revalidate">
-	<meta http-equiv="Pragma" content="no-cache">
 	<title><?php echo $LANG['DWCA_PUBLISHER']; ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT . '/includes/head.php');
 	?>
-	<style type="text/css">
+	<style>
 		.nowrap {
 			white-space: nowrap;
 		}
+		.font-control {
+			font-size: 14px;
+		}
+		.accessible-font {
+			font-size: 1.4em;
+		}
+		.margin-rt-rel {
+			margin-right: 1rem;
+		}
 	</style>
-	<script type="text/javascript" src="../../js/jquery.js"></script>
-	<script type="text/javascript" src="../../js/jquery-ui.js"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script type="text/javascript" src="../../js/symb/collections.gbifpublisher.js"></script>
 	<script type="text/javascript">
 		function toggle(target) {
@@ -184,69 +195,70 @@ if ($isEditor) {
 	include($SERVER_ROOT . '/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href="../../index.php"><?php echo $LANG['HOME']; ?></a> &gt;&gt;
+		<a href="../../index.php"><?php echo htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 		<?php
 		if ($collid) {
 			?>
-			<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1"><?php echo $LANG['COL_MANAGEMENT']; ?></a> &gt;&gt;
+			<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1"><?php echo htmlspecialchars($LANG['COL_MANAGEMENT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 			<?php
 		} else {
 			?>
-			<a href="../../sitemap.php"><?php echo $LANG['SITEMAP']; ?></a> &gt;&gt;
+			<a href="../../sitemap.php"><?php echo htmlspecialchars($LANG['SITEMAP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 			<?php
 		}
 		?>
 		<b><?php echo $LANG['DWCA_PUBLISHER']; ?></b>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext" class="accessible-font">
 		<?php
 		if (!$collid && $IS_ADMIN) {
 			?>
 			<div style="float:right;">
-				<a href="#" title="<?php echo $LANG['DISPLAY_CONTROL_PANEL']; ?>" onclick="toggle('dwcaadmindiv')">
-					<img style="border:0;width:12px;" src="../../images/edit.png" />
+				<a href="#" title="<?php echo htmlspecialchars($LANG['DISPLAY_CONTROL_PANEL'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" onclick="toggle('dwcaadmindiv')">
+					<?php echo $LANG['EDIT'] ?> 
+					<img style="border:0;width:1.2em;" src="../../images/edit.png" alt="pencil icon to indicate edit mode toggle" />
 				</a>
 			</div>
 			<?php
 		}
-		echo '<h1>' . $LANG['DWCA_PUBLISHING'] . '</h1>';
+		echo '<h1 class="page-heading">' . $LANG['DWCA_PUBLISHING'] . '</h1>';
 		if ($collid) {
 			echo '<div style="font-weight:bold;font-size:120%;">' . $collArr['collectionname'] . '</div>';
 			?>
-			<div style="margin:10px;">
+			<div class="font-control top-breathing-room-rel">
 				<?php
 				echo $LANG['DWCA_EXPLAIN_1'] . ' <a href="https://en.wikipedia.org/wiki/Darwin_Core_Archive" target="_blank">' . $LANG['DWCA'] . '</a> ' . $LANG['DWCA_EXPLAIN_2'] .
-					' <a href="http://rs.tdwg.org/dwc/terms/" target="_blank">' . $LANG['DWC'] . '</a> ' . $LANG['DWCA_EXPLAIN_3'] .
-					' <a href="https://biokic.github.io/symbiota-docs/coll_manager/data_publishing/idigbio/" target="_blank"> ' . $LANG['PUBLISH_IDIGBIO'] . '</a> &amp;' .
-					' <a href="https://biokic.github.io/symbiota-docs/coll_manager/data_publishing/gbif/" target="_blank"> ' . $LANG['PUBLISH_GBIF'] . '</a>.';
+					' <a href="http://rs.tdwg.org/dwc/terms/" target="_blank">' . htmlspecialchars($LANG['DWC'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['DWCA_EXPLAIN_3'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .
+					' <a href="https://biokic.github.io/symbiota-docs/coll_manager/data_publishing/idigbio/" target="_blank"> ' . htmlspecialchars($LANG['PUBLISH_IDIGBIO'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &amp;' .
+					' <a href="https://biokic.github.io/symbiota-docs/coll_manager/data_publishing/gbif/" target="_blank"> ' . htmlspecialchars($LANG['PUBLISH_GBIF'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>.';
 				?>
 			</div>
 			<?php
 		} else {
 			?>
-			<div style="margin:10px;">
+			<div>
 				<?php
-				echo $LANG['DWCA_DOWNLOAD_EXPLAIN_1'] . ' <a href="https://en.wikipedia.org/wiki/Darwin_Core_Archive" target="_blank">' . $LANG['DWCA'] . '</a> ';
-				echo $LANG['DWCA_DOWNLOAD_EXPLAIN_2'] . ' <a href="http://rs.tdwg.org/dwc/terms/" target="_blank">' . $LANG['DWC'] . '</a> ' . $LANG['DWCA_DOWNLOAD_EXPLAIN_3'];
+				echo $LANG['DWCA_DOWNLOAD_EXPLAIN_1'] . ' <a href="https://en.wikipedia.org/wiki/Darwin_Core_Archive" target="_blank">' . htmlspecialchars($LANG['DWCA'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ';
+				echo $LANG['DWCA_DOWNLOAD_EXPLAIN_2'] . ' <a href="http://rs.tdwg.org/dwc/terms/" target="_blank">' . htmlspecialchars($LANG['DWC'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['DWCA_DOWNLOAD_EXPLAIN_3'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 				?>
 			</div>
-			<div style="margin:10px;">
+			<div>
 				<?php
-				echo '<h3>' . $LANG['DATA_USE_POLICY'] . ':</h3>';
-				echo $LANG['DATA_POLICY_1'] . ' <a href="../../includes/usagepolicy.php">' . $LANG['DATA_USE_POLICY'] . '</a>. ' . $LANG['DATA_POLICY_2'];
+				echo '<h2>' . $LANG['DATA_USE_POLICY'] . ':</h2>';
+				echo $LANG['DATA_POLICY_1'] . ' <a href="../../includes/usagepolicy.php">' . htmlspecialchars($LANG['DATA_USE_POLICY'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>. ' . htmlspecialchars($LANG['DATA_POLICY_2'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 				?>
 			</div>
 			<?php
 		}
 		?>
-		<div style="margin:20px;">
+		<div class="font-control top-breathing-room-rel">
 			<?php
 			echo '<b>' . $LANG['RSS_FEED'] . ':</b> ';
 			$urlPrefix = $dwcaManager->getServerDomain() . $CLIENT_ROOT . (substr($CLIENT_ROOT, -1) == '/' ? '' : '/');
 			if (file_exists('../../content/dwca/rss.xml')) {
 				$feedLink = $urlPrefix . 'content/dwca/rss.xml';
-				echo '<a href="' . $feedLink . '" target="_blank">' . $feedLink . '</a>';
+				echo '<a href="' . htmlspecialchars($feedLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($feedLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 			} else {
 				echo '--' . $LANG['FEED_NOT_PUBLISHED'] . '--';
 			}
@@ -283,45 +295,45 @@ if ($isEditor) {
 				$dwcUri = ($dArr['collid'] == $collid ? $dArr['link'] : '');
 				if (!$idigbioKey) $idigbioKey = $collManager->findIdigbioKey($collArr['recordid']);
 				?>
-				<div style="margin:10px;">
+				<div>
 					<div>
 						<b><?php echo $LANG['TITLE']; ?>:</b> <?php echo $dArr['title']; ?>
 						<form action="datapublisher.php" method="post" style="display:inline;" onsubmit="return window.confirm('<?php echo $LANG['SURE_DELETE']; ?>');">
 							<input type="hidden" name="colliddel" value="<?php echo $dArr['collid']; ?>">
 							<input type="hidden" name="collid" value="<?php echo $dArr['collid']; ?>">
-							<input type="image" src="../../images/del.png" name="action" value="DeleteCollid" title="<?php echo $LANG['DELETE_ARCHIVE']; ?>" style="width:15px;">
+							<input type="image" src="../../images/del.png" name="action" alt="<?php echo $LANG['DELETE_ARCHIVE']; ?>" value="DeleteCollid" title="<?php echo $LANG['DELETE_ARCHIVE']; ?>" style="width:1.2em;">
 						</form>
 					</div>
 					<div><b><?php echo $LANG['DESCRIPTION']; ?>:</b> <?php echo $dArr['description']; ?></div>
 					<?php
 					$emlLink = $urlPrefix . 'collections/datasets/emlhandler.php?collid=' . $collid;
 					?>
-					<div><b>EML:</b> <a href="<?php echo $emlLink; ?>" target="_blank"><?php echo $emlLink; ?></a></div>
-					<div><b><?php echo $LANG['DWCA_FILE']; ?>:</b> <a href="<?php echo $dArr['link']; ?>"><?php echo $dArr['link']; ?></a></div>
+					<div><b>EML:</b> <a href="<?php echo htmlspecialchars($emlLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><?php echo htmlspecialchars($emlLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
+					<div><b><?php echo $LANG['DWCA_FILE']; ?>:</b> <a href="<?php echo htmlspecialchars($dArr['link'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo htmlspecialchars($dArr['link'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
 					<div><b><?php echo $LANG['PUB_DATE']; ?>:</b> <?php echo $dArr['pubDate']; ?></div>
 				</div>
 				<?php
-			} else echo '<div style="margin:20px;font-weight:bold;color:orange;">' . $LANG['DWCA_NOT_PUBLISHED'] . '</div>';
+			} else echo '<div style="font-weight:bold;color:orange;" class="font-control top-breathing-room-rel">' . $LANG['DWCA_NOT_PUBLISHED'] . '</div>';
 			?>
-			<fieldset style="margin:15px;padding:15px;">
+			<fieldset style="padding:15px;" class="top-breathing-room-rel">
 				<legend><b><?php echo $LANG['PUB_INFO']; ?></b></legend>
 				<?php
 				//Data integrity checks
 				$blockSubmitMsg = '';
 				$recFlagArr = $dwcaManager->verifyCollRecords($collid);
 				if ($collArr['guidtarget']) {
-					echo '<div style="margin:10px;"><b>GUID source:</b> ' . $collArr['guidtarget'] . '</div>';
+					echo '<div class="font-control"><b>' .  $LANG['GUID_SOURCE'] . ':</b> ' . $collArr['guidtarget'] . '</div>';
 					if (isset($recFlagArr['nullGUIDs']) && $recFlagArr['nullGUIDs']) {
-						echo '<div style="margin:10px;">';
+						echo '<div class="font-control">';
 						if ($collArr['guidtarget'] == 'occurrenceId') {
-							echo '<b>' . $LANG['RECORDS_MISSING'] . ' <a href="" target="_blank">' . $LANG['OCCID_GUIDS'] . '</a>:</b> ' . $recFlagArr['nullGUIDs'];
+							echo '<b>' . $LANG['RECORDS_MISSING'] . ' <a href="https://dwc.tdwg.org/terms/#dwc:occurrenceID" target="_blank">' . htmlspecialchars($LANG['OCCID_GUIDS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>:</b> ' . htmlspecialchars($recFlagArr['nullGUIDs'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 							echo ' <span style="color:red;margin-left:15px;">' . $LANG['RECS_TO_NOT_PUBLISH'] . '</span> ';
 						} elseif ($collArr['guidtarget'] == 'catalogNumber') {
 							echo '<b>' . $LANG['RECS_WO_CATNUMS'] . ':</b> ' . $recFlagArr['nullGUIDs'];
 							echo ' <span style="color:red;margin-left:15px;">' . $LANG['RECS_WILL_NOT_PUBLISH'] . '</span> ';
 						} else {
 							echo $LANG['RECS_MISSING_GUIDS'] . ': ' . $recFlagArr['nullGUIDs'] . '<br/>';
-							echo $LANG['PLEASE_GO_TO'] . ' <a href="../admin/guidmapper.php?collid=' . $collid . '">' . $LANG['COLL_GUID_MAP'] . '</a> ' . $LANG['TO_ASSIGN_GUIDS'];
+							echo $LANG['PLEASE_GO_TO'] . ' <a href="../admin/guidmapper.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['COLL_GUID_MAP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['TO_ASSIGN_GUIDS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 						}
 						echo '</div>';
 					}
@@ -330,30 +342,30 @@ if ($isEditor) {
 						if(substr($serverName, 0, 4) == 'www.') $serverName = str_replace('www.', '', $serverName);
 						if(!strpos($serverName, 'localhost') && strpos($collArr['dwcaurl'], $serverName) === false) {
 							$baseUrl = substr($collArr['dwcaurl'], 0, strpos($collArr['dwcaurl'], '/content')) . '/collections/datasets/datapublisher.php';
-							$blockSubmitMsg = $LANG['ALREADY_PUBLISHED'] . ' (<a href="' . $baseUrl . '" target="_blank">' . substr($baseUrl, 0, strpos($baseUrl, '/', 10)) . '</a>) ';
+							$blockSubmitMsg = $LANG['ALREADY_PUBLISHED'] . ' (<a href="' . htmlspecialchars($baseUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars(substr($baseUrl, 0, strpos($baseUrl, '/', 10)), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>) ';
 						}
 					}
 				} else {
-					echo '<div style="margin:10px;font-weight:bold;color:red;">' . $LANG['GUID_NOT_SET'] . ' <a href="../misc/collmetadata.php?collid=' . $collid . '">' . $LANG['EDIT_METADATA'] . '</a> ' . $LANG['TO_SET_GUID'] . '.</div>';
+					echo '<div style="margin:10px;font-weight:bold;color:red;" class="font-control top-breathing-room-rel">' . $LANG['GUID_NOT_SET'] . ' <a href="../misc/collmetadata.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['EDIT_METADATA'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['TO_SET_GUID'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.</div>';
 					$blockSubmitMsg = $LANG['CANNOT_PUBLISH'] . '<br/>';
 				}
 				if ($recFlagArr['nullBasisRec']) {
-					echo '<div style="margin:10px;font-weight:bold;color:red;">' . $LANG['THERE_ARE'] . ' ' . $recFlagArr['nullBasisRec'] . $LANG['MISSING_BASISOFRECORD'] . ' ' . ' <a href="../editor/occurrencetabledisplay.php?q_recordedby=&q_recordnumber=&q_catalognumber&collid=' . $collid . '&csmode=0&occid=&occindex=0">' . $LANG['EDIT_EXISTING'] . '</a> ' . $LANG['TO_CORRECT'] . '</div>';
+					echo '<div style="margin:10px;font-weight:bold;color:red;" class="font-control top-breathing-room-rel">' . $LANG['THERE_ARE'] . ' ' . $recFlagArr['nullBasisRec'] . $LANG['MISSING_BASISOFRECORD'] . ' ' . ' <a href="../editor/occurrencetabledisplay.php?q_recordedby=&q_recordnumber=&q_catalognumber&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&csmode=0&occid=&occindex=0">' . htmlspecialchars($LANG['EDIT_EXISTING'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['TO_CORRECT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</div>';
 				}
 				if ($publishGBIF && $dwcUri && isset($GBIF_USERNAME) && isset($GBIF_PASSWORD) && isset($GBIF_ORG_KEY) && $GBIF_ORG_KEY) {
 					if ($collManager->getDatasetKey()) {
 						$dataUrl = 'http://www.gbif.org/dataset/' . $collManager->getDatasetKey();
 						?>
-						<div style="margin:10px;">
-							<div><b><?php echo $LANG['GBIF_DATASET']; ?>:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
+						<div>
+							<div><b><?php echo $LANG['GBIF_DATASET']; ?>:</b> <a href="<?php echo htmlspecialchars($dataUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><?php echo htmlspecialchars($dataUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
 						</div>
 						<?php
 					} else {
 						?>
-						<div style="margin:10px;">
+						<div>
 							<?php
 							echo $LANG['YOU_SELECTED_GBIF_1'] .
-							' <a href="https://www.gbif.org/become-a-publisher" target="_blank">' . $LANG['GBIF_ENDORSE'] .
+							' <a href="https://www.gbif.org/become-a-publisher" target="_blank">' . htmlspecialchars($LANG['GBIF_ENDORSE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .
 							'</a> ' . $LANG['TO'] . ' ' . $LANG['YOU_SELECTED_GBIF_2'];
 							?>
 							<form style="margin-top:10px;" name="gbifpubform" action="datapublisher.php" method="post" onsubmit="return validateGbifForm(this)">
@@ -384,7 +396,7 @@ if ($isEditor) {
 										echo $LANG['BEFORE_SUBMITTING'];
 										echo ' (<a href="mailto:helpdesk@gbif.org?subject=Publishing%20data%20from%20Symbiota%20portal%20to%20GBIF...&body=' . rawurlencode(str_replace('<br/>', "\n", $bodyStr)) . '">helpdesk@gbif.org</a>) ';
 										echo $LANG['WITH_REQUEST_1'] . ' &quot;<b>' . $GBIF_USERNAME . '</b>&quot; ' . $LANG['WITH_REQUEST_2'];
-										echo ' <a href="#" onclick="toggle(\'emailMsg\');return false;" style="color:blue">' . $LANG['HERE'] . '</a> ' . $LANG['WITH_REQUEST_3'];
+										echo ' <a href="#" onclick="toggle(\'emailMsg\');return false;" style="color:blue">' . htmlspecialchars($LANG['HERE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['WITH_REQUEST_3'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 										?>
 										<fieldset id="emailMsg" style="display:none;padding:15px;margin:15px">
 											<legend><?php echo $LANG['EMAIL_DRAFT']; ?></legend><?php echo trim($bodyStr, ' <br/>'); ?>
@@ -404,25 +416,28 @@ if ($isEditor) {
 				if ($idigbioKey && $dwcUri) {
 					$dataUrl = 'https://www.idigbio.org/portal/recordsets/' . $idigbioKey;
 					?>
-					<div style="margin:10px;">
-						<div><b><?php echo $LANG['IDIGBIO_DATASET']; ?>:</b> <a href="<?php echo $dataUrl; ?>" target="_blank"><?php echo $dataUrl; ?></a></div>
+					<div>
+						<div><b><?php echo $LANG['IDIGBIO_DATASET']; ?>:</b> <a href="<?php echo htmlspecialchars($dataUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><?php echo htmlspecialchars($dataUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
 					</div>
 					<?php
 				}
 				?>
 			</fieldset>
-			<fieldset style="padding:15px;margin:15px;">
+			<fieldset style="padding:15px;" class="top-breathing-room-rel">
 				<legend><b><?php echo $LANG['PUBLISH_REFRESH']; ?></b></legend>
 				<form name="dwcaform" action="datapublisher.php" method="post" onsubmit="return verifyDwcaForm(this)">
-					<div>
+					<div class="font-control top-breathing-room-rel">
 						<input type="checkbox" name="dets" value="1" <?php echo ($includeDets ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_DETS']; ?><br />
 						<input type="checkbox" name="imgs" value="1" <?php echo ($includeImgs ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_IMGS']; ?><br />
 						<?php
-						if ($collManager->materialSampleIsActive()) echo '<input type="checkbox" name="matsample" value="1" ' . ($includeMatSample ? 'CHECKED' : '') . ' /> ' . $LANG['INCLUDE_MATSAMPLE'] . '<br/>';
+						if($dwcaManager->hasAttributes($collid)) echo '<input type="checkbox" name="attributes" value="1" '.($includeAttributes ? 'CHECKED' : '').'> '.$LANG['INCLUDE_ATTRIBUTES'].'<br/>';
+						if($dwcaManager->hasMaterialSamples($collid)) echo '<input type="checkbox" name="matsample" value="1" '.($includeMatSample ? 'CHECKED' : '').'> '.$LANG['INCLUDE_MATSAMPLE'].'<br/>';
 						?>
+					</div>
+					<div style="margin-top:5px;" class="font-control top-breathing-room-rel">
 						<input type="checkbox" name="redact" value="1" <?php echo ($redactLocalities ? 'CHECKED' : ''); ?> /> <?php echo $LANG['REDACT_LOC']; ?><br />
 					</div>
-					<div style="clear:both;margin:10px;">
+					<div class="font-control top-breathing-room-rel">
 						<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
 						<?php
 						echo '<button type="submit" name="formsubmit" value="buildDwca" ' . ($blockSubmitMsg ? 'disabled' : '') . '>' . $LANG['CREATE_REFRESH'] . '</button>';
@@ -432,7 +447,7 @@ if ($isEditor) {
 					<?php
 					if ($collArr['managementtype'] != 'Live Data' || $collArr['guidtarget'] != 'symbiotaUUID') {
 						?>
-						<div style="margin:10px;font-weight:bold">
+						<div style="margin:10px;font-weight:bold" class="font-control top-breathing-room-rel">
 							<?php echo $LANG['NOTE_LACKING_EXCLUDED']; ?>
 						</div>
 						<?php
@@ -443,23 +458,41 @@ if ($isEditor) {
 			<?php
 		} else {
 			$catID = (isset($DEFAULTCATID) ? $DEFAULTCATID : 0);
-			if ($IS_ADMIN) {
-				if ($action == 'buildDwca') {
-					echo '<ul>';
-					$dwcaManager->setVerboseMode(2);
-					$dwcaManager->setLimitToGuids(true);
-					$dwcaManager->batchCreateDwca($_POST['coll']);
-					echo '</ul>';
-					echo '<ul>';
-					$collManager->batchTriggerGBIFCrawl($_POST['coll']);
-					echo '</ul>';
+			if($IS_ADMIN) {
+				if($action == 'buildDwca') {
+					if($collIdArr = $_POST['coll']){
+						echo '<div>Starting batch process (' . date('Y-m-d h:i:s A') . ')</div>';
+						echo '<div>--------------------------------------------------------</div>';
+						echo '<ul>';
+						$dwcaManager->setVerboseMode(2);
+						$dwcaManager->setLimitToGuids(true);
+						foreach($collIdArr as $id){
+							$dwcaManager->resetCollArr($id);
+							if($includeAttributes){
+								if($dwcaManager->hasAttributes($id)) $dwcaManager->setIncludeAttributes(1);
+								else $dwcaManager->setIncludeAttributes(0);
+							}
+							if($includeMatSample){
+								if($dwcaManager->hasMaterialSamples($id)) $dwcaManager->setIncludeMaterialSample(1);
+								else  $dwcaManager->setIncludeMaterialSample(0);
+							}
+							if($dwcaManager->createDwcArchive()){
+								$dwcaManager->writeRssFile();
+								$collManager->batchTriggerGBIFCrawl(array($id));
+							}
+						}
+						$dwcaManager->setIncludeAttributes($includeAttributes);
+						$dwcaManager->setIncludeMaterialSample($includeMatSample);
+						echo '</ul>';
+						echo 'Batch process finished! (' . date('Y-m-d h:i:s A') . ')';
+					}
 				}
 				?>
 				<div id="dwcaadmindiv" style="margin:10px;display:<?php echo ($emode ? 'block' : 'none'); ?>;">
 					<form name="dwcaadminform" action="datapublisher.php" method="post" onsubmit="return verifyDwcaAdminForm(this)">
-						<fieldset style="padding:15px;">
+						<fieldset  class="top-breathing-room-rel" style="padding:15px;">
 							<legend><b><?php echo $LANG['PUBLISH_REFRESH']; ?></b></legend>
-							<div style="margin:10px;">
+							<div>
 								<input name="collcheckall" type="checkbox" value="" onclick="checkAllColl(this)" /> <?php echo $LANG['SEL_DESEL_ALL']; ?><br /><br />
 								<?php
 								$collList = $dwcaManager->getCollectionList($catID);
@@ -467,29 +500,36 @@ if ($isEditor) {
 									$errMsg = '';
 									if (isset($v['err']) && $v['err']) {
 										$errMsg = $LANG[$v['err']];
-										if ($v['err'] == 'ALREADY_PUB_DOMAIN') $errMsg .= ' (<a href="' . $v['url'] . '" target="_blank">' . substr($v['url'], 0, strpos($v['url'], '/', 10)) . '</a>)';
+										if ($v['err'] == 'ALREADY_PUB_DOMAIN') $errMsg .= ' (<a href="' . htmlspecialchars($v['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars(substr($v['url'], 0, strpos($v['url'], '/', 10)), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 									}
 									$inputAttr = '';
 									if ($errMsg) $inputAttr = 'DISABLED';
 									elseif ($v['url']) $inputAttr = 'CHECKED';
-									echo '<input name="coll[]" type="checkbox" value="' . $k . '" ' . $inputAttr . ' />';
-									echo '<a href="../misc/collprofiles.php?collid=' . $k . '" target="_blank">' . $v['name'] . '</a> ';
+									echo '<div class="bottom-breathing-room">';
+									echo '<input class="margin-rt-rel" name="coll[]" type="checkbox" value="' . $k . '" ' . $inputAttr . ' />';
+									echo '<a href="../misc/collprofiles.php?collid=' . htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($v['name'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ';
 									if ($errMsg) echo '<span style="color:red;margin-left:15px;">' . $errMsg . '</span>';
 									elseif ($v['url']) echo '<span> - published</span>';
+									echo '</div>';
 									echo '<br/>';
 								}
 								?>
 							</div>
-							<fieldset style="margin:10px;padding:15px;">
+							<fieldset style="padding:15px;"  class="top-breathing-room-rel">
 								<legend><b><?php echo $LANG['OPTIONS']; ?></b></legend>
-								<input type="checkbox" name="dets" value="1" <?php echo ($includeDets ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_DETS']; ?><br />
-								<input type="checkbox" name="imgs" value="1" <?php echo ($includeImgs ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_IMGS']; ?><br />
-								<?php
-								if ($dwcaManager->materialSampleIsActive()) echo '<input type="checkbox" name="matsample" value="1" ' . ($includeMatSample ? 'CHECKED' : '') . ' /> ' . $LANG['INCLUDE_MATSAMPLE'] . '<br/>';
-								?>
-								<input type="checkbox" name="redact" value="1" <?php echo ($redactLocalities ? 'CHECKED' : ''); ?> /> <?php echo $LANG['REDACT_LOC']; ?><br />
+								<div>
+									<input type="checkbox" name="dets" value="1" <?php echo ($includeDets ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_DETS']; ?><br />
+									<input type="checkbox" name="imgs" value="1" <?php echo ($includeImgs ? 'CHECKED' : ''); ?> /> <?php echo $LANG['INCLUDE_IMGS']; ?><br />
+									<?php
+									if($dwcaManager->hasAttributes()) echo '<input type="checkbox" name="attributes" value="1" '.($includeAttributes ? 'CHECKED' : '').'> '.$LANG['INCLUDE_ATTRIBUTES'].'<br/>';
+									if($dwcaManager->hasMaterialSamples()) echo '<input type="checkbox" name="matsample" value="1" '.($includeMatSample ? 'CHECKED' : '').'> '.$LANG['INCLUDE_MATSAMPLE'].'<br/>';
+									?>
+								</div>
+								<div style="margin-top:5px;">
+									<input type="checkbox" name="redact" value="1" <?php echo ($redactLocalities ? 'CHECKED' : ''); ?> /> <?php echo $LANG['REDACT_LOC']; ?><br />
+								</div>
 							</fieldset>
-							<div style="clear:both;margin:20px;">
+							<div style="clear:both;">
 								<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
 								<button type="submit" name="formsubmit" value="buildDwca"><?php echo $LANG['CREATE_REFRESH']; ?></button>
 							</div>
@@ -512,16 +552,16 @@ if ($isEditor) {
 					foreach ($dwcaArr as $k => $v) {
 						?>
 						<tr>
-							<td><?php echo '<a href="../misc/collprofiles.php?collid=' . $v['collid'] . '">' . str_replace(' DwC-Archive', '', $v['title']) . '</a>'; ?></td>
+							<td><?php echo '<a href="../misc/collprofiles.php?collid=' . htmlspecialchars($v['collid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars(str_replace(' DwC-Archive', '', $v['title']), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>'; ?></td>
 							<td><?php echo substr($v['description'], 24); ?></td>
 							<td class="nowrap">
 								<?php
-								echo '<a href="' . $v['link'] . '">DwC-A (' . $dwcaManager->humanFileSize($v['link']) . ')</a>';
+								echo '<a href="' . htmlspecialchars($v['link'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">DwC-A (' . htmlspecialchars($dwcaManager->humanFileSize($v['link']), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ')</a>';
 								if ($IS_ADMIN) {
 									?>
 									<form action="datapublisher.php" method="post" style="display:inline;" onsubmit="return window.confirm('<?php echo $LANG['SURE_DELETE']; ?>');">
 										<input type="hidden" name="colliddel" value="<?php echo $v['collid']; ?>">
-										<input type="image" src="../../images/del.png" name="action" value="DeleteCollid" title="<?php echo $LANG['DELETE_ARCHIVE']; ?>" style="width:15px;" />
+										<input type="image" src="../../images/del.png" name="action" value="DeleteCollid" title="<?php echo $LANG['DELETE_ARCHIVE']; ?>" style="width:1.2em;" />
 									</form>
 									<?php
 								}
@@ -529,7 +569,7 @@ if ($isEditor) {
 							</td>
 							<td>
 								<?php
-								echo '<a href="' . $urlPrefix . 'collections/datasets/emlhandler.php?collid=' . $v['collid'] . '">EML</a>';
+								echo '<a href="' . htmlspecialchars($urlPrefix, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . 'collections/datasets/emlhandler.php?collid=' . htmlspecialchars($v['collid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">EML</a>';
 								?>
 							</td>
 							<td class="nowrap"><?php echo date('Y-m-d', strtotime($v['pubDate'])); ?></td>
@@ -540,14 +580,14 @@ if ($isEditor) {
 				</table>
 				<?php
 			} else {
-				echo '<div style="margin:10px;font-weight:bold;">' . $LANG['NO_PUBLISHABLE'] . '</div>';
+				echo '<div style="margin:10px;font-weight:bold;" class="font-control top-breathing-room-rel">' . $LANG['NO_PUBLISHABLE'] . '</div>';
 			}
 			if ($catID) {
 				if ($addDwca = $dwcaManager->getAdditionalDWCA($catID)) {
 					echo '<div style="font-weight:bold;font-size:140%;margin:50px 0px 15px 0px;">' . $LANG['ADDIT_SOURCES'] . '</div>';
 					echo '<ul>';
 					foreach ($addDwca as $domanName => $domainArr) {
-						echo '<li><a href="' . $domainArr['url'] . '" target="_blank">' . $domanName . '</a> - ' . $domainArr['cnt'] . ' Archives</li>';
+						echo '<li><a href="' . htmlspecialchars($domainArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($domanName, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> - ' . htmlspecialchars($domainArr['cnt'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' Archives</li>';
 					}
 					echo '</ul>';
 				}

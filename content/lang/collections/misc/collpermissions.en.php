@@ -16,6 +16,7 @@ $LANG['PERMISSIONS'] = 'Permissions';
 $LANG['ADMINS'] = 'Administrators';
 $LANG['YES_REM_ADMIN'] = 'Are you sure you want to remove administrative rights for this user?';
 $LANG['DEL_PERMISSIONS'] = 'Delete permissions for this user';
+$LANG['REMOVE_PERMISSIONS'] = 'Remove user permissions';
 $LANG['NO_PERMS'] = 'There are no administrative permissions (excluding Super Admins)';
 $LANG['EDITORS'] = 'Editors';
 $LANG['YES_REM_EDIT'] = 'Are you sure you want to remove editor rights for this user?';
@@ -40,6 +41,7 @@ $LANG['PERS_OBS_SPONSOR_EXPLAIN'] = 'Collection administrators listed above can 
 $LANG['CHECKLIST_SPONSOR'] = 'Checklist / Dataset Management Sponsorship';
 $LANG['CHECKLIST_SPONSOR_EXPLAIN'] = 'Collection administrators listed above can sponsor users for Checklist and Dataset Management.
 						This allows users to create new public and private checklists or datasets that are linked directly to their user profile.  Public Checklists and Datasets are visible to all portal visitors.';
+
 $LANG['SURE_DELETE'] = 'Are you sure you want to delete these permissions?';
 $LANG['NONE_SPONSORED'] = 'No users have yet been sponsored';
 $LANG['NEW_SPONSOR'] = 'New Sponsorship';
@@ -62,5 +64,7 @@ $LANG['ALL_RANGES'] = 'All approved taxonomic ranges listed below';
 $LANG['SURE_REM_ID'] = 'Are you sure you want to remove identification editing rights for this user?';
 $LANG['NO_ID_PERMS'] = 'There are no Identification Editor permissions';
 $LANG['NOT_AUTH'] = 'Unauthorized to view this page. You must have administrative right for this collection.';
+
+$LANG['DROP_ICON'] = 'Drop Icon';
 
 ?>

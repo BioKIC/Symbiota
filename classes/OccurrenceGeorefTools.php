@@ -82,15 +82,15 @@ class OccurrenceGeorefTools {
 			$countryStr='';$stateStr='';$countyStr='';$municipalityStr='';$localityStr='';$verbCoordStr = '';$decLatStr='';$decLngStr='';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
-				$localityStrNew = trim($r->locality,' .,;');
-				$verbCoordStrNew = trim($r->verbatimcoordinates,' .,;');
+				$localityStrNew = trim($r->locality ?? '',' .,;');
+				$verbCoordStrNew = trim($r->verbatimcoordinates ?? '',' .,;');
 				if($localityStrNew || $verbCoordStrNew){
-					if($countryStr != trim($r->country) || $stateStr != trim($r->stateprovince) || $countyStr != trim($r->county) || $municipalityStr != trim($r->municipality)
+					if($countryStr != trim($r->country ?? '') || $stateStr != trim($r->stateprovince ?? '') || $countyStr != trim($r->county ?? '') || $municipalityStr != trim($r->municipality ?? '')
 						|| $localityStr != $localityStrNew || $verbCoordStr != $verbCoordStrNew || $decLatStr != $r->decimallatitude || $decLngStr != $r->decimallongitude){
-						$countryStr = trim($r->country);
-						$stateStr = trim($r->stateprovince);
-						$countyStr = trim($r->county);
-						$municipalityStr = trim($r->municipality);
+						$countryStr = trim($r->country ?? '');
+						$stateStr = trim($r->stateprovince ?? '');
+						$countyStr = trim($r->county ?? '');
+						$municipalityStr = trim($r->municipality ?? '');
 						$localityStr = $localityStrNew;
 						$verbCoordStr = $verbCoordStrNew;
 						$decLatStr = $r->decimallatitude;
@@ -253,7 +253,7 @@ class OccurrenceGeorefTools {
 		}
 		else{
 			//Exact search
-			$sqlWhere .= 'AND o.locality = "'.trim($this->cleanInStr($locality), " .").'" ';
+			$sqlWhere .= 'AND o.locality = "'.trim($this->cleanInStr($locality) ?? '', " .").'" ';
 		}
 		if($country){
 			$country = $this->cleanInStr($country);
@@ -333,7 +333,7 @@ class OccurrenceGeorefTools {
 		$sql = 'SELECT DISTINCT country FROM omoccurrences WHERE decimalLatitude IS NULL AND collid IN('.$this->collStr.')';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$cStr = trim($r->country);
+			$cStr = trim($r->country ?? '');
 			if($cStr) $retArr[] = $cStr;
 		}
 		$rs->free();
@@ -346,7 +346,7 @@ class OccurrenceGeorefTools {
 		$sql = 'SELECT DISTINCT stateprovince FROM omoccurrences WHERE decimalLatitude IS NULL AND collid IN('.$this->collStr.') ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$sStr = trim($r->stateprovince);
+			$sStr = trim($r->stateprovince ?? '');
 			if($sStr) $retArr[] = $sStr;
 		}
 		$rs->free();
@@ -360,7 +360,7 @@ class OccurrenceGeorefTools {
 		//echo $sql;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$cStr = trim($r->county);
+			$cStr = trim($r->county ?? '');
 			if($cStr) $retArr[] = $cStr;
 		}
 		$rs->free();
@@ -374,7 +374,7 @@ class OccurrenceGeorefTools {
 		//echo $sql;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$mStr = trim($r->municipality);
+			$mStr = trim($r->municipality ?? '');
 			if($mStr) $retArr[] = $mStr;
 		}
 		$rs->free();
@@ -403,7 +403,7 @@ class OccurrenceGeorefTools {
 		return $retArr;
 	}
 	private function cleanInStr($str){
-		$newStr = trim($str);
+		$newStr = trim($str ?? '');
 		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
 		$newStr = $this->conn->real_escape_string($newStr);
 		return $newStr;

@@ -377,20 +377,17 @@ class SpecProcNlpSalix
 				//echo "$Score,  {$match[0]}<br>";
 				}
 			//Check for county, state our country
-			if(count($match) > 1)
-				{
-
-				$query = "SELECT * FROM `lkupstateprovince` WHERE `stateName` LIKE '{$match[1]}' LIMIT 1";
-				//echo "query = $query<br>";
+			if(count($match) > 1){
+				$query = 'SELECT geoterm FROM geographicthesaurus WHERE geolevel = 60 AND geoterm = "'.$match[1].'" LIMIT 1';
 				$result = $this->conn->query($query);
-				if($result->num_rows > 0)
-					$ScoreArray[$match[0]] =  0;
+				if($result->num_rows > 0) $ScoreArray[$match[0]] =  0;
+				$result->free();
 				//echo "Found ".$result->num_rows." for state<br>";
-				$query = "SELECT CountryName from lkupcountry where CountryName LIKE '{$match[1]}' LIMIT 1";
+				$query = 'SELECT geoterm FROM geographicthesaurus WHERE geolevel = 50 AND geoterm = "'.$match[1].'" LIMIT 1';
 				$result = $this->conn->query($query);
-				if($result->num_rows > 0)
-					$ScoreArray[$match[0]] =  0;
-				}
+				if($result->num_rows > 0) $ScoreArray[$match[0]] =  0;
+				$result->free();
+			}
 			if($Score > $Max)
 				{
 				$Max = $Score;
@@ -2112,224 +2109,175 @@ class SpecProcNlpSalix
 		}
 
 	//*****************************************************************************
-	function PlantsOf($Name)
-		{//Find country/state from "Plants of" statement.
-		$query = "SELECT * FROM lkupcountry where countryName LIKE '$Name'";
+	function PlantsOf($Name){ //Find country/state from "Plants of" statement.
+		$countryArr = array();
+		$query = 'SELECT geoThesID, geoTerm FROM geographicthesaurus WHERE geolevel = 50 AND geoterm = "'.$Name.'" LIMIT 1';
 		$result = $this->conn->query($query);
-		if($result->num_rows > 0)
-			{
-			$Country = $result->fetch_assoc();
-			$this->AddToResults('country',$Country['countryName'],-1);
-			$this->SeekState($Country['countryId'],-1);
+		$countryArr = $result->fetch_assoc();;
+		$result->free();
+		if($countryArr){
+			$this->AddToResults('country',$countryArr['geoTerm'],-1);
+			$this->SeekState($countryArr['geoThesID'],-1);
 			return true;
-			}
-		else
-			{
+		}
+		else{
 			//echo "Here for $Name<br>";
 			$match = $this->LabeledRegion('county');
-			if($match != false)
-				{ //Found a county name on the label.  Check if $Name is a state that contains the county
+			if($match != false){ //Found a county name on the label.  Check if $Name is a state that contains the county
 				//echo "Here 1<br>";
 				$County = $match[1]." ".$match[2];
-				if(!$this->CheckCounty($County, $Name, $match['Line']))
-					{
+				if(!$this->CheckCounty($County, $Name, $match['Line'])){
 					$County = $match[2];
-					if(!$this->CheckCounty($County, $Name, $match['Line']))
-						{
+					if(!$this->CheckCounty($County, $Name, $match['Line'])){
 						$County = $match[1];
-						if(!$this->CheckCounty($County, $Name, $match['Line']))
-							return true;
-						}
-					else
-						return true;
+						if(!$this->CheckCounty($County, $Name, $match['Line'])) return true;
 					}
-				else
-					return true;
+					else return true;
 				}
+				else return true;
+			}
 			//Didn't find a county.  Just look for the state
-			$query = "SELECT s.stateName, s.stateId, cr.countryName, cr.countryId FROM lkupstateprovince s inner join lkupcountry cr on cr.countryId = s.countryId WHERE s.stateName LIKE '$Name'";
-			//echo "$query<br>";
+			$query = 'SELECT c.geoThesID AS countryId, c.geoterm AS countryName, s.geoThesID AS stateId, s.geoterm AS stateName
+				FROM geographicthesaurus c INNER JOIN geographicthesaurus s ON c.geoThesID = s.parentID
+				WHERE c.geolevel = 50 AND s.geolevel = 60 AND s.geoterm = "'.$Name.'"';
 			$result = $this->conn->query($query);
-			if($result->num_rows > 0)
-				{
-				while($OneState = $result->fetch_assoc())
-					{
-					//$this->printr($OneState,"OneState");
-					if($this->Results['stateProvince'] == "")
-						{
-						if($this->Results['decimalLatitude'] != "" && $this->Results['decimalLongitude'] != "")
-							{ //If we have lat/long, use that to confirm state
-							if($this->CheckCoordinates($OneState['stateName']))
-								{
-									{
-									$County = $this->ScanForCounty($OneState);
-									if($County != "")
-										{
-										$this->AddToResults('county',$County,-1);
-										for($L=0;$L<count($this->LabelLines);$L++)
-											{
-											if(stripos($this->LabelLines[$L],$County)!== false)
-												{
-												$this->LabelLines[$L] = str_ireplace($County." county","",$this->LabelLines[$L]);
-												$this->LabelLines[$L] = str_ireplace($County,"",$this->LabelLines[$L]);
-												$this->LabelLines[$L] = trim($this->LabelLines[$L]," ,;:");
-												return true;
-												}
-
-											}
-										}
+			while($row = $result->fetch_assoc()){
+				//$this->printr($OneState,"OneState");
+				if(!$this->Results['stateProvince']){
+					if($this->Results['decimalLatitude'] && $this->Results['decimalLongitude']){ //If we have lat/long, use that to confirm state
+						if($this->CheckCoordinates($row['stateName'])){
+							if($County = $this->ScanForCounty($row)){
+								$this->AddToResults('county', $County,-1);
+								for($L=0; $L<count($this->LabelLines); $L++){
+									if(stripos($this->LabelLines[$L], $County)!== false){
+										$this->LabelLines[$L] = str_ireplace($County." county","",$this->LabelLines[$L]);
+										$this->LabelLines[$L] = str_ireplace($County, '', $this->LabelLines[$L]);
+										$this->LabelLines[$L] = trim($this->LabelLines[$L], " ,;:");
+										return true;
 									}
 								}
 							}
-						else if($result->num_rows == 1 || preg_match("(\b({$OneState['countryName']})\b)",$this->Label))
-							{
-							if(isset($match['Line']))
-								$L = $match['Line'];
-							else
-								$L = -1;
-							$this->AddToResults('stateProvince',$OneState['stateName'],$L);
-							$this->AddToResults('country',$OneState['countryName'],$L);
-							$County = $this->ScanForCounty($OneState);
-							if($County != "")
-								{
-								$this->AddToResults('county',$County,-1);
-								}
-
-							}
 						}
-					if($this->Results['county'] != "")
-						return true;
+					}
+					elseif($result->num_rows == 1 || preg_match("(\b({$row['countryName']})\b)", $this->Label)){
+						if(isset($match['Line'])) $L = $match['Line'];
+						else $L = -1;
+						$this->AddToResults('stateProvince', $row['stateName'],$L);
+						$this->AddToResults('country', $row['countryName'],$L);
+						$County = $this->ScanForCounty($row);
+						if($County != "") $this->AddToResults('county', $County, -1);
 					}
 				}
+				if($this->Results['county'] != "")
+					return true;
 			}
+			$result->free();
 		}
-
+	}
 
 	//*****************************************************************************
-	private function CheckCounty($County, $State, $L)
-		{//Look for a match between the state and county.  If found, accept.
-		$match = array();
-		$query = "SELECT s.stateName, s.stateId, cr.countryName, cr.countryId, cy.countyName FROM lkupstateprovince s inner join lkupcountry cr on cr.countryId = s.countryId INNER JOIN lkupcounty cy on cy.stateId = s.stateId WHERE s.stateName LIKE '$State' AND cy.countyName like '$County'";
+	private function CheckCounty($County, $State, $L){ //Look for a match between the state and county.  If found, accept.
+		$query = 'SELECT cr.geoThesID AS countryId, cr.geoterm AS countryName, s.geoThesID AS stateId, s.geoterm AS stateName, cy.geoterm AS countyName
+			FROM geographicthesaurus cr INNER JOIN geographicthesaurus s ON cr.geoThesID = s.parentID
+			INNER JOIN geographicthesaurus cy ON s.geoThesID = cy.parentID
+			WHERE cy.geolevel = 50 AND s.geolevel = 60 AND cy.geolevel = 70 AND s.geoterm = "'.$State.'" AND cy.geoterm = "'.$County.'"';
 		$result = $this->conn->query($query);
-		if($result->num_rows > 0)
-			{
+		if($row = $result->fetch_assoc()){
 			//$L = $match['Line'];
-			$Result = $result->fetch_assoc();
-			$this->AddToResults('county',$Result['countyName'],$L);
-			$this->AddToResults('country',$Result['countryName'],$L);
-			$this->AddToResults('stateProvince',$Result['stateName'],$L);
-			if($L >= 0)
-				$this->LabelLines[$L] = trim(str_replace($County,"",$this->LabelLines[$L])," ,;:");
+			$this->AddToResults('county', $row['countyName'], $L);
+			$this->AddToResults('country', $row['countryName'], $L);
+			$this->AddToResults('stateProvince', $row['stateName'], $L);
+			if($L >= 0) $this->LabelLines[$L] = trim(str_replace($County, '', $this->LabelLines[$L]), " ,;:");
 			return true;
-			}
 		}
-
-
+	}
 
 	//*****************************************************************************
-	private function CheckCoordinates($State)
-		{//Given a state, see if there are in omoccurrences table states with similar coordinates
-		if($this->Results['decimalLatitude'] != "" && $this->Results['decimalLongitude'] != "")
-			{
+	private function CheckCoordinates($State) {  //Given a state, see if there are in omoccurrences table states with similar coordinates
+		$status = false;
+		if($this->Results['decimalLatitude'] && $this->Results['decimalLongitude']){
 			$Lat = $this->Results['decimalLatitude'];
 			$Long = $this->Results['decimalLongitude'];
-			$query =  "SELECT decimalLatitude, decimalLongitude, stateProvince, country, county from omoccurrences where stateProvince LIKE '$State' AND decimalLongitude IS NOT NULL LIMIT 5";
+			$query =  'SELECT decimalLatitude, decimalLongitude, stateProvince, country, county FROM omoccurrences WHERE stateProvince = "'.$State.'" AND decimalLongitude IS NOT NULL LIMIT 5';
 			$result = $this->conn->query($query);
-			if($result->num_rows == 0)
-					return false;
-			while($One = $result->fetch_array())
-				{
-				if(abs($Lat - $One['decimalLatitude']) < 2 && abs($Long - $One['decimalLongitude'] < 2))
-					{
-					$this->AddToResults('country',$One['country'],-1);
-					$this->AddToResults('stateProvince',$One['stateProvince'],-1);
-					return true;
-					}
+			while($row = $result->fetch_array()){
+				if(abs($Lat - $row['decimalLatitude']) < 2 && abs($Long - $row['decimalLongitude'] < 2)){
+					$this->AddToResults('country', $row['country'], -1);
+					$this->AddToResults('stateProvince', $row['stateProvince'], -1);
+					$status = true;
 				}
 			}
-		return false;
+			$result->free();
 		}
+		return $status;
+	}
 
 
 
 	//*****************************************************************************
-	function ScanForState($County)
-		{ //Given a county, come up with a list of possible states, then scan for them.
-		$MaybeState = array();
-		$query = "SELECT s.stateId, s.stateName, c.countyName from lkupstateProvince s inner join lkupcounty c on c.stateId=s.stateId where c.countyName LIKE '$County'";
+	function ScanForState($County){
+		//Given a county, come up with a list of possible states, then scan for them.
+		$status = false;
+		$maybeState = array();
+		$query = 'SELECT s.geoThesID AS stateId, s.geoTerm AS stateName, c.geoTerm AS countyName
+			FROM geographicthesaurus c INNER JOIN geographicthesaurus s ON c.geoThesID = s.parentID
+			WHERE c.geolevel = 70 AND s.geolevel = 60 AND c.geoterm = "'.$County.'"';
 		$result = $this->conn->query($query);
-		if($result->num_rows == 0)
-			{
-			return false;
-			}
-		else
-			{
-			while($OneCounty = $result->fetch_array())
-				{
-				$State = $OneCounty['stateName'];
-				$Preg = "(\b$State\b)i";
-				//echo "Preg = $Preg<br>";
-				if(preg_match($Preg,$this->Label,$match))
-					{
-					$MaybeState[] = $OneCounty;
-					}
-				}
-			if(count($MaybeState) == 1)
-				{
-				$this->AddToResults('county',$MaybeState[0]['countyName'],-1);
-				$this->AddToResults('stateProvince',$MaybeState[0]['stateName'],-1);
-				$this->AddCountry($MaybeState[0]['stateId']);
-				return true;
-				}
-			}
+		while($row = $result->fetch_array()){
+			if(preg_match('(\b'.$row['stateName'].'\b)i', $this->Label)) $maybeState[] = $row;
 		}
+		$result->free();
+		if(count($maybeState) == 1){
+			$this->AddToResults('county', $maybeState[0]['countyName'], -1);
+			$this->AddToResults('stateProvince', $maybeState[0]['stateName'], -1);
+			$this->AddCountry($maybeState[0]['stateId']);
+			$status = true;
+		}
+		return $status;
+	}
 
 
 	//*****************************************************************************
-	function ScanForCounty($OneState)
-		{//Given a state, find a county
+	function ScanForCounty($OneState){
+		//Given a state, find a county
 		//First look for the word "County"...
-		$BadCounties = array("island","park"); //These are much more likely to be false positives.
-		$query = "SELECT cy.countyName from lkupcounty cy INNER JOIN lkupstateprovince s on s.stateId=cy.stateId WHERE cy.stateId = ".$OneState['stateId'];
+		$retStr = '';
+		$badCounties = array('island', 'park'); //These are much more likely to be false positives.
+		$query = 'SELECT c.geoTerm AS countyName
+			FROM geographicthesaurus s INNER JOIN geographicthesaurus c ON s.geoThesID = c.parentID
+			WHERE s.geolevel = 60 AND c.geolevel = 70 AND s.geoThesID = "'.$OneState['stateId'].'"';
 		//echo $query."<br>";
 		$result = $this->conn->query($query);
-		if($result->num_rows > 0)
-			while($OneCounty = $result->fetch_assoc())
-				{
-				//echo "Checking {$OneCounty['countyName']}<br>";
-				$CountyName = $OneCounty['countyName'];
-				if(preg_match("(\b$CountyName\b)",$this->Results['recordedBy']) > 0)
-						continue;  //Rare case of collector name matching a county
-				$Preg = "((\b$CountyName\b)(\scounty)?)i";
-				if(preg_match($Preg,$this->Label,$match))
-					{
-					if(array_search(strtolower($match[1]),$BadCounties)!== false && !isset($match[2]))
-						continue;
-					else
-						return $CountyName;
-					}
-				if(preg_match("(Saint [A-Z][a-z]{2,20})",$CountyName))
-					{
-					$Preg = str_replace("Saint ","St. ",$Preg);
-					if(preg_match($Preg,$this->Label,$match))
-						return $CountyName;
-					}
-				}
+		while($row = $result->fetch_assoc()){
+			//echo "Checking {$row['countyName']}<br>";
+			if(preg_match('(\b'.$row['countyName'].'\b)', $this->Results['recordedBy'])) continue;  //Rare case of collector name matching a county
+			$pregTerm = '((\b'.$row['countyName'].'\b)(\scounty)?)i';
+			if(preg_match($pregTerm, $this->Label, $match)){
+				if(array_search(strtolower($match[1]), $badCounties) !== false && !isset($match[2])) continue;
+				else $retStr = $row['countyName'];
+			}
+			if(preg_match("(Saint [A-Z][a-z]{2,20})", $row['countyName'])){
+				$pregTerm = str_replace('Saint ', 'St. ', $pregTerm);
+				if(preg_match($pregTerm, $this->Label)) $retStr = $row['countyName'];
+			}
 		}
+		$result->free();
+		return $retStr;
+	}
 
 	//*****************************************************************************
-	function AddCountry($StateId)
-		{//Given the stateId from lkupstateprovince, find the country.
-		$query = "SELECT countryName FROM lkupcountry c INNER JOIN lkupstateprovince s on s.countryId= c.countryId where s.stateId=$StateId LIMIT 1";
-		//echo "$query<br>";
+	function AddCountry($StateId){
+		//Given the state Id from geographicthesaurus, find the country.
+		$query = 'SELECT c.geoterm AS countryName
+			FROM geographicthesaurus c INNER JOIN geographicthesaurus s ON c.geoThesID = s.parentID
+			WHERE c.geolevel = 50 AND s.geolevel = 60 AND s.geoThesID = '.$StateId.' LIMIT 1';
 		$result = $this->conn->query($query);
-		if($result->num_rows > 0)
-			{
-			$Country = $result->fetch_assoc();
-			$this->AddToResults('country',$Country['countryName'],-1);
-			}
-		return;
+		if($row = $result->fetch_assoc()){
+			$this->AddToResults('country', $row['countryName'], -1);
 		}
+		$result->free();
+		return;
+	}
 
 	private function GetFromLatLong($Lat,$Long)
 		{//If Lat/Long has been found previously, looks in the omoccurrences table for similar lat/long and checks the table's state/country to see if it will work with this label.
@@ -2361,86 +2309,76 @@ class SpecProcNlpSalix
 		}
 
 	//*****************************************************************************
-	private function AnyCountry()
-		{
+	private function AnyCountry(){
 		//Look through label for any country.  Require that a matching state be present.
-		$query = "SELECT countryId, countryName from lkupcountry where 1";
+		$query = 'SELECT geoThesID AS countryId, geoTerm AS countryName FROM geographicthesaurus WHERE geolevel = 50';
 		$result = $this->conn->query($query);
-		$Preg = "(\bbrasil\b)i";
-		$FullLabel = preg_replace($Preg,"Brazil",$this->Label);
-		while(($Country = $result->fetch_assoc()) && $this->Results['country'] == "")
-			{
-			//$this->printr($Country,"Country");
-			$Preg = "(\b{$Country['countryName']}\b)i";
-			if(preg_match($Preg,$FullLabel,$match))
-				{
-				//echo "Checking..<br>";
-				$this->SeekState($Country['countryId']);
+		$fullLabel = preg_replace('(\bbrasil\b)i', 'Brazil', $this->Label);
+		while($row = $result->fetch_assoc()){
+			if(!$this->Results['country']){
+				//$this->printr($row,"Country");
+				if(preg_match('(\b{'.$row['countryName'].'}\b)i', $fullLabel)){
+					//echo "Checking..<br>";
+					$this->SeekState($row['countryId']);
 				}
 			}
 		}
+		$result->free();
+	}
 
 
 	//*****************************************************************************
-	private function SeekState($CountryId,$m=-1)
-		{
+	private function SeekState($CountryId, $m=-1){
 		//Given the country (or if none assume USA), scan the whole label for a contained state.
+		$status = false;
 		$BadWords = "(\b(copyright|herbarium|garden|database|institute|instituto|vascular|university|specimen|botanical\b))i";
 
 		//Query the database for all the states in the given country.
-		$query = "SELECT stateName,stateId from lkupstateprovince where countryId like '$CountryId'";
+		$query = 'SELECT geoTerm AS stateName, geoThesID AS stateId FROM geographicthesaurus WHERE parentID = '.$CountryId;
 		//echo $query."<br>";
-		$StateArray = array();
-		$StateResult = $this->conn->query($query);
-		$Num = $StateResult->num_rows;
-		if($Num == 0)
-			return false; //No states found.
+		$stateArray = array();
+		$stateResult = $this->conn->query($query);
 		//echo "Looking for state<br>";
 		//Look in the most likely lines first.
 		$RankArray = $this->RankCountryLines();
 		//$this->PrintRank($RankArray,"States");
-		foreach ($RankArray as $L=>$Score)
-			{
-			$StateResult->data_seek(0); //Set the query result pointer back to the start
-			if(preg_match($BadWords, $this->LabelLines[$L])>0)
-				continue;
-			if($Score < 0)
-				break; //No need to keep checking.  The rest of the lines probably contain misleading results.
-			while($OneState = $StateResult->fetch_assoc())
-				{ //Check each potential state one at a time.
+		foreach($RankArray as $L=>$Score){
+			$stateResult->data_seek(0); //Set the query result pointer back to the start
+			if(preg_match($BadWords, $this->LabelLines[$L])>0) continue;
+			if($Score < 0) break; //No need to keep checking.  The rest of the lines probably contain misleading results.
+			while($row = $stateResult->fetch_assoc()){
+				//Check each potential state one at a time.
 				//echo "Looking for {$OneState['stateName']}<br>";
-				if(preg_match("(\b{$OneState['stateName']}\b)i",$this->LabelLines[$L]) > 0)
-					{ //Found a state listed on the line.
+				if(preg_match("(\b{$row['stateName']}\b)i",$this->LabelLines[$L]) > 0){
+					//Found a state listed on the line.
 					//echo "Found state {$OneState['stateName']}<br>";
-					$StateArray[] = $OneState['stateName'];
-					$StateId[] = $OneState['stateId'];
-					}
-				}
-			if(count($StateArray) > 0)
-				{
-				$Lengths = array_map('strlen',$StateArray); //Get the length of each potential state name
-				$index = $this->MaxKey($Lengths); //Take the longest state name in the array.  Least likely to be a random match.
-				$this->AddToResults('stateProvince',$StateArray[$index],$L);
-				$this->LabelLines[$L]= str_ireplace($StateArray[$index],"",$this->LabelLines[$L]);
-
-				//Look for a county within the state.
-				$County = $this->ScanForCounty(array ('stateId' => $StateId[$index]));
-				if($County != "")
-					{
-					$this->AddToResults('county',$County,-1);
-					}
-				if($this->Results['country'] == "")
-					{
-					$query = "SELECT countryName from lkupcountry where countryId like $CountryId LIMIT 1";
-					$CountryResult = $this->conn->query($query);
-					$Country = $CountryResult->fetch_assoc();
-					$this->AddToResults('country',$Country['countryName'],-1);
-					}
-				return true;
+					$stateArray[] = $row['stateName'];
+					$StateId[] = $row['stateId'];
 				}
 			}
-		return false;
+			if($stateArray){
+				$lengths = array_map('strlen', $stateArray); //Get the length of each potential state name
+				$index = $this->MaxKey($lengths); //Take the longest state name in the array.  Least likely to be a random match.
+				$this->AddToResults('stateProvince', $stateArray[$index], $L);
+				$this->LabelLines[$L]= str_ireplace($stateArray[$index], '', $this->LabelLines[$L]);
+
+				//Look for a county within the state.
+				$county = $this->ScanForCounty(array ('stateId' => $StateId[$index]));
+				if(!$county) $this->AddToResults('county', $county, -1);
+				if(!$this->Results['country']){
+					$query = 'SELECT geoterm AS countryName FROM geographicthesaurus WHERE geoThesID = '.$CountryId;
+					$countryResult = $this->conn->query($query);
+					if($country = $countryResult->fetch_assoc()){
+						$this->AddToResults('country', $country['countryName'], -1);
+					}
+					$countryResult->free();
+				}
+				$status = true;
+			}
 		}
+		$stateResult->free();
+		return $status;
+	}
 
 	//*****************************************************************************
 	private function RankCountryLines()

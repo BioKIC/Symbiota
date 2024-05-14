@@ -7,7 +7,7 @@ Language: Español (Spanish)
 
 $LANG['FAILED'] = '¡Falló actualización de perfil!';
 $LANG['PWORD_SUCCESS'] = 'Actualización de contraseña exitosa';
-$LANG['PWORD_FAILED'] = '¡Falló actualización de contraseña! ¿Está seguro de haber ingresado la contraseña antigua correctamente?';
+$LANG['PWD_UPDATE_FAILED'] = '¡Falló actualización de contraseña!';
 $LANG['UPDATE_SUCCESSFUL'] = '¡Actualización de nombre de usuario exitosa!';
 $LANG['LOGIN_USED'] = 'El inicio de sesión ya está siendo utilizado por otro usuario. Intente un nuevo inicio de sesión.';
 $LANG['INCORRECT_PWD'] = 'ERROR al guardar el nuevo inicio de sesión: contraseña incorrecta';

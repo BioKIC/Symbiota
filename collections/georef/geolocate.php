@@ -57,7 +57,8 @@ if(isset($PORTAL_GUID) && $PORTAL_GUID){
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
 	<title>GEOLocate Tool</title>
@@ -103,6 +104,7 @@ if(isset($PORTAL_GUID) && $PORTAL_GUID){
 
 <body>
 	<div id="container">
+		<h1 class="page-heading screen-reader-only">GEOLocate Tool</h1>
 		<div>
 			<iframe id="Iframe1" src="//www.geo-locate.org/web/WebGeoreflight.aspx?v=1&georef=run|true|true|true|false|false|false|false|0&tab=locality&<?php echo $urlVariables; ?>"></iframe>
 		</div>

@@ -17,8 +17,8 @@ CREATE TABLE `adminconfig` (
 );
 
 ALTER TABLE `agents` 
-  CHANGE COLUMN `taxonomicgroups` `taxonomicGroups` VARCHAR(900) NULL DEFAULT NULL ,
-  CHANGE COLUMN `collectionsat` `collectionsAt` VARCHAR(900) NULL DEFAULT NULL ,
+  CHANGE COLUMN `taxonomicgroups` `taxonomicGroups` text NULL DEFAULT NULL ,
+  CHANGE COLUMN `collectionsat` `collectionsAt` text NULL DEFAULT NULL ,
   CHANGE COLUMN `mbox_sha1sum` `mboxSha1Sum` CHAR(40) NULL DEFAULT NULL ;
 
 ALTER TABLE `agents`
@@ -425,7 +425,7 @@ ALTER TABLE `institutions`
   CHANGE COLUMN `Phone` `Phone` VARCHAR(100) NULL DEFAULT NULL,
   CHANGE COLUMN `Contact` `Contact` VARCHAR(255) NULL DEFAULT NULL,
   CHANGE COLUMN `Email` `Email` VARCHAR(255) NULL DEFAULT NULL,
-  CHANGE COLUMN `Notes` `Notes` VARCHAR(19500) NULL DEFAULT NULL;
+  CHANGE COLUMN `Notes` `Notes` text NULL DEFAULT NULL;
 
 
 ALTER TABLE `omcollections` 
@@ -963,7 +963,7 @@ ALTER TABLE `uploaddetermtemp`
   ADD COLUMN `verbatimTaxonRank` VARCHAR(45) NULL AFTER `specificEpithet`,
   ADD COLUMN `taxonRank` VARCHAR(45) NULL AFTER `verbatimTaxonRank`,
   ADD COLUMN `infraSpecificEpithet` VARCHAR(45) NULL AFTER `taxonRank`,
-  ADD COLUMN `taxonRemarks` VARCHAR(2000) NULL AFTER `identificationRemarks`,
+  ADD COLUMN `taxonRemarks` text NULL AFTER `identificationRemarks`,
   ADD COLUMN `identificationVerificationStatus` VARCHAR(45) NULL AFTER `taxonRemarks`,
   ADD COLUMN `taxonConceptID` VARCHAR(45) NULL AFTER `identificationVerificationStatus`,
   CHANGE COLUMN `identifiedBy` `identifiedBy` VARCHAR(255) NOT NULL DEFAULT '',

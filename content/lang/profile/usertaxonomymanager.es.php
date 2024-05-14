@@ -25,5 +25,6 @@ $LANG['DELETE_LINKS'] = 'Remover todas las relaciones taxonómicas para este usu
 $LANG['REMOVE_ONE_LINK'] = '¿Está seguro que quiere remover este enlace de taxonomía para este usuario?';
 $LANG['DELETE_A_LINK'] = 'Eliminar esta relación taxonómica';
 $LANG['NOT_AUTH'] = 'No está autorizado para ingresar en esta página';
+$LANG['ADD'] = 'Agregar botón';
 
 ?>

@@ -1,7 +1,9 @@
 <?php
 /*
 ------------------
-Language: Español
+Language: Español (Spanish)
+Translated by: Samanta Orellana
+Date Translated: 2021-09-05
 ------------------
 */
 
@@ -15,6 +17,7 @@ $LANG['IMAGE_FILE_TYPE'] = 'El archivo de imagen debe ser JPG, GIF, o PNG (tipo 
 $LANG['HOME'] = 'Inicio';
 $LANG['COL_MNT'] = 'Manejo de Coleciones';
 $LANG['OCC_IMAGE_SUBMIT'] = 'Envío de Imagen de Ocurrencia';
+$LANG['UPLOAD'] = 'Cargar el archivo';
 $LANG['MANUAL_UPLOAD'] = 'Envío Manual de Imagen de Ocurrencia';
 $LANG['WEB_READY_RECOMMENDED'] = 'Se recomienda subir imágenes listas para la web. El tamaño de las imágenes a subir no puede ser mayor de 10MB';
 $LANG['ENTER_URL_EXPLAIN'] = 'Ingresar una URL a una imagen accesible desde la web.
@@ -30,6 +33,7 @@ $LANG['PROCESSING_STATUS'] = 'Estado de Procesamiento';
 $LANG['SKELETAL_DATA'] = 'Datos Esqueléticos';
 $LANG['CAT_NUM'] = 'Número de Catálogo';
 $LANG['SCINAME'] = 'Nombre Científico';
+$LANG['SCINAMEAUTH'] = 'Autoría del nombre científico';
 $LANG['FAMILY'] = 'Familia';
 $LANG['COUNTRY'] = 'País';
 $LANG['STATE_PROVINCE'] = 'Estado/Provincia';

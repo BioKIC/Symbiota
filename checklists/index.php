@@ -1,26 +1,34 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ChecklistManager.php');
-include_once($SERVER_ROOT.'/content/lang/checklists/index.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/checklists/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/checklists/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT.'/content/lang/checklists/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $pid = array_key_exists('pid',$_REQUEST)?$_REQUEST['pid']:0;
 
 //Sanitation
-$pid = htmlspecialchars($pid, HTML_SPECIAL_CHARS_FLAGS);
+$pid = htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 if(!is_numeric($pid)) $pid = 0;
 
 
 $clManager = new ChecklistManager();
 $clManager->setProj($pid);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> Species Lists</title>
+	<title><?php echo $DEFAULT_TITLE . $LANG['SPECIES_INVENTORIES']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
+	<style>
+		.btn-medium-font {
+			font-size: 0.6em;
+			text-decoration: none;
+		}
+	</style>
 </head>
 <body>
 	<?php
@@ -28,38 +36,38 @@ $clManager->setProj($pid);
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class="navpath">
-		<a href="../index.php"><?php echo (isset($LANG['NAV_HOME'])?$LANG['NAV_HOME']:'Home'); ?></a> &gt;&gt;
-		<b><?php echo (isset($LANG['SPECIES_INVENTORIES'])?$LANG['SPECIES_INVENTORIES']:'Species Inventories'); ?></b>
+		<a href="../index.php"><?php echo htmlspecialchars($LANG['NAV_HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+		<b><?php echo $LANG['SPECIES_INVENTORIES']; ?></b>
 	</div>
-	<div id="innertext">
-		<h1><?php echo (isset($LANG['SPECIES_INVENTORIES'])?$LANG['SPECIES_INVENTORIES']:'Species Inventories'); ?></h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?= $LANG['SPECIES_INVENTORIES']; ?></h1>
         <div style="margin:20px;">
 			<?php
             $researchArr = $clManager->getChecklists();
 			if($researchArr){
 				foreach($researchArr as $pid => $projArr){
 					?>
-					<h3>
+					<h2>
 						<?php
 						$projName = $projArr['name'];
-						if($projName == 'Miscellaneous Inventories') $projName = (isset($LANG['MISC_INVENTORIES'])?$LANG['MISC_INVENTORIES']:'Miscellaneous Inventories');
+						if($projName == 'Miscellaneous Inventories') $projName = $LANG['MISC_INVENTORIES'];
 						echo $projName;
 						?>
-						<a href="<?php echo "clgmap.php?pid=" . $pid; ?>" title='<?php echo (isset($LANG['SHOW_MAP'])?$LANG['SHOW_MAP']:'Show inventories on map'); ?>'>
-							<img src='../images/world.png' style='width:10px;border:0' />
+						<a class="button button-tertiary btn-medium-font" href="<?php echo "clgmap.php?pid=" . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" title='<?php echo htmlspecialchars($LANG['SHOW_MAP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
+							<?php echo $LANG['MAP']; ?> <img src='../images/world.png' style='width:1em;border:0' alt='<?php echo $LANG['IMG_OF_GLOBE']; ?>' />
 						</a>
-					</h3>
+					</h2>
 					<ul>
 						<?php
 						foreach($projArr['clid'] as $clid => $clName){
-							echo '<li><a href="checklist.php?clid='.$clid.'&pid=' . $pid.'">' . $clName.'</a></li>';
+							echo '<li><a href="checklist.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($clName, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';
 						}
 						?>
 					</ul>
 					<?php
 				}
 			}
-			else echo '<div><b>'.(isset($LANG['NO_INVENTORIES'])?$LANG['NO_INVENTORIES']:'No inventories returned').'</b></div>';
+			else echo '<div><b>' . $LANG['NO_INVENTORIES'] . '</b></div>';
 			?>
 		</div>
 	</div>

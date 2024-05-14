@@ -27,12 +27,12 @@ include_once($SERVER_ROOT.'/classes/ImageExplorer.php');
 
                     <div class="tndiv" style="margin-top: 15px; margin-bottom: 15px">
                         <div class="tnimg">
-                            <a href="imgdetails.php?imgid=<?php echo $imgId; ?>">
+                            <a href="imgdetails.php?imgid=<?php echo htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
                                 <img src="<?php echo $imgUrl; ?>" />
                             </a>
                         </div>
                         <div>
-                            <?php echo "<a href=\"../collections/editor/occurrenceeditor.php?q_customtypeone=EQUALS&occid=". $imgArr['occid']. "\">". $imgArr['instcode'] . " - " . $imgArr['catalognumber'].  "<br />" . $imgArr['sciname'] . "<br />" . $imgArr['stateprovince']; ?>
+                            <?php echo "<a href=\"../collections/editor/occurrenceeditor.php?q_customtypeone=EQUALS&occid=". htmlspecialchars($imgArr['occid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .  "\">". htmlspecialchars($imgArr['instcode'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . " - " . htmlspecialchars($imgArr['catalognumber'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .  "<br />" . htmlspecialchars($imgArr['sciname'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "<br />" . htmlspecialchars($imgArr['stateprovince'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>
                             </a>
                         </div>
                     </div>

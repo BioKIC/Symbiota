@@ -10,12 +10,12 @@ if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/e
 $collid = filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT);
 $displayMode = array_key_exists('display', $_REQUEST) ? filter_var($_REQUEST['display'], FILTER_SANITIZE_NUMBER_INT) : '1';
 $faStatus = array_key_exists('fastatus', $_REQUEST) ? filter_var($_REQUEST['fastatus'], FILTER_SANITIZE_NUMBER_INT) : '';
-$frStatus = array_key_exists('frstatus', $_REQUEST)? filter_var($_REQUEST['frstatus'], FILTER_SANITIZE_STRING) : '1,2';
-$filterFieldName = array_key_exists('ffieldname', $_REQUEST) ? filter_var($_REQUEST['ffieldname'], FILTER_SANITIZE_STRING) : '';
-$editor = array_key_exists('editor', $_REQUEST) ? filter_var($_REQUEST['editor'], FILTER_SANITIZE_STRING) : '';
+$frStatus = array_key_exists('frstatus', $_REQUEST)? htmlspecialchars($_REQUEST['frstatus'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '1,2';
+$filterFieldName = array_key_exists('ffieldname', $_REQUEST) ? htmlspecialchars($_REQUEST['ffieldname'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
+$editor = array_key_exists('editor', $_REQUEST) ? htmlspecialchars($_REQUEST['editor'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
 $queryOccid = array_key_exists('occid', $_REQUEST) ? filter_var($_REQUEST['occid'], FILTER_SANITIZE_NUMBER_INT) : '';
-$startDate = array_key_exists('startdate', $_REQUEST) ? filter_var($_REQUEST['startdate'], FILTER_SANITIZE_STRING) : '';
-$endDate = array_key_exists('enddate', $_REQUEST) ? filter_var($_REQUEST['enddate'], FILTER_SANITIZE_STRING) : '';
+$startDate = array_key_exists('startdate', $_REQUEST) ? htmlspecialchars($_REQUEST['startdate'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
+$endDate = array_key_exists('enddate', $_REQUEST) ? htmlspecialchars($_REQUEST['enddate'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
 $pageNum = array_key_exists('pagenum', $_REQUEST) ? filter_var($_REQUEST['pagenum'], FILTER_SANITIZE_NUMBER_INT) : '0';
 $limitCnt = array_key_exists('limitcnt', $_REQUEST) ? filter_var($_REQUEST['limitcnt'], FILTER_SANITIZE_NUMBER_INT) : '1000';
 $recCnt = array_key_exists('reccnt', $_REQUEST) ? filter_var($_REQUEST['reccnt'], FILTER_SANITIZE_NUMBER_INT) : '';
@@ -85,24 +85,25 @@ $navPageBase = 'editreviewer.php?collid='.$collid.'&display='.$displayMode.'&fas
 	'&startdate='.$startDate.'&enddate='.$endDate.'&editor='.$editor.'&reccnt='.$recCnt;
 
 $navStr = '<div class="navbarDiv" style="float:right;">';
-if($pageNum) $navStr .= '<a href="'.$navPageBase.'&pagenum='.($pageNum-1).'&limitcnt='.$limitCnt.'" title="'.$LANG['PREVIOUS'].' '.$limitCnt.' '.$LANG['RECORDS1'].'">&lt;&lt;</a>';
+if($pageNum) $navStr .= '<a href="' . htmlspecialchars($navPageBase, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pagenum=' . htmlspecialchars(($pageNum-1), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&limitcnt=' . htmlspecialchars($limitCnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" title="' . htmlspecialchars($LANG['PREVIOUS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars($limitCnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars($LANG['RECORDS1'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">&lt;&lt;</a>';
 else $navStr .= '&lt;&lt;';
 $navStr .= ' | ';
 $navStr .= ($pageNum*$limitCnt).'-'.$subCnt.' of '.$recCnt.' '.$LANG['FIELDS_EDITED'];
 $navStr .= ' | ';
-if($subCnt < $recCnt) $navStr .= '<a href="'.$navPageBase.'&pagenum='.($pageNum+1).'&limitcnt='.$limitCnt.'" title="'.$LANG['NEXT'].' '.$limitCnt.' '.$LANG['RECORDS2'].'">&gt;&gt;</a>';
+if($subCnt < $recCnt) $navStr .= '<a href="' . htmlspecialchars($navPageBase, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pagenum=' . htmlspecialchars(($pageNum+1), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&limitcnt=' . htmlspecialchars($limitCnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" title="' . htmlspecialchars($LANG['NEXT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars($limitCnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars($LANG['RECORDS2'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">&gt;&gt;</a>';
 else $navStr .= '&gt;&gt;';
 $navStr .= '</div>';
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title><?php echo $LANG['EDIT_REVIEWER']; ?></title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery.js" type="text/javascript"></script>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script>
 			function validateFilterForm(f){
 				if(f.startdate.value > f.enddate.value){
@@ -180,7 +181,7 @@ $navStr .= '</div>';
 			}
 		</script>
 		<script src="<?php echo $CLIENT_ROOT; ?>/js/symb/shared.js" type="text/javascript" ></script>
-		<style type="text/css">
+		<style>
 			#filterDiv{ width:450px; }
 			.fieldDiv{ margin:3px; }
 		</style>
@@ -190,18 +191,19 @@ $navStr .= '</div>';
 		$displayLeftMenu = false;
 		include($SERVER_ROOT.'/includes/header.php');
 		echo '<div class="navpath">';
-		echo '<a href="../../index.php">Home</a> &gt;&gt; ';
+		echo '<a href="../../index.php">' . htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
 		if($reviewManager->getObsUid()){
-			echo '<a href="../../profile/viewprofile.php?tabindex=1">'.$LANG['PERS_SPEC_MNG'].'</a> &gt;&gt; ';
+			echo '<a href="../../profile/viewprofile.php?tabindex=1">' . htmlspecialchars($LANG['PERS_SPEC_MNG'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
 		}
 		else{
-			echo '<a href="../misc/collprofiles.php?collid='.$collid.'&emode=1">'.$LANG['COL_MAN_PAN'].'</a> &gt;&gt; ';
+			echo '<a href="../misc/collprofiles.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&emode=1">' . htmlspecialchars($LANG['COL_MAN_PAN'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> &gt;&gt; ';
 		}
 		echo '<b>'.$LANG['EDIT_REVIEWER'].'</b>';
 		echo '</div>';
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext" style="min-width:1100px">
+		<div role="main" id="innertext" style="min-width:1100px">
+			<h1 class="page-heading">Occurrence Edit Reviewer</h1>
 			<?php
 			if($collid && $isEditor){
 				?>
@@ -222,16 +224,16 @@ $navStr .= '</div>';
 						<fieldset>
 							<legend><b><?php echo $LANG['FILTER']; ?></b></legend>
 							<div class="fieldDiv">
-								<?php echo $LANG['APPLIED_STATUS']; ?>:
-								<select name="fastatus">
+								<label for="fastatus"> <?php echo $LANG['APPLIED_STATUS']; ?>: </label>
+								<select id="fastatus" name="fastatus">
 									<option value=""><?php echo $LANG['ALL_RECS']; ?></option>
 									<option value="0" <?php echo ($faStatus=='0'?'SELECTED':''); ?>><?php echo $LANG['NOT_APPLIED']; ?></option>
 									<option value="1" <?php echo ($faStatus=='1'?'SELECTED':''); ?>><?php echo $LANG['APPLIED']; ?></option>
 								</select>
 							</div>
 							<div class="fieldDiv">
-								<?php echo $LANG['REVIEW_STATUS']; ?>:
-								<select name="frstatus">
+								<label for="frstatus"> <?php echo $LANG['REVIEW_STATUS']; ?>: </label>
+								<select id="frstatus"name="frstatus">
 									<option value="0"><?php echo $LANG['ALL_RECS']; ?></option>
 									<option value="1,2" <?php echo ($frStatus=='1,2'?'SELECTED':''); ?>><?php echo $LANG['OPEN_PENDING']; ?></option>
 									<option value="1" <?php echo ($frStatus=='1'?'SELECTED':''); ?>><?php echo $LANG['OPEN_ONLY']; ?></option>
@@ -240,8 +242,8 @@ $navStr .= '</div>';
 								</select>
 							</div>
 							<div class="fieldDiv">
-								<?php echo $LANG['FIELD_NAME']; ?>:
-								<select name="ffieldname">
+								<label for="ffieldname"> <?php echo $LANG['FIELD_NAME']; ?>: </label>
+								<select id="ffieldname" name="ffieldname">
 									<option value=""><?php echo $LANG['ALL_FIELDS']; ?></option>
 									<option value="">----------------------</option>
 									<?php
@@ -253,8 +255,8 @@ $navStr .= '</div>';
 								</select>
 							</div>
 							<div class="fieldDiv">
-								<?php echo $LANG['EDITOR']; ?>:
-								<select name="editor">
+								<label for="editor"> <?php echo $LANG['EDITOR']; ?>: </label>
+								<select id="editor" name="editor">
 									<option value=""><?php echo $LANG['ALL_EDITORS']; ?></option>
 									<option value="">----------------------</option>
 									<?php
@@ -266,16 +268,16 @@ $navStr .= '</div>';
 								</select>
 							</div>
 							<div class="fieldDiv">
-								<?php echo $LANG['DATE']; ?>:
-								<input name="startdate" type="date" value="<?php echo $startDate; ?>" /> -
-								<input name="enddate" type="date" value="<?php echo $endDate; ?>" />
+								<label for="startdate"> <?php echo $LANG['DATE']; ?>: </label>
+								<input id="startdate" name="startdate" type="date" value="<?php echo $startDate; ?>" aria-label="<?php echo $LANG['START_DATE']; ?>" /> -
+								<input name="enddate" type="date" value="<?php echo $endDate; ?>" aria-label="<?php echo $LANG['END_DATE']; ?>"/>
 							</div>
 							<?php
 							if($reviewManager->hasRevisionRecords() && !$reviewManager->getObsUid()){
 								?>
 								<div class="fieldDiv">
-									<?php echo $LANG['EDITING_SOURCE']; ?>:
-									<select name="display">
+									<label for="display"> <?php echo $LANG['EDITING_SOURCE']; ?>: </label>
+									<select id="display" name="display">
 										<option value="1"><?php echo $LANG['INTERNAL']; ?></option>
 										<option value="2" <?php if($displayMode == 2) echo 'SELECTED'; ?>><?php echo $LANG['EXTERNAL']; ?></option>
 									</select>
@@ -301,13 +303,13 @@ $navStr .= '</div>';
 							<legend><b><?php echo $LANG['ACTION_PANEL']; ?></b></legend>
 							<div style="margin:10px 10px;">
 								<div style="float:left;margin-bottom:10px;">
-									<input name="applytask" type="radio" value="" CHECKED title="<?php echo $LANG['LEAVE_AS_IS']; ?>"> <?php echo $LANG['LEAVE_AS_IS']; ?><br/>
-									<input name="applytask" type="radio" value="apply" title="<?php echo $LANG['APPLY_EDITS_IF']; ?>"> <?php echo $LANG['APPLY_EDITS']; ?><br/>
-									<input name="applytask" type="radio" value="revert" title="<?php echo $LANG['REVERT_EDITS']; ?>"> <?php echo $LANG['REVERT_EDITS']; ?>
+									<input id="asIs" name="applytask" type="radio" value="" CHECKED> <label for="asIs"> <?php echo $LANG['LEAVE_AS_IS']; ?> </label> <br/>
+									<input id="apply" name="applytask" type="radio" value="apply"> <label for="apply"> <?php echo $LANG['APPLY_EDITS']; ?> </label> <br/>
+									<input id="revert" name="applytask" type="radio" value="revert"> <label for="revert"> <?php echo $LANG['REVERT_EDITS']; ?> </label>
 								</div>
 								<div style="float:left;margin-left:30px;">
-									<b><?php echo $LANG['REVIEW_STATUS']; ?>:</b>
-									<select name="rstatus">
+									<label for="rstatus"> <b><?php echo $LANG['REVIEW_STATUS']; ?>:</b> </label>
+									<select id="rstatus" name="rstatus">
 										<option value="0"><?php echo $LANG['LEAVE_AS_IS']; ?></option>
 										<option value="1"><?php echo $LANG['OPEN']; ?></option>
 										<option value="2"><?php echo $LANG['PENDING']; ?></option>
@@ -354,9 +356,12 @@ $navStr .= '</div>';
 					<?php
 					echo '<div style="clear:both">'.$navStr.'</div>';
 					?>
-					<table class="styledtable" style="font-family:Arial;font-size:12px;">
+					<table class="styledtable" style="font-family:Arial;font-size:1.25rem;" aria-label="<?php echo (isset($LANG['TABLE']) ? $LANG['TABLE'] : 'Table of Records'); ?>" aria-labeledby="table-desc">
+						<caption id="table-desc" class="bottom-breathing-room-rel top-breathing-room-rel screen-reader-only">
+							<?php echo $LANG['TABLE_DESC']; ?>
+						</caption>
 						<tr>
-							<th title="Select/Unselect All"><input name='selectall' type="checkbox" onclick="selectAllId(this)" /></th>
+							<th> <input name='selectall' type="checkbox" onclick="selectAllId(this)" aria-label="<?php echo (isset($LANG['SELECT_ALL']) ? $LANG['SELECT_ALL'] : 'Select/Unselect All'); ?>" /></th>
 							<th><?php echo $LANG['RECORD_NO']; ?></th>
 							<th><?php echo $LANG['CAT_NUM']; ?></th>
 							<th><?php echo $LANG['REVIEW_STATUS']; ?></th>
@@ -384,7 +389,8 @@ $navStr .= '</div>';
 												<td>
 													<?php
 													if($displayAll){
-														echo '<input name="id[]" type="checkbox" value="'.$id.'" />';
+														echo '<input id="id[]-' . $id . '" name="id[]" type="checkbox" value="'.$id.'" />';
+														echo '<label class="screen-reader-only" for="id[]-' . $id . '">' . $id . '</label>';
 													}
 													?>
 												</td>

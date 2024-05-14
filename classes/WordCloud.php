@@ -170,7 +170,7 @@ class WordCloud{
 			$maxCount = max($this->frequencyArr);
 			foreach ($topTags as $tag => $useCount){
 				$grade = $this->gradeFrequency(($useCount * 100) / $maxCount);
-				$retStr .= ('<a href="'. $this->tagUrl.urlencode($tag).'" style="color:'.$this->wordColors[$grade].';" target="_blank">'.
+				$retStr .= ('<a href="'. $this->tagUrl.urlencode($tag).'" style="color:' . $this->wordColors[$grade] . ';" target="_blank">'.
 					'<span style="color:'.$this->wordColors[$grade].'; letter-spacing:3px; '.
 					'padding:4px; font-family:Tahoma; font-weight:900; font-size:'.
 					(0.6 + 0.1 * $grade).'em">'.$tag.'</span></a> ');
@@ -183,7 +183,7 @@ class WordCloud{
 	}
 
 	private function getCloudHtmlWrapper($cloudStr){
-		$htmlStr = '<html>
+		$htmlStr = '<!DOCTYPE html><html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<title>'.$GLOBALS['DEFAULT_TITLE'].' - Word Cloud </title>';
@@ -194,8 +194,9 @@ class WordCloud{
 		$htmlStr .= '
 	</head>
 	<body>
-			<!-- This is inner text! -->
-			<div id="innertext">';
+	<!-- This is inner text! -->
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Word Cloud</h1>';
 		$htmlStr .= $cloudStr;
 		$htmlStr .= '		</div>
 	</body>

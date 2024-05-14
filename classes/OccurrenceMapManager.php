@@ -112,7 +112,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 					$sql .= ", o.".$fieldName." ";
 				}
 			}
-			$sql .= 'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid ';
+			$sql .= 'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid ';
 			$sql .= $this->getTableJoins($this->sqlWhere);
 			$sql .= $this->sqlWhere;
 			$sql .= 'AND (o.decimallatitude BETWEEN -90 AND 90) AND (o.decimallongitude BETWEEN -180 AND 180) ';
@@ -158,7 +158,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 			$sql = 'SELECT o.occid, c.institutioncode, o.catalognumber, CONCAT_WS(" ",o.recordedby,o.recordnumber) AS collector, '.
 				'o.eventdate, o.family, o.sciname, CONCAT_WS("; ",o.country, o.stateProvince, o.county) AS locality, o.DecimalLatitude, o.DecimalLongitude, '.
 				'IFNULL(o.LocalitySecurity,0) AS LocalitySecurity, o.localitysecurityreason '.
-				'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid ';
+				'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid ';
 			$sql .= $this->getTableJoins($this->sqlWhere);
 			$sql .= $this->sqlWhere;
 			$bottomLimit = ($pageRequest - 1)*$cntPerPage;
@@ -363,7 +363,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 				$iconStr = $this->googleIconArr[$cnt%44];
 				echo "<Style id='sn_".$iconStr."'>\n";
 				echo "<IconStyle><scale>1.1</scale><Icon>";
-				echo "<href>http://maps.google.com/mapfiles/kml/".$iconStr.".png</href>";
+				echo "<href>http://maps.google.com/mapfiles/kml/" . htmlspecialchars($iconStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ".png</href>";
 				echo "</Icon><hotSpot x='20' y='2' xunits='pixels' yunits='pixels'/></IconStyle>\n</Style>\n";
 				echo "<Style id='sh_".$iconStr."'>\n";
 				echo "<IconStyle><scale>1.3</scale><Icon>";
@@ -476,30 +476,9 @@ class OccurrenceMapManager extends OccurrenceManager {
 		return $retVar;
 	}
 
-	public function hasFullSpatialSupport(){
-		$serverStr = '';
-		if(mysqli_get_server_info($this->conn)) $serverStr = mysqli_get_server_info($this->conn);
-		else $serverStr = shell_exec('mysql -V');
-		if($serverStr){
-			if(strpos($serverStr,'MariaDB') !== false) return true;
-			else{	//db = mysql;
-				preg_match('@[0-9]+\.[0-9]+\.[0-9]+@',$serverStr,$m);
-				$mysqlVerNums = explode(".", $m[0]);
-				if($mysqlVerNums[0] > 5) return true;
-				elseif($mysqlVerNums[0] == 5){
-					if($mysqlVerNums[1] > 6) return true;
-					elseif($mysqlVerNums[1] == 6){
-						if($mysqlVerNums[2] >= 1) return true;
-					}
-				}
-			}
-		}
-		return false;
-	}
-
 	//Misc support functions
 	private function htmlEntities($string){
-		return htmlspecialchars($string, ENT_XML1 | ENT_QUOTES, 'UTF-8');
+		return htmlspecialchars($string ?? '', ENT_XML1 | ENT_QUOTES, 'UTF-8');
 	}
 }
 ?>

@@ -3,12 +3,8 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLabel.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$collid = $_POST['collid'];
+$collid = filter($_POST['collid'], FILTER_SANITIZE_NUMBER_INT);
 $action = array_key_exists('submitaction',$_POST)?$_POST['submitaction']:'';
-
-//Sanitation
-if(!is_numeric($collid)) $collid = 2;
-$action = filter_var($action, FILTER_SANITIZE_STRING);
 
 $labelManager = new OccurrenceLabel();
 $labelManager->setCollid($collid);
@@ -20,15 +16,21 @@ if($SYMB_UID){
 	elseif(array_key_exists("CollEditor",$USER_RIGHTS) && in_array($labelManager->getCollid(),$USER_RIGHTS["CollEditor"])) $isEditor = 1;
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title><?php echo $DEFAULT_TITLE; ?> Labels</title>
 		<style type="text/css">
 			body { background-color:#ffffff;font-family:arial,sans-serif; font-size:10pt; }
 			.barcode { width:220px; height:50px; float:left; padding:10px; text-align:center; }
+			.screen-reader-only {
+				position: absolute;
+				left: -10000px;
+			}
 		</style>
 	</head>
 	<body>
+		<h1 class="page-heading screen-reader-only">Labels</h1>
 		<div>
 			<?php
 			if($action && $isEditor){

@@ -5,6 +5,7 @@ Language: English
 ------------------
 */
 
+$LANG['HOME'] = 'Home';
 $LANG['EDIT_REVIEWER'] = 'Specimen Edit Reviewer';
 $LANG['PREVIOUS'] = 'Previous';
 $LANG['RECORDS1'] = 'records';
@@ -31,6 +32,8 @@ $LANG['EDITOR'] = 'Editor';
 $LANG['ALL_EDITORS'] = 'All Editors';
 $LANG['ALL_FIELDS'] = 'All Fields';
 $LANG['DATE'] = 'Date';
+$LANG['START_DATE'] = 'Start Date';
+$LANG['END_DATE'] = 'End Date';
 $LANG['TO'] = 'to';
 $LANG['EDITING_SOURCE'] = 'Editing Source';
 $LANG['INTERNAL'] = 'Internal';
@@ -53,6 +56,9 @@ $LANG['DOWNLOAD_SELECTED'] = 'Download Selected Edits';
 $LANG['DOWNLOAD_ALL'] = 'Download All Records';
 $LANG['BASED_ON_PARAMETERS'] = 'Based on search parameters in Filter Pane to the right';
 $LANG['PRINT_FRIENDLY'] = 'Print Friendly Page';
+$LANG['SELECT_ALL'] = 'Select/Unselect All';
+$LANG['TABLE'] = 'Table of Records';
+$LANG['TABLE_DESC'] = 'The table contains Record Id, Catalog Number, Review Status, Applied Status, Editor Name, Timestamp, Field Name, Old Value, and New Value for each entry';
 $LANG['RECORD_NO'] = 'Record #';
 $LANG['CAT_NUM'] = 'Catalog Number';
 $LANG['TIMESTAMP'] = 'Timestamp';

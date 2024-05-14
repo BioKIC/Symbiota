@@ -125,7 +125,7 @@ class SchemaManager extends Manager{
 					}
 					$this->logOrEcho('Finished: schema applied');
 					$logUrl = str_replace($GLOBALS['SERVER_ROOT'], $GLOBALS['CLIENT_ROOT'], $this->logPath);
-					$this->logOrEcho('Log file: <a href="' . $logUrl . '" target="_blank">' . $logUrl . '</a>');
+					$this->logOrEcho('Log file: <a href="' . htmlspecialchars($logUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($logUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>');
 					$amendmentUrl = str_replace($GLOBALS['SERVER_ROOT'], $GLOBALS['CLIENT_ROOT'], $this->amendmentPath);
 					if($this->amendmentFH) $this->logOrEcho('Amendment (failed statements needing to be applied): ' . $amendmentUrl);
 				}
@@ -243,7 +243,7 @@ class SchemaManager extends Manager{
 			$this->logOrEcho('One or more connection variables not set');
 			return false;
 		}
-		$password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+		$password = $_POST['password'];
 		$this->conn = new mysqli($this->host, $this->username, $password, $this->database, $this->port);
 		if($this->conn->connect_error){
 			$this->logOrEcho('Connection error: ' . $this->conn->connect_error);
@@ -257,7 +257,7 @@ class SchemaManager extends Manager{
 		$versionHistory = false;
 		$this->conn = MySQLiConnectionFactory::getCon('readonly');
 		if(!$this->conn && isset($_POST['password']) && $_POST['password']){
-			$password = filter_var($_POST['password'], FILTER_SANITIZE_STRING);
+			$password = $_POST['password'];
 			$this->conn = new mysqli($this->host, $this->username, $password, $this->database, $this->port);
 		}
 		if(!$this->conn) return false;

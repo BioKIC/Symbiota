@@ -18,8 +18,8 @@ if($IS_ADMIN || array_key_exists("KeyEditor",$USER_RIGHTS) || array_key_exists("
 	$editable = true;
 }
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Character Deficit Finder</title>
 	<?php
@@ -51,7 +51,8 @@ if($IS_ADMIN || array_key_exists("KeyEditor",$USER_RIGHTS) || array_key_exists("
 	}
 	?>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Character Deficit Finder</h1>
   		<form action="chardeficit.php" method="get">
 			<?php
 		 	if($editable){
@@ -119,8 +120,8 @@ if($IS_ADMIN || array_key_exists("KeyEditor",$USER_RIGHTS) || array_key_exists("
 				  			foreach($tList as $f=>$sArr){
 				  				echo "<div style='margin-top:1em;font-size:125%;'>$f</div>\n";
 				  				foreach($sArr as $idValue => $spValue){
-				  					echo "<div style=''>&nbsp;&nbsp;<a href='editor.php?tid=".$idValue."&lang=English&lang=English' target='_blank'>$spValue</a> ";
-				  					echo "(<a href=\"#\" onclick=\"openPopup('editor.php?tid=".$idValue."&char=".$cidValue."','technical');\">@</a>)</div>\n";
+				  					echo "<div style=''>&nbsp;&nbsp;<a href='editor.php?tid=" . htmlspecialchars($idValue, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "&lang=English&lang=English' target='_blank'>$spValue</a> ";
+				  					echo "(<a href=\"#\" onclick=\"openPopup('editor.php?tid=" . htmlspecialchars($idValue, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "&char=" . htmlspecialchars($cidValue, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "','technical');\">@</a>)</div>\n";
 				  				}
 				  			}
 				  		}

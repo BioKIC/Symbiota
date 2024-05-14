@@ -26,4 +26,5 @@ $LANG['MISC_TOOLS'] = 'Miscellaneous Tools';
 $LANG['DATASET_MANAGEMENT'] = 'Dataset Management';
 $LANG['CROSS_COL_GEOREF'] = 'Cross-Collection Georeferencing Tool';
 $LANG['CROSS_COL_TAXON'] = 'Cross Collection Taxonomy Cleaning Tool';
+$LANG['OCCURRENCE_MENU'] = 'Occurrence Menu';
 ?>

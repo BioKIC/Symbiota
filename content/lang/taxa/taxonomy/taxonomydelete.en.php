@@ -7,7 +7,7 @@ Language: English
 
 $LANG['NO_TARGET_TAXON'] = 'Target taxon does not appear to be null. Please submit a taxon to remap the resources';
 $LANG['TAXON_NOT_FOUND'] = 'ERROR: Remapping taxon not found in thesaurus. Is the name spelled correctly?';
-$LANG['TAXON_MUST_BE_EVALUATED'] = 'Taxon record first needs to be evaluated before it can be deleted from the system. The evaluation ensures that the deletion of this record will not interfer with data integrity.';
+$LANG['TAXON_MUST_BE_EVALUATED'] = 'Taxon record first needs to be evaluated before it can be deleted from the system. The evaluation ensures that the deletion of this record will not interfere with data integrity.';
 $LANG['CHILDREN_TAXA'] = 'Children Taxa';
 $LANG['CHILDREN_EXIST'] = 'Warning: children taxa exist for this taxon. They must be remapped before this taxon can be removed';
 $LANG['APPROVED'] = 'Approved';
@@ -32,6 +32,7 @@ $LANG['NO_DETS_LINKED'] = 'no occurrence determinations linked to this taxon';
 $LANG['CHECKLISTS'] = 'Checklists';
 $LANG['CHECKLISTS_EXIST'] = 'Warning, linked checklists exist';
 $LANG['NO_CHECKLISTS'] = 'no checklists linked to this taxon';
+$LANG['MORPHO_CHARACTERS'] = 'Morphological Characters (Key)';
 $LANG['LINKED_MORPHO'] = 'linked morphological characters';
 $LANG['NO_MORPHO'] = 'no morphological characters linked to this taxon';
 $LANG['LINKED_RESOURCES'] = 'Linked Resources';

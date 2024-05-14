@@ -4,7 +4,8 @@ if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/index.'.$LANG_T
 else include_once($SERVER_ROOT.'/content/lang/index.'.$LANG_TAG.'.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Home</title>
 	<?php
@@ -17,7 +18,8 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 	include($SERVER_ROOT . '/includes/header.php');
 	?>
 	<div class="navpath"></div>
-	<div id="innertext">
+	<main id="innertext">
+		<h1 class="page-heading"><?php echo $DEFAULT_TITLE; ?> Home</h1>
 		<?php
 		if($LANG_TAG == 'es'){
 			?>
@@ -40,13 +42,16 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 			?>
 			<div>
 				<h1>Welcome</h1>
-				<p>This data portal has been established to promote collaborative... Replace with introductory text in English.
-				If the portal is not meant to be multilingual, remove the unneeded language sections</p>
+				<p>
+					This data portal has been established to promote collaborative... Replace
+					with introductory text in English. If the portal is not meant to be
+					multilingual, remove the unneeded language sections
+				</p>
 			</div>
 			<?php
 		}
 		?>
-	</div>
+	</main>
 	<?php
 	include($SERVER_ROOT . '/includes/footer.php');
 	?>

@@ -1,8 +1,8 @@
 <?php
 if($isEditor){
 	if(strpos($action,'MaterialSample')){
-		include_once $SERVER_ROOT.'/classes/OccurrenceEditorMaterialSample.php';
-		$materialSampleManager = new OccurrenceEditorMaterialSample();
+		include_once $SERVER_ROOT.'/classes/OmMaterialSample.php';
+		$materialSampleManager = new OmMaterialSample();
 		$materialSampleManager->setOccid($occId);
 		$matSampleID = isset($_REQUEST['matSampleID'])?$_REQUEST['matSampleID']:'';
 		if(!is_numeric($matSampleID)) $matSampleID = 0;

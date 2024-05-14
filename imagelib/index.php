@@ -5,13 +5,14 @@ if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/index.'
 else include_once($SERVER_ROOT.'/content/lang/imagelib/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$taxon = array_key_exists('taxon',$_REQUEST)?htmlspecialchars(strip_tags($_REQUEST['taxon'])):'';
-$target = array_key_exists('target',$_REQUEST)?trim($_REQUEST['target']):'';
+$taxon = array_key_exists('taxon', $_REQUEST) ? $_REQUEST['taxon'] : '';
+$target = array_key_exists('target', $_REQUEST) ? trim($_REQUEST['target']):'';
 
 $imgManager = new ImageLibraryBrowser();
 $imgManager->setSearchTerm($taxon);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE.' '.$LANG['IMG_LIBRARY']; ?></title>
 	<?php
@@ -19,6 +20,17 @@ $imgManager->setSearchTerm($taxon);
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 	?>
 	<script src="../js/symb/imagelib.search.js?ver=201902" type="text/javascript"></script>
+	<style>
+		.sciname-search {
+			float: left;
+			margin: 10px 0px 10px 30px;
+		}
+		.sciname-search-container {
+			float: right;
+			width: 30rem;
+			margin-bottom: 1rem;
+		}
+	</style>
 </head>
 <body>
 	<?php
@@ -26,20 +38,20 @@ $imgManager->setSearchTerm($taxon);
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class="navpath">
-		<a href="<?php echo $CLIENT_ROOT; ?>/index.php"><?php echo $LANG['HOME']; ?></a> &gt;&gt;
+		<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php"><?php echo htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 		<b><?php echo $LANG['IMG_LIBRARY']; ?></b>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
-		<h1><?php echo $LANG['TAXA_W_IMGS']; ?></h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?php echo $LANG['TAXA_W_IMGS']; ?></h1>
 		<div style="margin:0px 0px 5px 20px;"><?php echo $LANG['TAXA_IMG_EXPLAIN']; ?>
 		</div>
-		<div style="float:left;margin:10px 0px 10px 30px;">
-			<div style=''>
-				<a href='index.php?target=family'><?php echo $LANG['BROWSE_FAMILY']; ?></a>
+		<div class="sciname-search">
+			<div>
+				<a href='index.php?target=family'><?php echo htmlspecialchars($LANG['BROWSE_FAMILY'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 			</div>
 			<div style='margin-top:10px;'>
-				<a href='index.php?target=genus'><?php echo $LANG['BROWSE_GENUS']; ?></a>
+				<a href='index.php?target=genus'><?php echo htmlspecialchars($LANG['BROWSE_GENUS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 			</div>
 			<div style='margin-top:10px;'>
 				<?php echo $LANG['BROWSE_SPECIES']; ?>
@@ -50,25 +62,26 @@ $imgManager->setSearchTerm($taxon);
 				<div><a href='index.php?taxon=R'>R</a>|<a href='index.php?taxon=S'>S</a>|<a href='index.php?taxon=T'>T</a>|<a href='index.php?taxon=U'>U</a>|<a href='index.php?taxon=V'>V</a>|<a href='index.php?taxon=W'>W</a>|<a href='index.php?taxon=X'>X</a>|<a href='index.php?taxon=Y'>Y</a>|<a href='index.php?taxon=Z'>Z</a></div>
 			</div>
 		</div>
-		<div style="float:right;width:250px;">
+		<div class="sciname-search-container">
 			<div style="margin:10px 0px 0px 0px;">
 				<form name="searchform1" action="index.php" method="post">
 					<fieldset style="background-color:#FFFFCC;padding:10px;">
-						<legend style="font-weight:bold;"><?php echo $LANG['SCINAME_SEARCH']; ?></legend>
-						<input type="text" name="taxon" value="<?php echo $taxon; ?>" title="<?php echo $LANG['ENTER_TAXON_NAME']; ?>" />
-						<button name="submit" value="Search" type="submit"><?php echo $LANG['SEARCH']; ?></button>
+						<legend style="font-weight:bold;"><?= $LANG['SCINAME_SEARCH'] ?></legend>
+						<label for="taxon">Taxon: </label>
+						<input type="text" name="taxon" value="<?= $imgManager->cleanOutStr($taxon) ?>" title="<?= $LANG['ENTER_TAXON_NAME'] ?>" placeholder="<?= $LANG['ENTER_TAXON_NAME'] ?>" >
+						<button name="submit" value="Search" type="submit"><?= $LANG['SEARCH'] ?></button>
 					</fieldset>
 				</form>
 			</div>
 			<div style="font-weight:bold;margin:15px 10px 0px 20px;">
 				<div>
-					<a href="../includes/usagepolicy.php#images"><?php echo $LANG['IMG_CP_POLICY']; ?></a>
+					<a href="../includes/usagepolicy.php#images"><?php echo htmlspecialchars($LANG['IMG_CP_POLICY'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 				</div>
 				<div>
-					<a href="contributors.php"><?php echo $LANG['IMG_CONTRIBUTORS']; ?></a>
+					<a href="contributors.php"><?php echo htmlspecialchars($LANG['IMG_CONTRIBUTORS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 				</div>
 				<div>
-					<a href="search.php"><?php echo $LANG['IMG_SEARCH']; ?></a>
+					<a href="search.php"><?php echo htmlspecialchars($LANG['IMG_SEARCH'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 				</div>
 			</div>
 		</div>
@@ -76,11 +89,11 @@ $imgManager->setSearchTerm($taxon);
 		<?php
 			$taxaList = Array();
 			if($target == 'genus'){
-				$taxaList = $imgManager->getGenusList($taxon);
+				$taxaList = $imgManager->getGenusList();
 				if($taxaList){
 					echo '<h2>'.$LANG['SELECT_GENUS'].'</h2>';
 					foreach($taxaList as $value){
-						echo "<div style='margin-left:30px;'><a href='index.php?taxon=".$value."'>".$value."</a></div>";
+						echo "<div style='margin-left:30px;'><a href='index.php?taxon=" . htmlspecialchars($value, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "'>" . htmlspecialchars($value, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "</a></div>";
 					}
 				}
 				else{
@@ -88,13 +101,13 @@ $imgManager->setSearchTerm($taxon);
 				}
 			}
 			elseif($target == 'species' || $taxon){
-				$taxaList = $imgManager->getSpeciesList($taxon);
+				$taxaList = $imgManager->getSpeciesList();
 				if($taxaList){
 					echo '<h2>'.$LANG['SELECT_SPECIES'].'</h2>';
 					foreach($taxaList as $key => $value){
 						echo '<div style="margin-left:30px;font-style:italic;">';
-						echo '<a href="#" onclick="openTaxonPopup('.$key.');return false;">'.$value.'</a> ';
-						echo '<a href="search.php?taxa='.$key.'&usethes=1&taxontype=2&submitaction=search" target="_blank"> <img src="../images/image.png" style="width:10px;" /></a> ';
+						echo '<a href="#" onclick="openTaxonPopup(' . htmlspecialchars($key, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ');return false;">' . htmlspecialchars($value, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ';
+						echo '<a href="search.php?taxa=' . htmlspecialchars($key, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&usethes=1&taxontype=2&submitaction=search" target="_blank"> <img src="../images/image.png" style="width:1.5em;" /></a> ';
 						echo '</div>';
 					}
 				}
@@ -107,7 +120,7 @@ $imgManager->setSearchTerm($taxon);
 				if($taxaList){
 					echo '<h2>'.$LANG['SELECT_FAMILY'].'.</h2>';
 					foreach($taxaList as $value){
-						echo '<div style="margin-left:30px;"><a href="index.php?target=genus&taxon='.$value.'">'.strtoupper($value).'</a></div>';
+						echo '<div style="margin-left:30px;"><a href="index.php?target=genus&taxon=' . htmlspecialchars($value, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars(strtoupper($value), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
 					}
 				}
 				else{

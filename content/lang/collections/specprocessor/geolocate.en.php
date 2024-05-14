@@ -5,6 +5,10 @@ Language: English
 ------------------
 */
 
+
+
+include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.en.php');
+
 $LANG['OCC_EXP_MAN'] = 'Occurrence Export Manager';
 $LANG['GEO_COM_TOOL'] = 'GeoLocate Community Toolkit';
 $LANG['GEO_COM_TOOL_EXPLAIN'] = 'This module is used to filter and package occurrence recordsets and import them directly into the GeoLocate Community project.

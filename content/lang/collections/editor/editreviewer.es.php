@@ -5,6 +5,7 @@ Language: Español
 ------------------
 */
 
+$LANG['HOME'] = 'Inicio';
 $LANG['EDIT_REVIEWER'] = 'Revisor de Edición de Especímenes';
 $LANG['PREVIOUS'] = '';
 $LANG['RECORDS1'] = 'registros anteriores';
@@ -31,6 +32,8 @@ $LANG['EDITOR'] = 'Editor';
 $LANG['ALL_EDITORS'] = 'Todos los Editores';
 $LANG['ALL_FIELDS'] = 'Todos los Campos';
 $LANG['DATE'] = 'Fecha';
+$LANG['START_DATE'] = 'Fecha de inicio';
+$LANG['END_DATE'] = 'Fecha de finalización';
 $LANG['TO'] = 'para';
 $LANG['EDITING_SOURCE'] = 'Fuente de Edición';
 $LANG['INTERNAL'] = 'Interno';
@@ -53,6 +56,9 @@ $LANG['DOWNLOAD_SELECTED'] = 'Descargar Registros Seleccionados';
 $LANG['DOWNLOAD_ALL'] = 'Descargar todos los Registros';
 $LANG['BASED_ON_PARAMETERS'] = 'Basado en parámetros de búsqueda en el Panel de Filtros de la derecha';
 $LANG['PRINT_FRIENDLY'] = 'Imprimir Página Amigable';
+$LANG['SELECT_ALL'] = 'Seleccionar/Anular selección de todo';
+$LANG['TABLE'] = 'Tabla de Registros';
+$LANG['TABLE_DESC'] = 'La tabla contiene ID de registro, número de catálogo, estado de revisión, estado aplicado, nombre del editor, marca de tiempo, nombre de campo, valor anterior y valor nuevo para cada entrada';
 $LANG['RECORD_NO'] = '# de Registro';
 $LANG['CAT_NUM'] = 'Número de Catálogo';
 $LANG['TIMESTAMP'] = 'Marca de Tiempo';

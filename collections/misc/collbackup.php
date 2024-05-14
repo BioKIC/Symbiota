@@ -1,24 +1,29 @@
 <?php
 include_once('../../config/symbini.php');
-include_once($SERVER_ROOT.'/content/lang/collections/misc/collbackup.'.$LANG_TAG.'.php');
-header("Content-Type: text/html; charset=".$CHARSET);
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/misc/collbackup.' . $LANG_TAG . '.php')){
+	include_once($SERVER_ROOT . '/content/lang/collections/misc/collbackup.' . $LANG_TAG . '.php');
+}
+else include_once($SERVER_ROOT . '/content/lang/collections/misc/collbackup.en.php');
+header('Content-Type: text/html; charset=' . $CHARSET);
 
-$collid = array_key_exists("collid",$_REQUEST)?$_REQUEST["collid"]:0;
-$action = array_key_exists("formsubmit",$_REQUEST)?$_REQUEST["formsubmit"]:'';
-$cSet = array_key_exists("cset",$_REQUEST)?$_REQUEST["cset"]:'';
+$collid = isset($_REQUEST['collid']) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$action = isset($_REQUEST['formsubmit']) ? $_REQUEST['formsubmit'] : '';
+$cSet = isset($_REQUEST['cset']) ? $_REQUEST['cset'] : '';
 
 $isEditor = 0;
-if($IS_ADMIN || array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collid,$USER_RIGHTS["CollAdmin"])){
+if($IS_ADMIN){
+	$isEditor = 1;
+}
+elseif($collid && isset($USER_RIGHTS['CollAdmin']) && in_array($collid, $USER_RIGHTS['CollAdmin'])){
 	$isEditor = 1;
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?= $LANG_TAG ?>">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>" />
-	<title><?php echo (isset($LANG['OCC_DWNLD'])?$LANG['OCC_DWNLD']:'Occurrences download'); ?></title>
+	<title><?= $LANG['OCCURRENCE_DOWNLOAD'] ?></title>
 	<?php
-
-	include_once($SERVER_ROOT.'/includes/head.php');
+	include_once($SERVER_ROOT . '/includes/head.php');
 	?>
     <script>
     	function submitBuForm(f){
@@ -27,34 +32,34 @@ if($IS_ADMIN || array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collid,$
 			return true;
     	}
     </script>
+    <style>
+    	fieldset{ padding:15px;width:350px }
+    	legend{ font-weight: bold }
+    	label{ font-weight: bold }
+    	#workingdiv{ float:left; margin-left:15px; font-weight: bold; }
+    </style>
 </head>
 <body>
-	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Download Backup File</h1>
 		<?php
 		if($isEditor){
 			?>
 			<form name="buform" action="../download/downloadhandler.php" method="post" onsubmit="return submitBuForm(this);">
-				<fieldset style="padding:15px;width:350px">
-					<legend><?php echo (isset($LANG['DWN_MOD'])?$LANG['DWN_MOD']:'Download Module'); ?></legend>
-					<div style="float:left;">
-						<?php echo (isset($LANG['DATA_SET'])?$LANG['DATA_SET']:'Data Set'); ?>:
+				<fieldset>
+					<legend><?= $LANG['DOWNLOAD_MODULE'] ?></legend>
+					<div style="height:50px; margin: 10px">
+						<input type="radio" id="cset1" name="cset" value="iso-8859-1" <?= (!$cSet || $cSet == 'iso88591' ? 'checked' : ''); ?> /> <label for="cset1">ISO-8859-1 (western)</label><br/>
+						<input type="radio" id="cset2" name="cset" value="utf-8" <?= ($cSet == 'utf8' ? 'checked' : ''); ?> /> <label for="cset2">UTF-8 (unicode)</label>
 					</div>
-					<div style="float:left;height:50px">
-						<?php
-						//$cSet = str_replace('-','',strtolower($CHARSET));
-						?>
-						<input type="radio" name="cset" value="iso-8859-1" <?php echo (!$cSet || $cSet=='iso88591'?'checked':''); ?> /> ISO-8859-1 (western)<br/>
-						<input type="radio" name="cset" value="utf-8" <?php echo ($cSet=='utf8'?'checked':''); ?> /> UTF-8 (unicode)
-					</div>
-					<div style="clear:both;">
+					<div>
 						<div style="float:left">
-							<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
-							<input type="hidden" name="schema" value="backup" />
-							<input type="submit" name="formsubmit" value="Perform Backup" />
+							<input type="hidden" name="collid" value="<?= $collid; ?>">
+							<input type="hidden" name="schema" value="backup">
+							<button type="submit" name="formsubmit"><?= $LANG['DOWNLOAD'] ?></button>
 						</div>
-						<div id="workingdiv" style="float:left;margin-left:15px;display:<?php echo ($action == 'Perform Backup'?'block':'none'); ?>;">
-							<b><?php echo (isset($LANG['DOWNLOADING'])?$LANG['DOWNLOADING']:'Downloading backup file'); ?>...</b>
+						<div id="workingdiv" style="display:<?= ($action == 'Perform Backup' ? 'block' : 'none') ?>;">
+							<?= $LANG['DOWNLOADING'] ?>...
 						</div>
 					</div>
 				</fieldset>

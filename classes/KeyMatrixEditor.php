@@ -21,10 +21,10 @@ class KeyMatrixEditor extends KeyManager{
 
 	public function getCharList($tidFilter){
 		$retArr = Array();
-		$sql = 'SELECT DISTINCT ch.headingname, c.CID, c.CharName '.
-			'FROM kmcharacters c INNER JOIN kmchartaxalink ctl ON c.CID = ctl.CID '.
+		$sql = 'SELECT DISTINCT ch.headingName, c.cid, c.charName '.
+			'FROM kmcharacters c INNER JOIN kmchartaxalink ctl ON c.cid = ctl.cid '.
 			'LEFT JOIN kmcharheading ch ON c.hid = ch.hid '.
-			'LEFT JOIN kmchardependance cd ON c.CID = cd.CID '.
+			'LEFT JOIN kmchardependance cd ON c.cid = cd.cid '.
 			'WHERE (ch.language IS NULL OR ch.language = "'.$this->language.'") AND (c.chartype IN("UM","OM")) ';
 		$strFrag = '';
 		if($tidFilter && is_numeric($tidFilter)){
@@ -35,14 +35,14 @@ class KeyMatrixEditor extends KeyManager{
 			if($parTidArr) $strFrag = implode(',',$parTidArr);
 		}
 		if($strFrag){
-			$sql .= 'AND (ctl.TID In ('.$strFrag.') AND ctl.relation = "include") '.
-				'AND (c.cid NOT In(SELECT DISTINCT CID FROM kmchartaxalink WHERE (TID In ('.$strFrag.') AND relation = "exclude"))) ';
+			$strFrag = trim($strFrag, ', ');
+			$sql .= 'AND (ctl.tid In ('.$strFrag.') AND ctl.relation = "include") '.
+				'AND (c.cid NOT In(SELECT DISTINCT cid FROM kmchartaxalink WHERE (tid In ('.$strFrag.') AND relation = "exclude"))) ';
 		}
-		$sql .= 'ORDER BY c.hid, c.SortSequence, c.CharName';
-		//echo $sql;
+		$sql .= 'ORDER BY c.hid, c.sortSequence, c.charName';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$retArr[$r->headingname][$r->CID] = $r->CharName;
+			$retArr[$r->headingName][$r->cid] = $r->charName;
 		}
 		$rs->free();
 		return $retArr;
@@ -180,7 +180,7 @@ class KeyMatrixEditor extends KeyManager{
 		if(is_numeric($tid)){
 			echo '<tr><td>';
 			echo '<span style="margin-left:'.($indent*10).'px"><b>'.($indent?'<i>':'').htmlspecialchars($sciname, ENT_QUOTES, 'UTF-8').($indent?'</i>':'').'</b></span>';
-			echo '<a href="editor.php?tid='.$tid.'" target="_blank"> <img src="../../images/edit.png" /></a>';
+			echo '<a href="editor.php?tid=' . htmlspecialchars($tid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank"> <img src="../../images/edit.png" /></a>';
 			echo '</td>';
 			foreach($this->stateArr as $cs => $csName){
 				$isSelected = false;
@@ -282,13 +282,13 @@ class KeyMatrixEditor extends KeyManager{
 		if(is_numeric($clid)){
 			$this->clid = $clid;
 			//Get children checklists
-			$sqlBase = 'SELECT ch.clidchild, cl2.name '.
-				'FROM fmchecklists cl INNER JOIN fmchklstchildren ch ON cl.clid = ch.clid '.
-				'INNER JOIN fmchecklists cl2 ON ch.clidchild = cl2.clid '.
-				'WHERE (cl2.type != "excludespp") AND cl.clid IN(';
+			$sqlBase = 'SELECT ch.clidchild, cl2.name
+				FROM fmchecklists cl INNER JOIN fmchklstchildren ch ON cl.clid = ch.clid
+				INNER JOIN fmchecklists cl2 ON ch.clidchild = cl2.clid
+				WHERE (cl2.type != "excludespp") AND (ch.clid != ch.clidchild) AND cl.clid IN(';
 			$sql = $sqlBase.$this->clid.')';
 			do{
-				$childStr = "";
+				$childStr = '';
 				$rsChild = $this->conn->query($sql);
 				while($r = $rsChild->fetch_object()){
 					$this->childClidArr[$r->clidchild] = $r->name;

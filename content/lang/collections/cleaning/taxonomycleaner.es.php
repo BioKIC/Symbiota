@@ -1,14 +1,14 @@
 <?php
 /*
 ------------------
-Language: English
+Language: Español (Spanish)
 ------------------
 */
 
-$LANG['OCC_TAX_CLEAN'] = 'Occurrence Taxon Cleaner';
-$LANG['SCINAME_NOT_FOUND'] = 'Scientific name not found in Thesaurus.';
-$LANG['REMAP_SUCCESS'] = 'Taxon remapped successfully!';
-$LANG['REMAP_FAIL'] = 'Taxon remapping failed!';
+$LANG['OCC_TAX_CLEAN'] = 'Limpiador de taxones de ocurrencia';
+$LANG['SCINAME_NOT_FOUND'] = 'Nombre científico no encontrado en el Tesauro.';
+$LANG['REMAP_SUCCESS'] = '¡Taxón reasignado exitosamente!';
+$LANG['REMAP_FAIL'] = '¡Error en la reasignación del taxón!';
 $LANG['TAXON_NOT_FOUND'] = 'Taxon not found within taxonomic thesaurus';
 $LANG['CHOOSE_ONE'] = '¡Por favor seleccione al menos una colección!';
 $LANG['SELECT_KINGDOM'] = 'Seleccione el reino a evaluar para la colección';
@@ -44,5 +44,6 @@ $LANG['NO_PERM'] = 'ERROR: no tiene permisos para editar esta colección';
 $LANG['BATCH_TAXON_CLEAN'] = 'Herramienta de Limpieza Taxonómica por Lote';
 $LANG['COL_SELECTOR'] = 'Seleccionador de Colecciones';
 $LANG['ERROR_COLID_NUL'] = 'ERROR: Identificador de la colección es nulo';
+$LANG['ADD_BUTTON'] = 'Botón Agregar';
 
 ?>

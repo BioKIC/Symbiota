@@ -10,16 +10,16 @@ class Media extends Model{
 
 	public $timestamps = false;
 
-	protected $fillable = [
-		'url', ' thumbnailUrl', 'originalUrl', 'archiveUrl', 'photographer', 'photographerUid', 'imageType', 'format', 'caption', 'owner', 'sourceUrl', 'referenceUrl', 'copyright',
-		'rights', 'accessRights', 'locality', 'occid', 'notes', 'anatomy', 'username', 'sourceIdentifier', 'hashFunction', 'hashValue', 'mediaMD5', 'dynamicProperties',
+	protected $fillable = [ 'url', 'thumbnailUrl', 'originalUrl', 'archiveUrl', 'tid', 'photographer', 'photographerUid', 'imageType', 'format', 'caption', 'owner', 'sourceUrl', 'referenceUrl',
+		'copyright', 'rights', 'accessRights', 'locality', 'occid', 'notes', 'anatomy', 'username', 'sourceIdentifier', 'hashFunction', 'hashValue', 'mediaMD5', 'dynamicProperties',
 		'defaultDisplay', 'sortSequence', 'sortOccurrence'
 	];
-
-	protected $hidden = ['dynamicProperties', 'username', 'photographerUid', 'sortOccurrence', 'defaultDisplay'];
+	protected $guarded = [];
+	protected $hidden = ['dynamicProperties', 'username', 'defaultDisplay'];
 	private $serverDomain;
 
-	public function __construct(){
+	public function __construct(array $attributes = array()){
+		parent::__construct($attributes);
 		$this->setServerDomain();
 	}
 

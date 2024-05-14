@@ -52,7 +52,7 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 				WHERE v.voucherID IS NULL AND (ctl.clid = '.$this->clid.') AND ts.taxauthid = 1
 				ORDER BY ts.family, t.sciname
 				LIMIT '.($startLimit ? $startLimit.',' : '') . $limit;
-			//echo '<div>'.$sql.'</div>';
+			//echo '<div>nonVoucheredTaxa: '.$sql.'</div>';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$retArr[$r->family][$r->clTaxaID]['s'] = $this->cleanOutStr($r->sciname);
@@ -68,29 +68,28 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 		if($this->clid){
 			if($sqlFrag = $this->getSqlFrag()){
 				if($includeAll == 1 || $includeAll == 2){
-					$sql = 'SELECT DISTINCT cl.clTaxaID, TRIM(CONCAT_WS(" ",t.sciname,cl.morphoSpecies)) AS clsciname, o.occid, c.institutioncode, c.collectioncode, o.catalognumber, '.
-						'o.tidinterpreted, o.sciname, o.recordedby, o.recordnumber, o.eventdate, CONCAT_WS("; ",o.country, o.stateprovince, o.county, o.locality) as locality '.
-						'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid '.
-						'INNER JOIN taxstatus ts ON o.tidinterpreted = ts.tid '.
-						'INNER JOIN fmchklsttaxalink cl ON ts.tidaccepted = cl.tid '.
-						'INNER JOIN taxa t ON cl.tid = t.tid ';
+					$sql = 'SELECT DISTINCT cl.clTaxaID, TRIM(CONCAT_WS(" ",t.sciname,cl.morphoSpecies)) AS clsciname, o.occid, c.institutioncode, c.collectioncode, o.catalognumber,
+						o.tidinterpreted, o.sciname, o.recordedby, o.recordnumber, o.eventdate, CONCAT_WS("; ",o.country, o.stateprovince, o.county, o.locality) as locality
+						FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid
+						INNER JOIN taxstatus ts ON o.tidinterpreted = ts.tid
+						INNER JOIN taxstatus ts2 ON ts.tidaccepted = ts2.tidaccepted
+						INNER JOIN fmchklsttaxalink cl ON ts2.tid = cl.tid
+						INNER JOIN taxa t ON cl.tid = t.tid ';
 					$sql .= $this->getTableJoinFrag($sqlFrag);
-					$sql .= 'WHERE ('.$sqlFrag.') AND (cl.clid = '.$this->clid.') AND (ts.taxauthid = 1) ';
+					$sql .= 'WHERE ('.$sqlFrag.') AND (cl.clid = '.$this->clid.') AND (ts.taxauthid = 1) AND (ts2.taxauthid = 1) ';
 					if($includeAll == 1){
-						$idStr = $this->getVoucherTidStr('tid');
-						if($idStr) $sql .= 'AND cl.tid NOT IN('.$idStr.') ';
+						$sql .= 'AND cl.tid IN(' . $this->getNonVoucherTidStr('tid') . ') ';
 					}
 					elseif($includeAll == 2){
-						$idStr = $this->getVoucherOccidStr();
-						if($idStr) $sql .= 'AND o.occid NOT IN('.$idStr.') ';
+						$inStr = $this->getVoucherOccidStr();
+						if($inStr) $sql .= 'AND o.occid NOT IN(' . $inStr . ') ';
 					}
 					$sql .= 'ORDER BY ts.family, o.sciname LIMIT '.$startLimit.', 1000';
-					//echo '<div>'.$sql.'</div>';
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
 						$retArr[$r->clTaxaID][$r->occid]['tid'] = $r->tidinterpreted;
 						$sciName = $r->clsciname;
-						if($r->clsciname <> $r->sciname) $sciName .= '<br/>specimen id: '.$r->sciname;
+						if($r->clsciname <> $r->sciname) $sciName .= '<br/>[specimen id: '.$r->sciname.']';
 						$retArr[$r->clTaxaID][$r->occid]['sciname'] = $sciName;
 						$collCode = '';
 						if(!$r->catalognumber || strpos($r->catalognumber, $r->institutioncode) === false){
@@ -105,19 +104,18 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 					}
 				}
 				elseif($includeAll == 3){
-					$sql = 'SELECT DISTINCT cl.clTaxaID, TRIM(CONCAT_WS(" ",t.sciname,cl.morphoSpecies)) AS clsciname, o.occid, '.
-						'c.institutioncode, c.collectioncode, o.catalognumber, '.
-						'o.tidinterpreted, o.sciname, o.recordedby, o.recordnumber, o.eventdate, '.
-						'CONCAT_WS("; ",o.country, o.stateprovince, o.county, o.locality) as locality '.
-						'FROM omcollections c INNER JOIN omoccurrences o ON c.collid = o.collid '.
-						'LEFT JOIN taxa t ON o.tidinterpreted = t.TID '.
-						'LEFT JOIN taxstatus ts ON t.TID = ts.tid ';
+					$sql = 'SELECT DISTINCT cl.clTaxaID, TRIM(CONCAT_WS(" ",t.sciname,cl.morphoSpecies)) AS clsciname, o.occid,
+						c.institutioncode, c.collectioncode, o.catalognumber,
+						o.tidinterpreted, o.sciname, o.recordedby, o.recordnumber, o.eventdate,
+						CONCAT_WS("; ",o.country, o.stateprovince, o.county, o.locality) as locality
+						FROM omcollections c INNER JOIN omoccurrences o ON c.collid = o.collid
+						LEFT JOIN taxa t ON o.tidinterpreted = t.TID
+						LEFT JOIN taxstatus ts ON t.TID = ts.tid ';
 					$sql .= $this->getTableJoinFrag($sqlFrag);
 					$sql .= 'WHERE ('.$sqlFrag.') AND ((t.RankId < 220)) ';
 					$idStr = $this->getVoucherOccidStr();
 					if($idStr) $sql .= 'AND (o.occid NOT IN('.$idStr.')) ';
 					$sql .= 'ORDER BY o.family, o.sciname LIMIT '.$startLimit.', 500';
-					//echo '<div>'.$sql.'</div>';
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
 						$retArr[$r->clTaxaID][$r->occid]['tid'] = $r->tidinterpreted;
@@ -140,6 +138,22 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 			}
 		}
 		return $retArr;
+	}
+
+	private function getNonVoucherTidStr(){
+		$idArr = array();
+		$clidStr = $this->getClidFullStr();
+		if($clidStr){
+			$sql = 'SELECT c.tid FROM fmchklsttaxalink c LEFT JOIN fmvouchers v ON c.clTaxaID = v.clTaxaID WHERE v.voucherID IS NULL AND c.clid = '.$this->clid;
+			$rs = $this->conn->query($sql);
+			while($r = $rs->fetch_object()){
+				$idArr[] = $r->tid;
+			}
+			$rs->free();
+		}
+		$retStr = '0';
+		if($idArr) $retStr = implode(',', $idArr);
+		return $retStr;
 	}
 
 	public function getMissingTaxa(){
@@ -256,7 +270,7 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 	private function getMissingTaxaBaseSql($sqlFrag){
 		$clidStr = $this->getClidFullStr();
 		if($clidStr){
-			$retSql = 'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid '.
+			$retSql = 'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid '.
 				'INNER JOIN taxstatus ts ON o.tidinterpreted = ts.tid '.
 				'INNER JOIN taxa t ON ts.tidaccepted = t.tid ';
 			$retSql .= $this->getTableJoinFrag($sqlFrag);
@@ -309,7 +323,7 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 
 	private function getProblemTaxaSql($sqlFrag){
 		//$clidStr = $this->getClidFullStr();
-		$retSql = 'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.CollID '.
+		$retSql = 'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.CollID '.
 			$this->getTableJoinFrag($sqlFrag).
 			'WHERE ('.$sqlFrag.') AND (o.tidinterpreted IS NULL) AND (o.sciname IS NOT NULL) ';
 		$idStr = $this->getVoucherOccidStr();
@@ -325,20 +339,6 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$idArr[] = $r->occid;
-			}
-			$rs->free();
-		}
-		return implode(',',$idArr);
-	}
-
-	private function getVoucherTidStr(){
-		$idArr = array();
-		$clidStr = $this->getClidFullStr();
-		if($clidStr){
-			$sql = 'SELECT DISTINCT tid FROM fmchklsttaxalink WHERE clid IN('.$clidStr.')';
-			$rs = $this->conn->query($sql);
-			while($r = $rs->fetch_object()){
-				$idArr[] = $r->tid;
 			}
 			$rs->free();
 		}

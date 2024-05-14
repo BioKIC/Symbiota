@@ -21,7 +21,8 @@ if($SYMB_UID){
 
 $statusStr = '';
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
 	<title><?php echo $DEFAULT_TITLE.' '.$LANG['CROWDSOURCE_SCORE_BOARD']; ?></title>
@@ -51,13 +52,13 @@ $statusStr = '';
 	?>
 
 	<!-- inner text -->
-	<div id="innertext">
-		<h1><?php echo $LANG['CROWDSOURCE_SCORE_BOARD']; ?></h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?php echo $LANG['CROWDSOURCE_SCORE_BOARD']; ?></h1>
 
 		<div style="margin:20px;">
 			<h2><?php echo $LANG['TOP_SCORES']; ?></h2>
 			<table class="styledtable" style="font-family:Arial;font-size:12px;width:300px;">
-				<tr><th style="min-width: 150px"><b>User</b></th><th style="text-align:center"><b><?php echo $LANG['APPROVED_SCORE']; ?></b></th><th style="text-align:center"><b><?php echo $LANG['PENDING_SCORE']; ?></b></th></tr>
+				<tr><th style="min-width: 150px"><b><?php echo $LANG['USER']; ?></b></th><th style="text-align:center"><b><?php echo $LANG['APPROVED_SCORE']; ?></b></th><th style="text-align:center"><b><?php echo $LANG['PENDING_SCORE']; ?></b></th></tr>
 				<?php
 				$topScoreArr = $csManager->getTopScores($catid);
 				if($topScoreArr){
@@ -84,22 +85,21 @@ $statusStr = '';
 				<legend><b><?php echo $LANG['YOUR_STANDING']; ?></b></legend>
 				<?php
 				if($SYMB_UID){
-					echo '<div style="margin-top:5px">Specimens processed as volunteer: '.number_format($userStats['totalcnt']);
-					if($userStats['nonvolcnt']) echo '<span style="margin-left:25px">(Additional as non-volunteer: '.number_format($userStats['nonvolcnt']).'*)</span>';
+					echo '<div style="margin-top:5px">' . $LANG['SPEC_PROC_AS_VOL'] . ': ' . number_format($userStats['totalcnt']) . '</div>';
+					if($userStats['nonvolcnt']) echo '<div style="margin-left:25px">(' . $LANG['ADD_AS_NONVOL'] . ': '.number_format($userStats['nonvolcnt']) . '*)</div>';
+					echo '<div style="margin-top:5px">' . $LANG['PEND_POINTS'] . ': '. number_format($userStats['ppoints']);
+					if($userStats['ppoints']) echo ' (<a href="review.php?rstatus=5&uid=' . htmlspecialchars($SYMB_UID, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .  '">' . htmlspecialchars($LANG['VIEW_RECORDS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 					echo '</div>';
-					echo '<div style="margin-top:5px">Pending points: '.number_format($userStats['ppoints']);
-					if($userStats['ppoints']) echo ' (<a href="review.php?rstatus=5&uid='.$SYMB_UID.'">'.$LANG['VIEW_RECORDS'].'</a>)';
+					echo '<div style="margin-top:5px">' . $LANG['APP_POINTS'] . ': ' . number_format($userStats['apoints']);
+					if($userStats['apoints']) echo ' (<a href="review.php?rstatus=10&uid=' . htmlspecialchars($SYMB_UID, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['VIEW_RECORDS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 					echo '</div>';
-					echo '<div style="margin-top:5px">Approved points: '.number_format($userStats['apoints']);
-					if($userStats['apoints']) echo ' (<a href="review.php?rstatus=10&uid='.$SYMB_UID.'">'.$LANG['VIEW_RECORDS'].'</a>)';
-					echo '</div>';
-					echo '<div style="margin-top:5px">Total possible score: '.number_format($userStats['ppoints']+$userStats['apoints']).'</div>';
-					if($userStats['nonvolcnt']) echo '<div style="margin-top:10px">* '.$LANG['ONLY_PROCESSED_SPECIMENS_ELIGIBLE'].'</div>';
+					echo '<div style="margin-top:5px">' . $LANG['TOT_POSS_SCORE'] . ': ' . number_format($userStats['ppoints']+$userStats['apoints']) . '</div>';
+					if($userStats['nonvolcnt']) echo '<div style="margin-top:10px">* ' . $LANG['ONLY_PROCESSED_SPECIMENS_ELIGIBLE'] . '</div>';
 				}
 				else{
 					?>
 					<div>
-						<a href="../../../profile/index.php?refurl=../collections/specprocessor/crowdsource/index.php"><?php echo $LANG['LOGIN']; ?></a> <?php echo $LANG['TO_VIEW_CURRENT']; ?>
+						<a href="../../../profile/index.php?refurl=../collections/specprocessor/crowdsource/index.php"><?php echo htmlspecialchars($LANG['LOGIN'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> <?php echo htmlspecialchars($LANG['TO_VIEW_CURRENT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>
 					</div>
 					<?php
 				}
@@ -127,12 +127,12 @@ $statusStr = '';
 					echo '<tr>';
 					echo '<td>';
 					echo '<b>'.$sArr['name'].'</b>';
-					if($IS_ADMIN || in_array($collId, $pArr)) echo ' <a href="../index.php?tabindex=1&collid='.$collId.'"><img src="../../../images/edit.png" style="width:14px;" /></a>';
+					if($IS_ADMIN || in_array($collId, $pArr)) echo ' <a href="../index.php?tabindex=1&collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><img src="../../../images/edit.png" style="width:1.3em;" /></a>';
 					echo '</td>';
 					echo '<td>'.number_format((array_key_exists(5,$cntArr)?$cntArr[5]:0)+(array_key_exists(10,$cntArr)?$cntArr[10]:0)).'</td>';
 					echo '<td>'.number_format(array_key_exists(5,$pointArr)?$pointArr[5]:0).'</td>';
 					echo '<td>'.number_format(array_key_exists(10,$pointArr)?$pointArr[10]:0).'</td>';
-					echo '<td><a href="../../editor/occurrencetabledisplay.php?csmode=1&occindex=0&displayquery=1&reset=1&collid='.$collId.'" target="_blank">'.number_format(array_key_exists(0,$cntArr)?$cntArr[0]:0).'</a></td>';
+					echo '<td><a href="../../editor/occurrencetabledisplay.php?csmode=1&occindex=0&displayquery=1&reset=1&collid=' . htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars(number_format(array_key_exists(0,$cntArr)?$cntArr[0]:0), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></td>';
 					echo '</tr>';
 				}
 				?>

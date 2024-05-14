@@ -38,14 +38,15 @@ if($SYMB_UID){
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
 	<title><?php echo $DEFAULT_TITLE; ?> Occurrence Editor</title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
-	<link href="../../css/occureditor.css?<?php echo $CSS_VERSION; ?>" type="text/css" rel="stylesheet" id="editorCssLink" />
-	<script src="../../js/jquery.js" type="text/javascript"></script>
-	<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+	<link href="../../css/occureditor.css?<?php echo htmlspecialchars($CSS_VERSION, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" type="text/css" rel="stylesheet" id="editorCssLink" />
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		var collId = "<?php echo $collid; ?>";
 	</script>
@@ -55,13 +56,13 @@ if($SYMB_UID){
 </head>
 <body>
 	<!-- inner text -->
-	<div id="innertext">
+	<div role="main" id="innertext">
 		<?php
 		if($isEditor && $collid){
 			?>
 			<div id="titleDiv">
 				<?php
-				echo $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').')';
+				echo '<h1 class="page-heading">' . $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').')</h1>';
 				?>
 			</div>
 			<div class='navpath'>
@@ -69,7 +70,7 @@ if($SYMB_UID){
 				<?php
 				if(!$isGenObs || $isEditor){
 					?>
-					<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1" onclick="return verifyLeaveForm()">Collection Management</a> &gt;&gt;
+					<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1" onclick="return verifyLeaveForm()">Collection Management</a> &gt;&gt;
 					<?php
 				}
 				if($isGenObs){
@@ -119,24 +120,6 @@ if($SYMB_UID){
 									<a href="#" onclick="return dwcDoc('verbatimEventDate')"><img class="docimg" src="../../images/qmark.png" /></a>
 								</div>
 								<input type="text" name="verbatimeventdate" tabindex="19" maxlength="255" value="<?php echo array_key_exists('verbatimeventdate',$occArr)?$occArr['verbatimeventdate']:''; ?>" onchange="verbatimEventDateChanged(this)" />
-							</div>
-							<div id="dateToggleDiv">
-								<a href="#" onclick="toggle('dateextradiv');return false;"><img src="../../images/editplus.png" style="width:15px;" /></a>
-							</div>
-							<div id="dateextradiv">
-								<div id="ymdDiv">
-									<?php echo (defined('YYYYMMDDLABEL')?YYYYMMDDLABEL:'YYYY-MM-DD'); ?>:
-									<a href="#" onclick="return dwcDoc('year')"><img class="docimg" src="../../images/qmark.png" /></a>
-									<input type="text" name="year" tabindex="20" value="<?php echo array_key_exists('year',$occArr)?$occArr['year']:''; ?>" onchange="inputIsNumeric(this, 'Year');fieldChanged('year');" title="Numeric Year" />-
-									<input type="text" name="month" tabindex="21" value="<?php echo array_key_exists('month',$occArr)?$occArr['month']:''; ?>" onchange="inputIsNumeric(this, 'Month');fieldChanged('month');" title="Numeric Month" />-
-									<input type="text" name="day" tabindex="22" value="<?php echo array_key_exists('day',$occArr)?$occArr['day']:''; ?>" onchange="inputIsNumeric(this, 'Day');fieldChanged('day');" title="Numeric Day" />
-								</div>
-								<div id="dayOfYearDiv">
-									<?php echo (defined('DAYOFYEARLABEL')?DAYOFYEARLABEL:'Day of Year'); ?>:
-									<a href="#" onclick="return dwcDoc('startDayOfYear')"><img class="docimg" src="../../images/qmark.png" /></a>
-									<input type="text" name="startdayofyear" tabindex="24" value="<?php echo array_key_exists('startdayofyear',$occArr)?$occArr['startdayofyear']:''; ?>" onchange="inputIsNumeric(this, 'Start Day of Year');fieldChanged('startdayofyear');" title="Start Day of Year" /> -
-									<input type="text" name="enddayofyear" tabindex="26" value="<?php echo array_key_exists('enddayofyear',$occArr)?$occArr['enddayofyear']:''; ?>" onchange="inputIsNumeric(this, 'End Day of Year');fieldChanged('enddayofyear');" title="End Day of Year" />
-								</div>
 							</div>
 						</fieldset>
 						<fieldset>
@@ -217,7 +200,7 @@ if($SYMB_UID){
 									<input type="button" value="Tools" onclick="toggleCoordDiv();" />
 								</div>
 								<div id="geodeticDatumDiv">
-									<?php echo (defined('GEODETICDATIMLABEL')?GEODETICDATIMLABEL:'Datum'); ?>
+									<?php echo (defined('GEODETICDATUMLABEL') ? GEODETICDATUMLABEL : 'Datum'); ?>
 									<a href="#" onclick="return dwcDoc('geodeticDatum')"><img class="docimg" src="../../images/qmark.png" /></a>
 									<br/>
 									<input type="text" id="geodeticdatum" name="geodeticdatum" tabindex="56" maxlength="255" value="<?php echo array_key_exists('geodeticdatum',$occArr)?$occArr['geodeticdatum']:''; ?>" />

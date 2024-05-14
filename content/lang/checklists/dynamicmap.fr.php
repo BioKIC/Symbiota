@@ -23,5 +23,6 @@ $LANG['TAXON_FILTER'] = 'Filtre de Taxon';
 $LANG['RADIUS'] = 'Rayon';
 $LANG['KM'] = 'Kilomètres';
 $LANG['MILES'] = 'Milles';
+$LANG['UNITS'] = 'Unités';
 
 ?>

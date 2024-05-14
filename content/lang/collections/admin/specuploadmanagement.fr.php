@@ -53,4 +53,6 @@ $LANG['PATH_EXPLAIN'] = 'Path can be URL or local path leading to a DwC-Archive 
 $LANG['DEL_PROFILE'] = 'Delete this Profile';
 $LANG['DEL_PR'] = 'Delete Profile';
 $LANG['ERROR_AUTH'] = 'ERROR: you are not authorized to upload to this collection';
+$LANG['IMG_EDIT'] = 'Modifier l\'image';
+
 ?>

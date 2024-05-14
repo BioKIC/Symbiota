@@ -193,11 +193,11 @@ CREATE TABLE `agents` (
   `endYearActive` int(11) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `rating` int(11) DEFAULT 10,
-  `guid` varchar(900) DEFAULT NULL,
+  `guid` varchar(150) DEFAULT NULL,
   `preferredRecByID` bigint(20) DEFAULT NULL,
   `biography` text DEFAULT NULL,
-  `taxonomicGroups` varchar(900) DEFAULT NULL,
-  `collectionsAt` varchar(900) DEFAULT NULL,
+  `taxonomicGroups` varchar(150) DEFAULT NULL,
+  `collectionsAt` varchar(150) DEFAULT NULL,
   `curated` tinyint(1) DEFAULT 0,
   `notOtherwiseSpecified` tinyint(1) DEFAULT 0,
   `type` enum('Individual','Team','Organization') DEFAULT NULL,
@@ -966,7 +966,7 @@ CREATE TABLE `institutions` (
   `contact` varchar(255) DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   `url` varchar(250) DEFAULT NULL,
-  `notes` varchar(19500) DEFAULT NULL,
+  `notes` varchar(250) DEFAULT NULL,
   `modifiedUid` int(10) unsigned DEFAULT NULL,
   `modifiedTimeStamp` datetime DEFAULT NULL,
   `initialTimestamp` timestamp NOT NULL DEFAULT current_timestamp(),
@@ -2268,7 +2268,7 @@ CREATE TABLE `omoccurrences` (
 ) ENGINE=InnoDB;
 
 
-DELIMITER ;;
+DELIMITER |
 CREATE TRIGGER `omoccurrences_insert` AFTER INSERT ON `omoccurrences`
 FOR EACH ROW BEGIN
 	IF NEW.`decimalLatitude` IS NOT NULL AND NEW.`decimalLongitude` IS NOT NULL THEN
@@ -2279,7 +2279,8 @@ FOR EACH ROW BEGIN
 		INSERT INTO omoccurrencesfulltext (`occid`,`recordedby`,`locality`) 
 		VALUES (NEW.`occid`,NEW.`recordedby`,CONCAT_WS("; ", NEW.`municipality`, NEW.`locality`));
 	END IF;
-END ;;
+END;
+|
 
 CREATE TRIGGER `omoccurrences_update` AFTER UPDATE ON `omoccurrences`
 FOR EACH ROW BEGIN
@@ -2308,13 +2309,15 @@ FOR EACH ROW BEGIN
 	ELSE 
 		DELETE FROM omoccurrencesfulltext WHERE `occid` = NEW.`occid`;
 	END IF;
-END ;;
+END;
+|
 
 CREATE TRIGGER `omoccurrences_delete` BEFORE DELETE ON `omoccurrences`
 FOR EACH ROW BEGIN
 	DELETE FROM omoccurpoints WHERE `occid` = OLD.`occid`;
 	DELETE FROM omoccurrencesfulltext WHERE `occid` = OLD.`occid`;
-END ;;
+END;
+|
 DELIMITER ;
 
 
@@ -2782,7 +2785,7 @@ CREATE TABLE `specprocessorrawlabels` (
 ) ENGINE=InnoDB;
 
 
-DELIMITER ;;
+DELIMITER |
 CREATE TRIGGER `specprocessorrawlabelsfulltext_insert` AFTER INSERT ON `specprocessorrawlabels`
 FOR EACH ROW BEGIN
   INSERT INTO specprocessorrawlabelsfulltext (
@@ -2794,8 +2797,8 @@ FOR EACH ROW BEGIN
     NEW.`imgid`,
     NEW.`rawstr`
   );
-END ;;
-
+END;
+|
 
 CREATE TRIGGER `specprocessorrawlabelsfulltext_update` AFTER UPDATE ON `specprocessorrawlabels`
 FOR EACH ROW BEGIN
@@ -2803,7 +2806,8 @@ FOR EACH ROW BEGIN
     `imgid` = NEW.`imgid`,
     `rawstr` = NEW.`rawstr`
   WHERE `prlid` = NEW.`prlid`;
-END ;;
+END;
+|
 DELIMITER ;
 
 
@@ -2822,11 +2826,12 @@ CREATE TABLE `specprocessorrawlabelsfulltext` (
 ) ENGINE=MyISAM;
 
 
-DELIMITER ;;
+DELIMITER |
 CREATE TRIGGER `specprocessorrawlabelsfulltext_delete` BEFORE DELETE ON `specprocessorrawlabelsfulltext`
 FOR EACH ROW BEGIN
   DELETE FROM specprocessorrawlabelsfulltext WHERE `prlid` = OLD.`prlid`;
-END ;;
+END;
+|
 DELIMITER ;
 
 
@@ -3524,11 +3529,11 @@ CREATE TABLE `uploadspectemp` (
   `taxonRank` varchar(32) DEFAULT NULL,
   `infraspecificEpithet` varchar(255) DEFAULT NULL,
   `scientificNameAuthorship` varchar(255) DEFAULT NULL,
-  `taxonRemarks` varchar(2000) DEFAULT NULL,
+  `taxonRemarks` text DEFAULT NULL,
   `identifiedBy` varchar(255) DEFAULT NULL,
   `dateIdentified` varchar(45) DEFAULT NULL,
-  `identificationReferences` varchar(2000) DEFAULT NULL,
-  `identificationRemarks` varchar(2000) DEFAULT NULL,
+  `identificationReferences` text DEFAULT NULL,
+  `identificationRemarks` text DEFAULT NULL,
   `identificationQualifier` varchar(255) DEFAULT NULL COMMENT 'cf, aff, etc',
   `typeStatus` varchar(255) DEFAULT NULL,
   `recordedBy` varchar(255) DEFAULT NULL COMMENT 'Collector(s)',

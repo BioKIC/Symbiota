@@ -1,0 +1,105 @@
+/* Input Text ********************************************************************************/
+.input-text-container
+  --bg: $neon-lighter-gray
+  --height: 46px
+  --bg-hover1: rgba(0,0,0,0.08)
+  --bbc: rgba(0,0,0,.42)
+  --opaq1: .08
+  --fz: 16px
+  margin: 0 auto
+  padding-top: 14px
+  width: 100%
+  max-width: 600px
+
+  label
+    position: relative
+    width: 100%
+    display: inline-block
+    
+    span
+        &::after, &::before
+            position: absolute
+            transition: 200ms ease-in-out
+        
+        &::before
+            content: attr(data-label)
+            // max-width: 200px
+            left: 16px
+            // // top: 0
+            top: 16px
+            // bottom: 0
+            margin: auto
+            pointer-events: none
+            // height: var(--fz)
+            height: 12px
+            font-size: var(--fz)
+            color: gray
+            line-height: 1
+        
+    input
+      &:focus,
+      &:valid, &:invalid
+         ~ span
+                &::before
+                    font-size: $font-size-small
+                    color: $accent-color
+
+  input
+    box-sizing: border-box
+    width: 100%
+    border: 0
+    height: var(--height)
+    padding: 10px 5px
+    font-size: $font-size
+    &:focus,
+    &:active
+        outline: 0
+        border: 0
+
+  .input-text--filled
+    border-bottom: 1px solid var(--bbc)
+    > input
+        background-color: var(--bg)
+        border-radius: 4px 4px 0 0
+        &:hover
+            background-color: var(--bg-hover1)
+        
+        &:focus,
+        &:valid, &:invalid
+            ~ span
+                &::before
+                    transform: translateY(-12px)
+                    font-size: $font-size-small
+                    color: $accent-color
+                
+                &::after
+                    width: 100%    
+      
+    span
+        &::after
+            content: ''
+            width: 0
+            height: 1px
+            background-color: $accent-color
+            bottom: 0
+            left: 0
+            right: 0
+            margin: auto
+            transition: 300ms
+        
+  .input-text--outlined
+     > input
+          // border: 1px solid var(--bbc)
+          border-radius: 0
+          &:focus
+              box-shadow: 0 0 0 2px $accent-color
+              border-color: transparent
+        
+          &:focus,
+          &:valid, &:invalid
+              ~ span
+                  &::before
+                      transform: translateY(-22px)
+                      background-color: white
+                      padding: 2px 4px
+

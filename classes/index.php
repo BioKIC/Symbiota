@@ -3,7 +3,8 @@ include_once('../config/symbini.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
 header('Location: '.$CLIENT_ROOT.'/index.php');
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>Forbidden</title>
 		<?php
@@ -16,13 +17,14 @@ header('Location: '.$CLIENT_ROOT.'/index.php');
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext">
-			<h1>Forbidden</h1>
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Access Denied</h1>
+			<h1 class="page-heading">Forbidden</h1>
 			<div style="font-weight:bold;">
 				You don't have permission to access this page.
 			</div>
 			<div style="font-weight:bold;margin:10px;">
-				<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Return to index page</a>
+				<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">Return to index page</a>
 			</div>
 		</div>
 		<?php

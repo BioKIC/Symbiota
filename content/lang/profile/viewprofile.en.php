@@ -7,7 +7,7 @@ Language: English
 
 $LANG['FAILED'] = 'Profile update failed!';
 $LANG['PWORD_SUCCESS'] = 'Password update successful';
-$LANG['PWORD_FAILED'] = 'Password update failed! Are you sure you typed the old password correctly?';
+$LANG['PWD_UPDATE_FAILED'] = 'Password update failed!';
 $LANG['UPDATE_SUCCESSFUL'] = 'Username update successful!';
 $LANG['LOGIN_USED'] = 'Login is already being used by another user. Please try a new login.';
 $LANG['INCORRECT_PWD'] = 'ERROR saving new login: incorrect password';

@@ -22,40 +22,40 @@ $cleanManager = new OccurrenceCleaner();
 if($collid) $cleanManager->setCollId($collid);
 $collMap = current($cleanManager->getCollMap());
 
-$statusStr = '';
 $isEditor = 0;
-if($IS_ADMIN || (array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collid,$USER_RIGHTS["CollAdmin"])) || ($collMap['colltype'] == 'General Observations')){
-	$isEditor = 1;
-}
+if($collMap){
+	if($IS_ADMIN || (array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collid,$USER_RIGHTS["CollAdmin"])) || ($collMap['colltype'] == 'General Observations')){
+		$isEditor = 1;
+	}
 
-//If collection is a general observation project, limit to User
-if($collMap['colltype'] == 'General Observations'){
-	$cleanManager->setObsUid($SYMB_UID);
-}
+	//If collection is a general observation project, limit to User
+	if($collMap['colltype'] == 'General Observations'){
+		$cleanManager->setObsUid($SYMB_UID);
+	}
 
-$limit = ini_get('max_input_vars')*0.2;
-if(!$limit || $limit > 1000) $limit = 1000;
+	$limit = ini_get('max_input_vars')*0.2;
+	if(!$limit || $limit > 1000) $limit = 1000;
 
-$dupArr = array();
-if($action == 'listdupscatalog'){
-	$dupArr = $cleanManager->getDuplicateCatalogNumber('cat',$start,$limit);
+	$dupArr = array();
+	if($action == 'listdupscatalog'){
+		$dupArr = $cleanManager->getDuplicateCatalogNumber('cat', $start, $limit);
+	}
+	if($action == 'listdupsothercatalog'){
+		$dupArr = $cleanManager->getDuplicateCatalogNumber('other', $start, $limit);
+	}
+	elseif($action == 'listdupsrecordedby'){
+		$dupArr = $cleanManager->getDuplicateCollectorNumber($start);
+	}
 }
-if($action == 'listdupsothercatalog'){
-	$dupArr = $cleanManager->getDuplicateCatalogNumber('other',$start,$limit);
-}
-elseif($action == 'listdupsrecordedby'){
-	$dupArr = $cleanManager->getDuplicateCollectorNumber($start);
-}
-
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
 	<title><?php echo $DEFAULT_TITLE.' '.$LANG['OCC_CLEANER']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<style type="text/css">
+	<style>
 		table.styledtable td { white-space: nowrap; }
 	</style>
 	<script type="text/javascript">
@@ -96,38 +96,38 @@ elseif($action == 'listdupsrecordedby'){
 		}
 	</script>
 </head>
-<body style="margin-left:0px;margin-right:0px">
-	<div class='navpath'>
+<body style="margin-left:10px; width: 100%">
+	<div class='navpath' style="margin:10px">
 		<a href="../../index.php"><?php echo $LANG['HOME']; ?></a> &gt;&gt;
 		<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1"><?php echo $LANG['COL_MAN']; ?></a> &gt;&gt;
 		<a href="index.php?collid=<?php echo $collid; ?>"><?php echo $LANG['CLEAN_MOD_INDEX']; ?></a> &gt;&gt;
 		<b><?php echo $LANG['DUP_OCCS']; ?></b>
 	</div>
-
-	<!-- inner text -->
-	<div id="innertext" style="background-color:white;">
+	<div role="main" id="innertext" style="background-color:white; margin:10px; width: 100%; max-width: 100%; padding: 0px;">
+		<h1 class="page-heading">Duplicate Catalog Number Cleaning Tool</h1>
 		<?php
-		if($isEditor){
-			if($IS_ADMIN && $limit < 900) echo '<div>'.$LANG['SUPERADMIN_NOTICE'].'</div>';
+		if($collMap && $isEditor){
+			if($IS_ADMIN && $limit < 900) echo '<div style="max-width: 1000px">'.$LANG['SUPERADMIN_NOTICE'].'</div>';
 			if($action == 'listdupscatalog' || $action == 'listdupsothercatalog' || $action == 'listdupsrecordedby'){
 				//Look for duplicate catalognumbers
 				if($dupArr){
-					$recCnt = count($dupArr);
-					//Build table
 					?>
-					<div style="margin-bottom:10px;">
+					<div style="max-width: 1000px; margin-bottom:10px;">
 						<b><?php echo $LANG['DUP_INSTRUCTIONS']; ?></b>
 					</div>
 					<form name="mergeform" action="duplicatesearch.php" method="post" onsubmit="return validateMergeForm(this);">
 						<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
-						<?php
-						if($recCnt > $limit){
-							$href = 'duplicatesearch.php?collid='.$collid.'&action='.$action.'&start='.($start+$limit);
-							echo '<div style="float:right;"><a href="'.$href.'"><b>'.$LANG['NEXT'].' '.$limit.' '.$LANG['RECORDS'].' &gt;&gt;</b></a></div>';
-						}
-						echo '<div style="float:left;margin-bottom:4px;margin-left:15px;"><input name="action" type="submit" value="Merge Duplicate Records" /></div>';
-						echo '<div style="float:left;margin-left:15px;"><b>'.($start+1).' '.$LANG['TO'].' '.($start+$recCnt).' '.$LANG['DUP_CLUSTERS'].' </b></div>';
-						?>
+						<div style="max-width: 1000px">
+							<?php
+							$recCnt = count($dupArr);
+							if($recCnt > $limit){
+								$href = 'duplicatesearch.php?collid='.$collid.'&action='.$action.'&start='.($start+$limit);
+								echo '<div style="float:right;"><a href="'.$href.'"><b>'.$LANG['NEXT'].' '.$limit.' '.$LANG['RECORDS'].' &gt;&gt;</b></a></div>';
+							}
+							echo '<div style="float:left;margin-bottom:4px;margin-left:15px;"><input name="action" type="submit" value="Merge Duplicate Records" /></div>';
+							echo '<div style="float:left;margin-left:15px;"><b>'.($start+1).' '.$LANG['TO'].' '.($start+$recCnt).' '.$LANG['DUP_CLUSTERS'].' </b></div>';
+							?>
+						</div>
 						<div style="clear: both">
 							<table class="styledtable" style="font-family:Arial;font-size:12px;">
 								<tr>
@@ -156,7 +156,7 @@ elseif($action == 'listdupsrecordedby'){
 									foreach($occArr as $occId => $occArr){
 										echo '<tr '.(($setCnt % 2) == 1?'class="alt"':'').'>';
 										echo '<td><a href="../editor/occurrenceeditor.php?occid='.$occId.'" target="_blank">'.$occId.'</a></td>'."\n";
-										echo '<td><input name="dupid[]" type="checkbox" value="'.$dupKey.':'.$occId.'" /></td>'."\n";
+										echo '<td><input name="dupid[]" type="checkbox" value="'.$dupKey.'|'.$occId.'" /></td>'."\n";
 										echo '<td><input name="dup'.$dupKey.'target" type="radio" value="'.$occId.'" '.($first?'checked':'').'/></td>'."\n";
 										echo '<td>'.$occArr['catalognumber'].'</td>'."\n";
 										echo '<td>'.$occArr['othercatalognumbers'].'</td>'."\n";
@@ -199,9 +199,9 @@ elseif($action == 'listdupsrecordedby'){
 					<?php
 					$dupArr = array();
 					foreach($_POST['dupid'] as $v){
-						$vArr = explode(':',$v);
+						$vArr = explode('|',$v);
 						if(count($vArr) > 1){
-							$target = $_POST['dup'.$vArr[0].'target'];
+							$target = $_POST['dup'.str_replace(' ', '_', $vArr[0]).'target'];
 							if($target != $vArr[1]) $dupArr[$target][] = $vArr[1];
 						}
 					}
@@ -214,13 +214,13 @@ elseif($action == 'listdupsrecordedby'){
 					if((count($dupArr)+2)>$limit){
 						?>
 							<div>
-								<a href="index.php?collid=<?php echo $collid; ?>"><?php echo $LANG['RETURN_TO_FORM']; ?></a>
+								<a href="index.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo htmlspecialchars($LANG['RETURN_TO_FORM'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 							</div>
 							<?php
 						}
 					?>
 					<div>
-						<a href="index.php?collid=<?php echo $collid; ?>"><?php echo $LANG['RETURN_TO_MAIN']; ?></a>
+						<a href="index.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo htmlspecialchars($LANG['RETURN_TO_MAIN'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 					</div>
 				</div>
 				<?php

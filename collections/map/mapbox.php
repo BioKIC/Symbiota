@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceMapManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/map/mapbox.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/map/mapbox.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/map/mapbox.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $clid = array_key_exists('clid',$_REQUEST)?$_REQUEST['clid']:0;
@@ -33,9 +36,10 @@ if(array_key_exists('taxa', $taxaArr)){
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> - Taxon Map</title>
+	<title><?php echo $DEFAULT_TITLE; ?> - <?php echo $LANG['TAXON_MAP']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
@@ -77,11 +81,11 @@ if(array_key_exists('taxa', $taxaArr)){
 			}
 			if(lat != null && lng != null){
 				if(lat < -180 || lat > 180 || lng < -180 || lng > 180){
-					window.alert("Latitude and Longitude must be of values between -180 and 180 (" + lat + ";" + lng + ")");
+					window.alert("<?php echo $LANG['LAT_LONG_VALUES']; ?> (" + lat + ";" + lng + ")");
 				}
 				else{
 					var addPoint = true;
-					if(lng > 0) addPoint = window.confirm("Longitude is positive, which will put the marker in the eastern hemisphere (e.g. Asia).\nIs this what you want?");
+					if(lng > 0) addPoint = window.confirm("<?php echo $LANG['LONGITUDE_IS_POSITIVE']; ?>?");
 					if(!addPoint) lng = -1*lng;
 
 					var iconImg = new google.maps.MarkerImage( '../../images/google/arrow.png' );
@@ -96,7 +100,7 @@ if(array_key_exists('taxa', $taxaArr)){
 				}
 			}
 			else{
-				window.alert("Enter values in the latitude and longitude fields");
+				window.alert("<?php echo $LANG['ENTER_VALUES_IN_LAT_LONG']; ?>");
 			}
 		}
 
@@ -120,40 +124,41 @@ if(array_key_exists('taxa', $taxaArr)){
 	</script>
 </head>
 <body style="background-color:#ffffff;width:100%">
+	<h1 class="page-heading">Taxon Map</h1>
 	<?php
 	if(!$coordArr){
 		?>
 			<div style="font-size:120%;font-weight:bold;">
-				Your query apparently does not contain any records with coordinates that can be mapped.
+				<?php echo $LANG['QUERY_DOES_NOT_CONTAIN_RECORDS']; ?>.
 			</div>
 			<div style="margin-left:20px;">
-				Either the records in the query are not georeferenced (no lat/long)<br/>
+				<?php echo $LANG['EITHER_REC_NOT_GEOREF']; ?><br/><br/>
 			</div>
 			<div style="margin-left:100px;">
-				-or-
+				-<?php echo $LANG['OR']; ?>-
 			</div>
 			<div style="margin-left:20px;">
-				Rare/threatened status requires the locality coordinates be hidden.
+				<?php echo $LANG['RARE_STATUS_REQUIRES']; ?>.
 			</div>
 		<?php
 	}
 	?>
 	<div id="mapid"></div>
 
-	<table title='Add Point of Reference' style="width:100%;" >
+	<table title='<?php echo $LANG['ADD_POINT_REF']; ?>' style="width:100%;" >
 		<tr>
 			<td style="width:330px" valign='top'>
 				<fieldset>
-					<legend>Legend</legend>
+					<legend><?php echo $LANG['LEGEND']; ?></legend>
 					<div style="float:left;">
 						<?php
 						foreach($colorKey as $iconKey => $colorCode){
 							echo '<div>';
 							echo '<svg xmlns="http://www.w3.org/2000/svg" style="height:12px;width:12px;margin-bottom:-2px;"><g><rect x="1" y="1" width="11" height="10" fill="#'.$colorCode.'" stroke="#000000" stroke-width="1px" /></g></svg> ';
-							if(!$iconKey) echo '= various taxa';
+							if(!$iconKey) echo '= ' . $LANG['VARIOUS_TAXA'];
 							elseif(is_numeric($iconKey)) echo '= <i>'.$taxaKey[$iconKey]['str'].'</i>';
 							elseif(isset($taxaKey['orphan'][$iconKey])) echo '= <i>'.$iconKey.'</i>';
-							else echo '= various taxa';
+							else echo '= ' . $LANG['VARIOUS_TAXA'];
 							echo '</div>';
 						}
 						?>
@@ -164,14 +169,14 @@ if(array_key_exists('taxa', $taxaArr)){
 								<g>
 									<circle cx="7.5" cy="7.5" r="7" fill="white" stroke="#000000" stroke-width="1px" ></circle>
 								</g>
-							</svg> = Collection
+							</svg> = <?php echo $LANG['COLLECTION']; ?>
 						</div>
 						<div>
 							<svg style="height:14px;width:14px;margin-bottom:-2px;">" xmlns="http://www.w3.org/2000/svg">
 								<g>
 									<path stroke="#000000" d="m6.70496,0.23296l-6.70496,13.48356l13.88754,0.12255l-7.18258,-13.60611z" stroke-width="1px" fill="white"/>
 								</g>
-							</svg> = Observation
+							</svg> = <?php echo $LANG['OBSERVATION']; ?>
 						</div>
 					</div>
 				</fieldset>
@@ -179,51 +184,51 @@ if(array_key_exists('taxa', $taxaArr)){
 			<td style="width:375px;" valign='top'>
 				<div>
 					<fieldset>
-						<legend>Add Point of Reference</legend>
+						<legend><?php echo $LANG['ADD_POINT_REF']; ?></legend>
 						<div style='float:left;width:350px;'>
 							<div class="latlongdiv">
 								<div>
-									Latitude decimal: <input name='lat' id='lat' size='10' type='text' /> eg: 34.57
+									<?php echo $LANG['LAT_DEC']; ?>: <input name='lat' id='lat' size='10' type='text' /> eg: 34.57
 								</div>
 								<div style="margin-top:5px;">
-									Longitude decimal: <input name='lng' id='lng' size='10' type='text' /> eg: -112.38
+									<?php echo $LANG['LONG_DEC']; ?>: <input name='lng' id='lng' size='10' type='text' /> eg: -112.38
 								</div>
 								<div style='font-size:80%;margin-top:5px;'>
-									<a href='#' onclick='toggleLatLongDivs();'>Enter in D:M:S format</a>
+									<a href='#' onclick='toggleLatLongDivs();'><?php echo $LANG['ENTER_IN_DMS_FORMAT']; ?></a>
 								</div>
 							</div>
 							<div class='latlongdiv' style='display:none;'>
 								<div>
-									Latitude:
+									<?php echo $LANG['LAT']; ?>:
 									<input name='latdeg' id='latdeg' size='2' type='text' />&deg;
 									<input name='latmin' id='latmin' size='5' type='text' />&prime;
 									<input name='latsec' id='latsec' size='5' type='text' />&Prime;
 									<select name='latns' id='latns'>
-										<option value='N'>N</option>
-										<option value='S'>S</option>
+										<option value='N'><?php echo $LANG['NORTH']; ?></option>
+										<option value='S'><?php echo $LANG['SOUTH']; ?></option>
 									</select>
 								</div>
 								<div style="margin-top:5px;">
-									Longitude:
+									<?php echo $LANG['LONG']; ?>:
 									<input name='longdeg' id='longdeg' size='2' type='text' />&deg;
 									<input name='longmin' id='longmin' size='5' type='text' />&prime;
 									<input name='longsec' id='longsec' size='5' type='text' />&Prime;
 									<select name='longew' id='longew'>
-										<option value='E'>E</option>
-										<option value='W' selected>W</option>
+										<option value='E'><?php echo $LANG['EAST']; ?></option>
+										<option value='W' selected><?php echo $LANG['WEST']; ?></option>
 									</select>
 								</div>
 								<div style='font-size:80%;margin-top:5px;'>
-									<a href='#' onclick='toggleLatLongDivs();'>Enter in Decimal format</a>
+									<a href='#' onclick='toggleLatLongDivs();'><?php echo $LANG['ENTER_IN_DEC_FORMAT']; ?></a>
 								</div>
 							</div>
 						</div>
 						<div style="float:right;width:100px;">
 							<div style="float:right;">
-								Marker Name: <input name='title' id='title' size='20' type='text' />
+								<?php echo $LANG['MARKER_NAME']; ?>: <input name='title' id='title' size='20' type='text' />
 							</div><br />
 							<div style="float:right;margin-top:10px;">
-								<input type='submit' value='Add Marker' onclick='addRefPoint();' />
+								<button type='submit' value='Add Marker' onclick='addRefPoint();' ><?php echo $LANG['ADD_MARKER']; ?></button>
 							</div>
 						</div>
 					</fieldset>
@@ -256,7 +261,7 @@ if(array_key_exists('taxa', $taxaArr)){
 		var mapObj = L.map('mapid').setView([<?php echo $latCen.','.$longCen; ?>], 3);
 
 		L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=<?php echo (isset($MAPBOX_API_KEY) && $MAPBOX_API_KEY?$MAPBOX_API_KEY:''); ?>', {
-			attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+			attribution: '<?php echo $LANG['MAP_DATA']; ?> &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> <?php echo $LANG['CONTRIBUTORS']; ?>, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, <?php echo $LANG['IMAGERY']; ?> © <a href="https://www.mapbox.com/">Mapbox</a>',
 			minZoom: 1,
 			maxZoom: 18,
 			id: 'taxon/streets-v11',

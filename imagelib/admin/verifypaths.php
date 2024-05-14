@@ -10,7 +10,8 @@ $buildThumbnails = array_key_exists("buildthumbnails",$_REQUEST)?$_REQUEST["buil
 $verifyPathsObj = new VerifyPaths();
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Verify Image Paths</title>
 	<?php
@@ -30,8 +31,8 @@ $verifyPathsObj = new VerifyPaths();
 	}
 	?>
 	<!-- This is inner text! -->
-	<div id="innertext">
-		<h1>Image Path Verification</h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Image Path Verification</h1>
 		<div>Clicking the button below will go through all the images in the image directory and
 		verify mapping within the database. Two following two error files will be produced:</div>
 

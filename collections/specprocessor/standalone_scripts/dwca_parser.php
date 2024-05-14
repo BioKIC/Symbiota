@@ -31,7 +31,6 @@ imageHarvest($fileInMedia,$occurrenceFileOut);
 class DwcaParser{
 
 	function occurrenceTabToCsv($fileIn,$fileOut,$conditionArr){
-		ini_set('auto_detect_line_endings', true);
 		if(!$conditionArr) exit("Condition variable cannot be NULL");
 		if(!file_exists($fileIn)) exit("File Not Found");
 

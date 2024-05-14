@@ -7,8 +7,6 @@ Language: English
 
 include_once($SERVER_ROOT.'/content/lang/glossary/addterm.en.php');
 
-$LANG['PLEASE_REFINE'] = 'Please select a language and taxonomic group to see term list.';
-$LANG['PLEASE_TO_DWNLD'] = 'Please select a primary language and taxonomic group to download.';
 $LANG['PLEASE_TRANSL'] = 'Please select a maximum of three translations for the Translation Table. Please be sure to not select the primary language.';
 $LANG['PLEASE_ONE'] = 'Please select at least one translation for the Translation Table. Please be sure to not select the primary language.';
 $LANG['HOME'] = 'Home';
@@ -26,9 +24,12 @@ $LANG['LANG'] = 'Language';
 $LANG['SEARCH_TERM'] = 'Search Term';
 $LANG['SEARCH_DEF'] = 'Search within definitions';
 $LANG['SEARCH_TERMS'] = 'Search/Browse Terms';
-$LANG['NO_GLOSS'] = 'A glossary has not yet been established for this portal';
-$LANG['DISP_SRC'] = '(Display Sources)';
-$LANG['ADD_SRC'] = '(Add Sources)';
+$LANG['TERMS'] = 'Terms';
+$LANG['FOR'] = 'for';
+$LANG['IN'] = 'in';
+$LANG['KEYWORD'] = 'with keyword ';
+$LANG['DISP_SRC'] = 'Display Sources';
+$LANG['ADD_SRC'] = 'Add Sources';
 $LANG['TAX_CONTR'] = 'Contributors for Taxonomic Group';
 $LANG['TERM_CONTR'] = 'Terms and Definitions contributed by';
 $LANG['IMG_CONTR'] = 'Images contributed by';

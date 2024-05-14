@@ -1,6 +1,7 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImInventories.php');
+include_once($SERVER_ROOT.'/content/lang/projects/index.'.$LANG_TAG.'.php');
 header('Content-Type: text/html; charset='.$CHARSET);
 
 $pid = $_REQUEST['pid'];
@@ -12,14 +13,14 @@ $projManager = new ImInventories();
 $projManager->setPid($pid);
 ?>
 <div id="managertab">
-	<div style="font-weight:bold;margin:10px 0px">Inventory Project Managers</div>
+	<div style="font-weight:bold;margin:10px 0px"><?= $LANG['INVENTORY_PROJECT_MANAGERS']?></div>
 	<ul style="margin:30px 10px">
 	<?php
 	$managerArr = $projManager->getManagers('ProjAdmin', 'fmprojects', $pid);
 	if($managerArr){
 		foreach($managerArr as $uid => $userName){
 			echo '<li title="'.$uid.'">';
-			echo $userName.' <a href="index.php?tabindex=1&emode=1&projsubmit=deluid&pid='.$pid.'&uid='.$uid.'" title="Remove manager"><img src="../images/del.png" style="width:13px;" /></a>';
+			echo $userName.' <a href="index.php?tabindex=1&emode=1&projsubmit=deluid&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&uid=' . htmlspecialchars($uid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" title="Remove manager"><img src="../images/del.png" style="width:1.3em;" /></a>';
 			echo '</li>';
 		}
 	}
@@ -27,10 +28,10 @@ $projManager->setPid($pid);
 	?>
 	</ul>
 	<fieldset class="form-color">
-		<legend><b>Add a New Manager</b></legend>
+		<legend><b><?= $LANG['ADD_NEW_MANAGER'] ?></b></legend>
 		<form name="manageraddform" action="index.php" method="post" onsubmit="return validateManagerAddForm(this)">
 			<select name="uid" style="width:450px;">
-				<option value="0">Select a User</option>
+				<option value="0"><?=$LANG['SELECT_USER']?></option>
 				<option value="0">------------------------</option>
 				<?php
 				$newManagerArr = $projManager->getUserArr();
@@ -42,7 +43,9 @@ $projManager->setPid($pid);
 			<input name="pid" type="hidden" value="<?php echo $pid; ?>" />
 			<input name="tabindex" type="hidden" value="1" />
 			<input name="emode" type="hidden" value="1" />
-			<input name="projsubmit" type="submit" value="Add to Manager List" />
+			<button name="projsubmit" type="submit">
+				<?= $LANG['ADD_TO_MANAGER_LIST'] ?>
+			</button>
 		</form>
 	</fieldset>
 </div>

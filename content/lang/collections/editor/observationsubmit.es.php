@@ -1,7 +1,9 @@
 <?php
 /*
 ------------------
-Language: Español
+Language: Español (Spanish)
+Translated by: Samanta Orellana
+Date Translated: 2021-09-05
 ------------------
 */
 
@@ -10,6 +12,8 @@ include_once($SERVER_ROOT.'/content/lang/collections/editor/skeletalsubmit.es.ph
 $LANG['OBS_SUBMIT'] = 'Envío de Observación';
 $LANG['SUCCESS_IMAGE'] = 'ÉXITO: ¡Imagen cargada exitosamente!';
 $LANG['OPEN'] = 'Abierto';
+$LANG['PERS_MNGT'] = 'Gestión personal';
+$LANG['OBS_SUB'] = 'Envío de observación';
 $LANG['OCC_DET_VIEW'] = 'Visualizador de Detalles de Ocurrencia';
 $LANG['TO_SEE_NEW'] = 'para ver el nuevo registro';
 $LANG['GO_TO'] = 'Ir a';
@@ -41,14 +45,14 @@ $LANG['DATUM'] = 'Datum';
 $LANG['ELEV_M'] = 'Elev. (metros)';
 $LANG['ELEV_FT'] = 'Elev. (pies)';
 $LANG['GEO_REMARKS'] = 'Comentarios de Georeferenciación';
-$LANG['LATITUDE_DEG'] = 'Latitud Grados';
-$LANG['LATITUDE_MIN'] = 'Latitud Minutos';
-$LANG['LATITUDE_SEC'] = 'Latitud Segundos';
-$LANG['N'] = 'N'; //As in North
-$LANG['S'] = 'S'; //As in South
-$LANG['LONGITUDE_DEG'] = 'Longitud Grados';
-$LANG['LONGITUDE_MIN'] = 'Longitud Minutos';
-$LANG['LONGITUDE_SEC'] = 'Longitud Segundos';
+$LANG['LATITUDE_DEG'] = 'Grados (latitud)';
+$LANG['LATITUDE_MIN'] = 'Minutos (latitud)';
+$LANG['LATITUDE_SEC'] = 'Segundos (latitud)';
+$LANG['N'] = 'N'; //Como en el Norte
+$LANG['S'] = 'S'; //Como en el sur
+$LANG['LONGITUDE_DEG'] = 'Grados (longitud)';
+$LANG['LONGITUDE_MIN'] = 'Minutos (longitud)';
+$LANG['LONGITUDE_SEC'] = 'Segundos (longitud)';
 $LANG['E'] = 'E'; //As in East
 $LANG['W'] = 'W'; //As in West
 $LANG['MISC'] = 'Misc';
@@ -64,6 +68,16 @@ $LANG['LINK_CHECK'] = 'Vincular a Listado como Voucher';
 $LANG['SP_LIST'] = 'Listado de Especies';
 $LANG['SEL_CHECKLIST'] = 'Seleccionar Listado de Especies';
 $LANG['SUBMIT_OBS'] = 'Enviar Observación';
+$LANG['SUBMIT'] = 'Enviar';
 $LANG['NOT_AUTH'] = 'No está autorizado para enviar observaciones.';
+$LANG['LONGDIRECTION'] = 'Dirección (longitud)';
+$LANG['LATDIRECTION'] = 'Dirección (latitud)';
+$LANG['EDIT_BTN'] = 'Mostrar campos adicionales';
+$LANG['REP_COND_EG'] = 'p.ej. estéril, flw, frt, flw/frt';
+$LANG['EST_MEANS_EG'] = 'p.ej. plantado, sembrado, escape del jardín, etc.';
+$LANG['CULT_CAPT_EG'] = 'Haga clic si el espécimen fue cultivado o cautivo';
+$LANG['IMG_GLOBE'] = 'Una pequeña imagen del globo terráqueo';
+$LANG['IMG_EDIT'] = 'Botón Mostrar campos adicionales';
+$LANG['NO_COLLECTION'] = 'Sin Colección';
 
 ?>

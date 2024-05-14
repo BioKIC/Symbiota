@@ -113,19 +113,19 @@ function cogeUpdateCount(formObj){
 	var objName = formObj.name;
 	if(objName == "customtype1" || objName == "customvalue1"){
 		if(f.customfield1.value == '') return false;
-		if(f.customtype1.value == "EQUALS" || f.customtype1.value == "STARTS" || f.customtype1.value == "LIKE" || f.customtype1.value == "NOTLIKE" || f.customtype1.value == "CONTAINS"){
+		if(f.customtype1.value == "EQUALS" || f.customtype1.value == "STARTS_WITH" || f.customtype1.value == "LIKE" || f.customtype1.value == "NOT_LIKE" || f.customtype1.value == "LIKE"){
 			if(objName == "customtype1" && f.customvalue1.value == '') return false;
 		}
 	}
 	if(objName == "customtype2" || objName == "customvalue2"){
 		if(f.customfield2.value == '') return false;
-		if(f.customtype2.value == "EQUALS" || f.customtype2.value == "STARTS" || f.customtype2.value == "LIKE" || f.customtype2.value == "NOTLIKE" || f.customtype2.value == "CONTAINS"){
+		if(f.customtype2.value == "EQUALS" || f.customtype2.value == "STARTS_WITH" || f.customtype2.value == "LIKE" || f.customtype2.value == "NOT_LIKE" || f.customtype2.value == "LIKE"){
 			if(objName == "customtype2" && f.customvalue2.value == '') return false;
 		}
 	}
 	if(objName == "customtype3" || objName == "customvalue3"){
 		if(f.customfield3.value == '') return false;
-		if(f.customtype3.value == "EQUALS" || f.customtype3.value == "STARTS" || f.customtype3.value == "LIKE" || f.customtype3.value == "NOTLIKE" || f.customtype3.value == "CONTAINS"){
+		if(f.customtype3.value == "EQUALS" || f.customtype3.value == "STARTS_WITH" || f.customtype3.value == "LIKE" || f.customtype3.value == "NOT_LIKE" || f.customtype3.value == "LIKE"){
 			if(objName == "customtype3" && f.customvalue3.value == '') return false;
 		}
 	}

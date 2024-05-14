@@ -2,7 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
-## [Unreleased] - 2022-01-14
+## [3.1] - pending feature release (Nov-Dec 2023)
+### New Feature 
+* EcoFlora iNaturalist voucher linking tool: Allows checklist administrators to link external iNaturual observations to taxa within a checklist to serve as voucher occurrences. These tools us the iNaturalist API to assist in locating and linking observations. Previously, only internally stored occurrence records could be linked as vouchers. This new workflow also has the potential for linking vouchers that exist within other Symbiota portals.   
+
+### Changed
+
+
+## [3.0] - 2022-01-14
 ### Added
 * Integrate additional identifiers table into occurrence management and publishing tools (table: omoccuridentifiers) 
 * Integrate Material Sample module into occurrence editor, public display, import, and export tools 

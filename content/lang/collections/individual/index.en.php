@@ -4,6 +4,12 @@
  Language: English
  ------------------
  */
+
+
+$LANG['FLAGGED_COMMENT'] = 'Comment reported as inappropriate. Comment will remain unavailable to public until reviewed by an administrator';
+$LANG['OCCURRENCE_PROFILE'] = 'Occurrence Profile';
+$LANG['SKIP_NAV'] = 'Skip Navigation';
+$LANG['FULL_RECORD_DETAILS'] = 'Full Record Details';
 $LANG['DETAILS'] = 'Details';
 $LANG['MAP'] = 'Map';
 $LANG['GENETIC'] = 'Genetic';
@@ -71,7 +77,7 @@ $LANG['BIOTA'] = 'Biota';
 $LANG['BIO_STRAT'] = 'Biostratigraphy';
 $LANG['GROUP'] = 'Group';
 $LANG['FORMATION'] = 'Formation';
-$LANG['TAXON_ENV'] = 'Taxon Environment';
+$LANG['TAXON_ENVIR'] = 'Taxon Environment';
 $LANG['MEMBER'] = 'Member';
 $LANG['BED'] = 'Bed';
 $LANG['LITHOLOGY'] = 'Lithology';
@@ -152,4 +158,13 @@ $LANG['CHECKING'] = 'Checking archive';
 $LANG['RESTORE_RECORD'] = 'Restore Record';
 $LANG['RECORD_DELETED'] = 'Record deleted';
 $LANG['VALUE'] = 'Value';
+$LANG['LAT_LNG'] = 'Latitude/Longitude';
+
+//Used within OccurrenceIndividual class
+$LANG['INAPPROPRIATE'] = 'Inappropriate comment reported';
+$LANG['REPORTED_AS_INAPPROPRIATE'] = 'The following comment has been reported as inappropriate';
+$LANG['EMAIL_NOT_DEFINED'] = 'ERROR: Portal admin email not defined in central configuration file';
+$LANG['PRIVATE_STATUS'] = 'private status';
+$LANG['UNABLE_TO_VERIFY_TARGET'] = 'ERROR deleting voucher: unable to verify target checklist for voucher';
+$LANG['PERMISSION_ERROR'] = 'ERROR deleting voucher: permission error';
 ?>

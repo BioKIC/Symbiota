@@ -2,6 +2,8 @@
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcessorManager.php');
 include_once($SERVER_ROOT.'/classes/ImageProcessor.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl='.$CLIENT_ROOT.'/collections/specprocessor/index.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
@@ -20,16 +22,17 @@ if($IS_ADMIN || (array_key_exists("CollAdmin",$USER_RIGHTS) && in_array($collid,
 
 if($spprid) $specManager->setProjVariables($spprid);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
-		<title>Image Processor</title>
+		<title><?php echo $LANG['IMG_PROCESSOR']; ?></title>
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
+		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<style type="text/css">.profileDiv{ clear:both; margin:2px 0px } </style>
-		<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-		<link href="../../js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script src="../../js/symb/shared.js" type="text/javascript"></script>
 		<script>
 			$(function() {
@@ -99,57 +102,55 @@ if($spprid) $specManager->setProjVariables($spprid);
 
 			function validateProjectForm(f){
 				if(f.projecttype.value == ""){
-					alert("Image Mapping/Import type must be selected");
+					alert("<?php echo $LANG['SEL_IMPORT_TYPE']; ?>");
 					return false;
 				}
 				if(f.projecttype.value == 'file'){
 					var fileName = f.uploadfile.value;
 					var fileExt = fileName.split('.').pop().toLowerCase();
 					if(fileName == ""){
-						alert("Select a CSV file to upload");
+						alert("<?php echo $LANG['SEL_CSV']; ?>");
 						return false;
 					}
 					else if(fileExt != "csv" && fileExt != "zip"){
-						alert("Input file must be a CSV spreadsheet (comma or tab delimited), or ZIP file containing a CSV file");
+						alert("<?php echo $LANG['CSV_OR_ZIP']; ?>");
 						return false;
 					}
 				}
 				else{
 					if(f.speckeypattern.value == ""){
-						alert("Pattern matching term must have a value");
+						alert("<?php echo $LANG['NEED_PATTERN_MATCH']; ?>");
 						return false;
 					}
 					if(f.speckeypattern.value.substr(f.speckeypattern.value.length-3).toLowerCase() != "csv"){
 						if(f.speckeypattern.value.indexOf("(") < 0 || f.speckeypattern.value.indexOf(")") < 0){
-							alert("Catalog portion of pattern matching term must be enclosed in parenthesis");
+							alert("<?php echo $LANG['CATNUM_IN_PARENS']; ?>");
 							return false;
 						}
 					}
 				}
 				if(f.projecttype.value == 'local'){
 					if(!isNumeric(f.webpixwidth.value)){
-						alert("Central image pixel width can only be a numeric value");
+						alert("<?php echo $LANG['WEB_IMG_NUMERIC']; ?>");
 						return false;
 					}
 					else if(!isNumeric(f.tnpixwidth.value)){
-						alert("Thumbnail pixel width can only be a numeric value");
+						alert("<?php echo $LANG['TN_IMG_NUMERIC']; ?>");
 						return false;
 					}
 					else if(!isNumeric(f.lgpixwidth.value)){
-						alert("Large image pixel width can only be a numeric value");
+						alert("<?php echo $LANG['LG_IMG_NUMERIC']; ?>");
 						return false;
 					}
 					else if(f.title.value == ""){
-						alert("Title cannot be empty");
+						alert("<?php echo $LANG['TITLE_NOT_EMPTY']; ?>");
 						return false;
 					}
 					else if(!isNumeric(f.jpgcompression.value) || f.jpgcompression.value < 30 || f.jpgcompression.value > 100){
-						alert("JPG compression needs to be a numeric value between 30 and 100");
+						alert("<?php echo $LANG['JPG_BETWEEN']; ?>");
 						return false;
 					}
 				}
-				if(f.patternreplace.value == "-- Optional --") f.patternreplace.value = "";
-				if(f.replacestr.value == "-- Optional --") f.replacestr.value = "";
 				if(f.sourcepath.value == "-- Use Default Path --") f.sourcepath.value = "";
 				return true;
 			}
@@ -159,12 +160,12 @@ if($spprid) $specManager->setProjVariables($spprid);
 					var regexObj = /^\d{4}-\d{2}-\d{2}$/;
 					var startDate = f.startdate.value;
 					if(startDate != "" && !regexObj.test(startDate)){
-						alert("Processing Start Date needs to be in the format YYYY-MM-DD (e.g. 2015-10-18)");
+						alert("<?php echo $LANG['PROC_DATE_FORMAT']; ?>");
 						return false;
 					}
 				}
 				if(f.matchcatalognumber.checked == false && f.matchothercatalognumbers.checked == false){
-					alert("At least one of the Match Term checkboxes need to be checked");
+					alert("<?php echo $LANG['CHECK_MATCH_TERM']; ?>");
 					return false;
 				}
 				return true;
@@ -178,7 +179,7 @@ if($spprid) $specManager->setProjVariables($spprid);
 					if(obj.name.indexOf("tf[") == 0){
 						if(obj.value){
 							if(tfArr.indexOf(obj.value) > -1){
-								alert("ERROR: Target field names must be unique (duplicate field: "+obj.value+")");
+								alert("<?php echo $LANG['TARGET_MUST_UNIQUE']; ?>"+": "+obj.value+")");
 								return false;
 							}
 							tfArr[tfArr.length] = obj.value;
@@ -187,7 +188,7 @@ if($spprid) $specManager->setProjVariables($spprid);
 					if(obj.name.indexOf("sf[") == 0){
 						if(obj.value){
 							if(sfArr.indexOf(obj.value) > -1){
-								alert("ERROR: Source field names must be unique (duplicate field: "+obj.value+")");
+								alert("<?php echo $LANG['SOURCE_MUST_UNIQUE']; ?>"+": "+obj.value+")");
 								return false;
 							}
 							sfArr[sfArr.length] = obj.value;
@@ -195,11 +196,11 @@ if($spprid) $specManager->setProjVariables($spprid);
 					}
 				}
 				if(tfArr.indexOf("catalognumber") < 0 && tfArr.indexOf("othercatalognumbers") < 0){
-					alert("Catalog Number or Other Catalog Numbers must be mapped to an import field");
+					alert("<?php echo $LANG['MUST_MAP_CATNUM']; ?>");
 					return false;
 				}
 				if(tfArr.indexOf("originalurl") < 0){
-					alert("Large Image URL must both be mapped to an import field");
+					alert("<?php echo $LANG['LARGE_URL_MAPPED']; ?>");
 					return false;
 				}
 				return true;
@@ -211,11 +212,10 @@ if($spprid) $specManager->setProjVariables($spprid);
 	</head>
 	<body>
 		<!-- This is inner text! -->
-		<div id="innertext" style="background-color:white;">
+		<div role="main" id="innertext" style="background-color:white;">
+			<h1 class="page-heading screen-reader-only"><?= $LANG['IMG_PROCESSOR']; ?></h1>
 			<div style="padding:15px;">
-				These tools are designed to aid collection managers in batch processing specimen images. Contact portal manager for help in setting up a new workflow.
-				 Once a profile is established, the collection manager can use this form to manually trigger image processing. For more information, see the Symbiota documentation for
-				 <b><a href="https://biokic.github.io/symbiota-docs/coll_manager/images/batch/" target="_blank">recommended practices</a></b> for integrating images.
+				<?php echo $LANG['IMG_PROCESSOR_EXPLAIN']; ?>
 			</div>
 			<?php
 			if($SYMB_UID){
@@ -224,10 +224,10 @@ if($spprid) $specManager->setProjVariables($spprid);
 						?>
 						<form name="filemappingform" action="processor.php" method="post" onsubmit="return validateFileUploadForm(this)">
 							<fieldset>
-								<legend><b>Image File Upload Map</b></legend>
+								<legend><b><?php echo $LANG['IMG_FILE_UPLOAD_MAP']; ?></b></legend>
 								<div style="margin:15px;">
 									<table class="styledtable" style="width:600px;font-family:Arial;font-size:12px;">
-										<tr><th>Source Field</th><th>Target Field</th></tr>
+										<tr><th><?php echo $LANG['SOURCE_FIELD']; ?></th><th><?php echo $LANG['TARGET_FIELD']; ?></th></tr>
 										<?php
 										$translationMap = array('catalognumber' => 'catalognumber', 'othercatalognumbers' => 'othercatalognumbers', 'othercatalognumber' => 'othercatalognumbers', 'url' => 'url',
 											'web' => 'url','webviewoptional' => 'url','thumbnailurl' => 'thumbnailurl', 'thumbnail' => 'thumbnailurl','thumbnailoptional' => 'thumbnailurl',
@@ -241,15 +241,15 @@ if($spprid) $specManager->setProjVariables($spprid);
 											echo '<input type="hidden" name="sf['.$i.']" value="'.$sourceField.'" />';
 											$sourceField = preg_replace('/[^a-z]+/','',$sourceField);
 											echo '</td><td>';
-											echo '<select name="tf['.$i.']" style="background:'.(!array_key_exists($sourceField,$translationMap)?'yellow':'').'">';
-											echo '<option value="">Select Target Field</option>';
+											echo '<select name="tf[' . $i . ']" style="background:' . (!array_key_exists($sourceField,$translationMap) ? 'yellow' : '') . '">';
+											echo '<option value="">' . $LANG['SEL_TARGET_FIELD'] . '</option>';
 											echo '<option value="">-------------------------</option>';
-											echo '<option value="catalognumber" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='catalognumber'?'SELECTED':'').'>Catalog Number</option>';
-											echo '<option value="othercatalognumbers" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='othercatalognumbers'?'SELECTED':'').'>Other Catalog Numbers</option>';
-											echo '<option value="originalurl" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='originalurl'?'SELECTED':'').'>Large Image URL (required)</option>';
-											echo '<option value="url" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='url'?'SELECTED':'').'>Web Image URL</option>';
-											echo '<option value="thumbnailurl" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='thumbnailurl'?'SELECTED':'').'>Thumbnail URL</option>';
-											echo '<option value="sourceurl" '.(isset($translationMap[$sourceField]) && $translationMap[$sourceField]=='sourceurl'?'SELECTED':'').'>Source URL</option>';
+											echo '<option value="catalognumber" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'catalognumber' ? 'SELECTED' : '') . '>' . $LANG['CAT_NUM'] . '</option>';
+											echo '<option value="othercatalognumbers" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'othercatalognumbers' ? 'SELECTED' : '') . '>' . $LANG['OTHER_CAT_NUMS'] . '</option>';
+											echo '<option value="originalurl" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'originalurl' ? 'SELECTED' : '') . '>' . $LANG['LG_IMG_URL'] . '</option>';
+											echo '<option value="url" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'url' ? 'SELECTED' : '') . '>' . $LANG['WEB_IMG_URL'] . '</option>';
+											echo '<option value="thumbnailurl" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'thumbnailurl' ? 'SELECTED' : '') . '>' . $LANG['TN_URL'] . '</option>';
+											echo '<option value="sourceurl" ' . (isset($translationMap[$sourceField]) && $translationMap[$sourceField] == 'sourceurl' ? 'SELECTED' : '') . '>' . $LANG['SOURCE_URL'] . '</option>';
 											echo '</select>';
 											echo '</td></tr>';
 										}
@@ -257,13 +257,13 @@ if($spprid) $specManager->setProjVariables($spprid);
 									</table>
 								</div>
 								<div style="margin:15px;">
-									<input name="createnew" type="checkbox" value ="1" /> Link image to new blank record if catalog number does not exist
+									<input name="createnew" type="checkbox" value ="1" /> <?php echo $LANG['LINK_BLANK_RECORD']; ?>
 								</div>
 								<div style="margin:15px;">
 									<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 									<input name="tabindex" type="hidden" value="0" />
 									<input name="filename" type="hidden" value="<?php echo $fileName; ?>" />
-									<button name="submitaction" type="submit" value="mapImageFile">Map Images</button>
+									<button name="submitaction" type="submit" value="mapImageFile"><?php echo $LANG['MAP_IMGS']; ?></button>
 								</div>
 							</fieldset>
 						</form>
@@ -276,7 +276,7 @@ if($spprid) $specManager->setProjVariables($spprid);
 								?>
 								<form name="sppridform" action="index.php" method="post">
 									<fieldset>
-										<legend><b>Saved Image Processing Profiles</b></legend>
+										<legend><b><?php echo $LANG['SAVED_PROCESSING_PROF']; ?></b></legend>
 										<div style="margin:15px;">
 											<?php
 											foreach($specProjects as $id => $projTitle){
@@ -299,12 +299,12 @@ if($spprid) $specManager->setProjVariables($spprid);
 						<div id="editdiv" style="display:<?php echo ($spprid?'none':'block'); ?>;position:relative;">
 							<form id="editproj" name="editproj" action="index.php" enctype="multipart/form-data" method="post" onsubmit="return validateProjectForm(this);">
 								<fieldset style="padding:15px">
-									<legend><b><?php echo ($spprid?'Edit':'New'); ?> Profile</b></legend>
+									<legend><b><?php echo ($spprid ? $LANG['EDIT'] : $LANG['NEW']) . ' ' . $LANG['PROFILE']; ?></b></legend>
 									<?php
 									if($spprid){
 										?>
-										<div style="float:right;" onclick="toggle('editdiv');toggle('imgprocessdiv')" title="Close Editor">
-											<img src="../../images/edit.png" style="border:0px" />
+										<div style="float:right;" onclick="toggle('editdiv');toggle('imgprocessdiv')" title="<?php echo $LANG['CLOSE_EDITOR']; ?>">
+											<img src="../../images/edit.png" style="width:1.5em;border:0px" />
 										</div>
 										<input name="projecttype" type="hidden" value="<?php echo $projectType; ?>" />
 										<?php
@@ -312,13 +312,13 @@ if($spprid) $specManager->setProjVariables($spprid);
 									else{
 										?>
 										<div>
-											<label>Processing Type:</label>
+											<label><?php echo $LANG['PROC_TYPE']; ?>:</label>
 											<div style="float:left;">
 												<select name="projecttype" id="projecttype" onchange="uploadTypeChanged(this.form)" <?php echo ($spprid?'DISABLED':'');?>>
 													<option value="">----------------------</option>
-													<option value="local">Map Images from a Local or Remote Server</option>
-													<option value="file">Image URL Mapping File</option>
-													<option value="iplant">iPlant Image Harvest</option>
+													<option value="local"><?php echo $LANG['MAP_FROM_SERVER']; ?></option>
+													<option value="file"><?php echo $LANG['URL_MAP_FILE']; ?></option>
+													<!-- <option value="iplant">iPlant Image Harvest</option> -->
 												</select>
 											</div>
 										</div>
@@ -326,58 +326,53 @@ if($spprid) $specManager->setProjVariables($spprid);
 									}
 									?>
 									<div id="titleDiv" style="display:<?php echo ($spprid?'block':'none'); ?>;clear:left;">
-										<label>Title:</label>
+										<label><?php echo $LANG['TITLE']; ?>:</label>
 										<div style="float:left;">
 											<input name="title" type="text" style="width:300px;" value="<?php echo $specManager->getTitle(); ?>" />
 										</div>
 									</div>
 									<div id="specKeyPatternDiv" class="profileDiv" style="display:<?php echo ($projectType?'block':'none'); ?>">
-										<label>Pattern match term:</label>
+										<label><?php echo $LANG['PATT_MATCH_TERM']; ?>:</label>
 										<div style="float:left;">
 											<input name="speckeypattern" type="text" style="width:300px;" value="<?php echo $specManager->getSpecKeyPattern(); ?>" />
-											<a id="speckeypatterninfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="speckeypatterninfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="speckeypatterninfodialog">
-												Regular expression needed to extract the unique identifier from source text.
-												For example, regular expression /^(WIS-L-\d{7})\D*/ will extract catalog number WIS-L-0001234
-												from image file named WIS-L-0001234_a.jpg. For more information on creating regular expressions,
-												Google &quot;Regular Expression PHP Tutorial&quot;
+												<?php echo $LANG['PATTERN_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="patternReplaceDiv" class="profileDiv" style="display:<?php echo ($projectType?'block':'none'); ?>">
-										<label>Replacement term:</label>
+										<label><?php echo $LANG['REPLACEMENT_TERM']; ?>:</label>
 										<div style="float:left;">
-											<input name="patternreplace" type="text" style="width:300px;" value="<?php echo ($specManager->getPatternReplace()?$specManager->getPatternReplace():'-- Optional --'); ?>" />
-											<a id="patternreplaceinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<input name="patternreplace" type="text" style="width:300px;" value="<?= ($specManager->getPatternReplace() ? $specManager->getPatternReplace() : '') ?>" placeholder="<?= $LANG['OPTIONAL'] ?>">
+											<a id="patternreplaceinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="patternreplaceinfodialog">
-												Optional regular expression for match on Catalog Number to be replaced with replacement term.
-												Example 1: expression replace term = '/^/' combined with replace string = 'barcode-' will convert 0001234 => barcode-0001234.
-												Example 2: expression replace term = '/XYZ-/' combined with empty replace string will convert XYZ-0001234 => 0001234.
+												<?php echo $LANG['PATT_REPLACE_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="replaceStrDiv" class="profileDiv" style="display:<?php echo ($projectType?'block':'none'); ?>">
-										<label>Replacement string:</label>
+										<label><?php echo $LANG['REPLACEMENT_STR']; ?>:</label>
 										<div style="float:left;">
-											<input name="replacestr" type="text" style="width:300px;" value="<?php echo ($specManager->getReplaceStr()?$specManager->getReplaceStr():'-- Optional --'); ?>" />
-											<a id="replacestrinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<input name="replacestr" type="text" style="width:300px;" value="<?= ($specManager->getReplaceStr() ? $specManager->getReplaceStr() : ''); ?>" placeholder="<?= $LANG['OPTIONAL'] ?>" >
+											<a id="replacestrinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="replacestrinfodialog">
-												Optional replacement string to apply for Expression replacement term matches on catalogNumber.
+												<?php echo $LANG['REPLACE_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="sourcePathDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'||$projectType=='iplant'?'block':'none'); ?>">
-										<label>Image source path:</label>
+										<label><?php echo $LANG['IMG_SOURCE_PATH']; ?>:</label>
 										<div style="float:left;">
 											<input name="sourcepath" type="text" style="width:600px;" value="<?php echo $specManager->getSourcePath(); ?>" />
-											<a id="sourcepathinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="sourcepathinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="sourcepathinfodialog">
 												<div id="sourcePathInfoIplant" class="profileDiv" style="display:<?php echo ($projectType == 'iplant'?'block':'none'); ?>">
@@ -402,139 +397,128 @@ if($spprid) $specManager->setProjVariables($spprid);
 										</div>
 									</div>
 									<div id="targetPathDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>Image target path:</label>
+										<label><?php echo $LANG['IMG_TARGET_PATH']; ?>:</label>
 										<div style="float:left;">
 											<input name="targetpath" type="text" style="width:600px;" value="<?php echo ($specManager->getTargetPath()?$specManager->getTargetPath():$IMAGE_ROOT_PATH); ?>" />
-											<a id="targetpathinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="targetpathinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="targetpathinfodialog">
-												Web server path to where the image derivatives will be depositied.
-												The web server (e.g. apache user) must have read/write access to this directory.
-												If this field is left blank, the portal's default image target (imageRootPath) will be used.
+												<?php echo $LANG['TARGET_PATH_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="urlBaseDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>Image URL base:</label>
+										<label><?php echo $LANG['IMG_URL_BASE']; ?>:</label>
 										<div style="float:left;">
 											<input name="imgurl" type="text" style="width:600px;" value="<?php echo ($specManager->getImgUrlBase()?$specManager->getImgUrlBase():$IMAGE_ROOT_URL); ?>" />
-											<a id="imgurlinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="imgurlinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
+
 											</a>
 											<div id="imgurlinfodialog">
-												Image URL prefix that will access the target folder from the browser.
-												This will be used to create the image URLs that will be stored in the database.
-												If absolute URL is supplied without the domain name, the portal domain will be assumed.
-												If this field is left blank, the portal's default image url will be used ($imageRootUrl).
+												<?php echo $LANG['IMG_URL_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="centralWidthDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>Central pixel width:</label>
+										<label><?php echo $LANG['WEB_IMG_WIDTH']; ?>:</label>
 										<div style="float:left;">
 											<input name="webpixwidth" type="text" style="width:75px;" value="<?php echo ($specManager->getWebPixWidth()?$specManager->getWebPixWidth():$IMG_WEB_WIDTH); ?>" />
-											<a id="webpixwidthinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="webpixwidthinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
+
 											</a>
 											<div id="webpixwidthinfodialog">
-												Width of the standard web image.
-												If the source image is smaller than this width, the file will simply be copied over without resizing.
+												<?php echo $LANG['WEB_IMG_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="thumbWidthDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>Thumbnail pixel width:</label>
+										<label><?php echo $LANG['TN_IMG_WIDTH']; ?>:</label>
 										<div style="float:left;">
 											<input name="tnpixwidth" type="text" style="width:75px;" value="<?php echo ($specManager->getTnPixWidth()?$specManager->getTnPixWidth():$IMG_TN_WIDTH); ?>" />
-											<a id="tnpixwidthinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="tnpixwidthinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="tnpixwidthinfodialog">
-												Width of the image thumbnail. Width should be greater than image sizing within the thumbnail display pages.
+												<?php echo $LANG['TN_IMG_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="largeWidthDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>Large pixel width:</label>
+										<label><?php echo $LANG['LG_IMG_WIDTH']; ?>:</label>
 										<div style="float:left;">
 											<input name="lgpixwidth" type="text" style="width:75px;" value="<?php echo ($specManager->getLgPixWidth()?$specManager->getLgPixWidth():$IMG_LG_WIDTH); ?>" />
-											<a id="lgpixwidthinfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="lgpixwidthinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="lgpixwidthinfodialog">
-												Width of the large version of the image.
-												If the source image is smaller than this width, the file will simply be copied over without resizing.
-												Note that resizing large images may be limited by the PHP configuration settings (e.g. memory_limit).
-												If this is a problem, having this value greater than the maximum width of your source images will avoid
-												errors related to resampling large images.
+												<?php echo $LANG['LG_IMG_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="jpgQualityDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
-										<label>JPG quality:</label>
+										<label><?php echo $LANG['JPG_QUALITY']; ?>:</label>
 										<div style="float:left;">
 											<input name="jpgcompression" type="text" style="width:75px;" value="<?php echo $specManager->getJpgQuality(); ?>" />
-											<a id="jpgcompressioninfo" href="#" onclick="return false" title="More Information">
-												<img src="../../images/info.png" style="width:15px;" />
+											<a id="jpgcompressioninfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a>
 											<div id="jpgcompressioninfodialog">
-												JPG quality refers to amount of compression applied.
-												Value should be numeric and range from 0 (worst quality, smaller file) to
-												100 (best quality, biggest file).
-												If null, 75 is used as the default.
+												<?php echo $LANG['JPG_QUALITY_EXPLAIN']; ?>
 											</div>
 										</div>
 									</div>
 									<div id="thumbnailDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
 										<div>
-											<b>Thumbnail:</b>
+											<b><?php echo $LANG['THUMBNAIL']; ?>:</b>
 											<div style="margin:5px 15px;">
-												<input name="createtnimg" type="radio" value="1" <?php echo ($specManager->getCreateTnImg()==1?'CHECKED':''); ?> /> Create new thumbnail from source image<br/>
-												<input name="createtnimg" type="radio" value="2" <?php echo ($specManager->getCreateTnImg()==2?'CHECKED':''); ?> /> Import thumbnail from source location (source name with _tn.jpg suffix)<br/>
-												<input name="createtnimg" type="radio" value="3" <?php echo ($specManager->getCreateTnImg()==3?'CHECKED':''); ?> /> Map to thumbnail at source location (source name with _tn.jpg suffix)<br/>
-												<input name="createtnimg" type="radio" value="0" <?php echo (!$specManager->getCreateTnImg()?'CHECKED':''); ?> /> Exclude thumbnail <br/>
+												<input name="createtnimg" type="radio" value="1" <?php echo ($specManager->getCreateTnImg()==1?'CHECKED':''); ?> /> <?php echo $LANG['CREATE_NEW_TN']; ?><br/>
+												<input name="createtnimg" type="radio" value="2" <?php echo ($specManager->getCreateTnImg()==2?'CHECKED':''); ?> /> <?php echo $LANG['IMPORT_TN_SOURCE']; ?><br/>
+												<input name="createtnimg" type="radio" value="3" <?php echo ($specManager->getCreateTnImg()==3?'CHECKED':''); ?> /> <?php echo $LANG['MAP_TN_AT_SOURCE']; ?><br/>
+												<input name="createtnimg" type="radio" value="0" <?php echo (!$specManager->getCreateTnImg()?'CHECKED':''); ?> /> <?php echo $LANG['EXCLUDE_TN']; ?><br/>
 											</div>
 										</div>
 									</div>
 									<div id="largeImageDiv" class="profileDiv" style="display:<?php echo ($projectType=='local'?'block':'none'); ?>">
 										<div>
-											<b>Large Image:</b>
+											<b><?php echo $LANG['LG_IMG']; ?>:</b>
 											<div style="margin:5px 15px;">
-												<input name="createlgimg" type="radio" value="1" <?php echo ($specManager->getCreateLgImg()==1?'CHECKED':''); ?> /> Import source image as large version<br/>
-												<input name="createlgimg" type="radio" value="2" <?php echo ($specManager->getCreateLgImg()==2?'CHECKED':''); ?> /> Map to source image as large version<br/>
-												<input name="createlgimg" type="radio" value="3" <?php echo ($specManager->getCreateLgImg()==3?'CHECKED':''); ?> /> Import large version from source location (source name with _lg.jpg suffix)<br/>
-												<input name="createlgimg" type="radio" value="4" <?php echo ($specManager->getCreateLgImg()==4?'CHECKED':''); ?> /> Map to large version at source location (source name with _lg.jpg suffix)<br/>
-												<input name="createlgimg" type="radio" value="0" <?php echo (!$specManager->getCreateLgImg()?'CHECKED':''); ?> /> Exclude large version<br/>
+												<input name="createlgimg" type="radio" value="1" <?php echo ($specManager->getCreateLgImg()==1?'CHECKED':''); ?> /> <?php echo $LANG['IMPORT_LG_SOURCE']; ?><br/>
+												<input name="createlgimg" type="radio" value="2" <?php echo ($specManager->getCreateLgImg()==2?'CHECKED':''); ?> /> <?php echo $LANG['MAP_TO_LG_SOURCE']; ?><br/>
+												<input name="createlgimg" type="radio" value="3" <?php echo ($specManager->getCreateLgImg()==3?'CHECKED':''); ?> /> <?php echo $LANG['IMPORT_LG_FROM_SOURCE']; ?><br/>
+												<input name="createlgimg" type="radio" value="4" <?php echo ($specManager->getCreateLgImg()==4?'CHECKED':''); ?> /> <?php echo $LANG['MAP_LG_AT_SOURCE']; ?><br/>
+												<input name="createlgimg" type="radio" value="0" <?php echo (!$specManager->getCreateLgImg()?'CHECKED':''); ?> /> <?php echo $LANG['EXCLUDE_LG']; ?><br/>
 											</div>
 										</div>
 									</div>
 									<div id="chooseFileDiv" class="profileDiv" style="clear:both;padding:15px 0px;display:none">
 										<div style="margin:5px 15px;">
-											<b>Select URL mapping file:</b>
+											<b><?php echo $LANG['SEL_URL_MAP_FILE']; ?>:</b>
 											<input type='hidden' name='MAX_FILE_SIZE' value='20000000' />
-											<input name='uploadfile' type='file' size='70' value="Choose File" />
+											<button name='uploadfile' type='file' size='70' value="Choose File"><?php echo $LANG['CHOOSE_FILE']; ?></button>
 										</div>
 									</div>
 									<div id="submitDiv" class="profileDiv" style="clear:both;padding:15px;display:<?php echo ($projectType?'block':'none'); ?>">
 										<input name="spprid" type="hidden" value="<?php echo $spprid; ?>" />
 										<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 										<input name="tabindex" type="hidden" value="0" />
-										<input id="profileEditSubmit" name="submitaction" type="submit" value="Save Profile" />
+										<button id="profileEditSubmit" name="submitaction" type="submit" value="Save Profile" ><?php echo $LANG['SAVE_PROFILE']; ?></button>
 									</div>
 								</fieldset>
 							</form>
 							<?php
 							if($spprid){
 								?>
-								<form id="delform" action="index.php" method="post" onsubmit="return confirm('Are you sure you want to delete this image processing profile?')" >
+								<form id="delform" action="index.php" method="post" onsubmit="return confirm('<?php echo $LANG['SURE_DELETE_PROF']; ?>')" >
 									<fieldset style="padding:25px">
-										<legend><b>Delete Project</b></legend>
+										<legend><b><?php echo $LANG['DELETE_PROJ']; ?></b></legend>
 										<div>
 											<input name="sppriddel" type="hidden" value="<?php echo $spprid; ?>" />
 											<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 											<input name="tabindex" type="hidden" value="0" />
-											<input name="submitaction" type="submit" value="Delete Profile" />
+											<button class="button-danger" name="submitaction" type="submit" value="Delete Profile" ><?php echo $LANG['DELETE_PROF']; ?></button>
 										</div>
 									</fieldset>
 								</form>
@@ -549,33 +533,33 @@ if($spprid) $specManager->setProjVariables($spprid);
 								<form name="imgprocessform" action="processor.php" method="post" enctype="multipart/form-data" onsubmit="return validateProcForm(this);">
 									<fieldset style="padding:15px;">
 										<legend><b><?php echo $specManager->getTitle(); ?></b></legend>
-										<div style="float:right" title="Show all saved profiles or add a new one...">
-											<a href="index.php?tabindex=0&collid=<?php echo $collid; ?>"><img src="../../images/add.png" style="border:0px" /></a>
+										<div style="float:right" title="<?php echo $LANG['SHOW_ALL_OR_ADD']; ?>">
+											<a href="index.php?tabindex=0&collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><img src="../../images/add.png" style="width:1.5em;border:0px" /></a>
 										</div>
-										<div style="float:right" title="Open Editor">
-											<a href="#" onclick="toggle('editdiv');toggle('imgprocessdiv');return false;"><img src="../../images/edit.png" style="border:0px;width:15px;" /></a>
+										<div style="float:right" title="<?php echo $LANG['OPEN_EDITOR']; ?>">
+											<a href="#" onclick="toggle('editdiv');toggle('imgprocessdiv');return false;"><img src="../../images/edit.png" style="border:0px;width:1.5em;" /></a>
 										</div>
 										<?php
 										if($projectType == 'iplant'){
-											$lastRunDate = ($specManager->getLastRunDate()?$specManager->getLastRunDate():'no run date');
+											$lastRunDate = ($specManager->getLastRunDate()?$specManager->getLastRunDate() : $LANG['NO_RUN_DATE']);
 											?>
 											<div style="margin-top:10px">
-												<label>Last Run Date:</label>
+												<label><?php echo $LANG['LAST_RUN_DATE']; ?>:</label>
 												<div style="float:left;">
 													<?php echo $lastRunDate; ?>
 												</div>
 											</div>
 											<div style="margin-top:10px;clear:both;">
-												<label>Processing start date:</label>
+												<label><?php echo $LANG['PROC_START_DATE']; ?>:</label>
 												<div style="float:left;">
-													<input name="startdate" type="text" value="<?php echo ($lastRunDate=='no run date'?'':$lastRunDate); ?>" />
+													<input name="startdate" type="text" value="<?php echo ($lastRunDate == $LANG['NO_RUN_DATE'] ? '' : $lastRunDate); ?>" />
 												</div>
 											</div>
 											<?php
 										}
 										?>
 										<div style="margin-top:10px;clear:left;">
-											<label>Pattern match term:</label>
+											<label><?php echo $LANG['PATT_MATCH_TERM']; ?>:</label>
 											<div style="float:left;">
 												<?php echo $specManager->getSpecKeyPattern(); ?>
 												<input type='hidden' name='speckeypattern' value='<?php echo $specManager->getSpecKeyPattern();?>' />
@@ -584,19 +568,19 @@ if($spprid) $specManager->setProjVariables($spprid);
 										<div style="clear:both;">
 											<label>Match term on:</label>
 											<div style="float:left;">
-												<input name="matchcatalognumber" type="checkbox" value="1" checked /> Catalog Number
-												<input name="matchothercatalognumbers" type="checkbox" value="1" style="margin-left:30px;" /> Other Catalog Numbers
+												<input name="matchcatalognumber" type="checkbox" value="1" checked /> <?php echo $LANG['CAT_NUM']; ?>
+												<input name="matchothercatalognumbers" type="checkbox" value="1" style="margin-left:30px;" /> <?php echo $LANG['OTHER_CAT_NUMS']; ?>
 											</div>
 										</div>
 										<div style="margin-top:10px;clear:both;">
-											<label>Replacement term:</label>
+											<label><?php echo $LANG['REPLACEMENT_TERM']; ?>:</label>
 											<div style="float:left;">
 												<?php echo $specManager->getPatternReplace(); ?>
 												<input type='hidden' name='patternreplace' value='<?php echo $specManager->getPatternReplace();?>' />
 											</div>
 										</div>
 										<div style="margin-top:10px;clear:both;">
-											<label>Replacement string:</label>
+											<label><?php echo $LANG['REPLACEMENT_STR']; ?>:</label>
 											<div style="float:left;">
 												<?php
 												echo str_replace(' ', '&lt;space&gt;', $specManager->getReplaceStr());
@@ -608,7 +592,7 @@ if($spprid) $specManager->setProjVariables($spprid);
 										if($projectType != 'idigbio'){
 											?>
 											<div style="clear:both;">
-												<label>Source path:</label>
+												<label><?php echo $LANG['SOURCE_PATH']; ?>:</label>
 												<div style="float:left;">
 													<?php
 													echo '<input name="sourcepath" type="hidden" value="'.$specManager->getSourcePathDefault().'" />';
@@ -621,106 +605,106 @@ if($spprid) $specManager->setProjVariables($spprid);
 										if($projectType != 'idigbio' && $projectType != 'iplant'){
 											?>
 											<div style="clear:both;">
-												<label>Target folder:</label>
+												<label><?php echo $LANG['TARGET_FOLDER']; ?>:</label>
 												<div style="float:left;">
 													<?php echo ($specManager->getTargetPath()?$specManager->getTargetPath():$IMAGE_ROOT_PATH); ?>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<label>URL prefix:</label>
+												<label><?php echo $LANG['URL_PREFIX']; ?>:</label>
 												<div style="float:left;">
 													<?php echo ($specManager->getImgUrlBase()?$specManager->getImgUrlBase():$IMAGE_ROOT_URL); ?>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<label>Web image width:</label>
+												<label><?php echo $LANG['WEB_IMG_WIDTH']; ?>:</label>
 												<div style="float:left;">
 													<?php echo ($specManager->getWebPixWidth()?$specManager->getWebPixWidth():$IMG_WEB_WIDTH); ?>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<label>Thumbnail width:</label>
+												<label><?php echo $LANG['TN_IMG_WIDTH']; ?>:</label>
 												<div style="float:left;">
 													<?php echo ($specManager->getTnPixWidth()?$specManager->getTnPixWidth():$IMG_TN_WIDTH); ?>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<label>Large image width:</label>
+												<label><?php echo $LANG['LG_IMG_WIDTH']; ?>:</label>
 												<div style="float:left;">
 													<?php echo ($specManager->getLgPixWidth()?$specManager->getLgPixWidth():$IMG_LG_WIDTH); ?>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<label>JPG quality (1-100): </label>
+												<label><?php echo $LANG['JPG_QUALITY']; ?>: </label>
 												<div style="float:left;">
 													<?php echo ($specManager->getJpgQuality()?$specManager->getJpgQuality():80); ?>
 												</div>
 											</div>
 											<div style="clear:both;padding-top:10px;">
 												<div>
-													<b>Web Image:</b>
+													<b><?php echo $LANG['WEB_IMG']; ?>:</b>
 													<div style="margin:5px 15px">
-														<input name="webimg" type="radio" value="1" CHECKED /> Evaluate and import source image<br/>
-														<input name="webimg" type="radio" value="2" /> Import source image as is without resizing<br/>
-														<input name="webimg" type="radio" value="3" /> Map to source image without importing<br/>
+														<input name="webimg" type="radio" value="1" CHECKED /> <?php echo $LANG['EVALUATE_IMPORT_SOURCE']; ?><br/>
+														<input name="webimg" type="radio" value="2" /> <?php echo $LANG['IMPORT_WITHOUT_RESIZE']; ?><br/>
+														<input name="webimg" type="radio" value="3" /> <?php echo $LANG['MAP_SOURCE_NO_IMPORT']; ?><br/>
 													</div>
 												</div>
 											</div>
 											<div style="clear:both;">
 												<div>
-													<b>Thumbnail:</b>
+													<b><?php echo $LANG['THUMBNAIL']; ?>:</b>
 													<div style="margin:5px 15px">
-														<input name="createtnimg" type="radio" value="1" <?php echo ($specManager->getCreateTnImg() == 1?'CHECKED':'') ?> /> Create new from source image<br/>
-														<input name="createtnimg" type="radio" value="2" <?php echo ($specManager->getCreateTnImg() == 2?'CHECKED':'') ?> /> Import existing source thumbnail (source name with _tn.jpg suffix)<br/>
-														<input name="createtnimg" type="radio" value="3" <?php echo ($specManager->getCreateTnImg() == 3?'CHECKED':'') ?> /> Map to existing source thumbnail (source name with _tn.jpg suffix)<br/>
-														<input name="createtnimg" type="radio" value="0" <?php echo (!$specManager->getCreateTnImg()?'CHECKED':'') ?> /> Exclude thumbnail <br/>
+														<input name="createtnimg" type="radio" value="1" <?php echo ($specManager->getCreateTnImg() == 1?'CHECKED':'') ?> /> <?php echo $LANG['CREATE_NEW_TN']; ?><br/>
+														<input name="createtnimg" type="radio" value="2" <?php echo ($specManager->getCreateTnImg() == 2?'CHECKED':'') ?> /> <?php echo $LANG['IMPORT_TN_SOURCE']; ?><br/>
+														<input name="createtnimg" type="radio" value="3" <?php echo ($specManager->getCreateTnImg() == 3?'CHECKED':'') ?> /> <?php echo $LANG['MAP_TN_AT_SOURCE'] ; ?><br/>
+														<input name="createtnimg" type="radio" value="0" <?php echo (!$specManager->getCreateTnImg()?'CHECKED':'') ?> /> <?php echo $LANG['EXCLUDE_TN']; ?><br/>
 													</div>
 												</div>
 											</div>
 											<div style="clear:both;">
 												<div>
-													<b>Large Image:</b>
+													<b><?php echo $LANG['LG_IMG']; ?>:</b>
 													<div style="margin:5px 15px">
-														<input name="createlgimg" type="radio" value="1" <?php echo ($specManager->getCreateLgImg() == 1?'CHECKED':'') ?> /> Import source image as large version<br/>
-														<input name="createlgimg" type="radio" value="2" <?php echo ($specManager->getCreateLgImg() == 2?'CHECKED':'') ?> /> Map to source image as large version<br/>
-														<input name="createlgimg" type="radio" value="3" <?php echo ($specManager->getCreateLgImg() == 3?'CHECKED':'') ?> /> Import existing large version (source name with _lg.jpg suffix)<br/>
-														<input name="createlgimg" type="radio" value="4" <?php echo ($specManager->getCreateLgImg() == 4?'CHECKED':'') ?> /> Map to existing large version (source name with _lg.jpg suffix)<br/>
-														<input name="createlgimg" type="radio" value="0" <?php echo (!$specManager->getCreateLgImg()?'CHECKED':'') ?> /> Exclude large version<br/>
+														<input name="createlgimg" type="radio" value="1" <?php echo ($specManager->getCreateLgImg() == 1?'CHECKED':'') ?> /> <?php echo $LANG['IMPORT_LG_SOURCE']; ?><br/>
+														<input name="createlgimg" type="radio" value="2" <?php echo ($specManager->getCreateLgImg() == 2?'CHECKED':'') ?> /> <?php echo $LANG['MAP_TO_LG_SOURCE']; ?><br/>
+														<input name="createlgimg" type="radio" value="3" <?php echo ($specManager->getCreateLgImg() == 3?'CHECKED':'') ?> /> <?php echo $LANG['IMPORT_LG_FROM_SOURCE']; ?><br/>
+														<input name="createlgimg" type="radio" value="4" <?php echo ($specManager->getCreateLgImg() == 4?'CHECKED':'') ?> /> <?php echo $LANG['MAP_LG_AT_SOURCE']; ?><br/>
+														<input name="createlgimg" type="radio" value="0" <?php echo (!$specManager->getCreateLgImg()?'CHECKED':'') ?> /> <?php echo $LANG['EXCLUDE_LG']; ?><br/>
 													</div>
 												</div>
 											</div>
 											<div style="clear:both;">
-												<div title="Unable to match primary identifer with an existing database record">
-													<b>Missing record:</b>
+												<div title="<?php echo $LANG['UNABLE_MATCH_ID']; ?>">
+													<b><?php echo $LANG['MISSING_RECORD']; ?>:</b>
 													<div style="margin:5px 15px">
 														<input type="radio" name="createnewrec" value="0" />
-														Skip image import and go to next<br/>
+														<?php echo $LANG['SKIP_AND_NEXT']; ?><br/>
 														<input type="radio" name="createnewrec" value="1" CHECKED />
-														Create empty record and link image
+														<?php echo $LANG['CREATE_AND_LINK']; ?>
 													</div>
 												</div>
 											</div>
 											<div style="clear:both;">
 												<div title="Image with exact same name already exists">
-													<b>Image already exists:</b>
+													<b><?php echo $LANG['IMG_EXISTS']; ?>:</b>
 													<div style="margin:5px 15px">
 														<input type="radio" name="imgexists" value="0" CHECKED />
-														Skip import<br/>
+														<?php echo $LANG['SKIP_IMPORT']; ?><br/>
 														<input type="radio" name="imgexists" value="1" />
-														Rename image and save both<br/>
+														<?php echo $LANG['RENAME_SAVE_BOTH']; ?><br/>
 														<input type="radio" name="imgexists" value="2" />
-														Replace existing image
+														<?php echo $LANG['REPLACE_EXISTING']; ?>
 													</div>
 												</div>
 											</div>
 											<div style="clear:both;">
 												<div>
-													<b>Look for and process skeletal files (allowed extensions: csv, txt, tab, dat):</b>
+													<b><?php echo $LANG['LOOK_FOR_SKELETAL']; ?>:</b>
 													<div style="margin:5px 15px">
 														<input type="radio" name="skeletalFileProcessing" value="0" CHECKED />
-														Skip skeletal files<br/>
+														<?php echo $LANG['SKIP_SKELETAL']; ?><br/>
 														<input type="radio" name="skeletalFileProcessing" value="1" />
-														Process skeletal files<br/>
+														<?php echo $LANG['PROCESS_SKELETAL']; ?><br/>
 													</div>
 												</div>
 											</div>
@@ -742,30 +726,30 @@ if($spprid) $specManager->setProjVariables($spprid);
 					}
 				}
 				else{
-					echo '<div>ERROR: collection identifier not defined. Contact administrator</div>';
+					echo '<div>' . $LANG['COLLID_NOT_DEFINED'] . '</div>';
 				}
 				?>
-				<div style="margin:20px;">
+				<div id="tmp" class="top-breathing-room-rel">
 					<fieldset style="padding:15px;">
-						<legend><b>Log Files</b></legend>
+						<legend><b><?= $LANG['LOG_FILES']; ?></b></legend>
 						<?php
 						$logArr = $specManager->getLogListing();
 						if($logArr){
 							$logPath = '../../content/logs/';
 							foreach($logArr as $logCat => $logList){
 								echo '<div style="font-weight:bold;margin: 10px 0px 5px 0px">';
-								if($logCat=='imgProccessing') echo 'General Processing';
-								elseif($logCat=='iplant') echo 'iPlant (pre-CyVerse)';
-								elseif($logCat=='cyverse') echo 'CyVerse';
-								elseif($logCat=='processing/imgmap') echo 'Image Mapping File';
+								if($logCat=='imgProccessing') echo $LANG['GEN_PROCESSING'];
+								elseif($logCat=='iplant') echo $LANG['IPLANT'];
+								elseif($logCat=='cyverse') echo $LANG['CYVERSE'];
+								elseif($logCat=='processing/imgmap') echo $LANG['IMG_MAP_FILE'];
 								echo '</div><div style="margin:5px 0px 15px 10px">';
 								foreach($logList as $logFile){
-									echo '<div><a href="'.$logPath.$logCat.'/'.$logFile.'" target="_blank">'.$logFile.'</a></div>';
+									echo '<div><a href="' . $logPath . $logCat . '/' . $logFile . '" target="_blank">' . $logFile . '</a></div>';
 								}
 								echo '</div>';
 							}
 						}
-						else echo '<div>No logs exist for this collection</div>';
+						else echo '<div>' . $LANG['NO_LOGS'] . '</div>';
 						?>
 					</fieldset>
 				</div>

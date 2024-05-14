@@ -1,0 +1,4 @@
+ /* This increases the font size of the layer toggle */
+.leaflet-control-layers-expanded .leaflet-control-layers-list {
+      font-size: 1.5rem;
+}

@@ -226,3 +226,36 @@ function trimPolygon(footprintWkt){
 	}
 	return footprintWkt;
 }
+
+function parseWkt(origin_wkt) {
+   if(!origin_wkt) return;
+
+   let wkt = validatePolygon(origin_wkt);
+
+   //if(wkt != origin_wkt) 
+
+   wkt = trimPolygon(wkt);
+
+   let pointArr = [];
+   let strArr = wkt.split(',');
+
+	function isNumeric(n) {
+		return !isNaN(parseFloat(n)) && isFinite(n);
+	}
+
+   for(let i = 0; i < strArr.length; i++) {
+      let xy = strArr[i].trim().split(" ");
+      let lat = xy[0];
+      let lng = xy[1];
+
+      if(!isNumeric(lat) || !isNumeric(lng)) {
+         throw Error("One or more coordinates are illegal (lat: "+lat+"   long: "+lng+")");
+      }
+      else if (parseInt(Math.abs(lat)) > 90 || parseInt(Math.abs(lng)) > 180) {
+         throw Error("One or more coordinates are out-of-range or ordered incorrectly (lat: "+lat+"   long: "+lng+")");
+      }
+      pointArr.push([parseFloat(lat), parseFloat(lng)]);
+   }
+
+   return pointArr;
+}

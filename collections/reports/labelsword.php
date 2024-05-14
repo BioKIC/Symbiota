@@ -16,9 +16,9 @@ elseif(class_exists('Image_Barcode')) $bcObj = new Image_Barcode;
 
 $labelManager = new OccurrenceLabel();
 
-$collid = $_POST["collid"];
+$collid = filter_var($_POST['collid'], FILTER_SANITIZE_NUMBER_INT);
 $hPrefix = $_POST['hprefix'];
-$hMid = $_POST['hmid'];
+$hMid = filter_var($_POST['hmid'], FILTER_SANITIZE_NUMBER_INT);
 $hSuffix = $_POST['hsuffix'];
 $lFooter = $_POST['lfooter'];
 $columnCount = $_POST['labeltype'];
@@ -30,10 +30,6 @@ $barcodeOnly = array_key_exists('bconly',$_POST)?$_POST['bconly']:0;
 $action = array_key_exists('submitaction',$_POST)?$_POST['submitaction']:'';
 
 //Sanitation
-$hPrefix = filter_var($hPrefix, FILTER_SANITIZE_STRING);
-$hMid = filter_var($hMid, FILTER_SANITIZE_STRING);
-$hSuffix = filter_var($hSuffix, FILTER_SANITIZE_STRING);
-$lFooter = filter_var($lFooter, FILTER_SANITIZE_STRING);
 if(!is_numeric($columnCount) && $columnCount != 'packet') $columnCount = 2;
 if(!is_numeric($includeSpeciesAuthor)) $includeSpeciesAuthor = 0;
 if(!is_numeric($showcatalognumbers)) $showcatalognumbers = 0;
@@ -138,7 +134,7 @@ if($isEditor && $action){
 			if($hPrefix || $midStr || $hSuffix){
 				$headerStrArr = array();
 				$headerStrArr[] = trim($hPrefix);
-				$headerStrArr[] = trim($midStr);
+				$headerStrArr[] = trim($midStr ?? '');
 				$headerStrArr[] = trim($hSuffix);
 				$headerStr = implode(" ",$headerStrArr);
 			}
@@ -229,17 +225,17 @@ if($isEditor && $action){
 				if($occArr['identifiedby']){
 					$textrun = $section->addTextRun('identified');
 					$textrun->addText('Det by: '.htmlspecialchars($occArr['identifiedby']).' ','identifiedFont');
-					$textrun->addText(htmlspecialchars($occArr['dateidentified']),'identifiedFont');
+					$textrun->addText(htmlspecialchars($occArr['dateidentified'] ?? ''),'identifiedFont');
 					if($occArr['identificationreferences'] || $occArr['identificationremarks'] || $occArr['taxonremarks']){
-						$section->addText(htmlspecialchars($occArr['identificationreferences']),'identifiedFont','identified');
-						$section->addText(htmlspecialchars($occArr['identificationremarks']),'identifiedFont','identified');
-						$section->addText(htmlspecialchars($occArr['taxonremarks']),'identifiedFont','identified');
+						$section->addText(htmlspecialchars($occArr['identificationreferences'] ?? ''),'identifiedFont','identified');
+						$section->addText(htmlspecialchars($occArr['identificationremarks'] ?? ''),'identifiedFont','identified');
+						$section->addText(htmlspecialchars($occArr['taxonremarks'] ?? ''),'identifiedFont','identified');
 					}
 				}
 				$textrun = $section->addTextRun('loc1');
 				$textrun->addText(htmlspecialchars($occArr['country'].($occArr['country']?', ':'')),'countrystateFont');
 				$textrun->addText(htmlspecialchars($occArr['stateprovince'].($occArr['stateprovince']?', ':'')),'countrystateFont');
-				$countyStr = trim($occArr['county']);
+				$countyStr = trim($occArr['county'] ?? '');
 				if($countyStr){
 					if(!stripos($occArr['county'],' County') && !stripos($occArr['county'],' Parish')) $countyStr .= ' County';
 					$countyStr .= ', ';
@@ -350,7 +346,9 @@ if($isEditor && $action){
 
 $targetFile = $SERVER_ROOT.'/temp/report/'.$PARAMS_ARR['un'].'_'.date('Ymd').'_labels_'.$ses_id.'.docx';
 $phpWord->save($targetFile, 'Word2007');
-
+ob_start();
+ob_clean();
+ob_end_flush();
 header('Content-Description: File Transfer');
 header('Content-type: application/force-download');
 header('Content-Disposition: attachment; filename='.basename($targetFile));

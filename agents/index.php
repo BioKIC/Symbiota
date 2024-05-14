@@ -48,7 +48,8 @@ function searchform($name="") {
    global $CLIENT_ROOT;
    $result  = "<div id='formDiv'>";
    $result .= "<form method='GET' id='queryForm' style='display:inline;' >\n";
-   $result .= "<input type='text' name='name' value='$name'>";
+   $result .= "<label for='name'>Name</label>";
+   $result .= "<input type='text' id='name' name='name' value='$name'>";
    $result .= "<input type='submit'>";
    $result .= "</form>\n";
    $result .= "<span id='plinkSpan'></span></div>\n";
@@ -64,7 +65,7 @@ function searchform($name="") {
          success: function( data ) {
             $("#responseDiv").html(data);
             $("#loadedWithPage").html("");
-            var permalink = "&nbsp;<a href=\''.$CLIENT_ROOT.'/agents/index.php?" + frm.serialize() +"\'>Permalink</a>";
+            var permalink = "&nbsp;<a href=\'' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/agents/index.php?" + frm.serialize() +"\'>Permalink</a>";
             $("#plinkSpan").html(permalink);
          },
          error: function( xhr, status, errorThrown ) {
@@ -90,15 +91,15 @@ function searchform($name="") {
 function pageheader($name) {
    global $SERVER_ROOT, $DEFAULT_TITLE, $spDisplay, $CLIENT_ROOT, $agents_indexMenu, $agents_indexCrumbs;
 echo '<!DOCTYPE HTML>
-<html>
+<html lang="en">
 <head>
 	<title>'.$DEFAULT_TITLE.' - '.$spDisplay. '</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>"/>
 	<meta name="keywords" content='. $spDisplay .' />
 	<link href="../css/base.css" type="text/css" rel="stylesheet" />
 	<link href="../css/main.css" type="text/css" rel="stylesheet" />
-	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/jquery-ui.js"></script>';
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>';
     // include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 echo '<script type="text/javascript">
 		var currentLevel = ' . ($descrDisplayLevel?$descrDisplayLevel:"1"). ';

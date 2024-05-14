@@ -1,7 +1,9 @@
 <?php
 /*
 ------------------
-Language: Spanish
+Language: Español
+Translated by: Samanta Orellana
+Date Translated: 2022-01-09
 ------------------
 */
 
@@ -78,4 +80,29 @@ $LANG['BATCH_GEO_TOOL'] = 'Herramienta de Georreferenciación por Lote';
 $LANG['COL_SELECTOR'] = 'Seleccionador de Colecciones';
 $LANG['ERROR_COL_ID_NULL'] = 'ERROR: Identificador de la colección está vacío';
 
+$LANG['TABLE_CONTENT'] = 'Formulario de actualización de datos geográficos: este formulario facilita la modificación de coordenadas, incluyendo latitud, longitud y parámetros adicionales.';
+$LANG['MULT_COLL_DIV'] = 'División de colección múltiple';
+$LANG['LOCALLIST'] = 'Lista local';
+$LANG['LATITUDE_DEGREE'] = 'Grados de latitud';
+$LANG['LATITUDE_MINUTES'] = 'Minutos de latitud';
+$LANG['LATITUDE_SECONDS'] = 'Segundos de latitud';
+$LANG['LATITUDE_NORTH_SOUTH'] = 'Latitud Norte/Sur';
+$LANG['DECIMAL_LATITUDE'] = 'Latitud decimal';
+$LANG['LONGITUDE_DEGREE'] ='Grados de longitud';
+$LANG['LONGITUDE_MINUTES'] = 'Minutos de longitud';
+$LANG['LONGITUDE_SECONDS'] = 'Segundos de longitud';
+$LANG['LONGITUDE_EAST_WEST'] = 'Longitud Este/Oeste';
+$LANG['DECIMAL_LONGITUDE'] = 'Longitud decimal';
+$LANG['MINIMUM_ELEVATION_IN_METERS'] = 'Elevación mínima en metros';
+$LANG['MAXIMUM_ELEVATION_IN_METERS'] = 'Elevación máxima en metros';
+$LANG['MINIMUM_ELEVATION'] = 'Elevación mínima';
+$LANG['MAXIMUM_ELEVATION'] = 'Elevación máxima';
+$LANG['ADD_ICON'] = 'Agregar';
+$LANG['WORLD_ICON'] = 'Icono mundial';
+$LANG['EDIT_PLUS_ICON'] = 'Editar icono más';
+$LANG['FIND_CLONES'] ='Buscar duplicados previamente geolocalizados';
+$LANG['LOCATE_GEO_AREA'] = 'Ubicar el área geográfica';
+$LANG['EXAMINE_FOR_COORDS'] = 'Examinar la localidad para Lat/Long o UTM.';
+$LANG['INITIAL_RECORDS_EDIT'] = 'Revisar el lote inicial de registros';
+$LANG['SKIP_NAV'] = 'Saltar sección de navegación';
 ?>

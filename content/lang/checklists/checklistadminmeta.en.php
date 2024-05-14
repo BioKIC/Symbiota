@@ -27,5 +27,6 @@ $LANG['CLICK_TO_CREATE'] = 'Click here to create a new checklist';
 $LANG['PROJ_ADMIN'] = 'Inventory Project Administration';
 $LANG['EDIT_PROJECT'] = 'Edit Project';
 $LANG['NO_PROJECTS'] = 'There are no Projects for which you have administrative permissions';
+$LANG['INATURALIST'] = 'iNaturalist';
 
 ?>

@@ -5,6 +5,9 @@ header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: '.$CLIENT_ROOT.'/profile/index.php?refurl=../collections/traitattr/attributemining.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
+if ($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/traitattr/attributemining.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/traitattr/attributemining.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/traitattr/attributemining.en.php');
+
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:'';
 $selectAll = array_key_exists('selectall',$_POST)?$_POST['selectall']:'';
 $taxonFilter = array_key_exists('taxonfilter',$_POST)?$_POST['taxonfilter']:'';
@@ -81,24 +84,25 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 	'behavior' => 'Behavior', 'reproductivecondition' => 'Reproductive Condition', 'lifestage' => 'Life Stage',
 	'sex' => 'Sex');
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
-		<title>Occurrence Attribute Mining Tool</title>
+		<title><?php echo $LANG['OCC_ATTRI_MINING_TOOL'] ?></title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 
 			function verifyFilterForm(f){
 				if(f.traitid.value == ""){
-					alert("You must select a trait");
+					alert("<?php echo $LANG['MUST_SELECT_TRAIT'] ?>");
 					return false;
 				}
 				if(f.fieldname.value == ""){
-					alert("A source field must be selected");
+					alert("<?php echo $LANG['MUST_SELECT_SOURCE_FIELD'] ?>");
 					return false;
 				}
 				return true;
@@ -106,7 +110,7 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 
 			function verifyMiningForm(f){
 				if(f.elements["fieldvalue[]"].selectedIndex == -1){
-					alert("You muct select at least one field value");
+					alert("<?php echo $LANG['MUST_SELECT_FIELD_VALUE'] ?>");
 					return false;
 				}
 
@@ -118,7 +122,7 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 					}
 				});
 				if(!formVerified){
-					alert("Please choose at least one state to assign");
+					alert("<?php echo $LANG['CHOOSE_ONE_STATE'] ?>");
 					return false;
 				}
 				return true;
@@ -140,7 +144,7 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 					var dbElement = dbElements[i];
 					if(dbElement.checked == true) return true;
 				}
-				alert('Select at last on collect to harvest from');
+				alert('<?php echo $LANG['SELECT_COLLECT_TO_HARVEST'] ?>');
 				return false;
 			}
 
@@ -167,12 +171,12 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="../../index.php">Home</a> &gt;&gt;
+			<a href="../../index.php"><?php echo $LANG['HOME'] ?></a> &gt;&gt;
 			<?php
-			if(is_numeric($collid)) echo '<a href="../misc/collprofiles.php?collid='.$collid.'&emode=1">Collection Management</a> &gt;&gt;';
-			else if($IS_ADMIN || count($collRights) > 1) echo '<a href="attributemining.php">Adjust Collection Selection</a> &gt;&gt;';
+			if(is_numeric($collid)) echo '<a href="../misc/collprofiles.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&emode=1">' . $LANG['COLLECTION_MANAGEMENT'] . '</a> &gt;&gt;';
+			else if($IS_ADMIN || count($collRights) > 1) echo '<a href="attributemining.php">' . $LANG['ADJUST_COLLECTION_SELECTION'] . '</a> &gt;&gt;';
 			?>
-			<b>Attribute Mining Tool</b>
+			<b><?php echo $LANG['ATTRI_MINING_TOOL'] ?></b>
 		</div>
 		<?php
 		if($statusStr){
@@ -182,11 +186,12 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 		}
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading"><?= $LANG['OCC_ATTRI_MINING_TOOL']; ?></h1>
 			<?php
 			if($collid){
 				if($collid == 'all'){
-					echo '<h2 class="heading">Searching All Collections</h2>';
+					echo '<h2 class="heading">' . $LANG['SEARCH_ALL_COLLECTION'] . '</h2>';
 				}
 				elseif(is_numeric($collid)){
 					echo '<h2 class="heading">'.$collArr[$collid].'</h2>';
@@ -194,31 +199,28 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 				else{
 					$collIdArr = explode(',',$collid);
 					echo '<fieldset>';
-					echo '<legend style="font-weight:bold;font-size:130%"><a href="#" style="" onclick="toggleCollections()">Searching '.count($collIdArr).' Collections</a></legend>';
+					echo '<legend style="font-weight:bold;font-size:130%"><a href="#" style="" onclick="toggleCollections()">' . $LANG['SEARCHING'] . ' '.count($collIdArr).' ' . $LANG['COLLECTION'] . '</a></legend>';
 					echo '<div id="collDiv" style="display:none;padding:10px;">';
 					foreach($collIdArr as $id){
 						echo '<div>'.$collArr[$id].'</div>';
 					}
 					echo '</div>';
-					echo '<div id="displayDiv" style="margin:0px 20px"><a href="#" onclick="toggleCollections()">click to display collection list</a></div>';
+					echo '<div id="displayDiv" style="margin:0px 20px"><a href="#" onclick="toggleCollections()">' . $LANG['CLICK_DISPLAY_COLLEC_LIST'] . '</a></div>';
 					echo '</fieldset>';
 				}
 				?>
 				<div style="width:700px;">
 					<div>
-						This module maps Occurrence Traits to specimens based on verbatium text field content.<span id="moreSpan">.. <a href="#" onclick="displayDetailDiv(this)">more</a></span>
-						<div id="detailDiv" style="display:none">For instance, phenology traits can be coded in bulk by mapping various
-						text strings displayed within Reproductive Condition text field to a controled phenology defined within the occurrence trait fields.
-						Coded trait attributes can be downloaded and shared via the Darwin Core (DwC) Archive export and publishing tools.
-						Traits are included within a <a href="https://tools.gbif.org/dwca-validator/extension.do?id=http://rs.iobis.org/obis/terms/ExtendedMeasurementOrFact" target="_blank">Measurement Or Fact</a> DwC Extension file.</div>
+						<?php echo $LANG['OCC_TRAITS_MAPPING'] ?><span id="moreSpan">.. <a href="#" onclick="displayDetailDiv(this)"><?php echo $LANG['MORE'] ?></a></span>
+						<div id="detailDiv" style="display:none"><?php echo $LANG['PHENOLOGY_TRAIT_MAPPING'] ?><a href="https://tools.gbif.org/dwca-validator/extension.do?id=http://rs.iobis.org/obis/terms/ExtendedMeasurementOrFact" target="_blank"><?php echo $LANG['MEASUREMENT_OR_FACT'] ?></a> <?php echo $LANG['DWC_EXTENSION_FILE'] ?></div>
 					</div>
 					<fieldset style="margin:15px;padding:15px;">
-						<legend><b>Harvesting Filter</b></legend>
+						<legend><b><?php echo $LANG['HARVESTING_FILTER'] ?></b></legend>
 						<form name="filterform" method="post" action="attributemining.php" onsubmit="return verifyFilterForm(this)" >
 							<div>
-								Occurrence trait:
+							<?php echo $LANG['OCC_TRAIT'] ?>
 								<select name="traitid">
-									<option value="">Select Target Trait (required)</option>
+									<option value=""><?php echo $LANG['SELECT_TARGET_TRAIT'] ?></option>
 									<option value="">------------------------------------</option>
 									<?php
 									$traitNameArr = $attrManager->getTraitNames();
@@ -228,15 +230,15 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 										}
 									}
 									else{
-										echo '<option value="0">No attributes are available</option>';
+										echo '<option value="0">' . $LANG['NO_ATTRI_AVAILABLE'] . '</option>';
 									}
 									?>
 								</select>
 							</div>
 							<div>
-								Verbatim text source:
+							    <?php echo $LANG['VERBATIM_TEXT_SOURCE'] ?>
 								<select name="fieldname">
-									<option value="">Select Source Field (required)</option>
+									<option value=""><?php echo $LANG['SELECT_SOURCE_FIELD'] ?></option>
 									<option value="">------------------------------------</option>
 									<?php
 									foreach($fieldArr as $k => $fName){
@@ -246,19 +248,19 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 								</select>
 							</div>
 							<div>
-								Filter by text (optional):
+							    <?php echo $LANG['FILTER_BY_TEXT'] ?>
 								<input name="stringfilter" type="text" value="<?php echo $stringFilter; ?>" />
 							</div>
 							<div style="float:right;margin-right:20px">
 								<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
-								<input id="filtersubmit" name="submitform" type="submit" value="Get Field Values" />
+								<button id="filtersubmit" name="submitform" type="submit" value="Get Field Values"><?php echo $LANG['GET_FEILD_VALUE'] ?></button>
 							</div>
 							<div>
-								Filter by taxon (optional):
+								<?php echo $LANG['FILTER_BY_TAXON'] ?>
 								<input id="taxonfilter" name="taxonfilter" type="text" value="<?php echo $taxonFilter; ?>" />
 								<input id="tidfilter" name="tidfilter" type="hidden" value="<?php echo $tidFilter; ?>" />
-								<span id="verify-span" style="display:none;font-weight:bold;color:green;">verifying taxonomy...</span>
-								<span id="notvalid-span" style="display:none;font-weight:bold;color:red;">taxon not valid...</span>
+								<span id="verify-span" style="display:none;font-weight:bold;color:green;"><?php echo $LANG['VERIFYING_TAXONOMY'] ?></span>
+								<span id="notvalid-span" style="display:none;font-weight:bold;color:red;"><?php echo $LANG['TAXON_NOT_VALID'] ?></span>
 							</div>
 						</form>
 					</fieldset>
@@ -271,7 +273,7 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 						<fieldset style="margin:15px;padding:15px">
 							<legend><b><?php echo $fieldArr[$fieldName]; ?></b></legend>
 							<form name="miningform" method="post" action="attributemining.php" onsubmit="return verifyMiningForm(this)">
-								<b>Select Source Field Values</b> - hold down control or shift buttons to select more than one value<br/>
+								<b><?php echo $LANG['SELECT_SOURCE_FIELD_VALUES'] ?></b><?php echo $LANG['HOLD_DOWN_BUTTONS_TO_SELECT'] ?><br/>
 								<div style="margin:5px;border:2px solid;width:100%;height:200px;resize: both;overflow: auto">
 									<select name="fieldvalue[]" multiple="multiple" style="width:100%;height:100%">
 										<?php
@@ -288,19 +290,19 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 									?>
 								</div>
 								<div class="trianglediv" style="float:left;margin-left:20px">
-									<div style="margin:4px 3px;float:right;cursor:pointer" onclick="setAttributeTree(this)" title="Toggle attribute tree open/close">
-										<img class="triangleright" src="../../images/triangleright.png" style="" />
-										<img class="triangledown" src="../../images/triangledown.png" style="display:none" />
+									<div style="margin:4px 3px;float:right;cursor:pointer" onclick="setAttributeTree(this)" title="<?php echo $LANG['TOGGLE_ATTRI_TREE'] ?>">
+										<img class="triangleright" src="../../images/tochild.png" style="width:1.4em" />
+										<img class="triangledown" src="../../images/toparent.png" style="display:none;width:1.4em" />
 									</div>
 								</div>
 								<div style="margin:10px 5px;clear:both">
-									Notes:
+									<?php echo $LANG['NOTES'] ?>
 									<input name="notes" type="text" style="width:200px" value="" />
 								</div>
 								<div style="margin: 5px">
-									Status: <select name="reviewstatus">
+									<?php echo $LANG['STATUS'] ?><select name="reviewstatus">
 										<option value="0">----------------------</option>
-										<option value="5">Expert Needed</option>
+										<option value="5"><?php echo $LANG['EXPERT NEEDED'] ?></option>
 									</select>
 								</div>
 								<div style="margin:15px;">
@@ -310,8 +312,8 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 									<input name="traitid" type="hidden" value="<?php echo $traitID; ?>" />
 									<input name="fieldname" type="hidden" value="<?php echo $fieldName; ?>" />
 									<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
-									<input name="submitform" type="submit" value="Batch Assign State(s)" />
-									<input name="resetform" type="reset" value="Reset Form" />
+									<button name="submitform" type="submit" value="Batch Assign State(s)"><?php echo $LANG['BATCH_ASSIGN_STATE'] ?></button>
+									<button name="resetform" type="reset" value="Reset Form"><?php echo $LANG['RESET_FORM'] ?></button>
 								</div>
 							</form>
 						</fieldset>
@@ -321,10 +323,10 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 			}
 			else{
 				?>
-				<div style="font-weight:bold;">Select the collections you wish to code for:</div>
+				<div style="font-weight:bold;"><?php echo $LANG['SELECT_COLLECTIONS'] ?></div>
 				<div style="margin:15px">
 					<form name="collform" method="post" action="attributemining.php" onsubmit="return verifyCollForm(this)">
-						<input name="selectall" type="checkbox" value="1" onchange="selectAll(this)" /> <b>Select/Deselect All</b><br/>
+						<input name="selectall" type="checkbox" value="1" onchange="selectAll(this)" /> <b><?php echo $LANG['SELECT_DESELECT_ALL'] ?></b><br/>
 						<?php
 						foreach($collArr as $id => $collName){
 							echo '<input name="collid[]" type="checkbox" value="'.$id.'" onchange="collidChanged(this.form)" />';
@@ -333,7 +335,7 @@ $fieldArr = array('habitat' => 'Habitat', 'substrate' => 'Substrate', 'occurrenc
 						}
 						?>
 						<div style="margin:15px">
-							<input type="submit" name="submitform" value="Harvest from Collections" />
+							<button type="submit" name="submitform" value="Harvest from Collections"><?php echo $LANG['HARVEST_COLLECTIONS'] ?></button>
 						</div>
 					</form>
 				</div>

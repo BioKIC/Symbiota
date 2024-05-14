@@ -13,6 +13,7 @@ $LANG['DISP_MODE'] = "Mode d'Affichage";
 $LANG['SPEC_LIST'] = 'Liste des Espèces';
 $LANG['BATCH_LINK'] = 'Lier par Lot';
 $LANG['NOT_FOUND'] = 'Ci-dessous sont listés les spécimens identifiés à une espèce non trouvée dans la liste. Utilisez le formulaire pour ajouter les noms et lier les bons en tant qu\'action par lot.';
+$LANG['SELECT_ALL'] = 'Tout Sélectionner';
 $LANG['SPEC_ID'] = 'ID du Spécimen';
 $LANG['COLLECTOR'] = 'Collectionneur';
 $LANG['LOCALITY'] = 'Localité';

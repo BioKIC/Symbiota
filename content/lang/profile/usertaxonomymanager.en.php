@@ -25,5 +25,6 @@ $LANG['DELETE_LINKS'] = 'Delete all taxonomic relationships for this user';
 $LANG['REMOVE_ONE_LINK'] = 'Are you sure you want to remove this taxonomy link for this user?';
 $LANG['DELETE_A_LINK'] = 'Delete this user taxonomic relationship';
 $LANG['NOT_AUTH'] = 'You are not authorized to access this page';
+$LANG['ADD'] = 'Add Button';
 
 ?>

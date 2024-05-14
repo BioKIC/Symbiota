@@ -4,9 +4,9 @@ include_once($SERVER_ROOT.'/content/lang/collections/misc/collprofiles.'.$LANG_T
 $statDisplay = array_key_exists('stat',$_REQUEST)?$_REQUEST['stat']:'';
 
 if($statDisplay == 'geography'){
-	$countryDist = array_key_exists('country',$_REQUEST)?htmlspecialchars($_REQUEST['country']):'';
-	$stateDist = array_key_exists('state',$_REQUEST)?htmlspecialchars($_REQUEST['state']):'';
-	$distArr = $collManager->getGeographyStats($countryDist,$stateDist);
+	$countryDist = array_key_exists('country',$_REQUEST) ? $collManager->cleanOutStr($_REQUEST['country']) : '';
+	$stateDist = array_key_exists('state',$_REQUEST) ? $collManager->cleanOutStr($_REQUEST['state']) : '';
+	$distArr = $collManager->getGeographyStats($countryDist, $stateDist);
 	if($distArr){
 		?>
 		<fieldset id="geographystats" style="margin:20px;width:90%;">
@@ -27,10 +27,10 @@ if($statDisplay == 'geography'){
 					$stateTerm = ($countryDist?($stateDist?$stateDist:$term):'');
 					$countyTerm = ($countryDist && $stateDist?$term:'');
 					echo '<li>';
-					if(!$stateDist) echo '<a href="collprofiles.php?collid='.$collid.'&stat=geography&country='.$countryTerm.'&state='.$stateTerm.'#geographystats">';
+					if(!$stateDist) echo '<a href="collprofiles.php?collid=' .htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&stat=geography&country=' . htmlspecialchars($countryTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&state=' . htmlspecialchars($stateTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '#geographystats">';
 					echo $term;
 					if(!$stateDist) echo '</a>';
-					echo ' (<a href="../list.php?db='.$collid.'&reset=1&country='.$countryTerm.'&state='.$stateTerm.'&county='.$countyTerm.'" target="_blank">'.$cnt.'</a>)';
+					echo ' (<a href="../list.php?db=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&reset=1&country=' . htmlspecialchars($countryTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&state=' . htmlspecialchars($stateTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&county=' . htmlspecialchars($countyTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($cnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 					echo '</li>';
 				}
 				?>
@@ -40,7 +40,7 @@ if($statDisplay == 'geography'){
 	}
 }
 elseif($statDisplay == 'taxonomy'){
-	$famDist = array_key_exists('family',$_REQUEST)?htmlspecialchars($_REQUEST['family']):'';
+	$famDist = array_key_exists('family', $_REQUEST) ? $collManager->cleanOutStr($_REQUEST['family']) : '';
 	$taxArr = $collManager->getTaxonomyStats($famDist);
 	?>
 	<fieldset id="taxonomystats" style="margin:20px;width:90%;">
@@ -53,10 +53,10 @@ elseif($statDisplay == 'taxonomy'){
 				<?php
 				foreach($taxArr as $name => $cnt){
 					echo '<li>';
-					if(!$famDist) echo '<a href="collprofiles.php?collid='.$collid.'&stat=taxonomy&family='.$name.'#taxonomystats">';
+					if(!$famDist) echo '<a href="collprofiles.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&stat=taxonomy&family=' . htmlspecialchars($name, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '#taxonomystats">';
 					echo $name;
 					if(!$famDist) echo '</a>';
-					echo ' (<a href="../list.php?db='.$collid.'&taxontype='.($famDist?2:3).'&reset=1&taxa='.$name.'" target="_blank">'.$cnt.'</a>)';
+					echo ' (<a href="../list.php?db=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&taxontype=' . htmlspecialchars(($famDist?2:3), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&reset=1&taxa=' . htmlspecialchars($name, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($cnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 					echo '</li>';
 				}
 				?>

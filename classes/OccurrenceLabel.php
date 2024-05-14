@@ -18,7 +18,7 @@ class OccurrenceLabel{
 	}
 
 	//Label functions
-	public function queryOccurrences($postArr){
+	public function queryOccurrences($postArr, $limit){
 		global $USER_RIGHTS;
 		$canReadRareSpp = false;
 		if($GLOBALS['IS_ADMIN'] || array_key_exists('CollAdmin', $USER_RIGHTS) || array_key_exists('RareSppAdmin', $USER_RIGHTS) || array_key_exists('RareSppReadAll', $USER_RIGHTS)){
@@ -137,7 +137,7 @@ class OccurrenceLabel{
 			if($sqlWhere) $sql .= 'WHERE '.substr($sqlWhere, 4);
 			if($sqlOrderBy) $sql .= ' ORDER BY '.substr($sqlOrderBy,1);
 			else $sql .= ' ORDER BY (o.recordnumber+1)';
-			$sql .= ' LIMIT 400';
+			$sql .= ' LIMIT ' . $limit;
 			//echo '<div>'.$sql.'</div>';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
@@ -175,7 +175,7 @@ class OccurrenceLabel{
 			//echo $sql1; exit;
 			if($rs1 = $this->conn->query($sql1)){
 				while($row1 = $rs1->fetch_object()){
-					$authorArr[$row1->occid] = $row1->author;
+					$authorArr[$row1->occid] = $row1->author ?? '';
 				}
 				$rs1->free();
 			}
@@ -199,12 +199,12 @@ class OccurrenceLabel{
 					$cnt = 0;
 					while($r = $rs->fetch_object()){
 						$otherCatArr[$r->occid][$cnt]['v'] = $r->identifiervalue;
-						$otherCatArr[$r->occid][$cnt]['n'] = $r->identifiername;
+						$otherCatArr[$r->occid][$cnt]['n'] = $r->identifiername ?? '';
 						$cnt++;
 					}
 					$rs->free();
 					foreach($otherCatArr as $occid => $ocnArr){
-						$verbIdStr = $retArr[$occid]['othercatalognumbers'];
+						$verbIdStr = $retArr[$occid]['othercatalognumbers'] ?? '';
 						$ocnStr = '';
 						foreach($ocnArr as $idArr){
 							$ocnStr .= '; '.($idArr['n']?$idArr['n'].': ':'').$idArr['v'];
@@ -231,6 +231,9 @@ class OccurrenceLabel{
 			$labelArr = $this->getLabelArray($occidArr, $speciesAuthors);
 			if($labelArr){
 				$fileName = 'labeloutput_'.time().".csv";
+				ob_start();
+				ob_clean();
+				ob_end_flush();
 				header('Content-Description: Symbiota Label Output File');
 				header ('Content-Type: text/csv');
 				header ('Content-Disposition: attachment; filename="'.$fileName.'"');
@@ -299,7 +302,7 @@ class OccurrenceLabel{
 				$fieldDivStr = '';
 				foreach($bArr['fieldBlock'] as $fieldArr){
 					$fieldName = strtolower($fieldArr['field']);
-					$fieldValue = trim($occArr[$fieldName]);
+					$fieldValue = trim($occArr[$fieldName] ?? '');
 					if($fieldValue){
 						if($delimiter && $cnt) $fieldDivStr .= $delimiter;
 						$fieldDivStr .= '<span class="'.$fieldName.(isset($fieldArr['className'])?' '.$fieldArr['className']:'').'" '.(isset($fieldArr['style'])?'style="'.$fieldArr['style'].'"':'').'>';
@@ -413,7 +416,7 @@ class OccurrenceLabel{
 			else $retArr['g'] = array('labelFormats'=>array());
 			//Add collection defined label formats
 			if($this->collid){
-				$collFormatArr = json_decode($this->collArr['dynprops'],true);
+				$collFormatArr = json_decode($this->collArr['dynprops'] ?? '[]',true);
 				if($annotated){
 					if(isset($collFormatArr['labelFormats'])){
 						foreach($collFormatArr['labelFormats'] as $k => $labelObj){
@@ -434,7 +437,7 @@ class OccurrenceLabel{
 					$dynPropStr = $r->dynamicProperties;
 				}
 				$rs->free();
-				$dynPropArr = json_decode($dynPropStr,true);
+				$dynPropArr = json_decode($dynPropStr  ?? '',true);
 				if($annotated){
 					if(isset($dynPropArr['labelFormats'])){
 						foreach($dynPropArr['labelFormats'] as $k => $labelObj){

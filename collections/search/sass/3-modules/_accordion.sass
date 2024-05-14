@@ -1,0 +1,59 @@
+/* Accordions ********************************************************************************/
+/* Dependencies: Material Design Icons */
+$accordion-label-color: #0073cf
+$accordion-label-bg-color: #ffffff
+$accordion-content-color: $text-color
+$accordion-content-border-color: #d7d9d9
+$accordion-content-bg-color: #ffffff
+
+// Testing better styles based off of: https://supfort.com/pure-css-accordion-without-javascript
+.accordions
+  input
+    &.accordion-selector
+      display: none
+  label
+    &.accordion-header
+      font-size: 16px
+      text-transform: uppercase
+      font-weight: 600
+      text-align: center
+      display: block    
+      padding: 8px 22px
+      margin: 0 0 1px 0
+      cursor: pointer
+      background-color: $accordion-label-bg-color
+      border-radius: 2px
+      border: 1px solid $accordion-label-color
+      color: $accordion-label-color
+      transition: ease .5s
+      position: relative
+      &:hover
+        background: darken($accordion-label-bg-color, 10%)
+      &::after
+        font-family: "Material Icons"
+        font-size: 24px
+        content: "\e313"
+        position: absolute
+        right: 20px
+        top: 10px
+
+  .content
+    background: #ffffff
+    padding: 10px 25px
+    border: 1px solid $accordion-content-border-color
+    margin: -1px 0 10px 0
+    border-radius: 2px
+  
+  .accordion-selector + label + .content
+    display: none
+    opacity: 0
+    height: 0
+    padding: 0 25px
+    transition: ease-in-out .2s
+  .accordion-selector:checked + label + .content
+    display: block
+    opacity: 1
+    height: auto
+    padding: 10px 25px
+  .accordion-selector:checked + label::after
+    content: "\e316"

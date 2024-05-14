@@ -1,14 +1,16 @@
 <?php
 include_once('../../../config/symbini.php');
-include_once($SERVER_ROOT.'/classes/OccurrenceEditorMaterialSample.php');
-include_once($SERVER_ROOT.'/content/lang/collections/fieldterms/materialSampleVars.'.$LANG_TAG.'.php');
+include_once($SERVER_ROOT . '/classes/OmMaterialSample.php');
+include_once($SERVER_ROOT . '/content/lang/collections/fieldterms/materialSampleVars.' . $LANG_TAG . '.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/includes/materialsampleinclude.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/editor/includes/materialsampleinclude.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/editor/includes/materialsampleinclude.en.php');
 header('Content-Type: text/html; charset='.$CHARSET);
 
 $occid = $_REQUEST['occid'];
 $collid = isset($_REQUEST['collid'])?$_REQUEST['collid']:'';
 $occIndex = $_REQUEST['occindex'];
 
-$materialSampleManager = new OccurrenceEditorMaterialSample();
+$materialSampleManager = new OmMaterialSample();
 
 //Sanitation
 if(!is_numeric($occid)) $occid = 0;
@@ -26,8 +28,8 @@ elseif(array_key_exists('CollEditor',$USER_RIGHTS) && in_array($collid,$USER_RIG
 $materialSampleArr = $materialSampleManager->getMaterialSampleArr();
 $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 ?>
-<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery.js" type="text/javascript"></script>
-<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.js" type="text/javascript"></script>
+<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 <script>
 	var collid = <?php echo $collid; ?>;
 	$(document).ready(function() {
@@ -40,7 +42,7 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 			change: function( event, ui ) {
 				if(ui.item === null) {
 					$(this.form.ms_preparedByUid).val("");
-					if(this.value != "") alert("You must select a user from the list. If user is not in the system, enter information into preparation detials.");
+					if(this.value != "") alert("<?php echo $LANG['SEL_USER']; ?>");
 				}
 			},
 			select: function( event, ui ) {
@@ -49,8 +51,8 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 		});
 	});
 </script>
-<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet" />
-<link href="<?php echo $CSS_BASE_PATH; ?>/symbiota/collections/editor/occureditormaterialsample.css" type="text/css" rel="stylesheet" >
+<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/jquery-ui.css" type="text/css" rel="stylesheet" />
+<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/collections/editor/occureditormaterialsample.css" type="text/css" rel="stylesheet" >
 <style type="text/css">
 	botton { margin: 10px; }
 	.edit-control{ float:right; }
@@ -59,7 +61,7 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 </style>
 <div style="width:795px;">
 	<div class="edit-control">
-		<span><a href="#" onclick="$('#formDiv-0').toggle()"><img src="../../images/add.png" /></a></span>
+		<span><a href="#" onclick="$('#formDiv-0').toggle()"><img src="../../images/add.png" style="width:1.5em;" /></a></span>
 	</div>
 	<!--
 	<div style="margin: 20px;">
@@ -74,10 +76,10 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 			$matSampleID = 0;
 			if($msArr) $matSampleID = $msArr['matSampleID'];
 			if($matSampleID){
-				echo '<fieldset><legend>Material Sample</legend>';
+				echo '<fieldset><legend>' . $LANG['MAT_SAMP'] . '</legend>';
 				?>
 				<div class="edit-control">
-					<span><a href="#" onclick="$('#formDiv-<?php echo $matSampleID; ?>').toggle()"><img src="../../images/edit.png" /></a></span>
+					<span><a href="#" onclick="$('#formDiv-<?php echo $matSampleID; ?>').toggle()"><img src="../../images/edit.png" style="width:1.2em;" /></a></span>
 				</div>
 				<?php
 			}
@@ -90,7 +92,7 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 			<div id="formDiv-<?php echo $matSampleID; ?>" style="display:<?php echo ($msCnt?'none':'block'); ?>">
 				<?php
 				if($matSampleID) echo '<hr/>';
-				else echo '<fieldset><legend>Add New Sample</legend>';
+				else echo '<fieldset><legend>' . $LANG['ADD_SAMPLE'] . '</legend>';
 				?>
 				<form name="matSampleForm-<?php echo $matSampleID; ?>" action="occurrenceeditor.php" method="post" >
 					<div style="clear:both">
@@ -276,10 +278,10 @@ $controlTermArr = $materialSampleManager->getMSTypeControlValues();
 							<input name="tabtarget" type="hidden" value="3" />
 							<?php
 							if($msArr){
-								echo '<button name="submitaction" type="submit" value="updateMaterialSample">Save Changes</button>';
-								echo '<span style="margin-left: 20px"><button name="submitaction" type="submit" value="deleteMaterialSample">Delete Sample</button></span>';
+								echo '<button name="submitaction" type="submit" value="updateMaterialSample">' . $LANG['SAVE_CHANGES'] . '</button>';
+								echo '<span style="margin-left: 20px"><button name="submitaction" type="submit" value="deleteMaterialSample">' . $LANG['DELETE_SAMP'] . '</button></span>';
 							}
-							else echo '<button name="submitaction" type="submit" value="insertMaterialSample">Add Record</button>';
+							else echo '<button name="submitaction" type="submit" value="insertMaterialSample">' . $LANG['ADD_RECORD'] . '</button>';
 							?>
 						</div>
 					</div>

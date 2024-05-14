@@ -13,6 +13,7 @@ $LANG['PLEASE_RELATE'] = 'Please select a related term';
 $LANG['PLEASE_TRANS'] = 'Please select a translation term';
 $LANG['PLEASE_IMG'] = 'Please either upload an image or enter the url of an existing image';
 $LANG['PLEASE_URL'] = 'Please enter a url for the image to save';
+$LANG['GOTO_PUBLIC_DISPLAY'] = 'Go to Public Display';
 $LANG['DETAILS'] = 'Details';
 $LANG['REL_TERMS'] = 'Related Terms';
 $LANG['IMGS'] = 'Images';

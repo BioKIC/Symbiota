@@ -26,7 +26,8 @@ $statusStr = '';
 $projArr = $csManager->getProjectDetails();
 ?>
 <!-- inner text -->
-<div id="innertext" style="background-color:white;">
+<div role="main" id="innertext" style="background-color:white;">
+	<h1 class="page-heading screen-reader-only">Crowdsourcing Administration</h1>
 	<?php
 	if($statusStr){
 		?>
@@ -39,7 +40,7 @@ $projArr = $csManager->getProjectDetails();
 	}
 	if($isEditor && $collid && $omcsid){
 		?>
-		<div style="float:right;"><a href="#" onclick="toggle('projFormDiv')"><img src="../../images/edit.png" /></a></div>
+		<div style="float:right;"><a href="#" onclick="toggle('projFormDiv')"><img src="../../images/edit.png" style="width:1.5em" /></a></div>
 		<div style="font-weight:bold;font-size:130%;"><?php echo (($omcsid && $projArr)?$projArr['name']:''); ?></div>
 		<div>
 			<?php echo $LANG['CROWDSOURCE_EXPLAIN']; ?>
@@ -67,7 +68,7 @@ $projArr = $csManager->getProjectDetails();
 		</div>
 		<?php
 		if($projArr['instr']) echo '<div style="margin-left:15px;"><b>Instructions: </b>'.$projArr['instr'].'</div>';
-		if($projArr['url']) echo '<div style="margin-left:15px;"><b>Training:</b> <a href="'.$projArr['url'].'">'.$projArr['url'].'</a></div>';
+		if($projArr['url']) echo '<div style="margin-left:15px;"><b>Training:</b> <a href="' . htmlspecialchars($projArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($projArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
 		?>
 		<div style="margin:15px;">
 			<?php
@@ -81,11 +82,11 @@ $projArr = $csManager->getProjectDetails();
 						$unprocessedCnt = 0;
 						if(isset($statsArr[0]) && $statsArr[0]) $unprocessedCnt = $statsArr[0];
 						if($unprocessedCnt){
-							echo '<a href="../editor/occurrencetabledisplay.php?csmode=1&occindex=0&displayquery=1&reset=1&collid='.$collid.'" target="_blank">';
+							echo '<a href="../editor/occurrencetabledisplay.php?csmode=1&occindex=0&displayquery=1&reset=1&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">';
 							echo $unprocessedCnt;
 							echo '</a> ';
-							echo '<a href="index.php?submitaction=delqueue&tabindex=1&collid='.$collid.'&omcsid='.$omcsid.'">';
-							echo '<img src="../../images/drop.png" style="width:12px;" title="'.$LANG['DEL_UNPROCESSED'].'" />';
+							echo '<a href="index.php?submitaction=delqueue&tabindex=1&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&omcsid='.$omcsid.'">';
+							echo '<img src="../../images/drop.png" style="width:1.2em;" title="'.$LANG['DEL_UNPROCESSED'].'" />';
 							echo '</a>';
 						}
 						else{
@@ -100,7 +101,7 @@ $projArr = $csManager->getProjectDetails();
 						if(isset($statsArr[5])) $pendingCnt = $statsArr[5];
 						echo $pendingCnt;
 						if($pendingCnt){
-							echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'" target="_blank">Review</a>)';
+							echo ' (<a href="crowdsource/review.php?rstatus=5&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">Review</a>)';
 						}
 						?>
 					</div>
@@ -111,7 +112,7 @@ $projArr = $csManager->getProjectDetails();
 						if(isset($statsArr[10])) $reviewedCnt = $statsArr[10];
 						echo $reviewedCnt;
 						if($reviewedCnt){
-							echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'" target="_blank">Review</a>)';
+							echo ' (<a href="crowdsource/review.php?rstatus=10&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">Review</a>)';
 						}
 						?>
 					</div>
@@ -219,13 +220,13 @@ $projArr = $csManager->getProjectDetails();
 								$pendingCnt = (isset($uArr[5])?$uArr[5]:0);
 								echo '<td>';
 								echo $pendingCnt;
-								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
+								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&uid=' . htmlspecialchars($uid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['REVIEW'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 								echo '</td>';
 								//Closed
 								$closeCnt = (isset($uArr[10])?$uArr[10]:0);
 								echo '<td>';
 								echo $closeCnt;
-								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
+								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&uid=' . htmlspecialchars($uid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['REVIEW'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 								echo '</td>';
 								echo '</tr>';
 							}
@@ -254,13 +255,13 @@ $projArr = $csManager->getProjectDetails();
 								$pendingCnt = (isset($uArr[5])?$uArr[5]:0);
 								echo '<td>';
 								echo $pendingCnt;
-								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
+								if($pendingCnt) echo ' (<a href="crowdsource/review.php?rstatus=5&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&uid=' . htmlspecialchars($uid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['REVIEW'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 								echo '</td>';
 								//Closed
 								$closeCnt = (isset($uArr[10])?$uArr[10]:0);
 								echo '<td>';
 								echo $closeCnt;
-								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid='.$collid.'&uid='.$uid.'">'.$LANG['REVIEW'].'</a>)';
+								if($closeCnt) echo ' (<a href="crowdsource/review.php?rstatus=10&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&uid=' . htmlspecialchars($uid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($LANG['REVIEW'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 								echo '</td>';
 								echo '</tr>';
 							}
@@ -272,7 +273,7 @@ $projArr = $csManager->getProjectDetails();
 					</table>
 				</div>
 				<div style="clear:both;margin-top:50px;font-weight:bold;">
-					Visit <a href="crowdsource/index.php"><?php echo $LANG['SCORE_BOARD']; ?></a>
+					Visit <a href="crowdsource/index.php"><?php echo htmlspecialchars($LANG['SCORE_BOARD'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 				</div>
 				<?php
 			}

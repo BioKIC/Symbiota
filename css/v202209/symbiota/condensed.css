@@ -1,0 +1,15 @@
+div {
+  /* background-color: greenyellow; */
+}
+
+.flex-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-form > * {
+  flex-basis: auto;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}

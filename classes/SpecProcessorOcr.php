@@ -271,7 +271,7 @@ class SpecProcessorOcr extends Manager{
 					while($r = $rs->fetch_object()){
 						$rawStr = $this->ocrImageByUrl($r->url,$getBest,$r->sciName);
 						if($rawStr != 'ERROR'){
-							$this->logOrEcho('#'.$recCnt.': image <a href="../editor/occurrenceeditor.php?occid='.$r->occid.'" target="_blank">'.$r->imgid.'</a> processed ('.date("Y-m-d H:i:s").')');
+							$this->logOrEcho('#'.$recCnt.': image <a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($r->occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> processed (' . date("Y-m-d H:i:s") . ')');
 							$notes = '';
 							$source = 'Tesseract: '.date('Y-m-d');
 							$this->databaseRawStr($r->imgid,$rawStr,$notes,$source);

@@ -2,6 +2,9 @@
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/content/lang/collections/misc/collprops.'.$LANG_TAG.'.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCollectionProperty.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/misc/collectionproperties.en.php');
+
 header('Content-Type: text/html; charset='.$CHARSET);
 
 $action = array_key_exists('submitaction',$_POST)?$_POST['submitaction']:'';
@@ -20,17 +23,18 @@ if($SYMB_UID){
 $statusStr = '';
 if($isEditor){
 	if($action == 'convertFormat'){
-		if($propManager->transferDynamicProperties()) $statusStr = '<span style="color:green">Success! Old collection profile updated</span>';
-		else $statusStr = '<span style="color:red">ERROR:</span> updating collection profile : '.$propManager->getErrorMessage();
+		if($propManager->transferDynamicProperties()) $statusStr = '<span style="color:green">' . $LANG['PROFILE_UPDATE_SUCCESS'] . '</span>';
+		else $statusStr = '<span style="color:red">' . $LANG['ERROR'] . ':</span> ' . $LANG['UPDATING_COLLEC_PROFILE'] . ' : '.$propManager->getErrorMessage();
 	}
 	elseif($action == 'saveTitleOverride'){
 
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $collMeta['collName'].(isset($LANG['SPECIAL_PROPS'])?$LANG['SPECIAL_PROPS']:'Special Properties'); ?></title>
+	<title><?php echo $collMeta['collName'] . ': ' . $LANG['SPECIAL_PROPS']; ?></title>
 	<?php
 
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -38,7 +42,7 @@ if($isEditor){
 	<script>
 		function verifyAddContactForm(f){
 			if(f.uid.value == ""){
-				alert("Please select a user from list");
+				alert("<?php echo $LANG['SELECT_USER']; ?>");
 				return false;
 			}
 			return true;
@@ -59,27 +63,28 @@ if($isEditor){
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href='../../index.php'><?php echo (isset($LANG['HOME'])?$LANG['HOME']:'Home'); ?></a> &gt;&gt;
-		<a href='collprofiles.php?emode=1&collid=<?php echo $collid; ?>'><?php echo (isset($LANG['SPECIAL_PROPS'])?$LANG['SPECIAL_PROPS']:'Special Properties'); ?></a> &gt;&gt;
-		<b>Collection Management Properties</b>
+
+		<a href='../../index.php'><?php echo htmlspecialchars((isset($LANG['HOME'])?$LANG['HOME']:'Home'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+		<a href='collprofiles.php?emode=1&collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'><?php echo htmlspecialchars((isset($LANG['SPECIAL_PROPS'])?$LANG['SPECIAL_PROPS']:'Special Properties'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+		<b><?php echo $LANG['COLLEC_MANAGEMENT_PROPERTIES']; ?></b>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?php echo $collMeta['collName'] . ': ' . $LANG['MANAGEMENT_PROP']; ?></h1>
 		<?php
-		echo '<div style="font-weight:bold;font-size: 1.3em">'.$collMeta['collName'].' Management Properties</div>';
 		if($isEditor){
 			$conversionCode = $propManager->getSystemConvertionCode();
 			if($conversionCode == 0){
-				$statusStr = '<span style="color:orange">WARNING:</span> Collection Properties has not yet been activated (e.g. missing tables or other schema issues)';
+				$statusStr = '<span style="color:orange">' . $LANG['WARNING'] . ':</span> ' . $LANG['COLLEC_PROP_NOT_ACTIVATED'];
 			}
 			elseif($conversionCode == 2){
-				$statusStr = '<span style="color:orange">WARNING:</span> Old Collection Properties need to be converted to new format! ';
+				$statusStr = '<span style="color:orange">' . $LANG['WARNING'] . ':</span> ' . $LANG['OLD_COLLEC_PROPERTIES'];
 				$statusStr .= '<form name="convertPropForm" action="collectionproperties.php" method="post" style="display:inline; margin-left:20px"><input name="collid" type="hidden" value="'.$collid.'" />';
-				$statusStr .= '<button name="submitaction" type="submit" value="convertFormat">Convert to new format</button>';
+				$statusStr .= '<button name="submitaction" type="submit" value="convertFormat">' . $LANG['CONVERT_TO_NEW_FORMAT'] . '</button>';
 				$statusStr .= '</form>';
 			}
 			if($statusStr){
-				echo '<fieldset><legend>Action Panel</legend>';
+				echo '<fieldset><legend>' . $LANG['ACTION_PANEL'] . '</legend>';
 				echo $statusStr;
 				echo '</fieldset>';
 			}
@@ -87,7 +92,7 @@ if($isEditor){
 			?>
 			<fieldset style="margin:15px;padding:15px;">
 				<legend><?php echo (isset($LANG['PUB_PROPS'])?$LANG['PUB_PROPS']:'Publication Properties'); ?></legend>
-				<div style="margin:20px">Following field will override the title of the collection/observation project that is published in the EML file within the Darwin Core Archive (DwC-A) export file</div>
+				<div style="margin:20px"><?php echo $LANG['OVERRIDE_COLLECTION_TITLE']; ?></div>
 				<form name="pubPropForm" action="collectionproperties.php" method="post" onsubmit="return verifyPubPropForm(this)">
 					<div style="margin:25px;clear:both;">
 						<span class="fieldLabel"><?php echo (isset($LANG['TITLE_OVERRIDE'])?$LANG['TITLE_OVERRIDE']:'Title Override'); ?>: </span>
@@ -95,7 +100,7 @@ if($isEditor){
 					</div>
 					<div style="margin:25px;">
 						<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
-						<button name="submitaction" type="submit" value="saveTitleOverride">Save Title Override</button>
+						<button name="submitaction" type="submit" value="saveTitleOverride"><?php echo $LANG['SAVE_TITLE_OVERRIDE']; ?></button>
 					</div>
 				</form>
 			</fieldset>

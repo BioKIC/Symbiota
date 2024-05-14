@@ -9,6 +9,7 @@ include_once($SERVER_ROOT.'/content/lang/glossary/index.en.php');
 
 $LANG['GLOSS_TERM_INFO'] = 'Glossary Term Information';
 $LANG['LOADING'] = 'Loading';
+$LANG['RETURN_TO_PREVIOUS'] = 'Return to Previous Term';
 $LANG['SYNS'] = 'Synonyms';
 $LANG['OTHER_REL'] = 'Other Related Terms';
 $LANG['RELEV_TAXA'] = 'Relevant Taxa';

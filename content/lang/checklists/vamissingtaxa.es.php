@@ -2,6 +2,8 @@
 /*
 ------------------
 Language: Español (Spanish)
+Translated by: Samanta Orellana
+Date Translated: 2021-08-05
 ------------------
 */
 
@@ -14,6 +16,7 @@ $LANG['SPEC_LIST'] = 'Listados de Especies';
 $LANG['BATCH_LINK'] = 'Enlazar por Lotes';
 $LANG['NOT_FOUND'] = 'Abajo se encuentran listados los especímenes identificados a especies no encontradas en el listado.
                         Use el formulario para añadir los nombres y enlazar los vouchers como una acción en lote.';
+$LANG['SELECT_ALL'] = 'Seleccionar Todo';
 $LANG['SPEC_ID'] = 'ID del Especímen';
 $LANG['COLLECTOR'] = 'Colector';
 $LANG['LOCALITY'] = 'Localidad';

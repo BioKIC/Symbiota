@@ -29,8 +29,8 @@ if($collid && is_numeric($collid)){
 		$dwcaHandler->setIncludeImgs(0);
 		$dwcaHandler->setIncludeAttributes(0);
 		$dwcaHandler->setOverrideConditionLimit(true);
-		$dwcaHandler->addCondition('catalognumber','NOTNULL');
-		$dwcaHandler->addCondition('locality','NOTNULL');
+		$dwcaHandler->addCondition('catalognumber','NOT_NULL');
+		$dwcaHandler->addCondition('locality','NOT_NULL');
 		if($processingStatus) $dwcaHandler->addCondition('processingstatus','EQUALS',$processingStatus);
 		for($i = 1; $i < 4; $i++){
 			if(array_key_exists('cf'.$i,$_POST) && $_POST['cf'.$i]){

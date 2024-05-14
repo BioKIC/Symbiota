@@ -25,7 +25,7 @@ $occManager->setOccId($occid);
 				if($IS_ADMIN || (array_key_exists('CollAdmin',$USER_RIGHTS) && in_array($collId,$USER_RIGHTS['CollAdmin']))){
 					?>
 					<div style="float:right;" title="<?php echo $LANG['MANAGE_HISTORY']; ?>">
-						<a href="../editor/editreviewer.php?collid=<?php echo $collId.'&occid='.$occid; ?>" target="_blank"><img src="../../images/edit.png" style="border:0px;width:14px;" /></a>
+						<a href="../editor/editreviewer.php?collid=<?php echo htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&occid=' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><img src="../../images/edit.png" style="border:0px;width:14px;" /></a>
 					</div>
 					<?php
 				}
@@ -133,7 +133,7 @@ $occManager->setOccId($occid);
 			<div style="margin:15px">
 				<?php echo $LANG['REC_MUST_EVALUATE']; ?>
 				<div style="margin:15px;display:block;">
-					<button name="verifydelete" type="button" value="Evaluate record for deletion" onclick="verifyDeletion(this.form);" ><?php echo $LANG['EVALUATE_FOR_DEL']; ?></button>
+					<button class="button-danger" name="verifydelete" type="button" value="Evaluate record for deletion" onclick="verifyDeletion(this.form);" ><?php echo $LANG['EVALUATE_FOR_DEL']; ?></button>
 				</div>
 				<div id="delverimgdiv" style="margin:15px;">
 					<b><?php echo $LANG['IMG_LINKS']; ?>: </b>
@@ -164,7 +164,7 @@ $occManager->setOccId($occid);
 				<div id="delapprovediv" style="margin:15px;display:none;">
 					<input name="occid" type="hidden" value="<?php echo $occid; ?>" />
 					<input name="occindex" type="hidden" value="<?php echo $occIndex; ?>" />
-					<button name="submitaction" type="submit" value="Delete Occurrence"><?php echo $LANG['DEL_OCC']; ?></button>
+					<button class="button-danger" name="submitaction" type="submit" value="Delete Occurrence"><?php echo $LANG['DEL_OCC']; ?></button>
 				</div>
 			</div>
 		</form>

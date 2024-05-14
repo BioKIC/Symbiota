@@ -19,18 +19,19 @@ if($IS_ADMIN
 		$editable = 1;
 }
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo (isset($LANG['PERS_SPEC_BACKUP'])?$LANG['PERS_SPEC_BACKUP']:'Personal Specimen Backup'); ?></title>
+	<title><?php echo $LANG['PERS_SPEC_BACKUP']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
 </head>
 <body>
 <!-- This is inner text! -->
-<div id="innertext">
+<div role="main" id="innertext">
+	<h1 class="page-heading"><?= $LANG['PERS_SPEC_BACKUP']; ?></h1>
 	<?php
 	if($editable){
 		if($action == 'Perform Backup'){
@@ -38,7 +39,7 @@ if($IS_ADMIN
 			$dlFile = $dlManager->dlSpecBackup($collId,$cSet,$zipFile);
 			if($dlFile){
 				echo '<li style="font-weight:bold;">'.(isset($LANG['BACK_COMPLETE'])?$LANG['BACK_COMPLETE']:'Backup Complete').'!</li>';
-				echo '<li style="font-weight:bold;">'.(isset($LANG['CLICK'])?$LANG['CLICK']:'Click on file to download').': <a href="'.$dlFile.'">'.$dlFile.'</a></li>';
+				echo '<li style="font-weight:bold;">'.(isset($LANG['CLICK'])?$LANG['CLICK']:'Click on file to download').': <a href="' . htmlspecialchars($dlFile, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($dlFile, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';
 				echo '</ul>';
 			}
 			echo '</ul>';

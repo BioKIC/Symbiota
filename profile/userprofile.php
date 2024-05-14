@@ -12,6 +12,7 @@ if(!is_numeric($userId)) $userId = 0;
 $pHandler = new ProfileManager();
 $pHandler->setUid($userId);
 $person = $pHandler->getPerson();
+$isAccessiblePreferred = $pHandler->getAccessibilityPreference($SYMB_UID);
 
 $isSelf = true;
 if($userId != $SYMB_UID) $isSelf = false;
@@ -22,10 +23,16 @@ if(isset($SYMB_UID) && $SYMB_UID){
 }
 if($isEditor){
 	?>
+	<!DOCTYPE html>
+    <html lang="<?php echo $LANG_TAG ?>">
+	<head>
+    <title><?php echo $LANG['DETAILS']; ?></title>
+    </head>
+	<body>
 	<div style="padding:15px;">
 		<div>
 			<div>
-				<b><u><?php echo (isset($LANG['DETAILS'])?$LANG['DETAILS']:'Profile Details'); ?></u></b>
+				<h1 class="page-heading"><?php echo $LANG['DETAILS']; ?></h1>
 			</div>
 			<div style="margin:20px;">
 				<?php
@@ -48,10 +55,10 @@ if($isEditor){
 				echo '<div>Login name: '.($person->getUserName()?$person->getUserName():'not registered').'</div>';
 				?>
 				<div style="font-weight:bold;margin-top:10px;">
-					<div><a href="#" onclick="toggleEditingTools('profileeditdiv');return false;"><?php echo (isset($LANG['EDIT_PROFILE'])?$LANG['EDIT_PROFILE']:'Edit Profile'); ?></a></div>
-					<div><a href="#" onclick="toggleEditingTools('pwdeditdiv');return false;"><?php echo (isset($LANG['CHANGE_PASSWORD'])?$LANG['CHANGE_PASSWORD']:'Change Password'); ?></a></div>
-					<div><a href="#" onclick="toggleEditingTools('logineditdiv');return false;"><?php echo (isset($LANG['CHANGE_LOGIN'])?$LANG['CHANGE_LOGIN']:'Change Login'); ?></a></div>
-					<div><a href="#" onclick="toggleEditingTools('managetokensdiv');return false;"><?php echo (isset($LANG['MANAGE_ACCESS'])?$LANG['MANAGE_ACCESS']:'Manage Access'); ?></a></div>
+					<div><a href="#" onclick="toggleEditingTools('profileeditdiv');return false;"><?php echo htmlspecialchars((isset($LANG['EDIT_PROFILE'])?$LANG['EDIT_PROFILE']:'Edit Profile'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
+					<div><a href="#" onclick="toggleEditingTools('pwdeditdiv');return false;"><?php echo htmlspecialchars((isset($LANG['CHANGE_PASSWORD'])?$LANG['CHANGE_PASSWORD']:'Change Password'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
+					<div><a href="#" onclick="toggleEditingTools('logineditdiv');return false;"><?php echo htmlspecialchars((isset($LANG['CHANGE_LOGIN'])?$LANG['CHANGE_LOGIN']:'Change Login'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
+					<div><a href="#" onclick="toggleEditingTools('managetokensdiv');return false;"><?php echo htmlspecialchars((isset($LANG['MANAGE_ACCESS'])?$LANG['MANAGE_ACCESS']:'Manage Access'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
 				</div>
 			</div>
 		</div>
@@ -59,7 +66,7 @@ if($isEditor){
 			<form name="editprofileform" action="viewprofile.php" method="post">
 				<fieldset>
 					<legend><b><?php echo (isset($LANG['EDIT_U_PROFILE'])?$LANG['EDIT_U_PROFILE']:'Edit User Profile'); ?></b></legend>
-					<table cellspacing='1' style="width:100%;">
+					<table style="width:100%; border-spacing: 1px;">
 						<tr>
 							<td><b><?php echo (isset($LANG['FIRST_NAME'])?$LANG['FIRST_NAME']:'First Name'); ?>:</b></td>
 							<td>
@@ -81,6 +88,15 @@ if($isEditor){
 							<td>
 								<div>
 									<input id="email" name="email" type="email" size="40" value="<?php echo $person->getEmail();?>" required />
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td><b><?php echo (isset($LANG['ACCESSIBILITY_PREF'])?$LANG['ACCESSIBILITY_PREF']:'Accessibility Preferences'); ?>:</b></td>
+							<td>
+								<div>
+									<input type="checkbox" name="accessibility-pref" id="accessibility-pref" value="1" <?php echo $isAccessiblePreferred ? 'checked' : ''; ?> />
+									<label for="accessibility-pref"><?php echo (isset($LANG['ACCESSIBILITY_PREF_DESC'])?$LANG['ACCESSIBILITY_PREF_DESC']:'Check to indicate a preference for accessibility-optimized styles'); ?></label>
 								</div>
 							</td>
 						</tr>
@@ -155,7 +171,7 @@ if($isEditor){
 				<fieldset style="padding:15px;width:200px;">
 					<legend><b><?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?></b></legend>
 					<input type="hidden" name="userid" value="<?php echo $userId;?>" />
-					<button type="submit" name="action" value="deleteProfile"><?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?></button>
+					<button type="submit" name="action" class="button-danger" value="deleteProfile"><?php echo (isset($LANG['DELETE_PROF'])?$LANG['DELETE_PROF']:'Delete Profile'); ?></button>
 				</fieldset>
 			</form>
 		</div>
@@ -242,9 +258,9 @@ if($isEditor){
 		</div>
 		<div>
 			<div>
-				<b><u><?php echo (isset($LANG['TAXON_RELS'])?$LANG['TAXON_RELS']:'Taxonomic Relationships'); ?></u></b>
-				<a href="#" onclick="toggle('addtaxonrelationdiv')" title="<?php echo (isset($LANG['ADD_TAXON_REL'])?$LANG['ADD_TAXON_REL']:'Add a New Taxonomic Relationship'); ?>">
-					<img style='border:0px;width:15px;' src='../images/add.png'/>
+				<b><span style="text-decoration: underline;"><?php echo (isset($LANG['TAXON_RELS'])?$LANG['TAXON_RELS']:'Taxonomic Relationships'); ?></span></b>
+				<a href="#" onclick="toggle('addtaxonrelationdiv')" title="<?php echo (isset($LANG['ADD_TAXON_REL'])?$LANG['ADD_TAXON_REL']:'Add a New Taxonomic Relationship'); ?>" aria-label="<?php echo $LANG['CREATE_TAXON_REL'] ?>" >
+					<img style='border:0px;width:1.3em;' src='../images/add.png' alt='<?php echo $LANG['ADD_ICON'] ?>'/>
 				</a>
 			</div>
 			<div id="addtaxonrelationdiv" style="display:none;">
@@ -295,7 +311,7 @@ if($isEditor){
 						echo $utArr['sciname'];
 						if($utArr['geographicScope']) echo ' - '.$utArr['geographicScope'].' ';
 						if($utArr['notes']) echo ', '.$utArr['notes'];
-						echo ' <a href="viewprofile.php?action=delusertaxonomy&utid='.$utid.'&userid='.$userId.'"><img src="../images/drop.png" style="width:14px;" /></a>';
+						echo ' <a href="viewprofile.php?action=delusertaxonomy&utid=' . htmlspecialchars($utid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&userid=' . htmlspecialchars($userId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><img src="../images/drop.png" style="width:1.2em;" /></a>';
 						echo '</li>';
 					}
 					echo '</ul>';
@@ -308,6 +324,8 @@ if($isEditor){
 			?>
 		</div>
 	</div>
+	</body>
+	</html>
 	<?php
 }
 ?>

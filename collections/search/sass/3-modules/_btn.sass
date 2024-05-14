@@ -1,0 +1,43 @@
+// Cool styles based off of: https://codepen.io/rkchauhan/pen/NNKgJY
+$btn_lightBlue: #002d74
+  
+.btn
+  color: #ffffff
+  background-color: $accent-color-darker
+  display: inline-block
+  position: relative
+  cursor: pointer
+  height: 35px
+  line-height: 35px
+  padding: 0 1.5rem
+  font-size: 16px
+  font-weight: 600
+  // font-family: 'Roboto', sans-serif
+  letter-spacing: .8px
+  text-align: center
+  text-decoration: none
+  text-transform: uppercase
+  vertical-align: middle
+  white-space: nowrap
+  outline: none
+  border: none
+  user-select: none
+  border-radius: 2px
+  transition: all .3s ease-out
+  box-shadow: 0 2px 5px 0 rgba(0,0,0,0.225)
+
+  &:hover
+    color: #ffffff
+    background-color: lighten($accent-color-darker, 10%)
+    text-decoration: none
+    box-shadow: 0 4px 10px 0px rgba(0,0,0,0.225)
+
+.btn-icon
+  display: block
+  float: left
+  width: 35px
+  line-height: 35px !important
+  border-radius: 50%
+  text-align: center
+  color: white
+  margin: 0 8px 0 -12px

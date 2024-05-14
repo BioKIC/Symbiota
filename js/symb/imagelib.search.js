@@ -1,10 +1,26 @@
-function imageTypeChanged(selectObj){
-	if(selectObj.value == 1 || selectObj.value == 2){
-		$("#collection-div").show();
-	}
-	else{
-		$("#collection-div").hide();
-	}
+function showCollections(){
+	$("#display-collections-span").hide();
+	$("#hide-collections-span").show();
+	$("#collection-div").show();
+}
+
+function hideCollections(){
+	$("#display-collections-span").show();
+	$("#hide-collections-span").hide();
+	$("#collection-div").hide();
+}
+
+function activateCollectionControl(){
+	$("#collections-control-span").show();
+	$("input[name='db[]']").prop('checked', true);
+	$("input[name='cat[]']").prop('checked', true);
+}
+
+function deactivateCollectionControl(){
+	$("#collections-control-span").hide();
+	$("#collection-div").hide();
+	$("input[name='db[]']").prop('checked', false);
+	$("input[name='cat[]']").prop('checked', false);
 }
 
 function openIndPU(occId,clid){

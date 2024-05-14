@@ -39,6 +39,7 @@ if($collid && $isEditor){
 		hr{ margin:10px 0px; }
 	</style>
 	<div id="contacts_resources">
+		<h1 class="page-heading screen-reader-only">Contacts and Resources Tab</h1>
 		<fieldset>
 			<legend><?php echo (isset($LANG['LINK_RESOURCE'])?$LANG['LINK_RESOURCE']:'Link Resource Listing'); ?></legend>
 			<div id="link-listing">
@@ -46,9 +47,9 @@ if($collid && $isEditor){
 				if($resourceArr = json_decode($collMetaArr['resourcejson'],true)){
 					foreach($resourceArr as $key => $valueArr){
 						echo '<div class="link-div"><span class="label">Link:</span> ';
-						echo '<a href="'.$valueArr['url'].'" target="_blank">'.$valueArr['url'].'</a>';
-						echo '<a href="#" onclick="editLink('.$key.');return false"><img src="../../images/edit.png" /></a>';
-						echo '<a href="#" onclick="deleteLink('.$key.');return false"><img src="../../images/del.png" /></a>';
+						echo '<a href="' . htmlspecialchars($valueArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($valueArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
+						echo '<a href="#" onclick="editLink('.$key.');return false"><img src="../../images/edit.png" style="width:1.2em" /></a>';
+						echo '<a href="#" onclick="deleteLink('.$key.');return false"><img src="../../images/del.png" style="width:1.2em" /></a>';
 						foreach($valueArr['title'] as $langCode => $titleValue){
 							$langStr = $langCode;
 							if($langCode == 'en') $langStr = (isset($LANG['ENGLISH'])?$LANG['ENGLISH']:'English');
@@ -115,13 +116,13 @@ if($collid && $isEditor){
 					foreach($contactArr as $key => $valueArr){
 						echo '<div class="contact-div">';
 						echo '<div>'.$valueArr['firstName'].' '.$valueArr['lastName'];
-						echo '<a href="#" onclick="editContact('.$key.');return false"><img src="../../images/edit.png" /></a>';
+						echo '<a href="#" onclick="editContact('.$key.');return false"><img src="../../images/edit.png" style="width:1.2em" /></a>';
 						?>
 						<form name="contactDelForm" action="collmetadata.php" method="post" style="display:inline">
 							<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 							<input name="contactIndex" type="hidden" value="<?php echo $key; ?>" />
 							<input name="action" type="hidden" value="deleteContact" />
-							<input type="image" src="../../images/del.png" style="width:13px" />
+							<input type="image" src="../../images/del.png" style="width:1.2em" />
 						</form>
 						<?php
 						echo '</div>';
@@ -135,7 +136,7 @@ if($collid && $isEditor){
 						if(isset($valueArr['phone'])) echo '<div style="margin-left:15px"><span class="label">'.(isset($LANG['PHONE'])?$LANG['PHONE']:'phone').': </span>'.$valueArr['phone'].'</div>';
 						if(isset($valueArr['orcid'])){
 							echo '<div style="margin-left:15px">';
-							echo '<span class="label">ORCID #: </span><a href="https://orcid.org/'.$valueArr['orcid'].'" target="_blank">'.$valueArr['orcid'].'</a>';
+							echo '<span class="label">ORCID #: </span><a href="https://orcid.org/' . htmlspecialchars($valueArr['orcid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($valueArr['orcid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 							echo '</div>';
 						}
 						echo '</div>';
@@ -198,11 +199,11 @@ if($collid && $isEditor){
 					echo '<div>';
 					echo $instArr['institutionname'].($instArr['institutioncode']?' ('.$instArr['institutioncode'].')':'');
 					?>
-					<a href="institutioneditor.php?emode=1&targetcollid=<?php echo $collid.'&iid='.$instArr['iid']; ?>" title="<?php echo (isset($LANG['EDIT_ADDRESS'])?$LANG['EDIT_ADDRESS']:'Edit institution address'); ?>">
-						<img src="../../images/edit.png" style="width:14px;" />
+					<a href="institutioneditor.php?emode=1&targetcollid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&iid=' . htmlspecialchars($instArr['iid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" title="<?php echo htmlspecialchars((isset($LANG['EDIT_ADDRESS'])?$LANG['EDIT_ADDRESS']:'Edit institution address'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
+						<img src="../../images/edit.png" style="width:1.2em;" />
 					</a>
-					<a href="collmetadata.php?tabindex=1&collid=<?php echo $collid.'&removeiid='.$instArr['iid']; ?>" title="<?php echo (isset($LANG['UNLINK_ADDRESS'])?$LANG['UNLINK_ADDRESS']:'Unlink institution address'); ?>">
-						<img src="../../images/drop.png" style="width:14px;" />
+					<a href="collmetadata.php?tabindex=1&collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&removeiid=' . htmlspecialchars($instArr['iid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" title="<?php echo htmlspecialchars((isset($LANG['UNLINK_ADDRESS'])?$LANG['UNLINK_ADDRESS']:'Unlink institution address'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
+						<img src="../../images/drop.png" style="width:1.2em;" />
 					</a>
 					<?php
 					echo '</div>';
@@ -213,7 +214,7 @@ if($collid && $isEditor){
 					if($instArr['phone']) echo '<div>'.$instArr['phone'].'</div>';
 					if($instArr['contact']) echo '<div>'.$instArr['contact'].'</div>';
 					if($instArr['email']) echo '<div>'.$instArr['email'].'</div>';
-					if($instArr['url']) echo '<div><a href="'.$instArr['url'].'">'.$instArr['url'].'</a></div>';
+					if($instArr['url']) echo '<div><a href="' . htmlspecialchars($instArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($instArr['url'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
 					if($instArr['notes']) echo '<div>'.$instArr['notes'].'</div>';
 					?>
 				</div>
@@ -239,8 +240,8 @@ if($collid && $isEditor){
 						<input name="action" type="submit" value="<?php echo (isset($LANG['LINK_ADDRESS'])?$LANG['LINK_ADDRESS']:'Link Address'); ?>" />
 					</form>
 					<div style="margin:15px;">
-						<a href="institutioneditor.php?emode=1&targetcollid=<?php echo $collid; ?>" title="<?php echo (isset($LANG['ADD_ADDRESS'])?$LANG['ADD_ADDRESS']:'Add a new address not on the list'); ?>">
-							<b><?php echo (isset($LANG['ADD_INST'])?$LANG['ADD_INST']:'Add an institution not on list'); ?></b>
+						<a href="institutioneditor.php?emode=1&instcode=<?= $collMetaArr['institutioncode'] ?>&targetcollid=<?= $collid ?>" title="<?= (isset($LANG['ADD_ADDRESS']) ? htmlspecialchars($LANG['ADD_ADDRESS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : 'Add a new address not on the list') ?>">
+							<b><?= (isset($LANG['ADD_INST']) ? $LANG['ADD_INST'] : 'Add an institution not on list') ?></b>
 						</a>
 					</div>
 				</div>

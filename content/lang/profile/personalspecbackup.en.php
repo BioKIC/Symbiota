@@ -5,7 +5,7 @@ Language: English
 ------------------
 */
 
-$LANG['PERS_SPEC_BACKUP'] = 'Personal Specimen Backup';
+$LANG['PERS_SPEC_BACKUP'] = 'Personal Records Backup';
 $LANG['BACK_COMPLETE'] = 'Backup Complete';
 $LANG['CLICK'] = 'Click on file to download';
 $LANG['DOWNLOAD_MOD'] = 'Download Module';

@@ -16,7 +16,7 @@ switch ($mode) {
     // auto create agents from collector records
     $am = new AgentManager();
     if ($am->isAgentEditor()) {    
-      echo "<html><head>".str_repeat(" ", 1024)."</head><body>\n";
+      echo "<!DOCTYPE html><html lang=" . $LANG_TAG . "><head>" . str_repeat(" ", 1024) . "</head><body>\n";
       echo "<h2>Creating agents from collector records.</h2>\n";
       flush();
       echo $am->createCollectorsByPattern();

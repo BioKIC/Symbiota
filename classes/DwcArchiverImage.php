@@ -66,7 +66,7 @@ class DwcArchiverImage{
 			}
 			$sql = 'SELECT '.trim($sqlFrag,', ').
 				' FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-				'LEFT JOIN omcollections c ON o.collid = c.collid '.
+				'INNER JOIN omcollections c ON o.collid = c.collid '.
 				'LEFT JOIN users u ON i.photographeruid = u.uid ';
 			if(strpos($conditionSql,'ts.taxauthid')){
 				$sql .= 'LEFT JOIN taxstatus ts ON o.tidinterpreted = ts.tid ';
@@ -84,6 +84,9 @@ class DwcArchiverImage{
 			}
 			if(strpos($conditionSql,'MATCH(f.recordedby)') || strpos($conditionSql,'MATCH(f.locality)')){
 				$sql .= 'INNER JOIN omoccurrencesfulltext f ON o.occid = f.occid ';
+			}
+			if(strpos($conditionSql,'ds.datasetid')){
+				$sql .= 'LEFT JOIN omoccurdatasetlink ds ON o.occid = ds.occid ';
 			}
 			if(stripos($conditionSql,'a.stateid')){
 				//Search is limited by occurrence attribute

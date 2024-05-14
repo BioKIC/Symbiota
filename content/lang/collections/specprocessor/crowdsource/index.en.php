@@ -7,10 +7,16 @@ Language: English
 
 $LANG['CROWDSOURCE_SCORE_BOARD'] = 'Crowdsourcing Score Board';
 $LANG['TOP_SCORES'] = 'Top Scores';
+$LANG['USER'] = 'User';
 $LANG['APPROVED_SCORE'] = 'Approved Score';
 $LANG['PENDING_SCORE'] = 'Pending Score';
 $LANG['TOP_SCORES_NOT_AVAIL'] = 'Top scores not yet available';
 $LANG['YOUR_STANDING'] = 'Your Current Standing';
+$LANG['SPEC_PROC_AS_VOL'] = 'Specimens processed as volunteer';
+$LANG['ADD_AS_NONVOL'] = 'Additional as non-volunteer';
+$LANG['PEND_POINTS'] = 'Pending points';
+$LANG['APP_POINTS'] = 'Approved points';
+$LANG['TOT_POSS_SCORE'] = 'Total Possible Score';
 $LANG['VIEW_RECORDS'] = 'view records';
 $LANG['ONLY_PROCESSED_SPECIMENS_ELIGIBLE'] = 'Only specimens processed as a volunteer are eligible for points';
 $LANG['LOGIN'] = 'Login';

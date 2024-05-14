@@ -7,10 +7,16 @@ Language: Espa&ntilde;ol
 
 $LANG['CROWDSOURCE_SCORE_BOARD'] = 'Pizarra de Puntaje del Crowdsourcing';
 $LANG['TOP_SCORES'] = 'Puntaje M&aacute;s Alta';
+$LANG['USER'] = 'Usuario';
 $LANG['APPROVED_SCORE'] = 'Puntaje Aprobada';
 $LANG['PENDING_SCORE'] = 'Puntaje Pendiente';
 $LANG['TOP_SCORES_NOT_AVAIL'] = ' Puntaje m&aacute;s alta a&uacute;n no disponible';
 $LANG['YOUR_STANDING'] = 'Posici&oacute;n Actual';
+$LANG['SPEC_PROC_AS_VOL'] = 'Especímenes procesados como voluntario';
+$LANG['ADD_AS_NONVOL'] = 'Adicional como no voluntario';
+$LANG['PEND_POINTS'] = 'Puntaje pendiente';
+$LANG['APP_POINTS'] = 'Puntaje aprobada';
+$LANG['TOT_POSS_SCORE'] = 'Puntuación total posible';
 $LANG['VIEW_RECORDS'] = 'ver registros';
 $LANG['ONLY_PROCESSED_SPECIMENS_ELIGIBLE'] = 'Solamente las especimenes revisado por un voluntario son elegibles por recibir puntaje';
 $LANG['LOGIN'] = 'Iniciar Sesi&oacute;n';

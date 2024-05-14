@@ -9,22 +9,22 @@ class ImageExplorer{
 	public function __construct(){
 	 	$this->conn = MySQLiConnectionFactory::getCon("readonly");
 	}
- 
+
 	public function __destruct(){
 		if(!($this->conn === null)) $this->conn->close();
 	}
 
-	/* 
-	 * Input: JSON array 
-	 * Input criteria: taxon (INT: tid), country (string), state (string), tag (string), 
-	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid), 
-	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT) 
+	/*
+	 * Input: JSON array
+	 * Input criteria: taxon (INT: tid), country (string), state (string), tag (string),
+	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid),
+	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT)
 	 *     e.g. {"state": {"Arizona", "New Mexico"},"taxa":{"Pinus"}}
-	 * Output: Array of images 
+	 * Output: Array of images
 	 */
 	public function getImages($searchCriteria){
 		$retArr = array();
-        if (array_key_exists('taxon',$searchCriteria)) { 
+        if (array_key_exists('taxon',$searchCriteria)) {
            // rewrite key "taxon" shown to users to that recognised for the fieldname "taxa".
            $searchCriteria['taxa'] = $searchCriteria['taxon'];
            unset($searchCriteria['taxon']);
@@ -37,7 +37,7 @@ class ImageExplorer{
 				$retArr[$r['imgid']] = $r;
 			}
 			$rs->free();
-			
+
 			if($retArr){
 				//Grab sciname and tid assigned to img, whether accepted or not
 				$sql2 = 'SELECT i.imgid, t.tid, t.sciname FROM images i INNER JOIN taxa t ON i.tid = t.tid '.
@@ -54,7 +54,7 @@ class ImageExplorer{
 					echo 'ERROR populating assigned tid and sciname for image: '.$this->conn->error.'<br/>';
 					echo 'SQL: '.$sql2;
 				}
-			
+
 				//Set image count
 				$cntSql = 'SELECT count(DISTINCT i.imgid) AS cnt '.substr($sql,strpos($sql,' FROM '));
 				$cntSql = substr($cntSql,0,strpos($cntSql,' LIMIT '));
@@ -76,14 +76,14 @@ class ImageExplorer{
 		}
 		return $retArr;
 	}
-	
-	/* 
+
+	/*
 	 * Input: array of criteria (e.g. array("state" => array("Arizona", "New Mexico"))
-	 * Input criteria: taxa (INT: tid), country (string), state (string), tag (string), 
-	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid), 
-	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT) 
+	 * Input criteria: taxa (INT: tid), country (string), state (string), tag (string),
+	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid),
+	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT)
 	 *     e.g. {"state": ["Arizona", "New Mexico"],"taxa":["Pinus"}}
-	 * Output: String, SQL to be used to query database  
+	 * Output: String, SQL to be used to query database
 	 */
 	private function getSql($searchCriteria){
 		$sqlWhere = '';
@@ -103,26 +103,16 @@ class ImageExplorer{
 				$sqlWhere .= 'AND (i.tid IN('.implode(',',$this->cleanInArray($tidArr)).')) ';
 			}
 		}
-		
+
 		// do something with "TEXT"
-		if (isset($searchCriteria['text']) && $searchCriteria['text']) { 
+		if (isset($searchCriteria['text']) && $searchCriteria['text']) {
 			$sqlWhere .= 'AND o.scientificName like "%'.$this->cleanInStr($searchCriteria['text'][0]).'%" ';
 		}
 
 		//Set country
 		if(isset($searchCriteria['country']) && $searchCriteria['country']){
 			$countryArr = $this->cleanInArray($searchCriteria['country']);
-			/*
-			$countryArr = array();
-			$sqlCountry = 'SELECT countryname FROM lkupcountry '.
-				'WHERE countryid IN('.implode(',',$this->cleanInArray($searchCriteria['country'])).')';
-			$rsCountry = $this->conn->query($sqlCountry);
-			while($rCountry = $rsCountry->fetch_object()){
-				$countryArr[] = $rCountry->countryname;
-			}
-			$rsCountry->free();
-			*/
-			
+
 			//Deal with multiple USA synonyms
 			$usaArr = array('usa','united states','united states of america','u.s.a','us');
 			foreach($countryArr as $countryStr){
@@ -137,16 +127,6 @@ class ImageExplorer{
 		//Set state
 		if(isset($searchCriteria['state']) && $searchCriteria['state']){
 			$stateArr = $this->cleanInArray($searchCriteria['state']);
-			/*
-			$stateArr = array();
-			$sqlState = 'SELECT statename FROM lkupstateprovince '.
-				'WHERE stateid IN('.implode(',',$this->cleanInArray($searchCriteria['state'])).')';
-			$rsState = $this->conn->query($sqlState);
-			while($rState = $rsState->fetch_object()){
-				$stateArr[] = $rState->statename;
-			}
-			$rsState->free();
-			*/
 			$sqlWhere .= 'AND o.stateProvince IN("'.implode('","',$stateArr).'") ';
 		}
 
@@ -155,40 +135,40 @@ class ImageExplorer{
 			$sqlWhere .= 'AND it.keyvalue IN("'.implode('","',$this->cleanInArray($searchCriteria['tags'])).'") ';
 		}
 		else{
-			/* If no tags, then limit to sort value less than 500, 
+			/* If no tags, then limit to sort value less than 500,
 			 * this is old system for limiting certain images to specimen details page only,
-			 * will replace with tag system in near future 
+			 * will replace with tag system in near future
 			*/
 			$sqlWhere .= 'AND i.sortsequence < 500 ';
 		}
-		
-		//Set collection 
+
+		//Set collection
 		if(isset($searchCriteria['collection']) && $searchCriteria['collection']){
 			$sqlWhere .= 'AND o.collid IN('.implode(',',$this->cleanInArray($searchCriteria['collection'])).') ';
 		}
 
-		//Set photographers 
+		//Set photographers
 		if(isset($searchCriteria['photographer']) && $searchCriteria['photographer']){
 			$sqlWhere .= 'AND i.photographerUid IN('.implode(',',$this->cleanInArray($searchCriteria['photographer'])).') ';
 		}
-		
-		if (isset($searchCriteria['idToSpecies']) && $searchCriteria['idToSpecies'] 
-		 && isset($searchCriteria['idNeeded']) && $searchCriteria['idNeeded'] ) { 
-			// if both are checked, don't include filter on either 
+
+		if (isset($searchCriteria['idToSpecies']) && $searchCriteria['idToSpecies']
+		 && isset($searchCriteria['idNeeded']) && $searchCriteria['idNeeded'] ) {
+			// if both are checked, don't include filter on either
 			$includeVerification = FALSE;  // used later to include/exclude the join to omoccurrverification
-		} else { 
+		} else {
 			$includeVerification = FALSE;
 		    //Needing to be identified to species or lower
 		    if(isset($searchCriteria['idNeeded']) && $searchCriteria['idNeeded']){
 	   		    $includeVerification = TRUE;
 	   		    // include occurrences with no verification of identification and an id of genus or higher or those with an identification verification of poor
-	   		    // differs from the query below only in rankid<220 
-	   		    // complexity is added by futureproofing for use of omoccurrverification for categories other than identification, 
+	   		    // differs from the query below only in rankid<220
+	   		    // complexity is added by futureproofing for use of omoccurrverification for categories other than identification,
 	   		    // testing for null omoccurrverification isn't adequate.
-			    $sqlWhere .= "AND ( " . 
+			    $sqlWhere .= "AND ( " .
 			                 "   (o.occid NOT IN (SELECT occid FROM omoccurverification WHERE (category = \"identification\")) AND (t.rankid < 220 OR o.tidinterpreted IS NULL) ) " .
-			                 // "   OR " . 
-			                 // "   (v.category = 'identification' AND v.ranking < 5) " . 
+			                 // "   OR " .
+			                 // "   (v.category = 'identification' AND v.ranking < 5) " .
 			                 " ) ";
 		    }
 		    //Identified to species or lower
@@ -196,10 +176,10 @@ class ImageExplorer{
 	   		   $includeVerification = TRUE;
 	   		    // include occurrences with no verification of identification and an id of species or lower or those with an identification verification of good
 	   		    // differs from the query above only in rankid>=220 and ranking>=5
-			    $sqlWhere .= "AND ( (o.occid IS NULL AND t.rankid IN(220,230,240,260)) OR " . 
+			    $sqlWhere .= "AND ( (o.occid IS NULL AND t.rankid IN(220,230,240,260)) OR " .
 			                 "   (o.occid NOT IN (SELECT occid FROM omoccurverification WHERE (category = \"identification\")) AND t.rankid IN(220,230,240,260)) " .
-			                 "   OR " . 
-			                 "   (v.category = 'identification' AND v.ranking >= 5) " . 
+			                 "   OR " .
+			                 "   (v.category = 'identification' AND v.ranking >= 5) " .
 			                 " ) ";
 		    }
             // identified with a low quality identification
@@ -234,7 +214,7 @@ class ImageExplorer{
 		}
 		// Strip off the leading AND from the assembled where clause.
 		if($sqlWhere) $sqlStr .= 'WHERE '.substr($sqlWhere,3);
-		
+
 		// add the group by clause
 		if(isset($searchCriteria['countPerCategory'])){
 			$countPerCategory = (int)$searchCriteria['countPerCategory'];
@@ -243,7 +223,7 @@ class ImageExplorer{
 				$sqlStr .= 'GROUP BY ts.tidaccepted ';
 			}
 			elseif($searchCriteria['countPerCategory'] === 'specimen'){
-				//one per occurrence (countPerCategory == 1) 
+				//one per occurrence (countPerCategory == 1)
 				$sqlStr .= 'GROUP BY o.occid ';
 			}
 			else{
@@ -251,7 +231,7 @@ class ImageExplorer{
 				//Do nothing
 			}
 		}
-		
+
 		//$sqlStr .= 'ORDER BY i.sortsequence ';
 		//Set start and limit
 		$start = (isset($searchCriteria['start'])?$searchCriteria['start']:0);
@@ -269,7 +249,7 @@ class ImageExplorer{
 		//$imgArr = $this->getImages($searchCriteria);
 		//print_r($imgArr);
 	}
-	
+
 	private function getAcceptedTid($inTidArr){
 		$retArr = array();
 		$sql = 'SELECT tidaccepted, tid FROM taxstatus WHERE taxauthid = 1 AND tid IN('.preg_replace('/^,+/','',implode(',',$inTidArr)).') ';
@@ -283,44 +263,44 @@ class ImageExplorer{
 
 	//Inner query gets all accepted children for input tid, which is an accepted tid
 	//Outer query gets all synonyms for input tid and their children
-	//Return should be all children and their synonyms 
+	//Return should be all children and their synonyms
 	private function getChildSql($inTid){
 		$sqlInner = 'SELECT DISTINCT ts.tid '.
 			'FROM taxstatus ts INNER JOIN taxaenumtree e ON ts.tid = e.tid '.
 			'WHERE ts.taxauthid = 1 AND e.taxauthid = 1 AND ts.tid = ts.tidaccepted '.
 			'AND (e.parenttid = '.$inTid.' OR ts.parenttid = '.$inTid.') ';
-		$sql = 'SELECT DISTINCT tid FROM taxstatus '. 
+		$sql = 'SELECT DISTINCT tid FROM taxstatus '.
 			'WHERE (taxauthid = 1) AND (tidaccepted = '.$inTid.' OR tidaccepted IN('.$sqlInner.'))';
 		return $sql;
 	}
-	
-    /** 
-     * Construct the same query as getChildSql, only execute the query and get the list of tids, 
-     * instead of returning the sql.  Nested query in this context ends up preventing use of 
+
+    /**
+     * Construct the same query as getChildSql, only execute the query and get the list of tids,
+     * instead of returning the sql.  Nested query in this context ends up preventing use of
      * and index, and substatively slows down query on taxon names.
-     * 
+     *
      * @param inTid the taxon id for which to find the list of all synonyms and their children.
      * @return a list tids consisting of the provided tid, all synonyms and children.
      */
-    private function getChildTids($inTid) { 
+    private function getChildTids($inTid) {
         $result = "$inTid";
         $comma = ',';
 		$sqlInner = 'SELECT DISTINCT ts.tid '.
 			'FROM taxstatus ts INNER JOIN taxaenumtree e ON ts.tid = e.tid '.
 			'WHERE ts.taxauthid = 1 AND e.taxauthid = 1 AND ts.tid = ts.tidaccepted '.
 			'AND (e.parenttid = ? OR ts.parenttid = ? ) ';
-		$sql = 'SELECT DISTINCT tid FROM taxstatus '. 
+		$sql = 'SELECT DISTINCT tid FROM taxstatus '.
 			'WHERE (taxauthid = 1) AND (tidaccepted = ? OR tidaccepted IN('.$sqlInner.'))';
         $stmt = $this->conn->prepare($sql);
-        if ($stmt) { 
+        if ($stmt) {
            $stmt->bind_param('iii',$inTid,$inTid,$inTid);
            $stmt->bind_result($tid);
            $stmt->execute();
-           while ($stmt->fetch()) { 
+           while ($stmt->fetch()) {
               $result .= $comma.$tid;
-           }      
+           }
            $stmt->close();
-        } 
+        }
         return $result;
     }
 
@@ -339,7 +319,7 @@ class ImageExplorer{
 			$rs->free();
 		}
 		return array_unique($childArr);
-	} 
+	}
 
 	private function getTaxaSynonyms($inTidArr){
 		$synArr = array();
@@ -354,22 +334,22 @@ class ImageExplorer{
 		}
 		$rs->free();
 		return array_unique($synArr);
-	} 
+	}
 
 	public function getCountries(){
 		$retArr = array();
-		$sql = 'SELECT DISTINCT countryname FROM lkupcountry ';
+		$sql = 'SELECT geoterm FROM geographicthesaurus WHERE geolevel = 50';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-            $retArr[] = $r->countryname;
+			$retArr[] = $r->geoterm;
 		}
 		$rs->free();
 		return $retArr;
 	}
-	
+
 	public function getStates(){
 		$retArr = array();
-		$sql = 'SELECT DISTINCT statename FROM lkupstateprovince ';
+		$sql = 'SELECT DISTINCT geoterm FROM geographicthesaurus WHERE geolevel = 60 ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr[] = $r->statename;
@@ -384,7 +364,7 @@ class ImageExplorer{
         $sql = 'SELECT count(i.imgid) as ct, c.collid, c.institutioncode, c.collectioncode ' .
                ' FROM omcollections c '.
                '    LEFT JOIN omoccurrences o ON c.collid = o.collid '.
-               '    LEFT JOIN images i ON o.occid = i.occid '. 
+               '    LEFT JOIN images i ON o.occid = i.occid '.
                ' WHERE i.imgid is not null  '.
                '       and i.sortsequence < 500 '.
                ' GROUP BY c.collid, c.institutioncode, c.collectioncode '.
@@ -393,11 +373,11 @@ class ImageExplorer{
         $sql = 'SELECT count(i.imgid) as ct, c.collid, c.institutioncode, c.collectioncode ' .
                ' FROM omcollections c '.
                '    INNER JOIN omoccurrences o ON c.collid = o.collid '.
-               '    INNER JOIN images i ON o.occid = i.occid '. 
+               '    INNER JOIN images i ON o.occid = i.occid '.
                ' WHERE i.sortsequence < 500 '.
                ' GROUP BY c.collid, c.institutioncode, c.collectioncode ';
         $stmt = $this->conn->prepare($sql);
-        if ($stmt) { 
+        if ($stmt) {
             $stmt->bind_result($count,$collid,$instcode,$collcode);
             $stmt->execute();
   		    while($stmt->fetch()){
@@ -410,8 +390,8 @@ class ImageExplorer{
         }
 		return json_encode($retArr);
 	}
-	
-	public function getTags() { 
+
+	public function getTags() {
 		$retArr = array();
 		$sql = "select tagkey from imagetagkey order by sortorder asc ";
 	    $stmt = $this->conn->stmt_init();
@@ -419,10 +399,10 @@ class ImageExplorer{
 	    if ($stmt) {
             $stmt->execute();
            $stmt->bind_result($shortlabel);
-           while ($stmt->fetch()) { 
+           while ($stmt->fetch()) {
            	  $retArr[] = $shortlabel;
            }
-	    } 
+	    }
 		return json_encode($retArr);
 	}
 

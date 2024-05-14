@@ -148,7 +148,7 @@ class OccurrenceSesar extends Manager {
 			//$this->logOrEcho('#'.$increment.': IGSN created for <a href="../editor/occurrenceeditor.php?occid='.$this->fieldMap['occid']['value'].'" target="_blank">'.$this->fieldMap['catalogNumber']['value'].'</a>',1);
 			if($this->registrationMethod == 'api'){
 				if($this->registerIdentifiersViaApi()){
-					$this->logOrEcho('#'.$increment.': IGSN registered: <a href="../editor/occurrenceeditor.php?occid='.$r['occid'].'" target="_blank">'.$igsn.'</a>',1);
+					$this->logOrEcho('#' . htmlspecialchars($increment, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ': IGSN registered: <a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($r['occid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($igsn, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>',1);
 				}
 				$this->igsnDom = null;
 			}
@@ -164,6 +164,9 @@ class OccurrenceSesar extends Manager {
 			}
 			elseif($this->registrationMethod == 'xml'){
 				$this->logOrEcho('XML document created');
+				ob_start();
+				ob_clean();
+				ob_end_flush();
 				header('Content-Description: ');
 				header('Content-Type: application/xml');
 				header('Content-Disposition: attachment; filename=SESAR_IGSN_registration_'.date('Y-m-d_His').'.xml');

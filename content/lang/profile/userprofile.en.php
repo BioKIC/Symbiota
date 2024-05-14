@@ -49,5 +49,10 @@ $LANG['ADD_TAX'] = 'Add Taxonomic Relationship';
 $LANG['OCC_EDIT'] = 'Occurrence Editor';
 $LANG['TAX_THES'] = 'Taxonomic Thesaurus Editor';
 $LANG['NO_RELS'] = 'No relationships defined';
+$LANG['ACCESSIBILITY_PREF'] = 'Accessibility Preference';
+$LANG['ACCESSIBILITY_PREF_DESC'] = 'Check to indicate a preference for accessibility-optimized styles';
+
+$LANG['CREATE_TAXON_REL'] = 'Create a New Taxonomic Relationship';
+$LANG['ADD_ICON'] = 'Add Icon';
 
 ?>

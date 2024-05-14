@@ -6,6 +6,7 @@ Language: English
 */
 
 $LANG['INVPROJ'] = 'Inventory Projects';
+$LANG['INVPROJLIST'] = 'Inventory Project List';
 $LANG['PROJMANAG'] = 'Project Managers:';
 $LANG['METADATA'] = 'Metadata';
 $LANG['INVMANAG'] = 'Inventory Managers';
@@ -46,4 +47,27 @@ $LANG['CHOOSEUSER'] = 'Choose a user from the pull-down';
 $LANG['ADDNEWPR'] = 'Add New Project';
 $LANG['TOGGLEEDIT'] = 'Toggle Editing Functions';
 $LANG['MAPREP'] = 'Map representation of checklists';
+$LANG['PENCIL_ALT'] = 'image of a pencil on paper, indicating edit mode toggle';
+$LANG['QUESTION_ALT'] = 'image of a question mark for more information about research species lists';
+$LANG['GLOBE_ALT'] = 'image a globe, indicating a version of the checklist superimposed on a map';
+$LANG['TRIANGLE_ALT'] = 'an image of a triangle. Just used to make the pop up look more like a dialog bubble';
+$LANG['EDIT'] = 'Edit';
+$LANG['KEY'] = 'Key';
+$LANG['KEY_SYMBOL'] = 'Key Symbol';
+$LANG['ADD_NEW_PRJ'] = 'Add New Project';
+$LANG['EDIT_PRJ'] = 'Edit Project';
+
+//Manager Tab
+$LANG['INVENTORY_PROJECT_MANAGERS'] = 'Inventory Project Managers';
+$LANG['ADD_NEW_MANAGER'] = 'Add a New Manager';
+$LANG['ADD_TO_MANAGER_LIST'] = 'Add to Manager List';
+$LANG['SELECT_USER'] = 'Select a User';
+
+//Checklist Tab
+$LANG['ADD_A_CHECKLIST'] = 'Add a Checklist';
+$LANG['SELECT_CHECKLIST_TO_ADD'] = 'Select Checklist to Add';
+$LANG['ADD_CHECKLIST'] = 'Add Checklist';
+$LANG['DELETE_A_CHECKLIST'] = 'Delete a Checklist';
+$LANG['SELECT_CHECKLIST_TO_DELETE'] = 'Select Checklist to Delete';
+$LANG['DELETE_CHECKLIST'] = 'Delete Checklist';
 ?>

@@ -212,12 +212,13 @@ class SpecProcessorManager {
 			$rs->free();
 
 			//Temporary code until customStoredProcedure field is offically integrated into specprocessorprojects table
-			$sql = 'SELECT customStoredProcedure FROM specprocessorprojects '.$sqlWhere;
-			if($rs = $this->conn->query($sql)){
-				if($r = $rs->fetch_object()) $this->customStoredProcedure = $r->customStoredProcedure;
-				$rs->free();
-			}
-
+			try{
+				$sql = 'SELECT customStoredProcedure FROM specprocessorprojects '.$sqlWhere;
+				if($rs = $this->conn->query($sql)){
+					if($r = $rs->fetch_object()) $this->customStoredProcedure = $r->customStoredProcedure;
+					$rs->free();
+				}
+			} catch (Exception $e) {}
 			//if(!$this->targetPath) $this->targetPath = $GLOBALS['imageRootPath'];
 			//if(!$this->imgUrlBase) $this->imgUrlBase = $GLOBALS['imageRootUrl'];
 			if($this->sourcePath && substr($this->sourcePath,-1) != '/' && substr($this->sourcePath,-1) != '\\') $this->sourcePath .= '/';
@@ -354,7 +355,7 @@ class SpecProcessorManager {
 				'WHERE collid = '.$this->collid.' GROUP BY processingstatus';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
-				$psArr[strtolower($r->processingstatus)] = $r->cnt;
+				$psArr[strtolower($r->processingstatus ?? '')] = $r->cnt;
 			}
 			$rs->free();
 			//Load into $retArr in a specific order
@@ -461,9 +462,9 @@ class SpecProcessorManager {
 		$retArr = array();
 		$startDate = (preg_match('/^[\d-]+$/', $getArr['startdate'])?$getArr['startdate']:'');
 		$endDate = (preg_match('/^[\d-]+$/', $getArr['enddate'])?$getArr['enddate']:'');
-		$uid = (is_numeric($getArr['uid'])?$getArr['uid']:'');
+		$uid = filter_var($getArr['uid'], FILTER_SANITIZE_NUMBER_INT);
 		$interval = $getArr['interval'];
-		$processingStatus = $this->cleanInStr($getArr['processingstatus']);
+		$processingStatus = $getArr['processingstatus'];
 
 		$dateFormat = '';
 		$dfgb = '';
@@ -508,7 +509,7 @@ class SpecProcessorManager {
 		if($processingStatus){
 			$sql .= 'AND e.fieldname = "processingstatus" ';
 			if($processingStatus != 'all'){
-				$sql .= 'AND (e.fieldvaluenew = "'.$processingStatus.'") ';
+				$sql .= 'AND (e.fieldvaluenew = "'.$this->cleanInStr($processingStatus).'") ';
 			}
 		}
 		$sql .= 'GROUP BY DATE_FORMAT(e.initialtimestamp, "'.$dfgb.'"), u.username ';

@@ -1,9 +1,11 @@
 <?php
-include_once($SERVER_ROOT.'/classes/UuidFactory.php');
+include_once('OccurrenceUtilities.php');
+include_once('UuidFactory.php');
 
 class ImageShared{
 
 	private $conn;
+	private $connShared = false;
 	private $sourceGdImg;
 
 	private $imageRootPath = '';
@@ -35,6 +37,9 @@ class ImageShared{
 	private $photographer = null;
 	private $photographerUid = null;
 	private $format = null;
+	private $hashFunction = null;
+	private $hashValue = null;
+	private $mediaMD5 = null;
 	private $owner = null;
 	private $locality = null;
 	private $occid = null;
@@ -43,22 +48,29 @@ class ImageShared{
 	private $rights = null;
 	private $accessRights = null;
 	private $copyright = null;
+	private $anatomy = null;
 	private $notes = null;
 	private $sortSeq = 50;
 	private $sortOccurrence = 5;
 
-	private $sourceUrl = null;
 	private $imgLgUrl = null;
 	private $imgWebUrl = null;
 	private $imgTnUrl = null;
+	private $archiveUrl = null;
+	private $sourceUrl = null;
+	private $referenceUrl = null;
 
 	private $activeImgId = 0;
 	private $errArr = array();
 	private $context = null;
 
- 	public function __construct(){
- 		$this->conn = MySQLiConnectionFactory::getCon("write");
- 		$this->imageRootPath = $GLOBALS["imageRootPath"];
+	public function __construct($conn = null){
+		if($conn){
+			$this->conn = $conn;
+			$this->connShared = true;
+		}
+		else $this->conn = MySQLiConnectionFactory::getCon('write');
+		$this->imageRootPath = $GLOBALS["imageRootPath"];
 		if(substr($this->imageRootPath,-1) != "/") $this->imageRootPath .= "/";
 		$this->imageRootUrl = $GLOBALS["imageRootUrl"];
 		if(substr($this->imageRootUrl,-1) != "/") $this->imageRootUrl .= "/";
@@ -85,46 +97,54 @@ class ImageShared{
 		);
 		$this->context = stream_context_create($opts);
 		ini_set('memory_limit','512M');
- 	}
+	}
 
 	public function __destruct(){
 		if($this->sourceGdImg) imagedestroy($this->sourceGdImg);
-		if(!($this->conn === null)){
-			$this->conn->close();
-			$this->conn = null;
+		if(!$this->connShared){
+			if(!($this->conn === null)){
+				$this->conn->close();
+				$this->conn = null;
+			}
 		}
 	}
 
- 	public function reset(){
- 		if($this->sourceGdImg) imagedestroy($this->sourceGdImg);
- 		$this->sourceGdImg = null;
+	public function reset(){
+		if($this->sourceGdImg) imagedestroy($this->sourceGdImg);
+		$this->sourceGdImg = null;
 
- 		$this->sourcePath = '';
+		$this->sourcePath = '';
 		$this->imgName = '';
 		$this->imgExt = '';
 
 		$this->sourceWidth = 0;
 		$this->sourceHeight = 0;
 
-		$this->imgTnUrl = '';
-		$this->imgWebUrl = '';
-		$this->imgLgUrl = '';
+		$this->imgTnUrl = null;
+		$this->imgWebUrl = null;
+		$this->imgLgUrl = null;
+		$this->archiveUrl = null;
+		$this->sourceUrl = null;
+		$this->referenceUrl = null;
 
 		//Image metadata
-		$this->caption = '';
-		$this->photographer = '';
-		$this->photographerUid = '';
-		$this->sourceUrl = '';
-		$this->format = '';
-		$this->owner = '';
-		$this->locality = '';
-		$this->occid = '';
-		$this->tid = '';
-		$this->sourceIdentifier = '';
-		$this->rights = '';
-		$this->accessRights = '';
-		$this->copyright = '';
-		$this->notes = '';
+		$this->caption = null;
+		$this->photographer = null;
+		$this->photographerUid = null;
+		$this->format = null;
+		$this->hashFunction = null;
+		$this->hashValue = null;
+		$this->mediaMD5 = null;
+		$this->owner = null;
+		$this->locality = null;
+		$this->occid = null;
+		$this->tid = null;
+		$this->sourceIdentifier = null;
+		$this->rights = null;
+		$this->accessRights = null;
+		$this->copyright = null;
+		$this->anatomy = null;
+		$this->notes = null;
 		$this->sortSeq = 50;
 		$this->sortOccurrence = 5;
 
@@ -133,7 +153,7 @@ class ImageShared{
 		unset($this->errArr);
 		$this->errArr = array();
 
- 	}
+	}
 
 	public function uploadImage($imgFile = 'imgfile'){
 		if($this->targetPath){
@@ -384,7 +404,7 @@ class ImageShared{
 			}
 		}
 
-		$status = $this->databaseImage();
+		$status = $this->insertImage();
 		return $status;
 	}
 
@@ -446,11 +466,11 @@ class ImageShared{
 			}
 			if(!$this->sourceGdImg){
 				if($this->imgExt == '.gif'){
-			   		$this->sourceGdImg = imagecreatefromgif($this->sourcePath);
+			  		$this->sourceGdImg = imagecreatefromgif($this->sourcePath);
 					if(!$this->format) $this->format = 'image/gif';
 				}
 				elseif($this->imgExt == '.png'){
-			   		$this->sourceGdImg = imagecreatefrompng($this->sourcePath);
+			  		$this->sourceGdImg = imagecreatefrompng($this->sourcePath);
 					if(!$this->format) $this->format = 'image/png';
 				}
 				else{
@@ -500,7 +520,7 @@ class ImageShared{
 		return $status;
 	}
 
-	private function databaseImage(){
+	public function insertImage(){
 		$status = false;
 		if($this->imgLgUrl || $this->imgWebUrl){
 			$urlBase = $this->getUrlBase();
@@ -526,14 +546,15 @@ class ImageShared{
 
 			//Save currently loaded record
 			$guid = UuidFactory::getUuidV4();
-			$sql = 'INSERT INTO images (tid, url, thumbnailurl, originalurl, photographer, photographeruid, format, caption, owner, sourceurl,
-				copyright, locality, occid, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights, recordID)
-				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
+			$sql = 'INSERT INTO images (tid, url, thumbnailurl, originalurl, archiveUrl, sourceurl, referenceUrl, photographer, photographeruid, format, caption, owner,
+				locality, occid, anatomy, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights, copyright, hashFunction, hashValue, mediaMD5, recordID)
+				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)';
 			if($stmt = $this->conn->prepare($sql)) {
 				$userName = $this->cleanInStr($GLOBALS['USERNAME']);
-				if($stmt->bind_param('issssissssssissiissss', $this->tid, $this->imgWebUrl, $this->imgTnUrl, $this->imgLgUrl, $this->photographer, $this->photographerUid, $this->format,
-					$this->caption, $this->owner, $this->sourceUrl, $this->copyright, $this->locality, $this->occid, $this->notes, $userName, $this->sortSeq, $this->sortOccurrence,
-					$this->sourceIdentifier, $this->rights, $this->accessRights, $guid)){
+				if($stmt->bind_param('isssssssissssisssiissssssss', $this->tid, $this->imgWebUrl, $this->imgTnUrl, $this->imgLgUrl, $this->archiveUrl, $this->sourceUrl, $this->referenceUrl,
+					$this->photographer, $this->photographerUid, $this->format, $this->caption, $this->owner, $this->locality, $this->occid, $this->anatomy,
+					$this->notes, $userName, $this->sortSeq, $this->sortOccurrence, $this->sourceIdentifier, $this->rights, $this->accessRights, $this->copyright,
+					$this->hashFunction, $this->hashValue, $this->mediaMD5, $guid)){
 					$stmt->execute();
 					if($stmt->affected_rows == 1){
 						$status = true;
@@ -744,13 +765,8 @@ class ImageShared{
 	}
 
 	public function setPhotographerUid($v){
-		if(is_numeric($v)){
-			$this->photographerUid = $v;
-		}
-	}
-
-	public function setSourceUrl($v){
-		$this->sourceUrl = $this->cleanInStr($v);
+		$v = OccurrenceUtilities::verifyUser($v, $this->conn);
+		$this->photographerUid = $v;
 	}
 
 	public function setImgLgUrl($v){
@@ -765,6 +781,18 @@ class ImageShared{
 		$this->imgTnUrl = $this->cleanInStr($v);
 	}
 
+	public function setArchiveUrl($v){
+		$this->archiveUrl = $this->cleanInStr($v);
+	}
+
+	public function setSourceUrl($v){
+		$this->sourceUrl = $this->cleanInStr($v);
+	}
+
+	public function setReferenceUrl($v){
+		$this->referenceUrl = $this->cleanInStr($v);
+	}
+
 	public function getTargetPath(){
 		return $this->targetPath;
 	}
@@ -775,6 +803,18 @@ class ImageShared{
 
 	public function getFormat(){
 		return $this->format;
+	}
+
+	public function setHashFunction($v){
+		$this->hashFunction = $this->cleanInStr($v);
+	}
+
+	public function setHashValue($v){
+		$this->hashValue = $this->cleanInStr($v);
+	}
+
+	public function setMediaMD5($v){
+		$this->mediaMD5 = $this->cleanInStr($v);
 	}
 
 	public function setOwner($v){
@@ -799,6 +839,10 @@ class ImageShared{
 
 	public function getTid(){
 		return $this->tid;
+	}
+
+	public function setAnatomy($v){
+		$this->anatomy = $this->cleanInStr($v);
 	}
 
 	public function setNotes($v){
@@ -923,10 +967,10 @@ class ImageShared{
 					if(isset($x['content-length'][1])) $this->sourceFileSize = $x['content-length'][1];
 					elseif(isset($x['content-length'])) $this->sourceFileSize = $x['content-length'];
 				}
-	 			else {
-	 				if(isset($x['content-length'])) $this->sourceFileSize = $x['content-length'];
-	 			}
-	 			/*
+				else {
+					if(isset($x['content-length'])) $this->sourceFileSize = $x['content-length'];
+				}
+				/*
 				$ch = curl_init($this->sourcePath);
 				curl_setopt($ch, CURLOPT_NOBODY, true);
 				curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -1142,7 +1186,7 @@ class ImageShared{
 	private function cleanInStr($str){
 		$newStr = trim($str);
 		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
-		$newStr = $this->conn->real_escape_string($newStr);
+		//$newStr = $this->conn->real_escape_string($newStr);
 		return $newStr;
 	}
 }

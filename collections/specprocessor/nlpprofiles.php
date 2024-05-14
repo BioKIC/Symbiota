@@ -3,9 +3,9 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcNlpProfiles.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$action = array_key_exists('formsubmit',$_REQUEST)?$_REQUEST['formsubmit']:'';
-$collId = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
-$spNlpId = array_key_exists('spnlpid',$_REQUEST)?$_REQUEST['spnlpid']:0;
+$action = array_key_exists('formsubmit',$_REQUEST) ? $_REQUEST['formsubmit'] : '';
+$collId = array_key_exists('collid', $_REQUEST) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$spNlpId = array_key_exists('spnlpid',$_REQUEST)? filter_var($_REQUEST['spnlpid'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
 $nlpManager = new SpecProcNlpProfiles();
 //$nlpManager->setCollId($collId);
@@ -38,7 +38,8 @@ if($isEditor){
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>Specimen NLP Profile Manager</title>
 		<?php
@@ -80,8 +81,8 @@ if($isEditor){
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext">
-			<h1>Specimen NLP Profile Manager</h1>
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Specimen NLP Profile Manager</h1>
 			<?php
 			if($status){
 				?>
@@ -97,7 +98,7 @@ if($isEditor){
 				if(!$spNlpId){
 					?>
 					<div style="float:right;margin:10px;" onclick="toggle('addprofilediv');">
-						<img src="../../images/add.png" style="border:0px" />
+						<img src="../../images/add.png" style="width:1.5em;border:0px" />
 					</div>
 					<div id="addprofilediv" style="display:none;">
 						<form name="addprofileform" action="nlpprofiles.php" method="post">
@@ -135,7 +136,7 @@ if($isEditor){
 								foreach($profileArr as $k => $vArr){
 									?>
 									<li>
-										<a href="nlpprofiles.php?collid=<?php echo $collId.'&spnlpid='.$k; ?>">
+										<a href="nlpprofiles.php?collid=<?php echo htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&spnlpid=' . htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
 											<?php echo $vArr['title']; ?>
 										</a>
 									</li>
@@ -156,7 +157,7 @@ if($isEditor){
 					$pArr = array_shift($profileArr);
 					?>
 					<div style="float:right;margin:10px;" onclick="toggle('editdiv');">
-						<img src="../../images/edit.png" style="border:0px" />
+						<img src="../../images/edit.png" style="width:1.3em;border:0px" />
 					</div>
 					<fieldset>
 						<legend><b><?php echo $pArr['title']; ?></b></legend>
@@ -239,7 +240,7 @@ if($isEditor){
 									?>
 									<li>
 										<?php echo '<b>'.$vArr['fieldname'].':</b> '.$vArr['patternmatch']; ?>
-										<img src="../../images/edit.png" onclick="toggle('frageditdiv-<?php echo $k; ?>')" />
+										<img src="../../images/edit.png" style="width:1.2em" onclick="toggle('frageditdiv-<?php echo $k; ?>')" />
 										<div style="margin-left:25px;">
 											<?php echo $vArr['notes']; ?>
 											<div id="frageditdiv-<?php echo $k; ?>" style="display:none;">
@@ -313,7 +314,7 @@ if($isEditor){
 				if(!$SYMB_UID){
 					?>
 					<div style='font-weight:bold;'>
-						Please <a href='../../profile/index.php?refurl=<?php echo $CLIENT_ROOT; ?>/collections/specprocessor/index.php'>login</a>!
+						Please <a href='../../profile/index.php?refurl=<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/collections/specprocessor/index.php'>login</a>!
 					</div>
 					<?php
 				}

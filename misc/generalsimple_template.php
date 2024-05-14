@@ -3,7 +3,7 @@ include_once('../config/symbini.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>Page Title</title>
 		<?php
@@ -17,11 +17,12 @@ header("Content-Type: text/html; charset=".$CHARSET);
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Home</a> &gt;&gt;
+			<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">Home</a> &gt;&gt;
 			<b>New Page</b>
 		</div>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Template Page Header</h1>
 
 
 

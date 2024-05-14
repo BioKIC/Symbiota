@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceSupport.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/datasets/occurharvester.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/datasets/occurharvester.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/datasets/occurharvester.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:'';
@@ -40,16 +43,16 @@ if($isEditor){
 }
 ?>
 <!DOCTYPE HTML>
-<html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>">
-		<title><?php echo $DEFAULT_TITLE; ?> - Occurrence Harvester</title>
+		<title><?php echo $DEFAULT_TITLE; ?> - <?php echo $LANG['OCCUR_HARV']; ?></title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			function validateDownloadForm(f){
 				return true;
@@ -101,7 +104,7 @@ if($isEditor){
 						newText = document.createTextNode(" - "+data.recordedby+" #"+data.recordnumber+" ("+data.eventdate+")");
 					}
 					else{
-						newText = document.createTextNode(" - unable to locate occurrence record");
+						newText = document.createTextNode(" - <?php echo $LANG['UNABLE_TO_LOCATE']; ?> ");
 					}
 					aElem.appendChild(newText);
 				});
@@ -124,30 +127,33 @@ if($isEditor){
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href='../../index.php'>Home</a> &gt;&gt;
+		<a href='../../index.php'><?php echo $LANG['HOME']; ?></a> &gt;&gt;
 		<?php
 		if(isset($collections_datasets_occurharvesterCrumbs)){
 			echo $collections_datasets_occurharvesterCrumbs;
 		}
 		?>
-		<b>Occurrence Harvester</b>
+		<b><?php echo $LANG['OCCUR_HARV']; ?></b>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Add Occurrences to Dataset</h1>
 		<div style="margin:15px">
-			Scan or type barcode number into field below and then hit enter or tab to add the specimen to the list.
-			Once list is complete, you can enter your catalog number in the text field and then transfer to your collection
-			or file export to a file that can be imported into your local database.
+		    <?php echo $LANG['BARCODE_INPUT_INSTRUCTIONS']; ?>
 		</div>
 		<div style="margin:20px 0px">
 			<hr/>
 		</div>
-		<div style="width:450px;float:right;">
+		<div class="bottom-breathing-room">
+			<label for="occidsubmit"><?php echo $LANG['OCCUR_ID']; ?>:</label>
+			<input type="text" name="occidsubmit" id="occidsubmit" onchange="loadOccurRecord(this)" />
+		</div>
+		<div style="width:450px;">
 			<form name="dlform" method="post" action="occurharvester.php" target="_blank">
 				<fieldset>
-					<legend><b>Specimen Queue</b></legend>
+					<legend><b><?php echo $LANG['SPEC_QUEUE']; ?></b></legend>
 					<div id="emptylistdiv" style="margin:20px;">
-						<b>List Empty: </b>enter barcode in field to left
+						<b><?php echo $LANG['LIST_EMPTY']; ?>: </b><?php echo $LANG['ENTER_OCC_ID']; ?>
 					</div>
 					<div id="occidlist" style="margin:10px;">
 					</div>
@@ -155,20 +161,16 @@ if($isEditor){
 					if($collid){
 						?>
 						<div style="margin:30px">
-							<input name="formsubmit" type="submit" value="Transfer Records" />
+							<button name="formsubmit" type="submit" value="Transfer Records" ><?php echo $LANG['TRANSFER_RECORD']; ?></button>
 						</div>
 						<?php
 					}
 					?>
 					<div style="margin:30px">
-						<input name="formsubmit" type="submit" value="Download Records" />
+						<button name="formsubmit" type="submit" value="Download Records" ><?php echo $LANG['DOWNLOAD_RECORDS']; ?></button>
 					</div>
 				</fieldset>
 			</form>
-		</div>
-		<div style="">
-			<b>Occurrence ID:</b><br/>
-			<input type="text" name="occidsubmit" onchange="loadOccurRecord(this)" />
 		</div>
 
 	</div>

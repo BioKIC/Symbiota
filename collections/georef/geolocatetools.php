@@ -52,15 +52,16 @@ if($isEditor){
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>GeoLocate Batch Processes</title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery.js" type="text/javascript"></script>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	</head>
 	<body>
 		<?php
@@ -68,12 +69,13 @@ if($isEditor){
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Home</a> &gt;&gt;
-			<a href="../misc/collprofiles.php?emode=1&collid=<?php echo $collId; ?>">Collection Management Menu</a> &gt;&gt;
+			<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">Home</a> &gt;&gt;
+			<a href="../misc/collprofiles.php?emode=1&collid=<?php echo htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">Collection Management Menu</a> &gt;&gt;
 			<b>Batch GeoLocate Tools</b>
 		</div>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading">GeoLocate Batch Processes</h1>
 		<?php
 		if($collId){
 			if($isEditor){
@@ -130,7 +132,7 @@ if($isEditor){
 							<?php
 							foreach($occRecArr as $occid => $occArr){
 								echo '<tr>';
-								echo '<td><a href="">'.$occid.'</a></td>';
+								echo '<td><a href="">' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></td>';
 								echo '<td>'.$occArr['loc'].'</td>';
 								echo '<td></td>';
 								echo '<td><input name="lat-'.$occid.'" type="text" value="'.$occArr['declat'].'" /></td>';

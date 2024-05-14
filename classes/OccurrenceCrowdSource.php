@@ -87,10 +87,10 @@ class OccurrenceCrowdSource {
 			$rs->free();
 
 			//Get record count for those available for adding to queue
-			$sql = 'SELECT count(o.occid) as cnt '.
-				'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
-				'LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid '.
-				'WHERE o.collid = '.$this->collid.' AND (o.processingstatus = "unprocessed") AND q.occid IS NULL ';
+			$sql = 'SELECT count(DISTINCT o.occid) as cnt
+				FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid
+				LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid
+				WHERE o.collid = '.$this->collid.' AND (o.processingstatus = "unprocessed") AND q.occid IS NULL ';
 			$toAddCnt = 0;
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){

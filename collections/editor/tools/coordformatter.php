@@ -1,11 +1,14 @@
 <?php
 include_once('../../../config/symbini.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/tools/coordformatter.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/editor/tools/coordformatter.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/editor/tools/coordformatter.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE; ?> Coordinate Converter</title>
+	<title><?php echo $DEFAULT_TITLE; ?><?php echo $LANG['COORDINATE_CONVERTER'] ?></title>
 	<?php
 
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -23,7 +26,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			var lngEW = f.lngew.value;
 			var datum = f.lldatum.value.replace(/^\s+|\s+$/g,"");
 			if(latDeg && latMin && lngDeg && lngMin){
-				alert("DMS fields must contain a value");
+				alert("<?php echo $LANG['DMS_MUST_CONTAIN_VALUE'] ?>");
 				return false;
 			}
 			if(latMin == "") latMin = 0;
@@ -31,19 +34,19 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			if(lngMin == "") lngMin = 0;
 			if(lngSec == "") lngSec = 0;
 			if(!isNumeric(latDeg) || !isNumeric(latMin) || !isNumeric(latSec) || !isNumeric(lngDeg) || !isNumeric(lngMin) || !isNumeric(lngSec)){
-				alert("Field values must be numeric only");
+				alert("<?php echo $LANG['FIELD_VALUES_MUST_BE_NUMERIC'] ?>");
 				return false;
 			}
 			if(latDeg < 0 || latDeg > 90){
-				alert("Latitude degree must be between 0 and 90 degrees");
+				alert("<?php echo $LANG['LATITUDE_DEGREE_RANGE'] ?>");
 				return false;
 			}
 			else if(lngDeg < 0 || lngDeg > 180){
-				alert("Longitude degree must be between 0 and 180 degrees");
+				alert("<?php echo $LANG['LONGITUDE_DEGREE_RANGE'] ?>");
 				return false;
 			}
 			else if(latMin < 0 || latMin > 60 || lngMin < 0 || lngMin > 60 || latSec < 0 || latSec > 60 || lngSec < 0 || lngSec > 60){
-				alert("Minute and second values can only be between 0 and 60");
+				alert("<?php echo $LANG['MIN_SEC_RANGE'] ?>");
 				return false;
 			}
 			var targetForm = '';
@@ -85,11 +88,11 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			var nValue = f.utmnorth.value.replace(/^\s+|\s+$/g,"");
 			var datum = f.utmdatum.value;
 			if(!zValue || !eValue || !nValue){
-				alert("Zone, Easting, and Northing fields must not be empty");
+				alert("<?php echo $LANG['ZONE_EMPTY_ALERT'] ?>");
 				return false;
 			}
 			if(!isNumeric(eValue) || !isNumeric(nValue)){
-				alert("Easting and northing fields must contain numeric values only");
+				alert("<?php echo $LANG['EAST_NORTH_MUST_CONTAIN_NUMERIC'] ?>");
 				return false;
 			}
 			//Remove prior UTM references from verbatimCoordinates field
@@ -135,23 +138,23 @@ header("Content-Type: text/html; charset=".$CHARSET);
 			var meridian = f.meridian.value.replace(/^\s+|\s+$/g,"");
 
 			if(!township || !range){
-				alert("Township and Range fields must have values");
+				alert("<?php echo $LANG['TOWNSHIP_AND_RANGE_ALERT'] ?>");
 				return false;
 			}
 			else if(!isNumeric(township)){
-				alert("Numeric value expected for Township field. If non-standardize format is used, enter directly into the Verbatim Coordinate Field");
+				alert("<?php echo $LANG['TOWNSHIP_FIELD_ALERT'] ?>");
 				return false;
 			}
 			else if(!isNumeric(range)){
-				alert("Numeric value expected for Range field. If non-standardize format is used, enter directly into the Verbatim Coordinate Field");
+				alert("<?php echo $LANG['RANGE_FIELD_ALERT'] ?>");
 				return false;
 			}
 			else if(!isNumeric(section)){
-				alert("Numeric value expected for Section field. If non-standardize format is used, enter directly into the Verbatim Coordinate Field");
+				alert("<?php echo $LANG['SECTION_FIELD_ALERT'] ?>");
 				return false;
 			}
 			else if(section > 36){
-				alert("Section field must contain a numeric value between 1-36");
+				alert("<?php echo $LANG['SECTION_FIELD_MUST_CONTAIN_VALUE'] ?>");
 				return false;
 			}
 			else{
@@ -196,29 +199,29 @@ header("Content-Type: text/html; charset=".$CHARSET);
 		<form name="formatterForm" onsubmit="return false">
 			<div id="dmsAidDiv" class="toolDiv">
 				<fieldset>
-					<legend>DMS Converter</legend>
+					<legend><?php echo $LANG['DMS_CONVERTER'] ?></legend>
 					<div class="fieldDiv">
-						<span class="labelSpan">Lat:</span>
-						<input name="latdeg" style="width:35px;" title="Latitude Degree" />&deg;
-						<input name="latmin" style="width:50px;" title="Latitude Minutes" />'
-						<input name="latsec" style="width:50px;" title="Latitude Seconds" />&quot;
+						<span class="labelSpan"><?php echo $LANG['LATITUDE'] ?>:</span>
+						<input name="latdeg" style="width:35px;" title="<?php echo $LANG['LATITUDE_DEGREE'] ?>" />&deg;
+						<input name="latmin" style="width:50px;" title="<?php echo $LANG['LATITUDE_MIN'] ?>" />'
+						<input name="latsec" style="width:50px;" title="<?php echo $LANG['LATITUDE_SEC'] ?>" />&quot;
 						<select name="latns">
-							<option>N</option>
-							<option>S</option>
+							<option><?php echo $LANG['NORTH'] ?></option>
+							<option><?php echo $LANG['SOUTH'] ?></option>
 						</select>
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">Long:</span>
-						<input name="lngdeg" style="width:35px;" title="Longitude Degree" />&deg;
-						<input name="lngmin" style="width:50px;" title="Longitude Minutes" />'
-						<input name="lngsec" style="width:50px;" title="Longitude Seconds" />&quot;
+						<span class="labelSpan"><?php echo $LANG['LONGITUDE'] ?>:</span>
+						<input name="lngdeg" style="width:35px;" title="<?php echo $LANG['LONGITUDE_DEGREE'] ?>" />&deg;
+						<input name="lngmin" style="width:50px;" title="<?php echo $LANG['LONGITUDE_MIN'] ?>" />'
+						<input name="lngsec" style="width:50px;" title="<?php echo $LANG['LONGITUDE_SEC'] ?>" />&quot;
 						<select name="lngew">
-							<option>E</option>
-							<option SELECTED>W</option>
+							<option><?php echo $LANG['EAST'] ?></option>
+							<option SELECTED><?php echo $LANG['WEST'] ?></option>
 						</select>
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">Datum:</span>
+						<span class="labelSpan"><?php echo $LANG['DATUM'] ?>:</span>
 						<select name="lldatum">
 							<option value="WGS84" selected>WGS84</option>
 							<option value="NAD27">NAD27</option>
@@ -226,34 +229,34 @@ header("Content-Type: text/html; charset=".$CHARSET);
 						</select>
 					</div>
 					<div style="margin:5px;">
-						<button type="button" onclick="fomatDWS(this.form)">Insert Lat/Long Values</button>
+						<button type="button" onclick="fomatDWS(this.form)"><?php echo $LANG['INSERT_LAT_LONG'] ?></button>
 					</div>
 				</fieldset>
 			</div>
 			<div id="utmAidDiv" class="toolDiv">
 				<fieldset>
-					<legend>UTM Converter</legend>
+					<legend><?php echo $LANG['UTM_CONVERTER'] ?></legend>
 					<div class="fieldDiv">
-						<span class="labelSpan">Zone:</span>
+						<span class="labelSpan"><?php echo $LANG['ZONE'] ?>:</span>
 						<input name="utmzone" style="width:40px;" />
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">East:</span>
+						<span class="labelSpan"><?php echo $LANG['EAST_'] ?>:</span>
 						<input name="utmeast" type="text" style="width:100px;" />
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">North:</span>
+						<span class="labelSpan"><?php echo $LANG['NORTH_'] ?>:</span>
 						<input name="utmnorth" type="text" style="width:100px;" />
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">Hemisphere:</span>
-						<select name="hemisphere" title="Use hemisphere designator (e.g. 12N) rather than grid zone ">
-							<option value="N">North</option>
-							<option value="S">South</option>
+						<span class="labelSpan"><?php echo $LANG['HEMISPHERE'] ?>:</span>
+						<select name="hemisphere" title="<?php echo $LANG['HEMISPHERE_DESIGNATOR'] ?> ">
+							<option value="N"><?php echo $LANG['NORTH_'] ?></option>
+							<option value="S"><?php echo $LANG['SOUTH_'] ?></option>
 						</select>
 					</div>
 					<div class="fieldDiv">
-						<span class="labelSpan">Datum:</span>
+						<span class="labelSpan"><?php echo $LANG['DATUM'] ?>:</span>
 						<select name="utmdatum">
 							<option value="WGS84" selected>WGS84</option>
 							<option value="NAD27">NAD27</option>
@@ -261,33 +264,33 @@ header("Content-Type: text/html; charset=".$CHARSET);
 						</select>
 					</div>
 					<div class="buttonDiv">
-						<button type="button" onclick="formatUTM(this.form)">Insert UTM Values</button>
+						<button type="button" onclick="formatUTM(this.form)"><?php echo $LANG['INSERT_UTM_VALUES'] ?></button>
 					</div>
 				</fieldset>
 			</div>
 			<div id="trsAidDiv" class="toolDiv">
 				<fieldset>
-					<legend>TRS Converter</legend>
+					<legend><?php echo $LANG['TRS_CONVERTER'] ?></legend>
 					<div class="fieldDiv">
-						T<input name="township" style="width:30px;" title="Township" />
+					    <?php echo $LANG['TOWNSHIP'] ?><input name="township" style="width:30px;" title="<?php echo $LANG['TOWNSHIP_'] ?>" />
 						<select name="townshipNS">
-							<option>N</option>
-							<option>S</option>
+							<option><?php echo $LANG['NORTH'] ?></option>
+							<option><?php echo $LANG['SOUTH'] ?></option>
 						</select>
-						R<input name="range" style="width:30px;" title="Range" />
+						<?php echo $LANG['RANGE'] ?><input name="range" style="width:30px;" title="<?php echo $LANG['RANGE_'] ?>" />
 						<select name="rangeEW">
-							<option>E</option>
-							<option>W</option>
+							<option><?php echo $LANG['EAST'] ?></option>
+							<option><?php echo $LANG['WEST'] ?></option>
 						</select>
 					</div>
 					<div class="fieldDiv">
-						Sec:
-						<input name="section" type="input" style="width:30px;" title="Section" />
-						Details:
-						<input name="secdetails" type="input" style="width:90px;" title="Section Details" />
+					    <?php echo $LANG['SECTION'] ?>:
+						<input name="section" type="input" style="width:30px;" title="<?php echo $LANG['SECTION_'] ?>" />
+						<?php echo $LANG['DETAILS'] ?>:
+						<input name="secdetails" type="input" style="width:90px;" title="<?php echo $LANG['SECTION_DETAILS'] ?>" />
 					</div>
-					<select name="meridian" title="Meridian">
-						<option value="">Meridian Selection</option>
+					<select name="meridian" title="<?php echo $LANG['MERIDIAN'] ?>">
+						<option value=""><?php echo $LANG['MERIDIAN_SELECTION'] ?></option>
 						<option value="">----------------------------------</option>
 						<option value="G-AZ">Arizona, Gila &amp; Salt River</option>
 						<option value="NAAZ">Arizona, Navajo</option>
@@ -319,7 +322,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 						<option value="WRWY">Wyoming, Wind River</option>
 					</select>
 					<div class="buttonDiv">
-						<button type="button" onclick="formatTRS(this.form)">Insert TRS Values</button>
+						<button type="button" onclick="formatTRS(this.form)"><?php echo $LANG['INSERT_TRS_VALUES'] ?></button>
 					</div>
 				</fieldset>
 			</div>

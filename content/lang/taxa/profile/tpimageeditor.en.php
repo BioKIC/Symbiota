@@ -5,10 +5,12 @@ Language: English
 ------------------
 */
 
+$LANG['LINKED_FROM'] = 'Linked from';
 $LANG['SORT_SEQUENCE'] = 'Sort sequence';
 $LANG['NEW_VALUE'] = 'New Value';
 $LANG['SUBMIT_SORT_EDITS'] = 'Submit Image Sort Edits';
 $LANG['NO_IMAGES'] = 'No images available';
+$LANG['ADD_NEW_IMAGE'] = 'Add New Image';
 $LANG['SELECT_IMAGE_TO_UPLOAD'] = 'Select an image file located on your computer that you want to upload';
 $LANG['KEEP_LARGE_IMG'] = 'Keep a large version of image, when applicable';
 $LANG['IMG_SIZE_NO_GREATER'] = 'Note: upload image size can not be greater than 4MB';
@@ -34,5 +36,6 @@ $LANG['UPLOAD_IMAGE'] = 'Upload Image';
 $LANG['OPEN_LARGE_IMAGE'] = 'Open Large Image';
 $LANG['MUST_HAVE_EDIT_PERM'] = 'Must have editing privileges for the collection managing this image';
 $LANG['IMAGE_LINKED_FROM'] = 'Image linked from';
+$LANG['TP_IMAGE_EDITOR'] = 'Taxon Profile Image Editor';
 
 ?>

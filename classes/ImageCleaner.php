@@ -68,7 +68,7 @@ class ImageCleaner extends Manager{
 			$status = true;
 			$cnt++;
 			$imgId = $row->imgid;
-			$this->logOrEcho($cnt.': Building thumbnail: <a href="../imgdetails.php?imgid='.$imgId.'" target="_blank">'.$imgId.'</a>...');
+			$this->logOrEcho($cnt.': Building thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>...');
 			$this->conn->autocommit(false);
 			//Tag for updating; needed to ensure two parallel processes are not processing the same image
 			$testSql = 'SELECT thumbnailurl, url FROM images WHERE (imgid = '.$imgId.') FOR UPDATE ';
@@ -128,8 +128,8 @@ class ImageCleaner extends Manager{
 
 	private function buildImageDerivatives($imgId, $catNum, $recUrlWeb, $recUrlTn, $recUrlOrig, $setFormat = false){
 		$status = true;
-		if(substr($recUrlWeb,0,10) == 'processing') $recUrlWeb = '';
-		if(substr($recUrlTn,0,10) == 'processing') $recUrlTn = '';
+		if(isset($recUrlWeb) && substr($recUrlWeb,0,10) == 'processing') $recUrlWeb = '';
+		if(isset($recUrlTn) && substr($recUrlTn,0,10) == 'processing') $recUrlTn = '';
 		//Build target path
 		$targetPath = '';
 		if($this->collid){
@@ -151,7 +151,7 @@ class ImageCleaner extends Manager{
 
 		$imgUrl = '';
 		$webIsEmpty = false;
-		if(strpos($recUrlOrig, 'tropicos.org/ImageDownload.aspx')){
+		if(isset($recUrlOrig) && strpos($recUrlOrig, 'tropicos.org/ImageDownload.aspx')){
 			//Is a TROPICOS image, thus try to harvest web image from their website
 			if(preg_match('/imageid=(\d+)$/', $recUrlOrig, $m)){
 				$newImgPath = $this->imgManager->getTargetPath().'mo_'.$m[1].'.jpg';
@@ -374,7 +374,7 @@ class ImageCleaner extends Manager{
 			$url = $r->url;
 			$urlTn = $r->thumbnailurl;
 			$urlOrig = $r->originalurl;
-			$this->logOrEcho($cnt.'. Rebuilding thumbnail: <a href="../imgdetails.php?imgid='.$r->imgid.'" target="_blank">'.$r->imgid.'</a> [cat#: '.$r->catalognumber.']...',0,'div');
+			$this->logOrEcho($cnt.'. Rebuilding thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> [cat#: ' . htmlspecialchars($r->catalognumber, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ']...',0,'div');
 			//echo 'evaluate_ts: '.$postArr['evaluate_ts'].'<br/>';
 			$tsSource = 0;
 			if($postArr['evaluate_ts']){

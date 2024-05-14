@@ -1,19 +1,23 @@
 <?php
 include_once('../../config/symbini.php');
-include_once($SERVER_ROOT.'/classes/OccurrenceLoans.php');
-header("Content-Type: text/html; charset=".$CHARSET);
-if(!$SYMB_UID) header('Location: '.$CLIENT_ROOT.'/profile/index.php?refurl=../collections/loans/outgoing.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
+include_once($SERVER_ROOT . '/classes/OccurrenceLoans.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/loans/loan_langs.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/loans/loan_langs.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/loans/loan_langs.en.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/editor/includes/determinationtab.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/editor/includes/determinationtab.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/editor/includes/determinationtab.en.php');
+header("Content-Type: text/html; charset=" . $CHARSET);
+if(!$SYMB_UID) header('Location: ' . $CLIENT_ROOT . '/profile/index.php?refurl=../collections/loans/outgoing.php?' . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
 $collid = $_REQUEST['collid'];
 $loanId = $_REQUEST['loanid'];
-$sortTag = (isset($_REQUEST['sortTag'])?$_REQUEST['sortTag']:'');
-
-//Sanitation
-if(!is_numeric($collid)) $collid = 0;
-if(!is_numeric($loanId)) $loanId = 0;
-$sortTag = filter_var($sortTag, FILTER_SANITIZE_STRING);
+$sortTag = (isset($_REQUEST['sortTag']) ? $_REQUEST['sortTag'] : '');
 
 $loanManager = new OccurrenceLoans();
+
+//Sanitation
+$collid = $loanManager->sanitizeInt($collid);
+$loanId = $loanManager->sanitizeInt($loanId);
+
 if($collid) $loanManager->setCollId($collid);
 $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 ?>
@@ -51,7 +55,7 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 				f.tidtoadd.value = data.tid;
 			}
 			else{
-	            alert("WARNING: Taxon not found. It may be misspelled or needs to be added to taxonomic thesaurus by a taxonomic editor.");
+	            alert("<?php echo $LANG['TAXON_NOT_FOUND']; ?>");
 				f.scientificnameauthorship.value = "";
 				f.family.value = "";
 				f.tidtoadd.value = "";
@@ -61,15 +65,15 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 
 	function verifyLoanDet(){
 		if(document.getElementById('dafsciname').value == ""){
-			alert("Scientific Name field must have a value");
+			alert("<?php echo $LANG['SCINAME_NEEDS_VALUE']; ?>");
 			return false;
 		}
 		if(document.getElementById('identifiedby').value == ""){
-			alert("Determiner field must have a value (enter 'unknown' if not defined)");
+			alert("<?php echo $LANG['DET_NEEDS_VALUE']; ?>");
 			return false;
 		}
 		if(document.getElementById('dateidentified').value == ""){
-			alert("Determination Date field must have a value (enter 's.d.' if not defined)");
+			alert("<?php echo $LANG['DET_DATE_NEEDS_VALUE']; ?>");
 			return false;
 		}
 		return true;
@@ -86,7 +90,7 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 			}
 		}
 		if(!cbChecked){
-			alert("Please select specimens to which you wish to apply the action");
+			alert("<?php echo $LANG['PLS_SEL_SPECIMENS']; ?>");
 			return false;
 		}
 		return true;
@@ -94,7 +98,7 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 
 	function processSpecimen(f,splist){
 		if(!f.catalognumber.value){
-			alert("Please enter a catalog number!");
+			alert("<?php echo $LANG['PLS_ENTER_CATNO']; ?>");
 			return false;
 		}
 		else{
@@ -108,14 +112,14 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 			})
 			.done(function(retStr) {
 				if(retStr == "0"){
-					$("#message-span").html("ERROR: No specimens found with that catalog number");
+					$("#message-span").html("<?php echo $LANG['ERROR_NO_SPECS']; ?>");
 					$("#message-span").css("color","red");
 				}
 				else if(retStr == "1"){
 					f.catalognumber.value = '';
-					let msgStr = "SUCCESS: specimen record ";
-					if(mode == "link") msgStr = msgStr + "linked";
-					else msgStr = msgStr + "checked-in";
+					let msgStr = "<?php echo $LANG['SUCCESS_SPEC'] . ' '; ?>";
+					if(mode == "link") msgStr = msgStr + "<?php echo $LANG['LINKED']; ?>";
+					else msgStr = msgStr + "<?php echo $LANG['CHECKED_IN']; ?>";
 					$("#message-span").html(msgStr);
 					$("#message-span").css("color","green");
 
@@ -126,21 +130,21 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 				}
 				else if(retStr == "2"){
 					if(mode == "link"){
-						$("#message-span").html("ERROR: more than one specimens located with same catalog number");
+						$("#message-span").html("<?php echo $LANG['MORE_THAN_ONE']; ?>");
 						$("#message-span").css("color","red");
 					}
 					else{
-						$("#message-span").html("SUCCESS: but more than one specimens were checked-in");
+						$("#message-span").html("<?php echo $LANG['SUCCESS_MORE_THAN']; ?>");
 						$("#message-span").css("color","orange");
 					}
 				}
 				else if(retStr == "3"){
 					if(mode == "link"){
-						$("#message-span").html("Warning: already linked to loan");
+						$("#message-span").html("<?php echo $LANG['WARNING_ALREADY_LINKED']; ?>");
 						$("#message-span").css("color","orange");
 					}
 					else{
-						$("#message-span").html("Warning: already checked-in or not linked to loan");
+						$("#message-span").html("<?php echo $LANG['WARNING_ALREADY_CHECKED']; ?>");
 						$("#message-span").css("color","orange");
 					}
 				}
@@ -153,7 +157,7 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 				}, 4000);
 			})
 			.fail(function() {
-				alert("Technical error: processing specimen failed ");
+				alert("<?php echo $LANG['TECHNICAL_ERROR']; ?>");
 			});
 		}
 		return false;
@@ -249,43 +253,43 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 <div id="outloanspecdiv">
 	<div id="menu-div">
 		<fieldset>
-			<legend>Menu Options</legend>
+			<legend><?php echo $LANG['MENU_OPTIONS']; ?></legend>
 			<ul>
-				<li><a href="#" onclick="displayBatchPanel(true,'speclink');return false;">Link specimens via list of catalog numbers</a></li>
-				<li><a href="#" onclick="displayBarcodePanel(true,'speclink');return false;">Link specimens via scanning barcode</a></li>
-				<li><a href="#" onclick="displayBatchPanel(true,'speccheckin');return false;">Check-in specimens via list of catalog numbers</a></li>
-				<li><a href="#" onclick="displayBarcodePanel(true,'speccheckin');return false;">Check-in specimens via scanning barcode</a></li>
-				<li><a href="#" onclick="displayNewDetPanel(true);return false;">Add New Determinations</a></li>
-				<li><a href="outgoing.php?formsubmit=exportSpecimenList&loanid=<?php echo $loanId.'&collid='.$collid; ?>">Export Full Specimen List</a></li>
-				<li><a href="#" onclick="displayBatchActionPanel(true);return false;">Display batch form select actions</a></li>
+				<li><a href="#" onclick="displayBatchPanel(true,'speclink');return false;"><?php echo $LANG['LINK_VIA_CATNUM']; ?></a></li>
+				<li><a href="#" onclick="displayBarcodePanel(true,'speclink');return false;"><?php echo $LANG['LINK_VIA_BARCODE']; ?></a></li>
+				<li><a href="#" onclick="displayBatchPanel(true,'speccheckin');return false;"><?php echo $LANG['CHECKIN_VIA_CATNUM']; ?></a></li>
+				<li><a href="#" onclick="displayBarcodePanel(true,'speccheckin');return false;"><?php echo $LANG['CHECKIN_VIA_BARCODE']; ?></a></li>
+				<li><a href="#" onclick="displayNewDetPanel(true);return false;"><?php echo $LANG['ADD_DETS']; ?></a></li>
+				<li><a href="outgoing.php?formsubmit=exportSpecimenList&loanid=<?php echo htmlspecialchars($loanId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo $LANG['EXPORT_FULL_LIST']; ?></a></li>
+				<li><a href="#" onclick="displayBatchActionPanel(true);return false;"><?php echo $LANG['DISPLAY_BATCH_FORM']; ?></a></li>
 			</ul>
 		</fieldset>
 	</div>
 	<div id="batchSpec-div" style="display:none">
 		<fieldset>
-			<legend>Batch Process Catalog Numbers</legend>
-			<div  class="info-div">Process multiple specimens at once by entering a list of catalog numbers on separate lines or delimited by commas.</div>
+			<legend><?php echo $LANG['BATCH_PROCESS_CATNUMS']; ?></legend>
+			<div  class="info-div"><?php echo $LANG['BATCH_PROCESS_EXPLAIN']; ?></div>
 			<form name="batchaddform" action="outgoing.php" method="post">
 				<div class="field-div">
-					<label>Processing mode:</label>
-					<span class="radio-span"><input class="speclink" name="processmode" type="radio" value="link" /> Specimen Linking</span>
-					<span class="radio-span"><input class="speccheckin" name="processmode" type="radio" value="checkin" /> Specimen Check-in</span>
+					<label><?php echo $LANG['PROC_MODE']; ?>:</label>
+					<span class="radio-span"><input class="speclink" name="processmode" type="radio" value="link" /> <?php echo $LANG['SPEC_LINKING']; ?></span>
+					<span class="radio-span"><input class="speccheckin" name="processmode" type="radio" value="checkin" /> <?php echo $LANG['SPEC_CHECKIN']; ?></span>
 				</div>
 				<div class="field-div">
-					<label>Catalog numbers:</label><br/>
+					<label><?php echo $LANG['CATNUMS']; ?>:</label><br/>
 					<textarea name="catalogNumbers" cols="6" style="width:700px"></textarea>
 				</div>
 				<div class="field-div">
 					<label>Target:</label>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="allid" /> All Identifiers</span>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="catnum" checked /> Catalog Number</span>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="other" /> Other Catalog Numbers</span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="allid" /> <?php echo $LANG['ALL_IDS']; ?></span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="catnum" checked /> <?php echo $LANG['CATNO']; ?></span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="other" /> <?php echo $LANG['OTHER_CATNUMS']; ?></span>
 				</div>
 				<div class="field-div">
 					<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 					<input name="loanid" type="hidden" value="<?php echo $loanId; ?>" />
 					<div style="float:left;margin-top:15px;margin-left:15px">
-						<button name="formsubmit" type="submit" value="batchProcessSpecimens">Process Specimens</button>
+						<button name="formsubmit" type="submit" value="batchProcessSpecimens"><?php echo $LANG['PROCESS_SPECS']; ?></button>
 					</div>
 				</div>
 			</form>
@@ -293,36 +297,36 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 	</div>
 	<div id="barcodeSpec-div" style="display:none">
 		<fieldset>
-			<legend>Barcode Scanning</legend>
+			<legend><?php echo $LANG['BARCODE_SCANNING']; ?></legend>
 			<form name="barcodeaddform" method="post" onsubmit="processSpecimen(this,<?php echo (!$specList?'0':'1'); ?>);return false;">
-				<div class="info-div">Processing specimens by scanning barcodes. Barcode reader should includes a "return" after each scan (typically the default)</div>
+				<div class="info-div"><?php echo $LANG['BARCODE_SCANNING_EXPLAIN']; ?></div>
 				<div class="field-div">
 					<label>Processing mode:</label>
-					<span class="radio-span"><input class="speclink" name="processmode" type="radio" value="link" /> Specimen Linking</span>
-					<span class="radio-span"><input class="speccheckin" name="processmode" type="radio" value="checkin" /> Specimen Check-in</span>
+					<span class="radio-span"><input class="speclink" name="processmode" type="radio" value="link" /> <?php echo $LANG['SPEC_LINKING']; ?></span>
+					<span class="radio-span"><input class="speccheckin" name="processmode" type="radio" value="checkin" /> <?php echo $LANG['SPEC_CHECKIN']; ?></span>
 				</div>
 				<div class="field-div">
-					<label>Barcode/Catalog #:</label>
+					<label><?php echo $LANG['BARCODE_CATNUM']; ?>:</label>
 					<input type="text" autocomplete="off" name="catalognumber" maxlength="255" style="width:300px;border:2px solid black;text-align:center;" value="" />
 					<span id="message-span"></span>
 				</div>
 				<div class="field-div">
 					<label>Target:</label>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="allid" /> All Identifiers</span>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="catnum" checked /> Catalog Number</span>
-					<span class="radio-span"><input name="targetidentifier" type="radio" value="other" /> Other Catalog Numbers</span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="allid" /> <?php echo $LANG['ALL_IDS']; ?></span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="catnum" checked /> <?php echo $LANG['CATNO']; ?></span>
+					<span class="radio-span"><input name="targetidentifier" type="radio" value="other" /> <?php echo $LANG['OTHER_CATNUMS']; ?></span>
 				</div>
 				<div style="padding-top:8px;clear:left;float:left;">
 					<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 					<input name="loanid" type="hidden" value="<?php echo $loanId; ?>" />
-					<button name="formsubmit" type="submit">Process Specimen</button>
+					<button name="formsubmit" type="submit"><?php echo $LANG['PROCESS_SPEC']; ?></button>
 				</div>
 			</form>
 			<form name="refreshspeclist" action="outgoing.php" method="post" style="float:left; margin-left:10px;">
 				<input name="loanid" type="hidden" value="<?php echo $loanId; ?>" />
 				<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 				<input name="tabindex" type="hidden" value="1" />
-				<button name="formsubmit" type="submit">Refresh List</button>
+				<button name="formsubmit" type="submit"><?php echo $LANG['REFRESH_LIST']; ?></button>
 			</form>
 		</fieldset>
 	</div>
@@ -330,66 +334,66 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 		<form name="speceditform" action="outgoing.php" method="post" onsubmit="return verifySpecEditForm(this)" >
 			<div id="newdet-div" style="display:none;">
 				<fieldset>
-					<legend><b>Add a New Determinations</b></legend>
+					<legend><b><?php echo $LANG['ADD_A_DET']; ?></b></legend>
 					<div style='margin:3px;'>
-						<b>Identification Qualifier:</b>
-						<input type="text" name="identificationqualifier" title="e.g. cf, aff, etc" />
+						<b><?php echo $LANG['ID_QUALIFIER']; ?>:</b>
+						<input type="text" name="identificationqualifier" title="<?php echo $LANG['ID_QUALIFIER_EX']; ?>" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Scientific Name:</b>
+						<b><?php echo $LANG['SCI_NAME']; ?>:</b>
 						<input type="text" id="dafsciname" name="sciname" style="background-color:lightyellow;width:350px;" onfocus="initLoanDetAutocomplete(this.form)" />
 						<input type="hidden" id="daftidtoadd" name="tidtoadd" value="" />
 						<input type="hidden" name="family" value="" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Author:</b>
+						<b><?php echo $LANG['AUTHOR']; ?>:</b>
 						<input type="text" name="scientificnameauthorship" style="width:200px;" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Confidence of Determination:</b>
+						<b><?php echo $LANG['CONFIDENCE_IN_DET']; ?>:</b>
 						<select name="confidenceranking">
-							<option value="8">High</option>
-							<option value="5" selected>Medium</option>
-							<option value="2">Low</option>
+							<option value="8"><?php echo $LANG['HIGH']; ?></option>
+							<option value="5" selected><?php echo $LANG['MEDIUM']; ?></option>
+							<option value="2"><?php echo $LANG['LOW']; ?></option>
 						</select>
 					</div>
 					<div style='margin:3px;'>
-						<b>Determiner:</b>
+						<b><?php echo $LANG['DETERMINER']; ?>:</b>
 						<input type="text" name="identifiedby" id="identifiedby" style="background-color:lightyellow;width:200px;" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Date:</b>
+						<b><?php echo $LANG['DATE']; ?>:</b>
 						<input type="text" name="dateidentified" id="dateidentified" style="background-color:lightyellow;" onchange="detDateChanged(this.form);" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Reference:</b>
+						<b><?php echo $LANG['REFERENCE']; ?>:</b>
 						<input type="text" name="identificationreferences" style="width:350px;" />
 					</div>
 					<div style='margin:3px;'>
-						<b>Notes:</b>
+						<b><?php echo $LANG['NOTES']; ?>:</b>
 						<input type="text" name="identificationremarks" style="width:350px;" />
 					</div>
 					<div style='margin:3px;'>
-						<input type="checkbox" name="makecurrent" value="1" /> Make this the current determination
+						<input type="checkbox" name="makecurrent" value="1" /> <?php echo $LANG['MAKE_THIS_CURRENT']; ?>
 					</div>
 					<div style='margin:3px;'>
-						<input type="checkbox" name="printqueue" value="1" /> Add to Annotation Print Queue
+						<input type="checkbox" name="printqueue" value="1" /> <?php echo $LANG['ADD_TO_PRINT']; ?>
 					</div>
 					<div style='margin:15px;'>
 						<div style="float:left;">
-							<button type="submit" name="formsubmit" value="addDeterminations" onclick="return verifyLoanDet();">Add New Determinations</button>
+							<button type="submit" name="formsubmit" value="addDeterminations" onclick="return verifyLoanDet();"><?php echo $LANG['ADD_NEW_DET']; ?></button>
 						</div>
 					</div>
 				</fieldset>
 			</div>
 			<div id="batchaction-div" style="margin:10px;display:none">
 				<fieldset style="width:800px">
-					<legend>Batch Form Select Actions</legend>
+					<legend><?php echo $LANG['BATCH_FORM_ACTIONS']; ?></legend>
 					<div style="float:left;margin-right:20px">
-						<button name="formsubmit" type="submit" value="checkinSpecimens">Batch Check-in Specimens</button><br/>
+						<button name="formsubmit" type="submit" value="checkinSpecimens"><?php echo $LANG['BATCH_CHECK_IN']; ?></button><br/>
 					</div>
 					<div style="float:left;">
-						<button name="formsubmit" type="submit" value="deleteSpecimens" onclick="return confirm('Are you sure you want to remove selected specimens from this loan?')">Remove Selected Specimens</button><br/>
+						<button name="formsubmit" type="submit" value="deleteSpecimens" onclick="return confirm('<?php echo $LANG['SURE_REMOVE_FROM_LOAN']; ?>')"><?php echo $LANG['REMOVE_SPECS']; ?></button><br/>
 					</div>
 					<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 					<input name="loanid" type="hidden" value="<?php echo $loanId; ?>" />
@@ -398,24 +402,24 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 			</div>
 			<table class="styledtable" style="font-family:Arial;font-size:12px;">
 				<tr>
-					<th class="form-checkbox"><input type="checkbox" onclick="selectAll(this);" title="Select/Deselect All" /></th>
+					<th class="form-checkbox"><input type="checkbox" onclick="selectAll(this);" title="<?php echo $LANG['SEC_DESEL_ALL']; ?>" /></th>
 					<th>&nbsp;</th>
-					<th>Catalog Number
+					<th><?php echo $LANG['CATNO']; ?>
 					<?php
 					$tagArr = $loanManager->getIdentifierTagArr();
 					ksort($tagArr);
 					if(count($tagArr) > 1){
-						echo '<div style="font-weight:normal">Sort by: <select name="sortTag" onchange="this.form.submit()">';
+						echo '<div style="font-weight:normal">' . $LANG['SORT_BY'] . ': <select name="sortTag" onchange="this.form.submit()">';
 						foreach($tagArr as $tagKey => $tagValue){
 							$tagKey = substr($tagKey,2);
-							echo '<option value="'.$tagKey.'" '.($sortTag==$tagKey?'selected':'').'>'.$tagValue.'</option>';
+							echo '<option value="' . $tagKey . '" ' . ($sortTag==$tagKey?'selected':'') . '>' . $tagValue . '</option>';
 						}
 						echo '</select></div>';
 					}
 					?>
 					</th>
-					<th>Details</th>
-					<th>Date Returned</th>
+					<th><?php echo $LANG['DETAILS']; ?></th>
+					<th><?php echo $LANG['DATE_RETURNED']; ?></th>
 				</tr>
 				<?php
 				$specSortArr = $loanManager->getSpecimenSortArr();
@@ -428,29 +432,31 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 						</td>
 						<td>
 							<div>
-								<a href="#" onclick="openIndPopup(<?php echo $occid; ?>); return false;"><img src="../../images/list.png" style="width:13px" title="Open Specimen Details page" /></a><br/>
-								<a href="#" onclick="openEditorPopup(<?php echo $occid; ?>); return false;"><img src="../../images/edit.png" style="width:13px" title="Open Occurrence Editor" /></a>
+								<a href="#" onclick="openIndPopup(<?php echo $occid; ?>); return false;"><img src="../../images/list.png" style="width:1.3em" title="<?php echo $LANG['OPEN_SPECIMEN_DETAILS']; ?>" /></a><br/>
+							</div>
+							<div>
+								<a href="#" onclick="openEditorPopup(<?php echo $occid; ?>); return false;"><img src="../../images/edit.png" style="width:1.3em" title="<?php echo $LANG['OPEN_OCC_EDITOR']; ?>" /></a>
 							</div>
 						</td>
 						<td>
 							<?php
-							if($specArr['catalognumber']) echo '<div>'.$specArr['catalognumber'].'</div>';
-							if(isset($specArr['othercatalognumbers'])) echo '<div>'.implode('<br/>',$specArr['othercatalognumbers']).'</div>';
+							if($specArr['catalognumber']) echo '<div>' . $specArr['catalognumber'] . '</div>';
+							if(isset($specArr['othercatalognumbers'])) echo '<div>' . implode('<br/>',$specArr['othercatalognumbers']) . '</div>';
 							if($specArr['collid'] != $collid) echo '<div style="color:orange">external</div>';
 							?>
 						</td>
 						<td>
 							<?php
-							if($specArr['sciname']) echo '<i>'.$specArr['sciname'].'</i>; ';
+							if($specArr['sciname']) echo '<i>' . $specArr['sciname'] . '</i>; ';
 							$loc = $specArr['locality'];
 							if(strlen($loc) > 500) $loc = substr($loc,400);
-							if($specArr['collector']) echo $specArr['collector'].'; ';
+							if($specArr['collector']) echo $specArr['collector'] . '; ';
 							echo $loc;
-							if($specArr['notes']) echo '<div class="notesDiv"><b>Notes:</b> '.$specArr['notes'],'</div>';
+							if($specArr['notes']) echo '<div class="notesDiv"><b>Notes:</b> ' . $specArr['notes'],'</div>';
 							?>
 						</td>
 						<td><?php
-						echo '<div style="float:right"><a href="#" onclick="openCheckinPopup('.$loanId.','.$occid.','.$collid.');return false"><img src="../../images/edit.png" style="width:13px" title="Edit notes" /></a></div>';
+						echo '<div style="float:right"><a href="#" onclick="openCheckinPopup(' . $loanId . ',' . $occid . ',' . $collid . ');return false"><img src="../../images/edit.png" style="width:13px" title="' . $LANG['EDIT_NOTES'] . '" /></a></div>';
 						echo $specArr['returndate'];
 						?></td>
 					</tr>
@@ -460,5 +466,5 @@ $specList = $loanManager->getSpecimenList($loanId, $sortTag);
 			</table>
 		</form>
 	</div>
-	<div id="nospecdiv" style="margin:20px;font-size:120%;<?php echo ($specList?'display:none;':''); ?>">There are no specimens registered for this loan.</div>
+	<div id="nospecdiv" style="margin:20px;font-size:120%;<?php echo ($specList?'display:none;':''); ?>"><?php echo $LANG['NO_SPECS_REGISTERED']; ?></div>
 </div>

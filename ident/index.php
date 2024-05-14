@@ -16,9 +16,10 @@ if($pid === '' && isset($DEFAULT_PROJ_ID)) $pid = $DEFAULT_PROJ_ID;
 $clManager = new ChecklistManager();
 $clManager->setPid($pid);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?><?php echo $LANG['IDKEY'];?></title>
+	<title><?php echo $DEFAULT_TITLE . ' ' . $LANG['IDKEY'];?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
@@ -35,18 +36,18 @@ $clManager->setPid($pid);
 	}
 	?>
 	<!-- This is inner text! -->
-	<div id="innertext">
-		<h2><?php echo $LANG['IDKEYS']; ?></h2>
+	<div role="main" id="innertext">
+		<h1 classes="page-heading"><?php echo $LANG['IDKEYS']; ?></h1>
 	    <div style='margin:20px;'>
 	        <?php
 	        $projArr = $clManager->getChecklists(true);
 			foreach($projArr as $pidKey => $pArr){
 				$clArr = $pArr['clid'];
 				echo '<div style="margin:3px 0px 0px 15px;">';
-				echo '<h3>'.$pArr['name'].' <a href="../checklists/clgmap.php?pid='.$pidKey.'&target=keys"><img src="../images/world.png" style="width:10px;border:0" /></a></h3>';
+				echo '<h3>'.$pArr['name'].' <a href="../checklists/clgmap.php?pid=' . htmlspecialchars($pidKey, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&target=keys"><img src="../images/world.png" style="width:10px;border:0" /></a></h3>';
 				echo '<div><ul>';
 				foreach($clArr as $clid => $clName){
-					echo '<li><a href="key.php?clid='.$clid.'&pid='.$pidKey.'&taxon=All+Species">'.$clName.'</a></li>';
+					echo '<li><a href="key.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pidKey, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&taxon=All+Species">' . htmlspecialchars($clName, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';
 				}
 				echo "</ul></div>";
 				echo "</div>";

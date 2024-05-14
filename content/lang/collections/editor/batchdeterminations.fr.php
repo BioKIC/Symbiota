@@ -17,11 +17,11 @@ $LANG['WARNING_TAXON_NOT_FOUND'] = "AVERTISSEMENT : Taxon introuvable. Il peut 
 $LANG['HOME'] = 'Accueil';
 $LANG['COLL_MANAGE'] = 'Panneau de Gestion des Collections';
 $LANG['DEFINE_RECORDSET'] = "Définir le jeu d'enregistrements de spécimen";
-$LANG['RECORDSET_EXPLAIN'] = "Scannez numéros de catalogue/codes-barres dans champ ci-dessous ou entrez un terme de recherche de taxon pour répertorier spécimens pour annotation des lots. 
+$LANG['RECORDSET_EXPLAIN'] = "Scannez numéros de catalogue/codes-barres dans champ ci-dessous ou entrez un terme de recherche de taxon pour répertorier spécimens pour annotation des lots.
 						Plusieurs numéros de catalogue peuvent être entrés de manière séquentielle ou en une fois séparés par des virgules.
 						Une fois la liste terminée, sélectionnez/désélectionnez spécimens cibles, entrez informations d'annotation et soumettez.";
 $LANG['CATNUM'] = 'Numéro de Catalogue';
-$LANG['TARGET_ALL'] = 'cibler tous les numéros de catalogue';
+$LANG['TARGET_ALL'] = 'Cibler tous les numéros de catalogue';
 $LANG['TAXON'] = 'Taxon';
 $LANG['CLEAR_LIST'] = 'Effacer Liste';
 $LANG['ADD_RECORDS'] = 'Ajouter de(s) Enregistrement(s) à Liste';

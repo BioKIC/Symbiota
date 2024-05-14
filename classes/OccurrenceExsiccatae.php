@@ -246,7 +246,8 @@ class OccurrenceExsiccatae {
 			fputcsv($out, array_keys($fieldArr));
 			while($r = $rs->fetch_assoc()){
 				foreach($r as $k => $v){
-					$r[$k] = utf8_decode($v);
+					if($v) $v = mb_convert_encoding($v, 'ISO-8859-1', $GLOBALS['CHARSET']);
+					$r[$k] = $v;
 				}
 				fputcsv($out, $r);
 			}
@@ -591,7 +592,7 @@ class OccurrenceExsiccatae {
 		}
 		if($transferCnt){
 			$statusStr = 'SUCCESS transferring '.$transferCnt.' records ';
-			//if($datasetId) $statusStr = '<br/>Records linked to dataset: <a href="">'.$datasetTitle.'</a>';
+			//if($datasetId) $statusStr = '<br/>Records linked to dataset: <a href="">' . htmlspecialchars($datasetTitle, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 		}
 		return $statusStr;
 	}
@@ -761,7 +762,7 @@ class OccurrenceExsiccatae {
 		$retStr .= '<td align="center"><a href="#" onclick="openExsPU('.$omenid.')">#'.$oArr['exsnum'].'</a></td>';
 		$retStr .= '<td>';
 		$retStr .= '<span '.($isTarget?'style="color:red;"':'').' title="'.$oArr['collname'].'">'.$oArr['collcode'].'</span>, ';
-		$retStr .= '<a href="#" onclick="openIndPU('.$occid.')">'.$oArr['recby'].' '.($oArr['recnum']?$oArr['recnum']:'s.n.').'</a>';
+		$retStr .= '<a href="#" onclick="openIndPU(' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ')">' . htmlspecialchars($oArr['recby'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' ' . htmlspecialchars(($oArr['recnum']?$oArr['recnum']:'s.n.'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 		$retStr .= ($oArr['eventdate']?', '.$oArr['eventdate']:'');
 		$retStr .= ', <i>'.$oArr['sciname'].'</i> '.$oArr['author'];
 		$retStr .= $oArr['country'].', '.$oArr['state'].', '.$oArr['county'].', '.(strlen($oArr['locality'])>75?substr($oArr['locality'],0,75).'...':$oArr['locality']);

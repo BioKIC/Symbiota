@@ -481,16 +481,15 @@ class OccurrenceLoans extends Manager{
 	public function getSpecimenList($loanid, $sortTag = ''){
 		$retArr = array();
 		if(is_numeric($loanid)){
-			$sql = 'SELECT o.collid, l.loanid, l.occid, l.returndate, l.notes, o.catalognumber, o.othercatalognumbers, o.sciname, '.
-				'CONCAT_WS(" ",o.recordedby,IFNULL(o.recordnumber,o.eventdate)) AS collector, CONCAT_WS(", ",stateprovince,county,locality) AS locality '.
-				'FROM omoccurloanslink l INNER JOIN omoccurrences o ON l.occid = o.occid '.
-				'WHERE l.loanid = '.$loanid.' '.
-				'ORDER BY o.catalognumber+1, o.othercatalognumbers+1';
+			$sql = 'SELECT o.collid, l.loanid, l.occid, l.returndate, l.notes, o.catalognumber, o.othercatalognumbers, o.sciname,
+				CONCAT_WS(" ",o.recordedby,IFNULL(o.recordnumber,o.eventdate)) AS collector, CONCAT_WS(", ",stateprovince,county,locality) AS locality
+				FROM omoccurloanslink l INNER JOIN omoccurrences o ON l.occid = o.occid
+				WHERE l.loanid = '.$loanid.'
+				ORDER BY o.catalognumber+1, o.othercatalognumbers+1';
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
 					$retArr[$r->occid]['collid'] = $r->collid;
 					$retArr[$r->occid]['catalognumber'] = $r->catalognumber;
-					if($r->othercatalognumbers) $retArr[$r->occid]['othercatalognumbers'][] = $r->othercatalognumbers;
 					if($r->catalognumber){
 						$retArr[$r->occid]['catalognumber'] = $r->catalognumber;
 						$this->idTagArr['1-catalognumber'] = 'Catalog Numbers';
@@ -520,8 +519,14 @@ class OccurrenceLoans extends Manager{
 				ORDER BY i.sortBy, i.identifierValue';
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
-					$retArr[$r->occid]['othercatalognumbers'][] = $r->identifierValue;
 					$idTag = $r->identifierName;
+					$idValue = ($idTag ? $idTag.': ' : '').$r->identifierValue;
+					if(isset($retArr[$r->occid]['othercatalognumbers'])){
+						foreach($retArr[$r->occid]['othercatalognumbers'] as $k => $v){
+							if($v == $r->identifierValue || $v == $idValue) unset($retArr[$r->occid]['othercatalognumbers'][$k]);
+						}
+					}
+					$retArr[$r->occid]['othercatalognumbers'][] = $idValue;
 					if(!$idTag) $idTag = 'otherCatalogNumbers';
 					$this->idTagArr['3-'.strtolower($idTag)] = $idTag;
 					if($sortTag && $sortTag != 'catalognumber'){
@@ -934,7 +939,7 @@ class OccurrenceLoans extends Manager{
 			}
 
 			if($rs = $this->conn->query($sql)){
-				$maxnum = 1;
+				$maxnum = 0;
 				while($r = $rs->fetch_object()){
 					$num = '';
 

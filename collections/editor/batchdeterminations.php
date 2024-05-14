@@ -7,7 +7,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/editor/batchdeterminations.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
-$collid = filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT);
+$collid = filter_var(($_REQUEST['collid'] ?? 0), FILTER_SANITIZE_NUMBER_INT);
 $formSubmit = array_key_exists('formsubmit',$_POST)?$_POST['formsubmit']:'';
 
 $occManager = new OccurrenceEditorDeterminations();
@@ -40,8 +40,8 @@ if($isEditor){
 	}
 }
 ?>
-
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>">
 		<title><?php echo $DEFAULT_TITLE.' '.$LANG['BATCH_DETERS']; ?></title>
@@ -49,8 +49,8 @@ if($isEditor){
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			function initScinameAutocomplete(f){
 				$( f.sciname ).autocomplete({
@@ -281,6 +281,14 @@ if($isEditor){
 				return false;
 			}
 		</script>
+		<style>
+			.top-breathing-room-sm-px {
+				margin-top: 5px;
+			}
+			.left-breathing-room-rel-lg {
+				margin-left: 2em;
+			}
+		</style>
 	</head>
 	<body>
 	<?php
@@ -288,39 +296,48 @@ if($isEditor){
 	include($SERVER_ROOT . '/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href='../../index.php'><?php echo $LANG['HOME']; ?></a> &gt;&gt;
-		<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1"><?php echo $LANG['COLL_MANAGE']; ?></a> &gt;&gt;
+		<a href='../../index.php'><?php echo htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+		<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1"><?php echo htmlspecialchars($LANG['COLL_MANAGE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 		<b><?php echo $LANG['BATCH_DETERS']; ?></b>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?= $LANG['BATCH_DETERS']; ?></h1>
 		<?php
 		if($isEditor){
 			echo '<h2>'.$occManager->getCollName().'</h2>';
 			?>
-			<div style="margin:0px;">
-				<fieldset style="padding:10px;">
-					<legend><b><?php echo $LANG['DEFINE_RECORDSET']; ?></b></legend>
-					<div style="margin:15px">
+			<div>
+				<section class="fieldset-like">
+					<h1> <span> <?php echo $LANG['DEFINE_RECORDSET']; ?> </span> </h1>
+					<div class="left-breathing-room-rel-lg">
 						<?php echo $LANG['RECORDSET_EXPLAIN']; ?>
 					</div>
 					<div style="margin:15px;width:700px;">
 						<form name="accqueryform" action="batchdeterminations.php" method="post" onsubmit="return submitAccForm(this);">
-							<div>
-								<b><?php echo $LANG['CATNUM']; ?>:</b>
-								<input name="catalognumber" type="text" style="border-color:green;width:200px;" />
-								<span style="margin-left:20px"><input name="allcatnum" type="checkbox" checked /> <?php echo $LANG['TARGET_ALL']; ?></span>
-							</div>
-							<div>
-								<b><?php echo $LANG['TAXON']; ?>:</b>
+							<section class="flex-form">
+								<div class="bottom-breathing-room">
+									<label for="catalognumber"><?php echo $LANG['CATNUM']; ?>:</label>
+									<input name="catalognumber" id="catalognumber" type="text" style="border-color:green;width:200px;" />
+								</div>
+								<div class="bottom-breathing-room">
+									<input name="allcatnum" id="allcatnum" type="checkbox" checked /> <label for="allcatnum"><?php echo $LANG['TARGET_ALL']; ?></label>
+								</div>
+							</section>
+							<div class="left-breathing-room-rel">
+								<label for="nomsciname"><?php echo $LANG['TAXON']; ?>:</label>
 								<input type="text" id="nomsciname" name="sciname" style="width:260px;" onfocus="initScinameAutocomplete(this.form)" />
 							</div>
-							<div style="margin-top:5px;">
-								<button name="clearaccform" type="button" style="float:right" onclick='clearAccForm(this.form)'><?php echo $LANG['CLEAR_LIST']; ?></button>
-								<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
-								<button name="addrecord" type="submit"><?php echo $LANG['ADD_RECORDS']; ?></button>
-								<img id="workingcircle" src="../../images/workingcircle.gif" style="display:none;" />
-							</div>
+							<section class="flex-form">
+								<div class="top-breathing-room-sm-px">
+									<button name="addrecord" type="submit"><?php echo $LANG['ADD_RECORDS']; ?></button>
+									<img id="workingcircle" src="../../images/workingcircle.gif" style="display:none;" alt="progress is being made" />
+								</div>
+								<div class="top-breathing-room-sm-px">
+									<button name="clearaccform" type="button" onclick='clearAccForm(this.form)'><?php echo $LANG['CLEAR_LIST']; ?></button>
+									<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
+								</div>
+							</section>
 						</form>
 					</div>
 					<div style="margin:15px">
@@ -330,18 +347,18 @@ if($isEditor){
 					if($statusStr){
 						echo '<div style="margin:30px 20px;">';
 						echo '<div style="color:orange;font-weight:bold;">'.$statusStr.'</div>';
-						echo '<div style="margin-top:10px;"><a href="../reports/annotationmanager.php?collid='.$collid.'" target="_blank">'.$LANG['DISPLAY_QUEUE'].'</a></div>';
+						echo '<div style="margin-top:10px;"><a href="../reports/annotationmanager.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($LANG['DISPLAY_QUEUE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
 						echo '</div>';
 					}
 					?>
-				</fieldset>
+				</section>
 				<div id="accrecordlistdviv" style="display:none;">
 					<form name="accselectform" id="accselectform" action="batchdeterminations.php" method="post" onsubmit="return validateSelectForm(this);">
 						<div style="margin-top: 15px; margin-left: 10px;">
 							<input name="accselectall" value="" type="checkbox" onclick="selectAll(this);" checked />
 							<?php echo $LANG['SELECT_DESELECT']; ?>
 						</div>
-						<table class="styledtable" style="font-family:Arial;font-size:12px;">
+						<table class="styledtable" style="font-family:Arial;font-size: 1.45rem;">
 							<thead>
 								<tr>
 									<th style="width:25px;text-align:center;">&nbsp;</th>
@@ -408,7 +425,7 @@ if($isEditor){
 								</div>
 								<div style='margin:3px;'>
 									<input type="checkbox" name="printqueue" value="1" checked /> <?php echo $LANG['ADD_PRINT_QUEUE']; ?>
-									<a href="../reports/annotationmanager.php?collid=<?php echo $collid; ?>" target="_blank"><img src="../../images/list.png" style="width:13px" title="<?php echo $LANG['DISPLAY_QUEUE']; ?>" /></a>
+									<a href="../reports/annotationmanager.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank"><img src="../../images/list.png" style="width:1.2em" title="<?php echo htmlspecialchars($LANG['DISPLAY_QUEUE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" /></a>
 								</div>
 								<div style='margin:15px;'>
 									<div style="float:left;">

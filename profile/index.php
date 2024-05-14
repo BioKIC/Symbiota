@@ -1,8 +1,26 @@
 <?php
 include_once('../config/symbini.php');
+
+if($SYMB_UID){
+	if($_SESSION['refurl']){
+		header("Location:" . $_SESSION['refurl']);
+		unset($_SESSION['refurl']);
+	}
+	if ($_REQUEST['refurl']){
+		header("Location:" . $_REQUEST['refurl']);	
+	}
+	else{
+		header("Location:" . $CLIENT_ROOT . '/profile/viewprofile.php');
+	}
+}
+
 include_once($SERVER_ROOT.'/classes/ProfileManager.php');
 include_once($SERVER_ROOT.'/content/lang/profile/index.'.$LANG_TAG.'.php');
 header("Content-Type: text/html; charset=".$CHARSET);
+
+$THIRD_PARTY_OID_AUTH_ENABLED = $THIRD_PARTY_OID_AUTH_ENABLED ?? false;
+$SYMBIOTA_LOGIN_ENABLED = $SYMBIOTA_LOGIN_ENABLED ?? true;
+$LOGIN_ACTION_PAGE = $LOGIN_ACTION_PAGE ?? $CLIENT_ROOT . '/profile/openIdAuth.php';
 
 $login = array_key_exists('login',$_REQUEST)?$_REQUEST['login']:'';
 $remMe = array_key_exists("remember",$_POST)?$_POST["remember"]:'';
@@ -15,21 +33,21 @@ $refUrl = '';
 if(array_key_exists('refurl',$_REQUEST)){
 	$refGetStr = '';
 	foreach($_GET as $k => $v){
-		$k = filter_var($k, FILTER_SANITIZE_STRING);
+		$k = htmlspecialchars($k, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 		if($k != 'refurl'){
 			if($k == 'attr' && is_array($v)){
 				foreach($v as $v2){
-					$v2 = filter_var($v2, FILTER_SANITIZE_STRING);
+					$v2 = htmlspecialchars($v2, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 					$refGetStr .= '&attr[]='.$v2;
 				}
 			}
 			else{
-				$v = filter_var($v, FILTER_SANITIZE_STRING);
+				$v = htmlspecialchars($v, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 				$refGetStr .= '&'.$k.'='.$v;
 			}
 		}
 	}
-	$refUrl = str_replace('&amp;','&',htmlspecialchars(filter_var($_REQUEST['refurl'], FILTER_SANITIZE_STRING)));
+	$refUrl = str_replace('&amp;','&',htmlspecialchars($_REQUEST['refurl'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE));
 	if(substr($refUrl,-4) == '.php') $refUrl .= '?'.substr($refGetStr,1);
 	else $refUrl .= $refGetStr;
 }
@@ -103,14 +121,20 @@ elseif($resetPwd){
 else{
 	$statusStr = $pHandler->getErrorMessage();
 }
+if (array_key_exists('last_message', $_SESSION)){
+	$statusStr .= $_SESSION['last_message'];
+	unset($_SESSION['last_message']);
+}
+
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE.' '.(isset($LANG['LOGIN_NAME'])?$LANG['LOGIN_NAME']:'Login'); ?></title>
+	<title><?php echo $DEFAULT_TITLE . ' ' . $LANG['LOGIN_NAME']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script src="../js/jquery-3.2.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		if(!navigator.cookieEnabled){
 			<?php
@@ -146,9 +170,26 @@ else{
 		}
 	</script>
 	<script src="../js/symb/shared.js" type="text/javascript"></script>
-	<style type="text/css">
-		fieldset { padding:20px; background-color:#F9F9F9; border:2px outset #808080; }
-		legend { font-weight: bold; }
+	<style>
+		.profile-fieldset {
+			padding: 20px;
+			background-color: #f9f9f9;
+			border: 2px outset #808080;
+		}
+		.profile-legend {
+			font-weight: bold;
+		}
+		.justify-center-full-screen {
+			display: flex;
+			justify-content: center;
+			width: 100vw;
+		}
+		.flex-item-login {
+			width: 100%;
+			max-width: 350px;
+			margin-left: auto;
+			margin-right: auto;
+		}
 	</style>
 </head>
 <body>
@@ -157,7 +198,8 @@ $displayLeftMenu = (isset($profile_indexMenu)?$profile_indexMenu:'true');
 include($SERVER_ROOT.'/includes/header.php');
 ?>
 <!-- inner text -->
-<div id="innertext" style="padding-left:0px;margin-left:0px;">
+<div role="main" id="innertext" style="padding-left:0px;margin-left:0px;">
+	<h1 class="page-heading screen-reader-only">Login</h1>
 	<?php
 	if($statusStr){
 		$color = 'green';
@@ -171,53 +213,87 @@ include($SERVER_ROOT.'/includes/header.php');
 		<?php
 	}
 	?>
-	<div style="width:300px;margin-right:auto;margin-left:auto;">
-		<fieldset style="margin:20px;width:350px;">
-			<legend><?php echo (isset($LANG['PORTAL_LOGIN'])?$LANG['PORTAL_LOGIN']:'Portal Login'); ?></legend>
+	<div class="gridlike-form justify-center-full-screen" style="margin: 0;">
+		<div class="flex-item-login bottom-breathing-room-rel">
 			<form id="loginform" name="loginform" action="index.php" onsubmit="return checkCreds();" method="post">
-				<div style="margin: 10px;">
-					<?php echo (isset($LANG['LOGIN_NAME'])?$LANG['LOGIN_NAME']:'Login'); ?>: <input id="login" name="login" value="<?php echo $login; ?>" style="border-style:inset;" />
-				</div>
-				<div style="margin:10px;">
-					<?php echo (isset($LANG['PASSWORD'])?$LANG['PASSWORD']:"Password"); ?>:
-					<input type="password" id="password" name="password"  style="border-style:inset;" autocomplete="off" />
-				</div>
-				<div style="margin:10px">
-					<input type="checkbox" value='1' name="remember" checked >
-					<?php echo (isset($LANG['REMEMBER'])?$LANG['REMEMBER']:'Remember me on this computer'); ?>
-				</div>
-				<div style="margin:15px;">
-					<input type="hidden" name="refurl" value="<?php echo $refUrl; ?>" />
-					<input type="hidden" id="resetpwd" name="resetpwd" value="">
-					<button name="action" type="submit" value="login"><?php echo (isset($LANG['SIGNIN'])?$LANG['SIGNIN']:'Sign In'); ?></button>
-				</div>
-			</form>
-		</fieldset>
-		<div style="width:300px;text-align:center;margin:20px;">
-			<div style="font-weight:bold;">
-				<?php echo (isset($LANG['NO_ACCOUNT'])?$LANG['NO_ACCOUNT']:"Don't have an Account?"); ?>
-			</div>
-			<div style="">
-				<a href="newprofile.php?refurl=<?php echo $refUrl; ?>"><?php echo (isset($LANG['CREATE_ACCOUNT'])?$LANG['CREATE_ACCOUNT']:'Create an account'); ?></a>
-			</div>
-			<div style="font-weight:bold;margin-top:5px">
-				<?php echo (isset($LANG['REMEMBER_PWD'])?$LANG['REMEMBER_PWD']:"Can't Remember your password?"); ?>
-			</div>
-			<div style="color:blue;cursor:pointer;" onclick="resetPassword();"><?php echo (isset($LANG['REST_PWD'])?$LANG['REST_PWD']:'Reset Password'); ?></div>
-			<div style="font-weight:bold;margin-top:5px">
-				<?php echo (isset($LANG['REMEMBER_LOGIN'])?$LANG['REMEMBER_LOGIN']:"Can't Remember Login Name?"); ?>
-			</div>
-			<div>
-				<div><a href="#" onclick="toggle('emaildiv');"><?php echo (isset($LANG['RETRIEVE'])?$LANG['RETRIEVE']:'Retrieve Login'); ?></a></div>
-				<div id="emaildiv" style="display:none;margin:10px 0px 10px 40px;">
-					<fieldset>
-						<form id="retrieveloginform" name="retrieveloginform" action="index.php" method="post">
-							<div><?php echo (isset($LANG['YOUR_EMAIL'])?$LANG['YOUR_EMAIL']:'Your Email'); ?>: <input type="text" name="email" /></div>
-							<div><button name="action" type="submit" value="Retrieve Login"><?php echo (isset($LANG['RETRIEVE'])?$LANG['RETRIEVE']:'Retrieve Login'); ?></button></div>
-						</form>
+				<?php if($SYMBIOTA_LOGIN_ENABLED){ ?>
+					<fieldset class="profile-fieldset">
+						<legend class="profile-legend"><?php echo (isset($LANG['PORTAL_LOGIN'])?$LANG['PORTAL_LOGIN']:'Portal Login'); ?></legend>
+						<div>
+							<label for="login"><?php echo (isset($LANG['LOGIN_NAME'])?$LANG['LOGIN_NAME']:'Login'); ?>:</label> 
+							<input id="login" name="login" value="<?php echo $login; ?>" style="border-style:inset;" />
+						</div>
+						<div>
+							<label for="password"><?php echo (isset($LANG['PASSWORD'])?$LANG['PASSWORD']:"Password"); ?>:</label>
+							<input type="password" id="password" name="password"  style="border-style:inset;" autocomplete="off" />
+						</div>
+						<div>
+							<input type="checkbox" value='1' name="remember" id="remember" checked >
+							<label for="remember">
+								<?php echo (isset($LANG['REMEMBER'])?$LANG['REMEMBER']:'Remember me on this computer'); ?>
+							</label>
+						</div>
+						<div>
+							<input type="hidden" name="refurl" value="<?php echo $refUrl; ?>" />
+							<input type="hidden" id="resetpwd" name="resetpwd" value="">
+							<button name="action" type="submit" value="login"><?php echo (isset($LANG['SIGNIN'])?$LANG['SIGNIN']:'Sign In'); ?></button>
+						</div>
 					</fieldset>
-				</div>
+				<?php }?>
+			</form>
+		</div>
+		<?php 
+			if($THIRD_PARTY_OID_AUTH_ENABLED){
+				$_SESSION['refurl'] = array_key_exists('refurl', $_REQUEST) ? $_REQUEST['refurl'] : '';
+
+		?>
+			<div class="flex-item-login bottom-breathing-room-rel">
+				<form action='<?= $LOGIN_ACTION_PAGE ?>' onsubmit="">
+					<fieldset  class="profile-fieldset">
+						<legend class="profile-legend"><?php echo (isset($LANG['THIRD_PARTY_LOGIN'])?$LANG['THIRD_PARTY_LOGIN']:'Login using third-party authentication'); ?></legend>
+						<div class="justify-center">
+							<button type="submit" value="login"><?php echo (isset($LANG['OID_LOGIN'])?$LANG['OID_LOGIN']:'Login with OID'); ?></button>
+						</div>
+					</fieldset>
+				</form>
 			</div>
+		<?php 
+			}
+		?>
+		<div class="flex-item-login" style="text-align:center">
+			<?php 
+				$shouldBeAbleToCreatePublicUser = $SHOULD_BE_ABLE_TO_CREATE_PUBLIC_USER ?? true;
+				if($shouldBeAbleToCreatePublicUser){ 
+			?>
+				<div style="font-weight:bold;">
+					<?php echo (isset($LANG['NO_ACCOUNT'])?$LANG['NO_ACCOUNT']:"Don't have an Account?"); ?>
+				</div>
+				<div>
+					<a href="newprofile.php?refurl=<?php echo htmlspecialchars($refUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo htmlspecialchars((isset($LANG['CREATE_ACCOUNT'])?$LANG['CREATE_ACCOUNT']:'Create an account'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
+				</div>
+			<?php
+		 		} 
+			?>
+			<?php if($SYMBIOTA_LOGIN_ENABLED){ ?>
+				<div style="font-weight:bold;margin-top:5px">
+					<?php echo (isset($LANG['REMEMBER_PWD'])?$LANG['REMEMBER_PWD']:"Can't Remember your password?"); ?>
+				</div>
+				<a href="#" style="color:blue;cursor:pointer;" onclick="resetPassword();"><?php echo (isset($LANG['REST_PWD'])?$LANG['REST_PWD']:'Reset Password'); ?></a>
+				<div style="font-weight:bold;margin-top:5px">
+					<?php echo (isset($LANG['REMEMBER_LOGIN'])?$LANG['REMEMBER_LOGIN']:"Can't Remember Login Name?"); ?>
+				</div>
+				<div>
+					<div><a href="#" onclick="toggle('emaildiv');"><?php echo htmlspecialchars((isset($LANG['RETRIEVE'])?$LANG['RETRIEVE']:'Retrieve Login'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
+					<div id="emaildiv" style="display:none;margin:10px 0px 10px 40px;">
+						<fieldset class="profile-fieldset">
+							<form id="retrieveloginform" name="retrieveloginform" action="index.php" method="post">
+								<div><?php echo (isset($LANG['YOUR_EMAIL'])?$LANG['YOUR_EMAIL']:'Your Email'); ?>: <input type="text" name="email" /></div>
+								<div><button name="action" type="submit" value="Retrieve Login"><?php echo (isset($LANG['RETRIEVE'])?$LANG['RETRIEVE']:'Retrieve Login'); ?></button></div>
+							</form>
+						</fieldset>
+					</div>
+				</div>
+			<?php } ?>
 		</div>
 	</div>
 </div>

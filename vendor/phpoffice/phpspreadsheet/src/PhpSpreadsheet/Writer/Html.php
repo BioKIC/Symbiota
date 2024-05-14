@@ -528,7 +528,7 @@ class Html extends BaseWriter
             $html .= '<ul class="navigation">' . PHP_EOL;
 
             foreach ($sheets as $sheet) {
-                $html .= '  <li class="sheet' . $sheetId . '"><a href="#sheet' . $sheetId . '">' . $sheet->getTitle() . '</a></li>' . PHP_EOL;
+                $html .= '  <li class="sheet' . $sheetId . '"><a href="#sheet' . htmlspecialchars($sheetId, HTML_SPECIAL_CHARS_FLAGS) . '">' . $sheet->getTitle() . '</a></li>' . PHP_EOL;
                 ++$sheetId;
             }
 
@@ -1489,7 +1489,7 @@ class Html extends BaseWriter
 
             // Hyperlink?
             if ($pSheet->hyperlinkExists($coordinate) && !$pSheet->getHyperlink($coordinate)->isInternal()) {
-                $cellData = '<a href="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getUrl()) . '" title="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getTooltip()) . '">' . $cellData . '</a>';
+                $cellData = '<a href="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getUrl()) . '" title="' . htmlspecialchars($pSheet->getHyperlink($coordinate)->getTooltip()) . '">' . htmlspecialchars($cellData, HTML_SPECIAL_CHARS_FLAGS) . '</a>';
             }
 
             // Should the cell be written or is it swallowed by a rowspan or colspan?

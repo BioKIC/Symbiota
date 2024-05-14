@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcessorManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -32,7 +34,7 @@ $procManager->setProjVariables('OCR Harvest');
 
 	function validateStatQueryForm(f){
 		if(f.pscrit.value == ""){
-			alert("Please select a processing status");
+			alert("<?php echo $LANG['PLS_SEL_PROC_STATUS']; ?>");
 			return false;
 		}
 		return true;
@@ -40,7 +42,7 @@ $procManager->setProjVariables('OCR Harvest');
 
 	function validateOcrTessForm(f){
 		if(f.procstatus.value == ""){
-			alert("Please select a processing status");
+			alert("<?php echo $LANG['PLS_SEL_PROC_STATUS']; ?>");
 			return false;
 		}
 		return true;
@@ -48,19 +50,19 @@ $procManager->setProjVariables('OCR Harvest');
 
 	function validateOcrUploadForm(f){
 		if(f.speckeypattern.value == ""){
-			alert("Please enter a pattern matching string for extracting the catalog number");
+			alert("<?php echo $LANG['ENTER_PATT_MATCH']; ?>");
 			return false;
 		}
 
 		if(f.sourcepath.value == "" && f.ocrfile.value == ""){
-			alert("Please select/enter an OCR input source file");
+			alert("<?php echo $LANG['SEL_OCR_INPUT']; ?>");
 			return false;
 		}
 		var fileName = f.ocrfile.value;
 		if(fileName != ""){
 			var ext = fileName.split('.').pop();
 			if(ext != 'zip' && ext != 'ZIP'){
-				alert("Upload file must be a ZIP file with a .zip extension");
+				alert("<?php echo $LANG['UPLOAD_MUST_ZIP']; ?>");
 				return false;
 			}
 		}
@@ -68,6 +70,7 @@ $procManager->setProjVariables('OCR Harvest');
 	}
 </script>
 <div style="margin:15px;">
+	<h1 class="page-heading screen-reader-only">Optical Character Recognition</h1>
 	<?php
 	$cntTotal = $procManager->getSpecWithImage();
 	$cntUnproc = $procManager->getSpecWithImage($procStatus);
@@ -75,20 +78,20 @@ $procManager->setProjVariables('OCR Harvest');
 	if($procStatus == 'null') $procStatus = 'No Status';
 	?>
 	<fieldset style="padding:20px;">
-		<legend><b>Specimen Image Statistics</b></legend>
+		<legend><b><?php echo $LANG['SPEC_IMG_STATS']; ?></b></legend>
 
-		<div><b>Total specimens with images:</b> <?php echo $cntTotal; ?></div>
-		<div><b>&quot;<?php echo $procStatus; ?>&quot; specimens with images:</b> <?php echo $cntUnproc; ?></div>
-		<div style="margin-left:15px;">with OCR: <?php echo ($cntUnproc-$cntUnprocNoOcr); ?></div>
-		<div style="margin-left:15px;">without OCR: <?php echo $cntUnprocNoOcr; ?> </div>
+		<div><?php echo '<b>' . $LANG['TOTAL_W_IMGS'] . ':</b> ' . $cntTotal; ?></div>
+		<div><?php echo '<b>"' . $procStatus . '" ' . $LANG['SPEC_W_IMGS'] . ':</b> ' . $cntUnproc; ?></div>
+		<div style="margin-left:15px;"><?php echo $LANG['W_OCR'] . ': ' . ($cntUnproc-$cntUnprocNoOcr); ?></div>
+		<div style="margin-left:15px;"><?php echo $LANG['WO_OCR'] . ': ' . $cntUnprocNoOcr; ?> </div>
 
 		<div style="margin:15px">
-			<b>Custom Query: </b><br/>
+			<b><?php echo $LANG['CUSTOM_QUERY']; ?>: </b><br/>
 			<form name="statqueryform" action="index.php" method="post" onsubmit="return validateStatQueryForm(this)">
 				<select name="procstatus">
-					<option value="">Select Processing Status</option>
+					<option value=""><?php echo $LANG['SEL_PROC_STATUS']; ?></option>
 					<option value="">-----------------------------------</option>
-					<option value="null">No Status</option>
+					<option value="null"><?php echo $LANG['NO_STATUS']; ?></option>
 					<?php
 					$psList = $procManager->getProcessingStatusList();
 					foreach($psList as $psVal){
@@ -98,23 +101,23 @@ $procManager->setProjVariables('OCR Harvest');
 				</select>
 				<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 				<input name="tabindex" type="hidden" value="2" />
-				<input name="submitaction" type="submit" value="Reset Statistics" />
+				<button name="submitaction" type="submit" value="Reset Statistics" ><?php echo $LANG['RESET_STATS']; ?></button>
 			</form>
 		</div>
 	</fieldset>
 
 	<fieldset style="padding:20px;margin-top:20px;">
-		<legend><b>Batch OCR Images using the Tesseract OCR Engine</b></legend>
+		<legend><b><?php echo $LANG['BATCH_OCR_IMGS']; ?></b></legend>
 		<?php
 		if(isset($TESSERACT_PATH) && $TESSERACT_PATH){
 			?>
 			<form name="batchTessform" action="processor.php" method="post" onsubmit="return validateBatchTessForm(this)">
 				<div style="padding:3px;">
-					<b>Processing Status:</b>
+					<b><?php echo $LANG['PROC_STATUS']; ?>:</b>
 					<select name="procstatus">
-						<option value="unprocessed">unprocessed</option>
+						<option value="unprocessed"><?php echo $LANG['UNPROCESSED']; ?></option>
 						<option value="">-----------------------------------</option>
-						<option value="null">No Status</option>
+						<option value="null"><?php echo $LANG['NO_STATUS']; ?></option>
 						<?php
 						$psList = $procManager->getProcessingStatusList();
 						foreach($psList as $psVal){
@@ -126,108 +129,99 @@ $procManager->setProjVariables('OCR Harvest');
 					</select><br/>
 				</div>
 				<div style="padding:3px;">
-					<b>Number of records to process:</b>
+					<b><?php echo $LANG['NUM_RECORDS_PROCESS']; ?>:</b>
 					<input name="batchlimit" type="text" value="100" style="width:60px" />
 				</div>
 				<div style="padding:15px;">
 					<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 					<input name="tabindex" type="hidden" value="2" />
-					<input name="submitaction" type="submit" value="Run Batch OCR" />
+					<button name="submitaction" type="submit" value="Run Batch OCR" ><?php echo $LANG['RUN_BATCH_OCR']; ?></button>
 				</div>
 				<div style="margin:15px">
-					Note: This feature is dependent on the proper installation of the Tesseract OCR Engine on the hosting server
+					<?php echo $LANG['TESSERACT_DEPEND']; ?>
 				</div>
 			</form>
 			<?php
 		}
 		else{
 			echo '<div style="margin:25px"><b>';
-			echo 'The Tesseract OCR engine does not appear to be installed or the tesseractPath variable is not set within the Symbiota configuration file. ';
-			echo 'Contact your system administrator to resolve these issues. ';
+			echo $LANG['NO_TESSERACT'] . ' ';
+			echo $LANG['CONTACT_SYSADMIN'];
 			echo '</b></div>';
 		}
 		?>
 	</fieldset>
 
 	<fieldset style="padding:20px;margin-top:20px;">
-		<legend><b>OCR Batch Import Tool</b></legend>
+		<legend><b><?php echo $LANG['OCR_IMPORT_TOOL']; ?></b></legend>
 		<form name="ocruploadform" action="processor.php" method="post" enctype="multipart/form-data" onsubmit="return validateOcrUploadForm(this);">
 			<div style="margin:15px">
-				This interface will upload OCR text files generated outside of the portal environment.
-				For instance, ABBYY FineReader has the ability to batch OCR specimen images and output the results as separate text files (.txt) named after the source image.
-				OCR text files are linked to specimen records by matching catalog numbers extracted from the file name and comparing OCR and iamge file names.
+				<?php echo $LANG['OCR_IMPORT_EXPLAIN']; ?>
 			</div>
 			<div style="margin:15px">
-				<b>Requirements:</b>
+				<b><?php echo $LANG['REQS']; ?>:</b>
 				<ul>
-					<li>OCR files must be in a text format with a .txt extension. When using ABBYY, use the setting: &quot;Create a separate document for each file&quot;, &quot;Save as Text (*.txt)&quot;, and &quot;Name as source file&quot;</li>
-					<li>Compress multiple OCR text files into a single zip file to be uploaded into the portal</li>
-					<li>Files must be named using the Catalog Number. The regular expression below will be used to extract catalog number from file name. Click information symbol for more information.</li>
-					<li>Since OCR text needs to be linked to source image, images must have been previously uploaded into portal</li>
-					<li>If there are more than one image linked to a specimen, the full file name will be used to determine which image to link the OCR</li>
+					<li><?php echo $LANG['REQ1']; ?></li>
+					<li><?php echo $LANG['REQ2']; ?></li>
+					<li><?php echo $LANG['REQ3']; ?></li>
+					<li><?php echo $LANG['REQ4']; ?></li>
+					<li><?php echo $LANG['REQ5']; ?></li>
 				</ul>
 			</div>
 			<div style="margin:15px">
 				<table style="width:100%;">
 					<tr>
 						<td style="width:200px">
-							<b>Regular Expression:</b>
+							<b><?php echo $LANG['REGEX']; ?>:</b>
 						</td>
 						<td>
 							<input name="speckeypattern" type="text" style="width:300px;" value="<?php echo $procManager->getSpecKeyPattern(); ?>" />
-							<a id="speckeypatterninfo" href="#" onclick="return false" title="More Information">
-								<img src="../../images/info.png" style="width:15px;" />
+							<a id="speckeypatterninfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+								<img src="../../images/info.png" style="width:1.3em;" />
 							</a>
 							<div id="speckeypatterninfodialog">
-								Regular expression needed to extract the unique identifier from source text.
-								For example, regular expression /^(WIS-L-\d{7})\D*/ will extract catalog number WIS-L-0001234
-								from image file named WIS-L-0001234_a.jpg. For more information on creating regular expressions,
-								Google &quot;Regular Expression PHP Tutorial&quot;. It is recommended to have the portal manager
-								help with the initial setup of batch processing.
+								<?php echo $LANG['REGEX_EXPLAIN']; ?>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<b>Zip file containing OCR:</b>
+							<b><?php echo $LANG['ZIP_W_OCR']; ?>:</b>
 						</td>
 						<td>
-							<div style="float:right;"><a href="#" onclick="toggle('pathElem');return false;" title="toggle option to enter full path">full path option</a></div>
+							<div style="float:right;"><a href="#" onclick="toggle('pathElem');return false;" title="<?php echo $LANG['TOGGLE_FULL_PATH']; ?>"><?php echo $LANG['FULL_PATH']; ?></a></div>
 							<div class="pathElem">
 								<input name="ocrfile" type="file" size="50" onchange="this.form.sourcepath.value = ''" />
 								<input name="MAX_FILE_SIZE" type="hidden" value="10000000" />
-								<a id="ocrfileinfo" href="#" onclick="return false" title="More Information">
-									<img src="../../images/info.png" style="width:15px;" />
+								<a id="ocrfileinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+									<img src="../../images/info.png" style="width:1.3em;" />
 								</a>
 								<div id="ocrfileinfodialog">
-									Browse and select zip file that contains the multiple OCR text files.
+									<?php echo $LANG['BROWSE_SEL_ZIP']; ?>
 								</div>
 							</div>
 							<div class="pathElem" style="display:none;">
 								<input name="sourcepath" type="text" style="width:350px;" value="<?php echo $procManager->getSourcePath(); ?>" />
-								<a id="sourcepathinfo" href="#" onclick="return false" title="More Information">
-									<img src="../../images/info.png" style="width:15px;" />
+								<a id="sourcepathinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+									<img src="../../images/info.png" style="width:1.3em;" />
 								</a>
 								<div id="sourcepathinfodialog">
-									File path or URL to folder containing the OCR text files.
-									If a URL (e.g. http://) is supplied, the web server needs to be configured to list
-									all files within the directory, or the html output needs to list all images in anchor tags.
-									Scripts will attempt to crawl through all child directories.
+									<?php echo $LANG['SOURCE_PATH_EXPLAIN']; ?>
 								</div>
 							</div>
 						</td>
 					</tr>
 					<tr>
 						<td>
-							<b>OCR Source:</b>
+							<b><?php echo $LANG['OCR_SOURCE']; ?>:</b>
 						</td>
 						<td>
 							<input name="ocrsource" type="text" value="" />
-							<a id="ocrsourceinfo" href="#" onclick="return false" title="More Information">
-								<img src="../../images/info.png" style="width:15px;" />
+							<a id="ocrsourceinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
+								<img src="../../images/info.png" style="width:1.3em;" />
 							</a>
 							<div id="ocrsourceinfodialog">
-								Short string describing OCR Source (e.g. ABBYY, Tesseract, etc). This value is placed in source field with current date appended.
+								<?php echo $LANG['OCR_SOURCE_EXPLAIN']; ?>
 							</div>
 						</td>
 					</tr>
@@ -239,7 +233,7 @@ $procManager->setProjVariables('OCR Harvest');
 							<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 							<input name="tabindex" type="hidden" value="2" />
 							<div style="margin:25px">
-								<input name="submitaction" type="submit" value="Load OCR Files" />
+								<button name="submitaction" type="submit" value="Load OCR Files" ><?php echo $LANG['LOAD_OCR_FILES']; ?></button>
 							</div>
 						</td>
 					</tr>

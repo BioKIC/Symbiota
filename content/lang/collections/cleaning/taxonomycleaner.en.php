@@ -44,5 +44,6 @@ $LANG['NO_PERM'] = 'ERROR: you do not have permission to edit this collection';
 $LANG['BATCH_TAXON_CLEAN'] = 'Batch Taxonomic Cleaning Tool';
 $LANG['COL_SELECTOR'] = 'Collection Selector';
 $LANG['ERROR_COLID_NUL'] = 'ERROR: Collection identifier is null';
+$LANG['ADD_BUTTON'] = 'Add Button';
 
 ?>

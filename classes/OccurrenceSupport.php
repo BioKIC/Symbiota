@@ -187,10 +187,13 @@ class OccurrenceSupport {
 	public function getCollectionArr($filter){
 		//Used by /collections/misc/occurrencesearch.php
 		$retArr = array();
-		$filterStr = implode(',', $filter);
-		if($filter && !preg_match('/^[,\d]+$/', $filterStr)) return false;
+		$filterStr = null;
+		if($filter){
+			$filterStr = implode(',', $filter);
+			if(!preg_match('/^[,\d]+$/', $filterStr)) return false;
+		}
 		$sql = 'SELECT collid, collectionname FROM omcollections ';
-		if($filter) $sql .= 'WHERE collid IN('.$filterStr.')';
+		if($filterStr) $sql .= 'WHERE collid IN('.$filterStr.')';
 		$rs = $this->conn->query($sql);
 		while($row = $rs->fetch_object()){
 			$retArr[$row->collid] = $row->collectionname;

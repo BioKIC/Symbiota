@@ -82,6 +82,7 @@ $LANG['IDIGBIO_DATASET'] = 'Página de Conjunto de Datos iDigBio';
 $LANG['PUBLISH_REFRESH'] = 'Publicar/Refrescar Datos del DwC-A';
 $LANG['INCLUDE_DETS'] = 'Incluir Historia de Determinación';
 $LANG['INCLUDE_IMGS'] = 'Incluir URL de las Imágenes';
+$LANG['INCLUDE_ATTRIBUTES'] = 'Incluir atributos de rasgos de ocurrencia';
 $LANG['INCLUDE_MATSAMPLE'] = 'Incluir Material Sample';
 $LANG['REDACT_LOC'] = 'Ocultar localidades sensibles';
 $LANG['CREATE_REFRESH'] = 'Crear/Refrescar Archivo Darwin Core';
@@ -96,6 +97,6 @@ $LANG['METADATA'] = 'Metadatos';
 $LANG['PUB_DATE'] = 'Fecha de Publicación';
 $LANG['NO_PUBLISHABLE'] = 'No existen colecciones publicables';
 $LANG['ADDIT_SOURCES'] = 'Fuentes Adicionales de Datos en la Red del Portal';
-
+$LANG['EDIT'] = 'Editar';
 
 ?>

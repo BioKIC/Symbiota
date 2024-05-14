@@ -26,4 +26,5 @@ $LANG['MISC_TOOLS'] = 'Herramientas Misceláneas';
 $LANG['DATASET_MANAGEMENT'] = 'Manejo de Conjuntos de Datos';
 $LANG['CROSS_COL_GEOREF'] = 'Herramienta de Georreferenciación a través de Colecciones';
 $LANG['CROSS_COL_TAXON'] = 'Herramienta de Limpieza de Taxonomía a través de Colecciones';
+$LANG['OCCURRENCE_MENU'] = 'Menú de Ocurrencia';
 ?>

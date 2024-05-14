@@ -1,6 +1,10 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceSesar.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/admin/igsnmanagement.'.$LANG_TAG.'.php'))
+	include_once($SERVER_ROOT.'/content/lang/collections/admin/igsnmanagement.'.$LANG_TAG.'.php');
+else
+	include_once($SERVER_ROOT.'/content/lang/collections/admin/igsnmanagement.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ini_set('max_execution_time', 3600);
 
@@ -46,22 +50,24 @@ $sesarProfile = $guidManager->getSesarProfile();
 if(isset($sesarProfile['namespace'])) $namespace = $sesarProfile['namespace'];
 if(isset($sesarProfile['generationMethod'])) $generationMethod = $sesarProfile['generationMethod'];
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title>IGSN GUID Management</title>
+	<title><?php echo $LANG['IGSN_GUID'] ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script type="text/javascript" src="../../js/jquery.js"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
+
 		function validateCredentials(f){
 			if(f.username.value == "" || f.pwd.value == ""){
-				alert("Please enter valid SESAR username and password");
+				alert("<?php echo $LANG['INVALID_SESAR'] ?>");
 				return false;
 			}
 			else if(f.username.value.indexOf("@") == -1){
-				alert("SESAR username must be an email address");
+				alert("<?php echo $LANG['MUST_BE_EMAIL'] ?>");
 				return false;
 			}
 			$.ajax({
@@ -117,30 +123,31 @@ if(isset($sesarProfile['generationMethod'])) $generationMethod = $sesarProfile['
 	</style>
 </head>
 <body>
-<?php
-$displayLeftMenu = 'false';
+	<?php
+$displayLeftMenu = false;
 include($SERVER_ROOT.'/includes/header.php');
 ?>
 <div class='navpath'>
-	<a href="../../index.php">Home</a> &gt;&gt;
-	<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1">Collection Management</a> &gt;&gt;
-	<a href="igsnmapper.php?collid=<?php echo $collid; ?>">IGSN GUID Generator</a> &gt;&gt;
-	<b>IGSN Management</b>
+	<a href="../../index.php"> <?php echo $LANG['HOME'] ?></a> &gt;&gt;
+	<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1"> <?php echo $LANG['COLL_MANAGE'] ?></a> &gt;&gt;
+	<a href="igsnmapper.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"> <?php echo $LANG['IGSN_GUID_GEN'] ?></a> &gt;&gt;
+	<b><?php echo $LANG['IGSN_MANAGE'] ?></b>
 </div>
-<div id="innertext">
+<div role="main" id="innertext">
+	<h1 class="page-heading"><?= $LANG['IGSN_MANAGE']; ?></h1>
 	<?php
 	if($isEditor && $collid){
-		echo '<h3>IGSN Management: '.$guidManager->getCollectionName().'</h3>';
+		echo '<h3>' . $LANG['IGSN_MANAGE'] . ': '.$guidManager->getCollectionName().'</h3>';
 		if($statusStr){
 			?>
 			<fieldset>
-				<legend>Error Panel</legend>
+				<legend><?php echo $LANG['ERROR_PANEL'] ?></legend>
 				<?php echo $statusStr; ?>
 			</fieldset>
 			<?php
 		}
 		if(!$guidManager->getProductionMode()){
-			echo '<h2 style="color:orange">-- In Development Mode --</h2>';
+			echo '<h2 style="color:orange">-- ' . $LANG['DEV_MODE'] . ' --</h2>';
 		}
 		if($namespace){
 			$guidCnt = $guidManager->getGuidCount($collid);
@@ -148,15 +155,15 @@ include($SERVER_ROOT.'/includes/header.php');
 			$guidAllCollCnt = $guidManager->getGuidCount();
 			?>
 			<fieldset>
-				<legend>IGSN Profile Details & Statistics</legend>
-				<p><span class="form-label">IGSN Namespace:</span> <?php echo $namespace; ?></p>
-				<p><span class="form-label">IGSN generation method:</span> <?php echo $generationMethod; ?></p>
-				<p><span class="form-label">GUIDs within collection:</span> <?php echo $guidCnt; ?></p>
-				<p><span class="form-label">Occurrences without GUIDs:</span> <?php echo $guidMissingCnt; ?></p>
+				<legend><?php echo $LANG['IGSN_PROFILE'] ?></legend>
+				<p><span class="form-label"> <?php echo $LANG['IGSN_NAMESPACE'] ?> </span> <?php echo $namespace; ?></p>
+				<p><span class="form-label"> <?php echo $LANG['IGSN_GEN_METHOD'] ?> </span> <?php echo $generationMethod; ?></p>
+				<p><span class="form-label"> <?php echo $LANG['IGSN_WITHIN_COLL'] ?> </span> <?php echo $guidCnt; ?></p>
+				<p><span class="form-label"> <?php echo $LANG['OCC_WITHOUT_GUID'] ?> </span> <?php echo $guidMissingCnt; ?></p>
 				<?php
 				if($guidAllCollCnt > $guidCnt){
 					?>
-					<p><span class="form-label">GUIDs using above namespace across all collections:</span> <?php echo $guidAllCollCnt; ?></p>
+					<p><span class="form-label"><?php echo $LANG['GUID_USING_ABOVE'] ?></span> <?php echo $guidAllCollCnt; ?></p>
 					<?php
 				}
 				?>
@@ -165,10 +172,10 @@ include($SERVER_ROOT.'/includes/header.php');
 						<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
 						<input type="hidden" name="namespace" value="<?php echo $namespace; ?>" />
 						<span style="margin-left:10px;">
-							<button name="formsubmit" type="submit" value="deleteProfile" onclick="return confirm('Are you sure you want to delete this profile?')">Delete Profile</button>
+							<button class="button-danger" name="formsubmit" type="submit" value="deleteProfile" onclick="return confirm('<?php echo $LANG['DEL_CONFIRM'] ?>')"><?php echo $LANG['DEL_PROFILE'] ?></button>
 						</span>
 						<span style="margin-left:10px;">
-							<a href="igsnmapper.php?collid=<?php echo $collid; ?>"><button type="button">Go to Mapper</button></a>
+							<a href="igsnmapper.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><button type="button"><?php echo $LANG['GO_TO_MAPPER'] ?></button></a>
 						</span>
 					</form>
 				</div>
@@ -177,7 +184,7 @@ include($SERVER_ROOT.'/includes/header.php');
 						<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
 						<input type="hidden" name="namespace" value="<?php echo $namespace; ?>" />
 						<span style="margin-left:10px;">
-							<button name="formsubmit" type="submit" value="verifysesar">Verify SESAR GUIDs</button>
+							<button name="formsubmit" type="submit" value="verifysesar"><?php echo $LANG['VERIFY_SESAR'] ?></button>
 						</span>
 					</form>
 				</div>
@@ -188,33 +195,33 @@ include($SERVER_ROOT.'/includes/header.php');
 			?>
 			<form name="profileform" action="igsnmanagement.php" method="post" onsubmit="return verifyProfileForm(this)">
 				<fieldset>
-					<legend>IGSN Registration Profile</legend>
+					<legend><?php echo $LANG['IGSN_REG_PROFILE'] ?></legend>
 					<p>
 						<div>
-							<span class="form-label">Username:</span> <input name="username" type="text" value="<?php echo $username; ?>" />
-							<span id="valid-span" style="display:none;color:green">Credentials Valid!</span>
-							<span id="notvalid-span" style="display:none;color:orange">Credentials Not Valid</span>
+							<span class="form-label"><?php echo $LANG['USERNAME'] ?></span> <input name="username" type="text" value="<?php echo $username; ?>" />
+							<span id="valid-span" style="display:none;color:green"><?php echo $LANG['CRED_VALID'] ?></span>
+							<span id="notvalid-span" style="display:none;color:orange"><?php echo $LANG['CRED_NOT_VALID'] ?></span>
 						</div>
-						<div><span class="form-label">Password:</span> <input name="pwd" type="password" value="<?php echo $pwd; ?>" /></div>
-						<button id="validate-button" type="button" onclick="validateCredentials(this.form)">Validate Credentials</button>
+						<div><span class="form-label"><?php echo $LANG['PASSWORD'] ?></span> <input name="pwd" type="password" value="<?php echo $pwd; ?>" /></div>
+						<button id="validate-button" type="button" onclick="validateCredentials(this.form)"><?php echo $LANG['VALIDATE_CRED'] ?></button>
 					</p>
 					<div id="igsn-reg-div" style="margin-top:20px;display:none">
 						<p>
-							<span class="form-label">IGSN Namespace:</span>
+							<span class="form-label"><?php echo $LANG['IGSN_NAMESPACE'] ?></span>
 							<select id="nsSelect" name="namespace">
-								<option value="">-- Select an IGSN Namespace --</option>
+								<option value=""><?php echo  " -- " . $LANG['SELECT_IGSN'] .  " --"?></option>
 								<option value="">------------------------------</option>
 							</select>
 						</p>
 						<p>
-							<span class="form-label">IGSN Generation Method:</span>
+							<span class="form-label"><?php echo $LANG['IGSN_GEN_METHOD'] ?></span>
 							<select name="generationMethod">
-								<option value='sesar'>SESAR generates IGSN (recommended)</option>
-								<option value='inhouse'>Generate IGSN in-house</option>
+								<option value='sesar'><?php echo $LANG['SESAR_GEN_IGSN'] ?></option>
+								<option value='inhouse'><?php echo $LANG['GEN_IGSN'] ?></option>
 							</select>
 						</p>
 						<p>
-							<button name="formsubmit" type="submit" value="saveProfile">Save Profile</button>
+							<button name="formsubmit" type="submit" value="saveProfile"><?php echo $LANG['SAVE_PROFILE'] ?></button>
 							<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
 						</p>
 					</div>
@@ -223,7 +230,7 @@ include($SERVER_ROOT.'/includes/header.php');
 			<?php
 		}
 	}
-	else echo '<h2>You are not authorized to access this page or collection identifier has not been set</h2>';
+	else echo '<h2>' . $LANG['NOT_AUTH'] . ' </h2>';
 	?>
 </div>
 <?php

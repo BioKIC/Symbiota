@@ -32,6 +32,7 @@ $LANG['NO_DETS_LINKED'] = 'no existen determinaciones de registros vinculados a 
 $LANG['CHECKLISTS'] = 'Listados de Especies';
 $LANG['CHECKLISTS_EXIST'] = 'Advertencia, existen listados de especies vinculados';
 $LANG['NO_CHECKLISTS'] = 'no hay listados de especies vinculados a este taxón';
+$LANG['MORPHO_CHARACTERS'] = 'Caracteres Morfológicos (Clave)';
 $LANG['LINKED_MORPHO'] = 'caracteres morfológicos vinculados';
 $LANG['NO_MORPHO'] = 'no hay caracteres morfológicos vinculados a este taxón';
 $LANG['LINKED_RESOURCES'] = 'Recursos Enlazados';

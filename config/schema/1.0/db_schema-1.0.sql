@@ -217,7 +217,7 @@ CREATE TABLE `agents` (
   `endyearactive` int(11) DEFAULT NULL,
   `notes` varchar(255) DEFAULT NULL,
   `rating` int(11) DEFAULT '10',
-  `guid` varchar(900) DEFAULT NULL,
+  `guid` varchar(150) DEFAULT NULL,
   `preferredrecbyid` bigint(20) DEFAULT NULL,
   `initialtimestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `uuid` char(43) DEFAULT NULL,

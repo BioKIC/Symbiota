@@ -117,7 +117,7 @@ if($clid){
 		$textrun->addTextBreak(1);
 	}
 }
-if(($clArray['locality'] || ($clid && ($clArray['latcentroid'] || $clArray['abstract'])) || $clArray['notes'])){
+if(isset($clArray['locality']) || ($clid && isset ($clArray['latcentroid']) || isset ($clArray['abstract']) || isset($clArray['notes']))){
 	$locStr = $clManager->cleanOutText($clArray['locality']);
 	if($clid && $clArray['latcentroid']) $locStr .= ' ('.$clArray['latcentroid'].', '.$clArray['longcentroid'].')';
 	if($locStr){
@@ -125,13 +125,13 @@ if(($clArray['locality'] || ($clid && ($clArray['latcentroid'] || $clArray['abst
 		$textrun->addText($locStr,'textFont');
 		$textrun->addTextBreak(1);
 	}
-	if($clid && $clArray['abstract']){
+	if($clid && isset ($clArray['abstract'])){
 		$abstract = $clManager->cleanOutText($clArray['abstract']);
 		$textrun->addText('Abstract: ', 'topicFont');
 		$textrun->addText($abstract, 'textFont');
 		$textrun->addTextBreak(1);
 	}
-	if($clid && $clArray['notes']){
+	if($clid && isset ($clArray['notes'])){
 		$notes = $clManager->cleanOutText($clArray['notes']);
 		$textrun->addText('Notes: ', 'topicFont');
 		$textrun->addText($notes, 'textFont');
@@ -242,12 +242,15 @@ else{
 		}
 	}
 }
-$fileName = str_replace(array(' ', '/', '.'), '_', $clManager->getClName());
+$fileName = str_replace(array(' ', '/', '.'), '_', $clManager->getClName() ?? "");
 $fileName = preg_replace('/[^0-9A-Za-z\-]/', '', $fileName);
 if(strlen($fileName) > 30) $fileName = substr($fileName, 0, 30);
 $targetFile = $SERVER_ROOT.'/temp/report/'.$fileName.'_'.date('Y-m-d').'.docx';
 $phpWord->save($targetFile, 'Word2007');
 
+ob_start();
+ob_clean();
+ob_end_flush();
 header('Content-Description: File Transfer');
 header('Content-type: application/force-download');
 header('Content-Disposition: attachment; filename='.basename($targetFile));

@@ -35,7 +35,7 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 			if($editMode < 3){
 				?>
 				<a href="#" title="<?php echo $LANG['MODIFY_CURRENT_RANKING']; ?>" onclick="toggle('idrankeditdiv');toggle('idrankdiv');return false;">
-					<img src="../../images/edit.png" style="border:0px;width:12px;" />
+					<img src="../../images/edit.png" style="border:0px;width:1.2em;" />
 				</a>
 				<?php
 			}
@@ -110,7 +110,7 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 		<fieldset style="margin:15px;padding:15px;">
 			<legend><b><?php echo $LANG['DET_HISTORY']; ?></b></legend>
 			<div style="float:right;">
-				<a href="#" onclick="toggle('newdetdiv');return false;" title="<?php echo $LANG['ADD_NEW_DET']; ?>" ><img style="border:0px;width:12px;" src="../../images/add.png" /></a>
+				<a href="#" onclick="toggle('newdetdiv');return false;" title="<?php echo $LANG['ADD_NEW_DET']; ?>" ><img style="border:0px;width:1.5em;" src="../../images/add.png" /></a>
 			</div>
 			<?php
 			if(!$detArr){
@@ -230,7 +230,7 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 						}
 						if($canEdit){
 							?>
-							<a href="#" onclick="toggle('editdetdiv-<?php echo $detId;?>');return false;" title="<?php echo $LANG['EDIT_DET']; ?>"><img style="border:0px;width:12px;" src="../../images/edit.png" /></a>
+							<a href="#" onclick="toggle('editdetdiv-<?php echo $detId;?>');return false;" title="<?php echo $LANG['EDIT_DET']; ?>"><img style="border:0px;width:1.2em;" src="../../images/edit.png" /></a>
 							<?php
 						}
 						if(!$detRec['appliedstatus']){
@@ -357,7 +357,7 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 									<input type="hidden" name="detid" value="<?php echo $detId; ?>" />
 									<input type="hidden" name="occindex" value="<?php echo $occIndex; ?>" />
 									<input type="hidden" name=" <?php echo $crowdSourceMode; ?>" />
-									<button type="submit" name="submitaction" value="Delete Determination" ><?php echo $LANG['DELETE_DET']; ?></button>
+									<button class="button-danger" type="submit" name="submitaction" value="Delete Determination" ><?php echo $LANG['DELETE_DET']; ?></button>
 								</form>
 							</div>
 						</fieldset>

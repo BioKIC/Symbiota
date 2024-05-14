@@ -70,8 +70,11 @@ function openMappingAid() {
 }
 
 function openMappingPolyAid() {
-	var zoom = 5;
-	var mapWindow=open("../tools/mappolyaid.php?zoom="+zoom,"mappolyaid","resizable=0,width=800,height=700,left=20,top=20");
+   var mapWindow = open(
+      "../tools/mapcoordaid.php?&map_mode_strict=true&mapmode=polygon",
+      "polygon",
+      "resizable=0,width=900,height=630,left=20,top=20"
+   );
 	if(mapWindow != null){
 		if (mapWindow.opener == null) mapWindow.opener = self;
 		mapWindow.focus();

@@ -43,16 +43,17 @@ if($isEditor){
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE.' '.(isset($LANG['LOADER'])?$LANG['LOADER']:'Glossary Term Loader'); ?></title>
+	<title><?php echo $DEFAULT_TITLE . ' ' . $LANG['LOADER']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>" />
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script type="text/javascript" src="../js/jquery.js"></script>
-	<script type="text/javascript" src="../js/jquery-ui.js"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#batchtaxagroup").autocomplete({
@@ -102,17 +103,17 @@ if(isset($glossary_admin_glossaryloaderCrumbs)){
 else{
 	?>
 	<div class="navpath">
-		<a href="../index.php"><?php echo (isset($LANG['HOME'])?$LANG['HOME']:'Home'); ?></a> &gt;&gt;
-		<a href="index.php"><b><?php echo (isset($LANG['GLOSS_MGMNT'])?$LANG['GLOSS_MGMNT']:'Glossary Management'); ?></b></a> &gt;&gt;
-		<b><?php echo (isset($LANG['BATCH_LOAD'])?$LANG['BATCH_LOAD']:'Glossary Batch Loader'); ?></b>
+		<a href="../index.php"><?php echo htmlspecialchars((isset($LANG['HOME'])?$LANG['HOME']:'Home'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+		<a href="index.php"><b><?php echo htmlspecialchars((isset($LANG['GLOSS_MGMNT'])?$LANG['GLOSS_MGMNT']:'Glossary Management'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></b></a> &gt;&gt;
+		<b><?php echo htmlspecialchars((isset($LANG['BATCH_LOAD'])?$LANG['BATCH_LOAD']:'Glossary Batch Loader'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></b>
 	</div>
 	<?php
 }
 
 if($isEditor){
 	?>
-	<div id="innertext">
-		<h1><?php echo (isset($LANG['G_BATCH_LOAD'])?$LANG['G_BATCH_LOAD']:'Glossary Term Batch Loader'); ?></h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading"><?php echo (isset($LANG['G_BATCH_LOAD'])?$LANG['G_BATCH_LOAD']:'Glossary Term Batch Loader'); ?></h1>
 		<div style="margin:30px;">
 			<div style="margin-bottom:30px;">
 				<?php echo (isset($LANG['BATCH_EXPLAIN'])?$LANG['BATCH_EXPLAIN']:'This page allows a Taxonomic Administrator to batch upload glossary data files.'); ?>
@@ -220,7 +221,7 @@ if($isEditor){
 							<input type="submit" name="action" value="Activate Terms" />
 						</div>
 						<div style="float:right;margin:10px;">
-							<a href="glossaryloader.php?action=downloadcsv" ><?php echo (isset($LANG['DOWNLOAD_TERMS'])?$LANG['DOWNLOAD_TERMS']:'Download CSV Terms File'); ?></a>
+							<a href="glossaryloader.php?action=downloadcsv" ><?php echo htmlspecialchars((isset($LANG['DOWNLOAD_TERMS'])?$LANG['DOWNLOAD_TERMS']:'Download CSV Terms File'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 						</div>
 					</fieldset>
 				</form>
@@ -230,7 +231,7 @@ if($isEditor){
 				echo '<ul>';
 				$loaderManager->transferUpload();
 				echo "<li>".(isset($LANG['TERM_SUCCESS'])?$LANG['TERM_SUCCESS']:'Terms upload appears to have been successful').".</li>";
-				echo "<li>".(isset($LANG['GO_TO'])?$LANG['GO_TO']:'Go to')." <a href='index.php'>".(isset($LANG['G_SEARCH'])?$LANG['G_SEARCH']:'Glossary Search')."</a> ".(isset($LANG['TO_SEARCH'])?$LANG['TO_SEARCH']:'page to search for a loaded name.')."</li>";
+				echo "<li>".(isset($LANG['GO_TO'])?$LANG['GO_TO']:'Go to')." <a href='index.php'>" . htmlspecialchars((isset($LANG['G_SEARCH'])?$LANG['G_SEARCH']:'Glossary Search'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "</a> " . htmlspecialchars((isset($LANG['TO_SEARCH'])?$LANG['TO_SEARCH']:'page to search for a loaded name.'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "</li>";
 				echo '</ul>';
 			}
 			else{

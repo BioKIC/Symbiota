@@ -5,7 +5,7 @@ Language: Español (Spanish)
 ------------------
 */
 
-include_once($SERVER_ROOT.'/content/lang/glossary/index.en.php');
+include_once($SERVER_ROOT.'/content/lang/glossary/index.es.php');
 
 $LANG['G_SOURCES'] = 'Manejo de Fuentes del Glosario';
 $LANG['MAIN_G'] = 'Glosario Principal';

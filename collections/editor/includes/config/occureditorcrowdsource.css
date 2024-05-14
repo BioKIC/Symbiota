@@ -15,10 +15,6 @@ body{
 	width: 595px;
 }
 
-#querySymbolDiv{
-	float:right;
-}
-
 #navDiv{
 	width: 600px;
 	clear: both;	
@@ -114,15 +110,6 @@ body{
 	padding:3px;
 }
 
-#dateToggleDiv{
-	float:left;
-	margin:15px 5px;
-}
-
-#dateextradiv{
-	display: block;
-}
-
 #idrefToggleDiv{
 	display:none;
 }
@@ -140,14 +127,6 @@ body{
 #verbatimEventDateDiv input{
 	width:	200px;
 	display: block;
-}
-
-#ymdDiv {
-	display: none;
-}
-
-#dayOfYearDiv {
-	display:none;
 }
 
 #endDateDiv {
@@ -297,13 +276,13 @@ body{
 	width:	70px;
 }
 
-#googleDiv{
+#mapIconDiv{
 	float:left;
 	margin: 17px 2px 0px 2px;
 	cursor:	pointer;
 }
 
-#googleDiv img{
+#mapIconDiv img{
 	border:	0px;
 	width:	13px;
 }

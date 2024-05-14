@@ -59,10 +59,10 @@ class OccurrenceAttributeSearch extends OccurrenceAttributes {
 			$classArr = explode(' ',$classStr);
 			$divClass = array_pop($classArr);
 		}
-		$retStr = '<div class="'.$divClass.'" style="margin-left:'.($classStr?'10':'').'px;"><div style="clear:both">';
+		$retStr = '<div class="' . $divClass . '" style="margin-left:' . ($classStr?'10':'0') . 'px; margin-top: 0.5rem;"><div style="clear:both">';
 		if(isset($this->traitArr[$traitID]['states'])){
 			if($this->traitArr[$traitID]['type']=='TF'){
-				$retStr .= '<div style="float:left;margin-left: 15px">'.$this->traitArr[$traitID]['name'].':</div>';
+				$retStr .= '<div style="float:left;margin-left: 15px; margin-bottom: 0.5rem;">' . $this->traitArr[$traitID]['name'] . ':</div>';
 				$retStr .= '<div style="clear:both;margin-left: 25px">';
 			}
 			else $retStr .= '<div style="float:left;">';
@@ -75,18 +75,20 @@ class OccurrenceAttributeSearch extends OccurrenceAttributes {
 					continue;
 				}
 				else{
-					$retStr .= '<div title="'.$sArr['description'].'" style="clear:both">';
-					$retStr .= '<input name="attr[]" id="traitstateid-'.$sid.'" class="'.$classStr.'" type="checkbox" value="'.$sid.'" onchange="traitChanged(this)" /> ';
-					$retStr .= $sArr['name'];
+					$retStr .= '<div title="' . $sArr['description'] . '" style="clear:both;">';
+					$retStr .= '<div style="display:flex;">';
+					$retStr .= '<div><input data-chip="' . $this->traitArr[$traitID]['name'] . ': ' . ucfirst($sArr['name']) . '" name="attr[]" id="traitstateid-' . $sid . '" class="' . $classStr . ' " style="margin: 0;"  type="checkbox" value="' . $sid . '" onchange="traitChanged(this)" /></div> ';
+					$retStr .= '<div style="margin-left: 0.5rem;"><label for="traitstateid-' . $sid . '">' . ucfirst($sArr['name']) . '<span class="screen-reader-only"> ('. $this->traitArr[$traitID]['name'] . ')</span></label></div>';
+					$retStr .= '</div>';
 					if($depTraitIdArr){
 						foreach($depTraitIdArr as $depTraitId){
-							$retStr .= $this->getTraitSearchHTML($depTraitId,trim($classStr.' child-'.$sid));
+							$retStr .= $this->getTraitSearchHTML($depTraitId, trim($classStr . ' child-' . $sid));
 						}
 					}
 					$retStr .= '</div>';
 				}
 			}
-			$retStr .= '</div>';
+			$retStr .= '<div style="margin-bottom: 1rem;"></div></div>';
 		}
 		$retStr .= '</div></div>';
 		return $retStr;

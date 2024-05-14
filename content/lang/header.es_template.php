@@ -7,15 +7,15 @@ Language: Español (Spanish)
 
 $LANG['H_HOME'] = 'Inicio';
 
-$LANG['H_SEARCH'] = 'Búsqueda';
-$LANG['H_COLLECTIONS'] = 'Colecciones';
+$LANG['H_SEARCH'] = 'Buscar';
+$LANG['H_COLLECTIONS'] = 'Buscar Colecciones';
 $LANG['H_MAP'] = 'Mapa';
-$LANG['H_MAP_SEARCH'] = 'Búsqueda Mapa';
+$LANG['H_MAP_SEARCH'] = 'Buscar Mapa';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Explorador Taxon&oacute;mico';
 
 $LANG['H_IMAGES'] = 'Im&aacute;genes';
-$LANG['H_IMAGE_BROWSER'] = 'Navegador de Im&aacute;genes';
-$LANG['H_IMAGE_SEARCH'] = 'Búsqueda de Im&aacute;genes';
+$LANG['H_IMAGE_BROWSER'] = 'Navegador de Imágenes';
+$LANG['H_IMAGE_SEARCH'] = 'Buscar Imágenes';
 
 $LANG['H_INVENTORIES'] = 'Lista de Especies';
 $LANG['H_PROJECT_1'] = 'Proyecto 1';
@@ -41,7 +41,31 @@ $LANG['H_DATA_USAGE'] = 'Uso de Datos';
 
 $LANG['H_WELCOME'] = 'Bienvenido';
 $LANG['H_MY_PROFILE'] = 'Mi Perfil';
-$LANG['H_LOGOUT'] = 'Finalizar Sesi&oacute;n';
+$LANG['H_LOGOUT'] = 'Finalizar Sesión';
 $LANG['H_LOGIN'] = 'Iniciar Sesi&oacute;n';
 $LANG['H_NEW_ACCOUNT'] = 'Nueva Cuenta';
+$LANG['TOGGLE_508_OFF'] = "Alternar el Diseño de Formulario Condensado";
+$LANG['TOGGLE_508_ON'] = "Alternar Diseño de Formulario Vertical";
+$LANG['SELECT_LANGUAGE'] = 'Seleccionar un Idioma';
+
+$LANG['CONTACT_US'] = 'Contacta con Nosotros';
+$LANG['LOGIN'] = 'Acceso';
+$LANG['SEARCH_COLLECTIONS'] = 'Buscar Colecciones';
+$LANG['CHECKLISTS'] = 'Listas de Control';
+$LANG['ABOUT_SYMBIOTA'] = 'Acerca de Symbiota';
+$LANG['HELP'] = 'Ayuda';
+$LANG['SPECIMENS'] = 'Especímenes';
+$LANG['IMG_CONTR'] = 'Contribuidores de imágenes';
+$LANG['OBS'] = 'Observaciones';
+
+$LANG['NAV_HOME'] = 'Hogar';
+$LANG['NAV_IMG_LIB'] = 'Biblioteca de Imágenes';
+$LANG['NAV_IMG_CONTR'] = 'Colaboradores de Imágenes';
+$LANG['NAV_IMG_SEARCH'] = 'Búsqueda de Imágenes';
+$LANG['SKIP_NAV'] = 'Saltar Navegación';
+
+// Footer-specific
+$LANG['ACCESSIBILITY_OPTIONS'] = 'Opciones de accesibilidad';
+$LANG['ACCESSIBILITY_OPTIONS_DESCRIPTION'] = 'Con el tiempo se agregarán más funciones de accesibilidad. Alterna aquellos que se adapten a tus necesidades.';
+$LANG['CLOSE'] = 'Cerrar';
 ?>

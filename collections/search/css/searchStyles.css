@@ -1,0 +1,949 @@
+/************* CUSTOM STYLES *************
+ * 
+*************/
+
+/*
+0. NEON COLORS
+1. GENERAL
+2. LAYOUT
+3. SPECIFIC SECTIONS
+4. FORMS, BUTTONS
+5. TABLES
+6. ICONS
+7. TABS
+8. QUICK SEARCH PLUGIN
+9. FOOTER
+*/
+
+/******* 0. NEON COLORS ********/
+
+:root {
+  --navy: #002c77;
+  --blue: #0073cf;
+  --skyblue: #8fcae7;
+  --skybluelight: #c2deea;
+  --brownblack: #352723;
+  --browndark: #4b372e;
+  --brown: #82542f;
+  --greendark: #558807;
+  --green: #acc37e;
+  --greenlight: #c4daa1;
+  --gold: #f0ab00;
+  --goldlight: #ffcb4f;
+  --red: #cc0000;
+  --black: #000000;
+  --white: #ffffff;
+  --graydarkest: #565a5c;
+  --graydarker: #7c7f80;
+  --gray: #a2a4a3;
+  --graylight: #d7d9d9;
+  --graylightest: #e4e6e7;
+  --graywhite: #f5f6f7;
+  --alertgreen: #eef3e6;
+  --alertgreenborder: #558807;
+  --alertyellow: #fff5dc;
+  --alertyellowborder: #f0ab00;
+  --alertred: #f5cccc;
+  --alertredborder: #cc0000;
+}
+
+@import "../../../css/v202209/symbiota/variables.css";
+
+/* Accordion styling from NEON
+========================================================================== */
+
+.accordions input.accordion-selector {
+  display: none;
+}
+
+.accordions label.accordion-header {
+  font-size: 16px;
+  text-transform: uppercase;
+  font-weight: 600;
+  text-align: center;
+  display: block;
+  padding: 8px 22px;
+  margin: 0 0 1px 0;
+  cursor: pointer;
+  background-color: #ffffff;
+  border-radius: 2px;
+  border: 1px solid var(--darkest-color);
+  color: var(--darkest-color);
+  -webkit-transition: ease 0.5s;
+  transition: ease 0.5s;
+  position: relative;
+}
+
+.accordions label.accordion-header:hover {
+  background: #e6e6e6;
+}
+
+.accordions label.accordion-header::after {
+  font-family: "Material Icons";
+  font-size: 24px;
+  content: "\e313";
+  position: absolute;
+  right: 20px;
+  top: 10px;
+}
+
+.accordions .content {
+  background: #ffffff;
+  padding: 10px 25px;
+  border: 1px solid #d7d9d9;
+  margin: -1px 0 10px 0;
+  border-radius: 2px;
+}
+
+.accordions .accordion-selector + label + .content {
+  display: none;
+  opacity: 0;
+  height: 0;
+  padding: 0 25px;
+  -webkit-transition: ease-in-out 0.2s;
+  transition: ease-in-out 0.2s;
+}
+
+.accordions .accordion-selector:checked + label + .content {
+  display: block;
+  opacity: 1;
+  height: auto;
+  padding: 10px 25px;
+}
+
+.accordions .accordion-selector:checked + label::after {
+  content: "\e316";
+}
+
+/* End accordion styling from NEON
+========================================================================== */
+
+/* Input Text ********************************************************************************/
+.input-text-container {
+  --bg: $neon-lighter-gray;
+  --height: 46px;
+  --bg-hover1: rgba(0, 0, 0, 0.08);
+  --bbc: rgba(0, 0, 0, 0.42);
+  --opaq1: 0.08;
+  --fz: 100px;
+  margin: 0 auto;
+  padding-top: 14px;
+  width: 100%;
+  max-width: 600px;
+}
+
+.input-text-container label {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.input-text-container label span::after,
+.input-text-container label span::before {
+  position: absolute;
+  -webkit-transition: 200ms ease-in-out;
+  transition: 200ms ease-in-out;
+}
+
+.input-text-container label span::before {
+  content: attr(data-label);
+  left: 16px;
+  top: 16px;
+  margin: auto;
+  pointer-events: none;
+  height: 12px;
+  font-size: var(--fz);
+  color: gray;
+  line-height: 1;
+}
+
+.input-text-container label input:focus ~ span::before,
+.input-text-container label input:valid ~ span::before,
+.input-text-container label input:invalid ~ span::before {
+  font-size: 0.8em;
+  color: #005dab;
+}
+
+.input-text-container input {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100%;
+  border: 0;
+  height: var(--height);
+  padding: 10px 5px;
+  font-size: 1em;
+}
+
+.input-text-container input:focus,
+.input-text-container input:active {
+  outline: 0;
+  border: 0;
+}
+
+.input-text-container .input-text--filled {
+  border-bottom: 1px solid var(--bbc);
+}
+
+.input-text-container .input-text--filled > input {
+  background-color: var(--bg);
+  border-radius: 4px 4px 0 0;
+}
+
+.input-text-container .input-text--filled > input:hover {
+  background-color: var(--bg-hover1);
+}
+
+.input-text-container .input-text--filled > input:focus ~ span::before,
+.input-text-container .input-text--filled > input:valid ~ span::before,
+.input-text-container .input-text--filled > input:invalid ~ span::before {
+  -webkit-transform: translateY(-12px);
+  transform: translateY(-12px);
+  font-size: 0.8em;
+  color: #005dab;
+}
+
+.input-text-container .input-text--filled > input:focus ~ span::after,
+.input-text-container .input-text--filled > input:valid ~ span::after,
+.input-text-container .input-text--filled > input:invalid ~ span::after {
+  width: 100%;
+}
+
+.input-text-container .input-text--filled span::after {
+  content: "";
+  width: 0;
+  height: 1px;
+  background-color: #005dab;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.input-text-container .input-text--outlined > input {
+  border-radius: 0;
+}
+
+.input-text-container .input-text--outlined > input:focus {
+  -webkit-box-shadow: 0 0 0 2px #005dab;
+  box-shadow: 0 0 0 2px #005dab;
+  border-color: transparent;
+}
+
+.input-text-container .input-text--outlined > input:focus ~ span::before,
+.input-text-container .input-text--outlined > input:valid ~ span::before,
+.input-text-container .input-text--outlined > input:invalid ~ span::before {
+  -webkit-transform: translateY(-22px);
+  transform: translateY(-22px);
+  background-color: white;
+  padding: 2px 4px;
+}
+
+/* End Input Text ********************************************************************************/
+
+/* Select control ***********************************/
+.select-container label {
+  font-size: 0.8em;
+  postion: relative;
+  top: 22px;
+  background-color: white;
+  padding: 2px 4px;
+}
+
+.select-container label span {
+  content: attr(data-label);
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  pointer-events: none;
+  color: gray;
+  line-height: 1;
+}
+
+.select-container select {
+  margin-top: 14px;
+  height: 46px;
+  border: 2px solid #939292;
+  -webkit-box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.17);
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.17);
+  font-family: inherit;
+  font-size: 1em;
+  width: 100%;
+}
+
+.select-container select:active,
+.select-container select:focus {
+  border-color: #005dab;
+}
+/* End Select control ***********************************/
+
+/* Text Area ********************************************************************************/
+.text-area-container {
+  --bg: $neon-lighter-gray;
+  --bg-hover1: rgba(0, 0, 0, 0.08);
+  --bbc: rgba(0, 0, 0, 0.42);
+  --opaq1: 0.08;
+  --padding: 10px;
+  --fz: 100px;
+  margin: 10px auto;
+  width: 100%;
+  max-width: 600px;
+}
+
+.text-area-container label {
+  position: relative;
+  width: 100%;
+  display: inline-block;
+}
+
+.text-area-container label span::after,
+.text-area-container label span::before {
+  position: absolute;
+  -webkit-transition: 200ms ease-in-out;
+  transition: 200ms ease-in-out;
+}
+
+.text-area-container label span::after {
+  position: absolute;
+  top: 0;
+  -webkit-transition: 200ms ease-in-out;
+  transition: 200ms ease-in-out;
+}
+
+.text-area-container label span::before {
+  content: attr(data-label);
+  left: 16px;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  pointer-events: none;
+  height: 12px;
+  font-size: var(--fz);
+  line-height: 1;
+}
+
+.text-area-container textarea {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  resize: none;
+  border: 0;
+  height: 100px;
+  padding: var(--padding);
+  font-size: 1em;
+}
+
+.text-area-container textarea ~ span::before {
+  top: -60px;
+  font-size: 0.8em;
+  color: #005dab;
+}
+
+.text-area-container textarea:focus,
+.text-area-container textarea:active {
+  outline: 0;
+  border: 0;
+}
+
+.text-area-container .text-area--outlined > textarea {
+  border: 1px solid var(--bbc);
+  border-radius: 0;
+}
+
+.text-area-container .text-area--outlined > textarea:focus {
+  -webkit-box-shadow: 0 0 0 2px #005dab;
+  box-shadow: 0 0 0 2px #005dab;
+  border-color: transparent;
+}
+
+.text-area-container .text-area--outlined > textarea:focus ~ span::before,
+.text-area-container .text-area--outlined > textarea:valid ~ span::before {
+  -webkit-transform: translateY(-22px);
+  transform: translateY(-22px);
+  background-color: white;
+  padding: 2px 4px;
+}
+
+/* End Text Area ********************************************************************************/
+
+.alert {
+  max-width: 30%;
+  padding: 20px;
+  background-color: green; /* Red */
+  color: white;
+  margin-bottom: 15px;
+}
+
+/******* 1. GENERAL ********/
+
+.inner-search html {
+  font-size: 1.2em;
+  font-weight: 400;
+  line-height: 1.5em;
+}
+
+.inner-search body {
+  color: var(--black, black);
+  margin-top: 0px;
+}
+
+/* Utilities */
+
+.inner-search .visually-hidden {
+  display: none;
+}
+
+.inner-search .ml-1 {
+  margin-left: 0.5em;
+}
+
+.inner-search .mr-1 {
+  margin-right: 0.5em;
+}
+
+.inner-search .mt-1 {
+  margin-top: 0.5em;
+}
+
+/* Alerts */
+
+.inner-search .alerts {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 15px;
+  pointer-events: none;
+}
+
+.inner-search .alerts .alert {
+  padding: 15px;
+  border-radius: 4px;
+  border: solid 1px var(--alertgreenborder);
+  background-color: var(--alertgreen);
+  color: var(--black, black);
+  font-size: 14px;
+  -webkit-transform: translateY(300px);
+  transform: translateY(300px);
+  pointer-events: all;
+  margin-bottom: 10px;
+  -webkit-animation: slide-in 1s ease-out forwards;
+  animation: slide-in 1s ease-out forwards;
+}
+
+.inner-search .alerts .alert > a {
+  color: #002c77;
+}
+
+@-webkit-keyframes slide-in {
+  to {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slide-in {
+  to {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
+
+/******* 2. LAYOUT ********/
+
+.inner-search #innertext img {
+  max-width: 100%;
+}
+
+.inner-search #middlecenter {
+  padding: 0px;
+}
+
+/*Central div in the middle center table div */
+
+.inner-search .navpath {
+  margin-left: 2rem;
+}
+/* div.navpath {
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 1000px;
+  max-width: 1150px;
+  width: 90%;
+} */
+
+.inner-search .disclaimer span {
+  font-weight: bold;
+}
+
+/* Manifest Viewer conteiner */
+
+.inner-search #samplePanel {
+  font-size: 12px !important;
+}
+
+/* Large screens */
+
+@media (min-width: 1024px) {
+  .inner-search #innertext {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 1000px;
+    max-width: 1150px;
+    width: 90%;
+  }
+  .inner-search #popup-innertext {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 1000px;
+    max-width: 1150px;
+    width: 90%;
+  }
+  .inner-search #home-left {
+    max-width: 70%;
+    float: left;
+  }
+  .inner-search #home-right {
+    max-width: 30%;
+    float: right;
+  }
+  .inner-search #cloptiondiv {
+    max-width: 20% !important;
+  }
+  .inner-search #img-container {
+    width: 80%;
+  }
+  .inner-search .hide-on-large {
+    display: none;
+  }
+}
+
+/* Medium screens */
+
+@media (min-width: 426px) and (max-width: 1023px) {
+  .inner-search #innertext {
+    max-width: 96%;
+    margin: 0 auto;
+  }
+  .inner-search #popup-innertext {
+    max-width: 96%;
+    margin: 0 auto;
+  }
+  .inner-search #home-left {
+    max-width: 60%;
+    float: left;
+    padding-left: 1rem;
+  }
+  .inner-search #home-right {
+    max-width: 40%;
+    float: right;
+  }
+  .inner-search #cloptiondiv {
+    max-width: 15% !important;
+  }
+  .inner-search #taxon-container {
+    max-width: 75%;
+  }
+  .inner-search .hide-on-large {
+    display: none;
+  }
+}
+
+/* Smaller screens */
+
+@media (max-width: 425px) {
+  .inner-search #innertext {
+    max-width: 95%;
+  }
+  .inner-search #popup-innertext {
+    max-width: 95%;
+  }
+  .inner-search .hide-on-small {
+    display: none;
+  }
+}
+
+/******* 3. SPECIFIC SECTIONS ********/
+
+.inner-search .home-page section {
+  margin: 3rem 0 1.5rem 0;
+}
+
+/*Main table framework*/
+
+.inner-search #maintable {
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+}
+
+/* SYMBIOTA MAIN HEADER */
+
+.inner-search #biorepo-header {
+  position: relative;
+  list-style: none;
+  text-align: center;
+  max-width: 100%;
+  padding: 3rem 0 2rem 0;
+  margin: 0 auto;
+}
+
+@media (max-width: 425px) {
+  .inner-search ul#biorepo-header {
+    position: relative;
+    list-style: none;
+    text-align: center;
+    max-width: 100%;
+    padding: 1rem 0;
+    margin: 0 auto;
+  }
+}
+
+.inner-search #biorepo-header::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url(../images/layout/NEON_Biorepo_Hero_Image.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center center;
+  filter: opacity(40%);
+}
+
+.inner-search li.header-title {
+  position: relative;
+}
+
+.inner-search .header-title a:hover {
+  text-decoration: none;
+}
+
+.inner-search .header-title a {
+  text-decoration: none;
+}
+
+.inner-search #biorepo-header > li {
+  display: inline-block;
+  padding: 0 0.5rem;
+  vertical-align: center;
+  filter: opacity(100%);
+}
+
+.inner-search #biorepo-header h1 {
+  text-transform: uppercase;
+  font-size: 1.5rem;
+  color: white;
+  font-weight: bold;
+}
+
+.inner-search #header a {
+  color: white;
+  text-transform: uppercase;
+}
+
+/* Checklists displayed with images */
+.inner-search .tndiv {
+  font-size: 12px;
+  line-height: 14px;
+}
+
+/* SYMBIOTA NAVIGATION */
+
+/* Admin bar */
+
+@media (min-width: 1024px) {
+  .inner-search #top_navbar {
+    margin-top: 10px;
+  }
+}
+
+.inner-search #top_navbar {
+  clear: both;
+  margin-left: auto;
+  margin-right: 1rem;
+  padding-right: 1rem;
+}
+
+.inner-search #right_navbarlinks {
+  clear: both;
+  font-size: 11px;
+  float: right;
+  color: #000000;
+}
+
+/* Main menu bar */
+
+.inner-search #hor_dropdown {
+  display: inline-block;
+  list-style: none;
+  position: relative;
+  text-align: left;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.inner-search #hor_dropdown li {
+  position: relative;
+  display: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+.inner-search #hor_dropdown a {
+  display: block;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.inner-search #hor_dropdown a:hover {
+  background-color: #1b67b3;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* Submenu */
+
+.inner-search #hor_dropdown ul {
+  list-style: none;
+  position: absolute;
+  left: -9999px;
+  top: -9999px;
+  background-color: #1b67b3;
+  z-index: 1000;
+}
+
+.inner-search #hor_dropdown ul li {
+  float: none;
+}
+
+.inner-search #hor_dropdown ul a {
+  white-space: nowrap;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.inner-search #hor_dropdown li:hover ul {
+  left: 0;
+  /* top: 3.5rem;
+   */
+  top: 42px;
+  text-decoration: none;
+  padding: 5px 0px;
+  z-index: 1000;
+}
+
+.inner-search #hor_dropdown li:hover ul a {
+  padding: 5px;
+  text-decoration: none;
+  text-indent: 8px;
+  padding-right: 8px;
+  background-image: none;
+  background-color: #1b67b3;
+  z-index: 1000;
+}
+
+.inner-search #hor_dropdown li:hover ul li a:hover {
+  background: #1b67b3;
+  text-decoration: underline;
+}
+
+.inner-search .biorepo-home-icon {
+  padding: 0 !important;
+  /* display: inline-block; */
+  background-image: url(../neon/images/home-white.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center center;
+  height: 14px;
+  width: 14px;
+}
+
+/******* 4. FORMS, BUTTONS ********/
+
+/* Forcing styles over jquery-ui (search forms) */
+
+.inner-search .ui-widget input,
+.inner-search .ui-widget select,
+.inner-search .ui-widget textarea,
+.inner-search .ui-widget button {
+  font-family: "Inter", sans-serif !important;
+}
+
+.inner-search button,
+.inner-search button.ui-button.ui-widget.ui-corner-all,
+.inner-search input[type="submit" i] {
+  font-family: "Inter", sans-serif !important;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  color: white;
+  border-style: none;
+  border-color: var(--link-color);
+  border-bottom-left-radius: 2px;
+  border-bottom-right-radius: 2px;
+  border-bottom-width: 0px;
+  border-right-width: 0px;
+  background-color: var(--darkest-color) !important;
+  width: 100%;
+  box-sizing: border-box;
+  box-shadow: 0px 3px 1px -2px rgb(0 0 0 / 20%),
+    0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 5px 0px rgb(0 0 0 / 12%);
+  padding: 8px 16px;
+  margin-bottom: 12px;
+  white-space: nowrap;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,
+    border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition-property: background-color, box-shadow, border;
+  transition-duration: 250ms, 250ms, 250ms;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1),
+    cubic-bezier(0.4, 0, 0.2, 1), cubic-bezier(0.4, 0, 0.2, 1);
+  transition-delay: 0ms, 0ms, 0ms;
+}
+
+.inner-search button:hover {
+  background-color: var(--bright-color) !important;
+  box-shadow: 0px 2px 4px -1px rgb(0 0 0 / 20%),
+    0px 4px 5px 0px rgb(0 0 0 / 14%), 0px 1px 10px 0px rgb(0 0 0 / 12%);
+}
+.inner-search button#reset-btn {
+  background-color: var(--medium-color) !important;
+  &:hover {
+	background-color: var(--bright-color) !important;
+  }
+}
+
+.inner-search input[type="text"],
+.inner-search input[type="number"],
+.inner-search textarea,
+.inner-search select {
+  border: 1px solid #d0d0d0 !important;
+  border-radius: 0;
+  color: #333333;
+}
+
+.inner-search input[type="text"]:focus,
+.inner-search textarea:focus,
+.inner-search select:focus {
+  border-radius: 0 !important;
+}
+
+.inner-search button.ui-button.ui-widget.ui-corner-all:hover {
+  background-color: var(--link-color);
+  text-decoration: none;
+}
+
+.inner-search button.ui-button:active {
+  background: #000000;
+}
+
+/* Inverts color for svgs inside TinyMCE format buttons */
+.inner-search .tox-editor-container svg {
+  filter: invert(1);
+}
+.inner-search span.tox-tbtn__select-label {
+  filter: invert(1);
+}
+
+/* Links inside buttons */
+
+.inner-search button > a {
+  color: #ffffff !important;
+}
+
+.inner-search button > a:hover {
+  text-decoration: none !important;
+}
+
+/******* 5. TABLES ********/
+
+.inner-search table,
+.inner-search .ui-widget {
+  font-family: "Inter", sans-serif !important;
+  font-size: 1em;
+}
+
+.inner-search hr:first-of-type {
+  margin-top: 1em;
+}
+
+/******* 6. ICONS ********/
+
+.inner-search .svg-icon {
+  filter: invert(1);
+}
+
+.inner-search #speclist button.icon-button img {
+  filter: invert(1);
+}
+
+.inner-search #omlisttable img {
+  border: none !important;
+}
+
+/******* 7. TABS ********/
+
+.inner-search #tabs {
+  height: auto;
+}
+
+/******* 8. QUICK SEARCH PLUGIN ********/
+
+.inner-search #quicksearchdiv {
+  width: auto !important;
+  padding: 0.75rem !important;
+  margin: 1rem auto 4rem auto !important;
+}
+
+.inner-search #quicksearchbutton {
+  margin-left: 1rem !important;
+  margin-bottom: 1rem !important;
+  padding-bottom: 10px !important;
+}
+
+/******* 9. FOOTER ********/
+
+.inner-search #footer {
+  /* padding: 3rem !important; */
+  border-top: 2px solid #e7e7e7 !important;
+}
+
+.inner-search footer {
+  display: inline-flex !important;
+  vertical-align: top;
+}
+
+@media (min-width: 1024px) {
+  .inner-search #footer {
+    padding: 3rem;
+    margin: 3rem;
+  }
+  .inner-search #footer .footer-bottom .footer-bottom-left {
+    width: 50%;
+    padding-top: 1.2em;
+  }
+  .inner-search #footer .footer-bottom .footer-bottom-left {
+    display: flex !important;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    max-width: 100%;
+    float: left;
+  }
+  .inner-search #footer .footer-bottom .footer-bottom-right {
+    width: auto;
+    float: right;
+  }
+}
+
+.inner-search footer .nsf-link {
+  width: 200px;
+}

@@ -19,7 +19,8 @@ if (isset($_POST['formsubmit'])) {
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>" />
 		<title><?php echo $DEFAULT_TITLE; ?> Action Requests</title>
@@ -28,8 +29,8 @@ if (isset($_POST['formsubmit'])) {
 		include_once($SERVER_ROOT.'/includes/head.php');
 		include_once($SERVER_ROOT.'/includes/googleanalytics.php');
 		?>
-		<script type="text/javascript" src="../js/jquery.js"></script>
-		<script type="text/javascript" src="../js/jquery-ui.js"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
         <!--  Supporting visualsearch search box widget -->
         <script type="text/javascript" src="../js/underscore-1.4.3.js"></script>
         <script type="text/javascript" src="../js/backbone-0.9.10.js"></script>
@@ -106,8 +107,8 @@ if (isset($_POST['formsubmit'])) {
 	}
 	?>
 	<!-- This is inner text! -->
-	<div id="innertext">
-		<h1>Action Requests</h1>
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Action Requests</h1>
 		<div id="tabs" style="margin:0px;">
 	        <?php
 	        if($RequestTrackingIsActive!=1){

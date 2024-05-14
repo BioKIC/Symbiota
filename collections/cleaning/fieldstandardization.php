@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCleaner.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/cleaning/fieldstandardization.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/cleaning/fieldstandardization.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/cleaning/fieldstandardization.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -33,10 +36,11 @@ if($collMap['colltype'] == 'General Observations' && $obsUid !== 0){
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE; ?> Field Standardization</title>
+	<title><?php echo $DEFAULT_TITLE; ?> <?php echo $LANG['FIELD_STANDARDIZATION'] ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
@@ -47,13 +51,14 @@ if($collMap['colltype'] == 'General Observations' && $obsUid !== 0){
 	if(!$dupArr) include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class='navpath'>
-		<a href="../../index.php">Home</a> &gt;&gt;
-		<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1">Collection Management</a> &gt;&gt;
-		<b>Batch Field Cleaning Tools</b>
+		<a href="../../index.php"><?php echo $LANG['HOME'] ?></a> &gt;&gt;
+		<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1"><?php echo $LANG['COLLECTION_MANAGEMENT'] ?></a> &gt;&gt;
+		<b><?php echo $LANG['BATCH_FIELD_TOOLS'] ?></b>
 	</div>
-
+	
 	<!-- inner text -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Field Standardization</h1>
 		<?php
 		if($statusStr){
 			?>
@@ -76,38 +81,44 @@ if($collMap['colltype'] == 'General Observations' && $obsUid !== 0){
 			}
 			?>
 			<fieldset style="padding:20px;">
-				<legend><b>Country</b></legend>
+				<legend><b><?php echo $LANG['COUNTRY'] ?></b></legend>
+				<section class="flex-form">
+					<div>
+						<label for="country-old-field"><?php echo $LANG['OLD_FIELD'] ?>:</label>
+						<select name="country-old-field" id="country-old-field">
+							<option value=""><?php echo $LANG['SELECT_TARGET_FIELD'] ?></option>
+							<option value="">--------------------------------</option>
+							<?php
+	
+	
+	
+	
+							?>
+						</select>
+					</div>
+					<div>
+						<label for="country-old-value"><?php echo $LANG['OLD_VALUE'] ?>:</label>
+						<select name="country-old-value" id="country-old-value">
+							<option value=""><?php echo $LANG['SELECT_TARGET_VALUE'] ?></option>
+							<option value="">--------------------------------</option>
+							<?php
+	
+	
+	
+	
+							?>
+						</select>
+					</div>
+				</section>
 				<div style="margin:5px">
-					<select name="country_old">
-						<option value="">Select Target Field</option>
-						<option value="">--------------------------------</option>
-						<?php
-
-
-
-
-						?>
-					</select>
-					<select name="country_old">
-						<option value="">Select Target Value</option>
-						<option value="">--------------------------------</option>
-						<?php
-
-
-
-
-						?>
-					</select>
-				</div>
-				<div style="margin:5px">
-					<b>Replacement Value:</b>
-					<input name="country_new" type="text" value="" />
+					<label for="country-new"><?php echo $LANG['REPLACEMENT_VALUE'] ?>:</label>
+					<input name="country-new" id="country-new" type="text" value="" />
 				</div>
 			</fieldset>
 			<?php
 		}
 		else{
-			echo '<h2>You are not authorized to access this page</h2>';
+			echo '<h2>' . $LANG['NOT_AUTHORIZED'] . '</h2>';
 		}
 		?>
 	</div>

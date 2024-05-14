@@ -242,29 +242,46 @@ function resetCustomElements(x){
 	}
 }
 
-function toggle(target){
-	var ele = document.getElementById(target);
-	if(ele){
-		if(ele.style.display=="none" || ele.style.display==""){
-			ele.style.display="block";
-  		}
-	 	else {
-	 		ele.style.display="none";
-	 	}
+
+function toggle(target, displayStyle = "block") {
+  var ele = document.getElementById(target);
+
+  if (ele) {
+    if (ele.style.display == "none" || ele.style.display == "") {
+      ele.style.display = displayStyle;
+    } else {
+      ele.style.display = "none";
+    }
+  } else {
+    var divObjs = document.getElementsByTagName("div");
+    for (i = 0; i < divObjs.length; i++) {
+      var divObj = divObjs[i];
+      if (
+        divObj.getAttribute("class") == target ||
+        divObj.getAttribute("className") == target
+      ) {
+        if (divObj.style.display == "none") {
+          divObj.style.display = "";
+        } else {
+          divObj.style.display = "none";
+        }
+      }
+    }
+  }
+}
+
+function toggleButtonVisuals(el, containerId, linkedBtnIds) {
+	for (let id of linkedBtnIds) {
+		const linkedBtn = document.getElementById(id);
+		linkedBtn.classList.remove('active');
 	}
-	else{
-		var divObjs = document.getElementsByTagName("div");
-	  	for (i = 0; i < divObjs.length; i++) {
-	  		var divObj = divObjs[i];
-	  		if(divObj.getAttribute("class") == target || divObj.getAttribute("className") == target){
-				if(divObj.style.display=="none"){
-					divObj.style.display="";
-				}
-			 	else {
-			 		divObj.style.display="none";
-			 	}
-			}
-		}
+
+	const toggleContainer = document.getElementById(containerId)
+	
+	if(toggleContainer && toggleContainer.style.display === 'none') {
+		el.classList.remove('active');
+	} else {
+		el.classList.add('active');
 	}
 }
 

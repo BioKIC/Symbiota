@@ -234,6 +234,67 @@ class RpcOccurrenceEditor extends RpcBase{
 		return $retArr;
 	}
 
+	//Used by /collections/editor/rpc/localitysecuritycheck.php
+	public function getStateSecuritySetting($tid, $state){
+		$retStr = 0;
+		if(is_numeric($tid) && $state){
+			$sql = 'SELECT c.clid
+				FROM fmchecklists c INNER JOIN fmchklsttaxalink cl ON c.clid = cl.clid
+				INNER JOIN taxstatus ts1 ON cl.tid = ts1.tid
+				INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted
+				WHERE c.type = "rarespp" AND ts1.taxauthid = 1 AND ts2.taxauthid = 1
+				AND (ts2.tid = ?) AND (c.locality = ?)';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('is', $tid, $state);
+				$stmt->execute();
+				$stmt->store_result();
+				if($stmt->num_rows) $retStr = 1;
+				$stmt->close();
+			}
+		}
+		return $retStr;
+	}
+
+	//Used by Geographic Thesaurus calls
+	public function getGeography($term, $target, $parentTerm){
+		$retArr = Array();
+		$sql = 'SELECT geoterm FROM geographicthesaurus WHERE geoterm LIKE "'.$this->cleanInStr($term).'%" AND geolevel = 50 ';
+		if($target == 'state'){
+			$sql = 'SELECT DISTINCT s.geoterm FROM geographicthesaurus s ';
+			$sqlWhere = 'WHERE s.geolevel = 60 AND s.geoterm LIKE "'.$this->cleanInStr($term).'%" ';
+			if($parentTerm){
+				$sql .= 'INNER JOIN geographicthesaurus c ON s.parentID = c.geoThesID ';
+				$sqlWhere .= 'AND c.geolevel = 50 AND c.geoterm = "'.$this->cleanInStr($parentTerm).'" ';
+			}
+			$sql .= $sqlWhere;
+		}
+		elseif($target == 'county'){
+			$sql = 'SELECT DISTINCT c.geoterm FROM geographicthesaurus c ';
+			$sqlWhere = 'WHERE c.geolevel = 70 AND c.geoterm LIKE "'.$this->cleanInStr($term).'%" ';
+			if($parentTerm){
+				$sql .= 'INNER JOIN geographicthesaurus s ON c.parentID = s.geoThesID ';
+				$sqlWhere .= 'AND s.geolevel = 60 AND s.geoterm = "'.$this->cleanInStr($parentTerm).'" ';
+			}
+			$sql .= $sqlWhere;
+		}
+		elseif($target == 'municipality'){
+			$sql = 'SELECT DISTINCT m.geoterm FROM geographicthesaurus m ';
+			$sqlWhere = 'WHERE m.geolevel = 80 AND m.geoterm LIKE "'.$this->cleanInStr($term).'%" ';
+			if($parentTerm){
+				$sql .= 'INNER JOIN geographicthesaurus s ON m.parentID = s.geoThesID ';
+				$sqlWhere .= 'AND s.geolevel = 70 AND s.geoterm = "'.$this->cleanInStr($parentTerm).'" ';
+			}
+			$sql .= $sqlWhere;
+		}
+		$rs = $this->conn->query($sql);
+		while ($r = $rs->fetch_object()) {
+			$retArr[] = $r->geoterm;
+		}
+		$rs->free();
+		sort($retArr);
+		return $retArr;
+	}
+
 	//Used by /collections/editor/rpc/getPaleoGtsParents.php
 	public function getPaleoGtsParents($term){
 		$retArr = Array();

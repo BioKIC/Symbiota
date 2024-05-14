@@ -15,7 +15,7 @@ $LANG['RADIUS_DESCRIPTION'] = 'If a radius is defined, species lists are generat
 					If a radius is not supplied, the area is sampled in concentric rings until the sample size is determined to 
 					best represent the local species diversity. In other words, poorly collected areas will have a larger radius sampled. 
 					Setting the taxon filter will limit the return to species found within that taxonomic group.';
-$LANG['LESS_DETAILS'] = 'Less Details';
+$LANG['LESS_DETAILS'] = 'Fewer Details';
 $LANG['BUILD_CHECKLIST'] = 'Build Checklist';
 $LANG['POINT'] = 'Point (Lat, Long)';
 $LANG['CLICK_MAP'] = 'Click on map';
@@ -23,5 +23,6 @@ $LANG['TAXON_FILTER'] = 'Taxon Filter';
 $LANG['RADIUS'] = 'Radius';
 $LANG['KM'] = 'Kilometers';
 $LANG['MILES'] = 'Miles';
+$LANG['UNITS'] = 'Units';
 
 ?>

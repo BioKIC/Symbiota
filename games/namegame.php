@@ -3,28 +3,18 @@ include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GamesManager.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
-$clName = array_key_exists('listname',$_REQUEST)?$_REQUEST['listname']:'';
-$clid = array_key_exists('clid',$_REQUEST)?$_REQUEST['clid']:0;
-$dynClid = array_key_exists('dynclid',$_REQUEST)?$_REQUEST['dynclid']:0;
+$clid = array_key_exists('clid', $_REQUEST) ? filter_var($_REQUEST['clid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$dynClid = array_key_exists('dynclid', $_REQUEST) ? filter_var($_REQUEST['dynclid'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
-//Sanitation
-if(filter_var($clName, FILTER_SANITIZE_STRING)) $clName = '';
-if(!is_numeric($clid)) $clid = 0;
-if(!is_numeric($dynClid)) $dynClid  = 0;
+$gameManager = new GamesManager();
+if($clid) $gameManager->setClid($clid);
+elseif($dynClid) $gameManager->setDynClid($dynClid);
+$clName = $gameManager->getClName();
 
-if(!$clName){
-	$gameManager = new GamesManager();
-	if($clid){
-		$gameManager->setClid($clid);
-	}
-	elseif($dynClid){
-		$gameManager->setDynClid($dynClid);
-	}
-	$clName = $gameManager->getClName();
-}
 $imgloc = "../images/games/namegame/";
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Name Game</title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
@@ -32,18 +22,21 @@ $imgloc = "../images/games/namegame/";
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
     ?>
-	<script src="../js/jquery.js" type="text/javascript"></script>
-	<script src="../js/jquery-ui.js" type="text/javascript"></script>
-	<style type="text/css">
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+	<style>
 		.lettertable{border:1px solid #000000;border-spacing:3px;}
 		.tableplain{border:1px}
-		#charactertable td{margin-left: auto;margin-right: auto;vertical-align: middle;border:1px solid #000000;width:50px;cursor:hand;cursor:pointer;font-family:times new roman;font-size:25;font-weight:bold;color:#000000}
-		.buttonover{border:5px outset gray;cursor:hand;cursor:pointer;font-weight:normal;font-weight:bold}
+		#charactertable td{margin-left: auto;margin-right: auto;vertical-align: middle;border:1px solid #000000;width:50px;cursor:pointer;font-family:times new roman;font-size:2.5rem;font-weight:bold;color:#000000}
+		.buttonover{border:5px outset gray;cursor:pointer;font-weight:normal;font-weight:bold}
 		.buttonout{border:5px outset #CCCC99;font-weight:normal}
-		.buttondown{border:5px inset gray;cursor:hand;cursor:pointer;font-weight:bold}
-		.buttonup{border:5px outset #CCCC99;cursor:hand;cursor:pointer;font-weight:normal;font-weight:bold}
-		.question{font-size:30px}
+		.buttondown{border:5px inset gray;cursor:pointer;font-weight:bold}
+		.buttonup{border:5px outset #CCCC99;cursor:pointer;font-weight:normal;font-weight:bold}
+		.question{font-size:2.5rem}
 		#rw{margin-left:auto;margin-right:auto}
+		.tr-center {
+			text-align: center;
+		}
 	</style>
 	<script>
 		//COLLAPSE MENU
@@ -562,26 +555,26 @@ $imgloc = "../images/games/namegame/";
 		echo $games_namegameCrumbs;
 	}
 	else{
-		echo '<a href="../checklists/checklist.php?clid='.$clid.'&dynclid='.$dynClid.'">';
+		echo '<a href="../checklists/checklist.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&dynclid=' . htmlspecialchars($dynClid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 		echo $clName;
 		echo '</a> &gt;&gt; ';
 	}
 	echo ' <b>Name Game</b>';
 	echo '</div>';
 	?>
-	<div id="innertext">
+	<div role="main" id="innertext">
 		<div style="width:100%;text-align:center;">
-			<h1><?php echo $DEFAULT_TITLE; ?> Name Game</h1>
+			<h1 class="page-heading screen-reader-only">Name Guessing Game</h1>
 		</div>
 		<div style="width:100%;text-align:center;margin:10px;">
 			I am thinking of a species found within the following checklist: <b><?php echo $clName;?></b><br/>
 			What am I thinking of?
 		</div>
 		<div style="width:140px;margin-left:auto;margin-right:auto;margin-top:20px;">
-			<div id="imageset" style="cursor:hand;cursor:pointer;">
-				<img onclick="mClick(this.parentNode.id,this.id,'6','<?php echo $imgloc; ?>plant_on.gif','<?php echo $imgloc; ?>plant_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>plant_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>plant_off.gif')" src="<?php echo $imgloc; ?>plant_off.gif" id="img7">
-				<img onclick="mClick(this.parentNode.id,this.id,'5','<?php echo $imgloc; ?>flower_on.gif','<?php echo $imgloc; ?>flower_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>flower_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>flower_off.gif')" src="<?php echo $imgloc; ?>flower_off.gif" id="img6">
-				<img onclick="mClick(this.parentNode.id,this.id,'8','<?php echo $imgloc; ?>apple_on.gif','<?php echo $imgloc; ?>apple_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>apple_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>apple_off.gif')" src="<?php echo $imgloc; ?>apple_off.gif" id="img8">
+			<div id="imageset" style="cursor:pointer;">
+				<img onclick="mClick(this.parentNode.id,this.id,'6','<?php echo $imgloc; ?>plant_on.gif','<?php echo $imgloc; ?>plant_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>plant_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>plant_off.gif')" src="<?php echo $imgloc; ?>plant_off.gif" id="img7" alt="Image of a plant">
+				<img onclick="mClick(this.parentNode.id,this.id,'5','<?php echo $imgloc; ?>flower_on.gif','<?php echo $imgloc; ?>flower_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>flower_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>flower_off.gif')" src="<?php echo $imgloc; ?>flower_off.gif" id="img6" alt="Image of a flower">
+				<img onclick="mClick(this.parentNode.id,this.id,'8','<?php echo $imgloc; ?>apple_on.gif','<?php echo $imgloc; ?>apple_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>apple_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>apple_off.gif')" src="<?php echo $imgloc; ?>apple_off.gif" id="img8" alt="Image of an apple">
 				<!--<img onclick="mClick(this.parentNode.id,this.id,'0','<?php echo $imgloc; ?>man1_head_on.gif','<?php echo $imgloc; ?>man1_head_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>man1_head_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>man1_head_off.gif')" src="<?php echo $imgloc; ?>man1_head_off.gif" id="img1">-->
 				<!--<img onclick="mClick(this.parentNode.id,this.id,'1','<?php echo $imgloc; ?>woman1_head_on.gif','<?php echo $imgloc; ?>woman1_head_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>woman1_head_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>woman1_head_off.gif')" src="<?php echo $imgloc; ?>woman1_head_off.gif" id="img2">-->
 				<!--<img onclick="mClick(this.parentNode.id,this.id,'2','<?php echo $imgloc; ?>man2_head_on.gif','<?php echo $imgloc; ?>man2_head_off.gif')" onmouseover="mOver(this.parentNode.id,this.id,'<?php echo $imgloc; ?>man2_head_on.gif')" onmouseout="mOut(this.parentNode.id,this.id,'<?php echo $imgloc; ?>man2_head_off.gif')" src="<?php echo $imgloc; ?>man2_head_off.gif" id="img3">-->
@@ -593,7 +586,7 @@ $imgloc = "../images/games/namegame/";
 		<div style="width:600px;margin-left:auto;margin-right:auto;margin-top:20px;">
 			<div style="float:left;width:250px;">
 				<div style="width:150px;margin-left:auto;margin-right:auto;">
-					<img id="hpic" style="width:150px;" src="<?php echo $imgloc; ?>plant7.gif">
+					<img id="hpic" style="width:150px;" src="<?php echo $imgloc; ?>plant7.gif" alt="Image of a plant">
 				</div>
 				<div id="counter" style="text-align:center;width:190px;margin-left:auto;margin-right:auto;">Chances left = 6</div>
 			</div>
@@ -602,10 +595,10 @@ $imgloc = "../images/games/namegame/";
 					<div style="margin-top:30px;">
 						<b>Difficulty</b>
 					</div>
-					<div id="levelset" style="cursor:hand;cursor:pointer">
-						Hard <img onclick="mClick(this.parentNode.id,this.id,'3','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level1">
-						<img onclick="mClick(this.parentNode.id,this.id,'6','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level2">
-						<img onclick="mClick(this.parentNode.id,this.id,'12','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level3"> Easy
+					<div id="levelset" style="cursor:pointer">
+						Hard <img onclick="mClick(this.parentNode.id,this.id,'3','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level1" alt="Hard">
+						<img onclick="mClick(this.parentNode.id,this.id,'6','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level2" alt="Medium">
+						<img onclick="mClick(this.parentNode.id,this.id,'12','<?php echo $imgloc; ?>radio_on4.gif','<?php echo $imgloc; ?>radio_off4.gif')" src="<?php echo $imgloc; ?>radio_off4.gif" id="level3" alt="Easy"> Easy
 					</div>
 					<div style="margin-top:10px;">
 						Games Played <span id="plays">0</span><br>
@@ -619,18 +612,18 @@ $imgloc = "../images/games/namegame/";
 				</div>
 			</div>
 		</div>
-		<div style="clear:both;width:100%;text-align:center;padding-top:20px;">
-			<div id="hintdisplay" style="font-size:20;"></div>
+		<div style="clear:both;width:100%;text-align:center;padding-top:2rem;">
+			<div id="hintdisplay" style="font-size:2rem;"></div>
 		</div>
-		<div style="clear:both;width:100%;text-align:center;padding-top:20px;">
-			<div id="attempt" style="letter-spacing:5px;font-weight:bold;font-size:20px"></div>
+		<div style="clear:both;width:100%;text-align:center;padding-top:2rem;">
+			<div id="attempt" style="letter-spacing:0.75rem;font-weight:bold;font-size:2rem"></div>
 		</div>
-		<div style="clear:both;width:100%;text-align:center;padding-top:20px;">
+		<div style="clear:both;width:100%;text-align:center;padding-top:2rem;">
 			<div id="splash" style="color:#336699"></div>
 		</div>
 		<div style="clear:both;width:450px;margin-left:auto;margin-right:auto;margin-top:10px;">
-			<table id="charactertable" class="lettertable" border="0" width="450">
-				<tr align="center" height = '40' valign = "middle">
+			<table id="charactertable" class="lettertable">
+				<tr class="tr-center">
 					<td><span id="a" style="display:block">A</span></td>
 					<td><span id="b" style="display:block">B</span></td>
 					<td><span id="c" style="display:block">C</span></td>
@@ -641,7 +634,7 @@ $imgloc = "../images/games/namegame/";
 					<td><span id="h" style="display:block">H</span></td>
 					<td><span id="i" style="display:block">I</span></td>
 				</tr>
-				<tr align="center" height = '40'>
+				<tr class="tr-center">
 					<td><span id="j" style="display:block">J</span></td>
 					<td><span id="k" style="display:block">K</span></td>
 					<td><span id="l" style="display:block">L</span></td>
@@ -652,7 +645,7 @@ $imgloc = "../images/games/namegame/";
 					<td><span id="q" style="display:block">Q</span></td>
 					<td><span id="r" style="display:block">R</span></td>
 				</tr>
-				<tr align="center" height = '40'>
+				<tr class="tr-center">
 					<td><span id="s" style="display:block">S</span></td>
 					<td><span id="t" style="display:block">T</span></td>
 					<td><span id="u" style="display:block">U</span></td>
@@ -661,7 +654,7 @@ $imgloc = "../images/games/namegame/";
 					<td><span id="x" style="display:block">X</span></td>
 					<td><span id="y" style="display:block">Y</span></td>
 					<td><span id="z" style="display:block">Z</span></td>
-					<td valign="center">
+					<td>
 						<span id="qmark" style="display:block;" class="question"  title="Wild Card">?</span>
 					</td>
 				</tr>

@@ -39,7 +39,6 @@ class OccurrenceChecklistManager extends OccurrenceManager{
 					$this->getTableJoins($sqlWhere).
 					$sqlWhere.' AND ((t.rankid > 140 AND ts1.taxauthid = 1) OR t.tid IS NULL) ';
 			}
-			//echo '<div>'.$sql.'</div>';
 			$result = $this->conn->query($sql);
 			while($r = $result->fetch_object()){
 				$family = strtoupper($r->family);

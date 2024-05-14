@@ -15,8 +15,8 @@ class TPImageEditorManager extends TPEditorManager{
  	}
 
 	public function getImages(){
-		$imageArr = Array();
-		$tidArr = Array($this->tid);
+		$imageArr = array();
+		$tidArr = array($this->tid);
 		if($this->rankid == 220){
 			$sql1 = 'SELECT DISTINCT tid FROM taxstatus WHERE (taxauthid = '.$this->taxAuthId.') AND (tid = tidaccepted) AND (parenttid = '.$this->tid.')';
 			$rs1 = $this->conn->query($sql1);
@@ -26,7 +26,6 @@ class TPImageEditorManager extends TPEditorManager{
 			$rs1->free();
 		}
 
-		$this->imageArr = Array();
 		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl, i.caption, i.photographer, i.photographeruid, CONCAT_WS(" ",u.firstname,u.lastname) AS photographerdisplay,
 			i.owner, i.locality, i.occid, i.notes, i.sortsequence, i.sourceurl, i.copyright, t.tid, t.sciname ';
 		if($this->acceptance){

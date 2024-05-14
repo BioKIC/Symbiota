@@ -1,9 +1,15 @@
 <?php
 /*
  ------------------
- Language: Español (Spanish)
+Language: Español (Spanish)
+Translated by: Samanta Orellana (2021-06-23)
  ------------------
  */
+
+$LANG['FLAGGED_COMMENT'] = 'Comentario reportado como inapropiado. El comentario no estará disponible para el público hasta que lo revise un administrador.';
+$LANG['OCCURRENCE_PROFILE'] = 'Perfil de ocurrencia';
+$LANG['SKIP_NAV'] = 'Saltar Navegación';
+$LANG['FULL_RECORD_DETAILS'] = 'Detalles Completos del Registro';
 $LANG['DETAILS'] = 'Detalles';
 $LANG['MAP'] = 'Mapa';
 $LANG['GENETIC'] = 'Gen&eacute;tica';
@@ -152,4 +158,13 @@ $LANG['CHECKING'] = 'Revisando archivo';
 $LANG['RESTORE_RECORD'] = 'Restore Record';
 $LANG['RECORD_DELETED'] = 'Registro eliminado';
 $LANG['VALUE'] = 'Valor';
+$LANG['LAT_LNG'] = 'Latitud/Longitud';
+
+//Used within OccurrenceIndividual class
+$LANG['INAPPROPRIATE'] = 'Comentario inapropiado reportado';
+$LANG['REPORTED_AS_INAPPROPRIATE'] = 'El siguiente comentario ha sido eliminado por ser inapropiado.';
+$LANG['EMAIL_NOT_DEFINED'] = 'ERROR: El correo electrónico del administrador del portal no está definido en el archivo de configuración central';
+$LANG['PRIVATE_STATUS'] = 'estado privado';
+$LANG['UNABLE_TO_VERIFY_TARGET'] = 'ERROR al eliminar el cupón: no se puede verificar la lista de verificación objetivo del cupón';
+$LANG['PERMISSION_ERROR'] = 'ERROR al eliminar el comprobante: error de permiso';
 ?>

@@ -21,7 +21,7 @@ $LANG['RECORDSET_EXPLAIN'] = 'Scan catalog numbers/barcodes into the field below
 						Multiple catalog numbers can be entered sequentially or at once separated by commas.
 						Once list is complete, select/deselect target specimens, enter annotation information, and submit.';
 $LANG['CATNUM'] = 'Catalog Number';
-$LANG['TARGET_ALL'] = 'target all catalog numbers';
+$LANG['TARGET_ALL'] = 'Target all catalog numbers';
 $LANG['TAXON'] = 'Taxon';
 $LANG['CLEAR_LIST'] = 'Clear List';
 $LANG['ADD_RECORDS'] = 'Add Record(s) to List';

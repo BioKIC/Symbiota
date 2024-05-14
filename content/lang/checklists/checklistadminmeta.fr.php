@@ -27,5 +27,6 @@ $LANG['CLICK_TO_CREATE'] = 'Cliquez ici pour créer une nouvelle liste';
 $LANG['PROJ_ADMIN'] = 'Inventaire Administration du Projet';
 $LANG['EDIT_PROJECT'] = 'Modifier Projet';
 $LANG['NO_PROJECTS'] = 'Il n\'y a aucun projet pour lequel vous avez des autorisations administratives';
+$LANG['INATURALIST'] = 'iNaturalist';
 
 ?>

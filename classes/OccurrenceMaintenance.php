@@ -108,7 +108,7 @@ class OccurrenceMaintenance {
 	}
 
 	public function indexOccurrencesToTaxa(){
-		$this->outputMsg('Indexing validated scientific names (e.g. populating tidInterpreted)... ', 1);
+		$this->outputMsg('Indexing scientific names (e.g. populating tidInterpreted)... ', 1);
 
 		//Avoid using straight UPDATE SQL since they will often lock omoccurrences table for a significant amount of time when database is large
 		$occidArr = array();
@@ -175,6 +175,24 @@ class OccurrenceMaintenance {
 		}
 		$rs->free();
 		$this->batchUpdateTidInterpreted($occidArr);
+
+		//Match hybrids
+		/* Not activating due to taking too long to run on big datasets
+		$activeTid = 0;
+		$sql = 'SELECT t.tid, o.occid
+			FROM taxa t INNER JOIN omoccurrences o ON t.sciname LIKE REPLACE(o.sciname, "× ", "%×%")
+			WHERE o.tidinterpreted IS NULL AND o.sciname LIKE "%× %" ';
+		if($this->collidStr) $sql .= 'AND o.collid IN('.$this->collidStr.') ';
+		$sql .= 'ORDER BY t.tid';
+		$rs = $this->conn->query($sql);
+		while($r = $rs->fetch_object()){
+			if($occidArr && $r->tid != $activeTid) $this->batchUpdateTidInterpreted($occidArr);
+			$activeTid = $r->tid;
+			$occidArr[$r->tid][] = $r->occid;
+		}
+		$rs->free();
+		$this->batchUpdateTidInterpreted($occidArr);
+		*/
 	}
 
 	private function batchUpdateTidInterpreted(&$occidArr){
@@ -294,9 +312,10 @@ class OccurrenceMaintenance {
 		$sensitiveArr = $this->getSensitiveTaxa();
 
 		if($sensitiveArr){
-			$sql = 'UPDATE omoccurrences '.
-				'SET LocalitySecurity = 1 '.
-				'WHERE (LocalitySecurity IS NULL OR LocalitySecurity = 0) AND (localitySecurityReason IS NULL) AND (tidinterpreted IN('.implode(',',$sensitiveArr).')) ';
+			$sql = 'UPDATE omoccurrences
+				SET localitySecurity = 1
+				WHERE (localitySecurity IS NULL OR localitySecurity = 0) AND (localitySecurityReason IS NULL)
+				AND (cultivationStatus = 0 OR cultivationStatus IS NULL) AND (tidinterpreted IN(' . implode(',', $sensitiveArr) . ')) ';
 			if($this->collidStr) $sql .= 'AND collid IN('.$this->collidStr.')';
 			if($this->conn->query($sql)){
 				$status += $this->conn->affected_rows;
@@ -345,13 +364,13 @@ class OccurrenceMaintenance {
 		return $status;
 	}
 
-	public function protectStateRareSpecies($clid,$locality){
+	public function protectStateRareSpecies($clid, $locality){
 		$status = 0;
 		$occArr = array();
 		$sql = 'SELECT o.occid FROM omoccurrences o INNER JOIN taxstatus ts1 ON o.tidinterpreted = ts1.tid '.
 			'INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
 			'INNER JOIN fmchklsttaxalink cl ON  ts2.tid = cl.tid '.
-			'WHERE (o.localitysecurity IS NULL OR o.localitysecurity = 0) AND (o.localitySecurityReason IS NULL) '.
+			'WHERE (o.localitysecurity IS NULL OR o.localitysecurity = 0) AND (o.localitySecurityReason IS NULL) AND (o.cultivationStatus = 0 OR o.cultivationStatus IS NULL) '.
 			'AND (o.stateprovince = "'.$locality.'") AND (cl.clid = '.$clid.') AND (ts1.taxauthid = 1) AND (ts2.taxauthid = 1) ';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
@@ -381,7 +400,7 @@ class OccurrenceMaintenance {
 				'FROM omoccurrences o INNER JOIN taxstatus ts1 ON o.tidinterpreted = ts1.tid '.
 				'INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
 				'INNER JOIN fmchklsttaxalink cl ON  ts2.tid = cl.tid '.
-				'WHERE (o.localitysecurity IS NULL OR o.localitysecurity = 0) AND (o.localitySecurityReason IS NULL) '.
+				'WHERE (o.localitysecurity IS NULL OR o.localitysecurity = 0) AND (o.localitySecurityReason IS NULL) AND (o.cultivationStatus = 0 OR o.cultivationStatus IS NULL) '.
 				'AND (o.stateprovince = "'.$state.'") AND (cl.clid = '.$clid.') AND (ts1.taxauthid = 1) AND (ts2.taxauthid = 1) ';
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
@@ -453,8 +472,8 @@ class OccurrenceMaintenance {
 						WHERE o.collid = '.$collid.' GROUP BY o.family ';
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
-						$family = str_replace(array('"',"'"),"",$r->family);
-						if($family){
+						if($r->family){
+							$family = str_replace(array('"', "'"), '', $r->family);
 							$statsArr['families'][$family]['SpecimensPerFamily'] = $r->SpecimensPerFamily;
 							$statsArr['families'][$family]['GeorefSpecimensPerFamily'] = $r->GeorefSpecimensPerFamily;
 							$statsArr['families'][$family]['IDSpecimensPerFamily'] = $r->IDSpecimensPerFamily;
@@ -471,8 +490,8 @@ class OccurrenceMaintenance {
 						WHERE o.collid = '.$collid.' GROUP BY o.country ';
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
-						$country = str_replace(array('"',"'"),"",$r->country);
-						if($country){
+						if($r->country){
+							$country = str_replace(array('"', "'"), "", $r->country);
 							$statsArr['countries'][$country]['CountryCount'] = $r->CountryCount;
 							$statsArr['countries'][$country]['GeorefSpecimensPerCountry'] = $r->GeorefSpecimensPerCountry;
 							$statsArr['countries'][$country]['IDSpecimensPerCountry'] = $r->IDSpecimensPerCountry;

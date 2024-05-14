@@ -1,5 +1,4 @@
 <?php
-include_once($SERVER_ROOT.'/config/dbconnection.php');
 include_once($SERVER_ROOT.'/classes/Manager.php');
 include_once($SERVER_ROOT.'/classes/TaxonomyUtilities.php');
 include_once($SERVER_ROOT.'/classes/TaxonomyHarvester.php');
@@ -85,9 +84,9 @@ class TaxonomyCleaner extends Manager{
 			$taxaCnt = 1;
 			$itemCnt = 0;
 			while($r = $rs->fetch_object()){
-				$editLink = '[<a href="#" onclick="openPopup(\''.$GLOBALS['CLIENT_ROOT'].
-					'/collections/editor/occurrenceeditor.php?q_catalognumber=&occindex=0&q_customfield1=sciname&q_customtype1=EQUALS&q_customvalue1='.urlencode($r->sciname).'&collid='.
-					$this->collid.'\'); return false;">'.$r->cnt.' specimens <img src="../../images/edit.png" style="width:12px;" /></a>]';
+				$editLink = '[<a href="#" onclick="openPopup(\'' . htmlspecialchars($GLOBALS['CLIENT_ROOT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .
+					'/collections/editor/occurrenceeditor.php?q_catalognumber=&occindex=0&q_customfield1=sciname&q_customtype1=EQUALS&q_customvalue1=' . urlencode($r->sciname) . '&collid=' . 
+					htmlspecialchars($this->collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '\'); return false;">' . htmlspecialchars($r->cnt, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' specimens <img src="../../images/edit.png" style="width:1.2em;" /></a>]';
 				$this->logOrEcho('<div style="margin-top:5px">Resolving #'.$taxaCnt.': <b><i>'.$r->sciname.'</i></b>'.($r->family?' ('.$r->family.')':'').'</b> '.$editLink.'</div>');
 				if($r->family) $taxonHarvester->setDefaultFamily($r->family);
 				if($r->scientificnameauthorship) $taxonHarvester->setDefaultAuthor($r->scientificnameauthorship);
@@ -121,7 +120,7 @@ class TaxonomyCleaner extends Manager{
 				if($manualCheck){
 					$thesLink = '';
 					if($isTaxonomyEditor){
-						$thesLink = ' <a href="#" onclick="openPopup(\'../../taxa/taxonomy/taxonomyloader.php\'); return false;" title="Open Thesaurus New Record Form"><img src="../../images/edit.png" style="width:12px" /><b style="font-size:70%;">T</b></a>';
+						$thesLink = ' <a href="#" onclick="openPopup(\'../../taxa/taxonomy/taxonomyloader.php\'); return false;" title="Open Thesaurus New Record Form"><img src="../../images/edit.png" style="width:1.2em" /><b style="font-size:70%;">T</b></a>';
 					}
 					$this->logOrEcho('Checking close matches in thesaurus'.$thesLink.'...',1);
 					if($matchArr = $taxonHarvester->getCloseMatch($sciname)){
@@ -283,7 +282,7 @@ class TaxonomyCleaner extends Manager{
 		$sql = 'UPDATE taxa t INNER JOIN taxaenumtree e ON t.tid = e.tid '.
 			'INNER JOIN taxa t2 ON e.parenttid = t2.tid '.
 			'SET t.kingdomname = t2.sciname '.
-			'WHERE (e.taxauthid = '.$this->taxAuthId.') AND (t2.rankid = 10) AND (t.kingdomName IS NULL)';
+			'WHERE (e.taxauthid = '.$this->taxAuthId.') AND (t2.rankid = 10) AND (t.kingdomName = "")';
 		if($this->conn->query($sql)){
 			$this->logOrEcho('Populating null kingdom name tags... '.$this->conn->affected_rows.' taxon records updated', 1);
 		}
@@ -308,7 +307,7 @@ class TaxonomyCleaner extends Manager{
 		ob_flush();
 
 		$occurMaintenance = new OccurrenceMaintenance($this->conn);
-		$occurMaintenance->setCollidStr($this->collid);
+		//$occurMaintenance->setCollidStr($this->collid);
 		$occurMaintenance->setVerbose(true);
 		$occurMaintenance->generalOccurrenceCleaning();
 	}
@@ -721,7 +720,7 @@ class TaxonomyCleaner extends Manager{
 					}
 				}
 			}
-			if($this->targetKingdomName) $sql .= 'AND (kingdomname IS NULL OR kingdomname = "'.targetKingdomName.'") ';
+			if($this->targetKingdomName) $sql .= 'AND (kingdomname = "" OR kingdomname = "'.targetKingdomName.'") ';
 			$sql .= 'LIMIT 30';
 			//echo $sql;
 			$rs = $this->conn->query($sql);

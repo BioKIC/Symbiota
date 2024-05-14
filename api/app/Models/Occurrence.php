@@ -11,8 +11,8 @@ class Occurrence extends Model{
 
 	protected $fillable = [ 'basisOfRecord', 'occurrenceID', 'catalogNumber', 'otherCatalogNumbers', 'family', 'scientificName', 'sciname', 'genus', 'specificEpithet', 'datasetID', 'organismID',
 		'taxonRank', 'infraspecificEpithet', 'institutionCode', 'collectionCode', 'scientificNameAuthorship', 'taxonRemarks', 'identifiedBy', 'dateIdentified', 'identificationReferences',
-		'identificationRemarks', 'identificationQualifier', 'typeStatus', 'recordedBy', 'recordNumber', 'associatedCollectors', 'eventDate', 'eventDate2', 'year', 'month', 'day', 'startDayOfYear',
-		'endDayOfYear', 'verbatimEventDate', 'eventTime', 'habitat', 'substrate', 'fieldNotes', 'fieldnumber', 'eventID', 'occurrenceRemarks', 'informationWithheld', 'dataGeneralizations',
+		'identificationRemarks', 'identificationQualifier', 'typeStatus', 'recordedBy', 'recordNumber', 'associatedCollectors', 'eventDate', 'eventDate2',
+		'verbatimEventDate', 'eventTime', 'habitat', 'substrate', 'fieldNotes', 'fieldnumber', 'eventID', 'occurrenceRemarks', 'informationWithheld', 'dataGeneralizations',
 		'associatedTaxa', 'dynamicProperties', 'verbatimAttributes', 'behavior', 'reproductiveCondition', 'cultivationStatus', 'establishmentMeans', 'lifeStage', 'sex', 'individualCount',
 		'samplingProtocol', 'samplingEffort', 'preparations', 'locationID', 'continent', 'parentLocationID', 'country', 'stateProvince', 'county', 'municipality', 'waterBody', 'islandGroup',
 		'island', 'countryCode', 'locality', 'localitySecurity', 'localitySecurityReason', 'decimalLatitude', 'decimalLongitude', 'geodeticDatum', 'coordinateUncertaintyInMeters',

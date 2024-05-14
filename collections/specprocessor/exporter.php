@@ -1,8 +1,17 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceDownload.php');
-if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/exporter.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/exporter.'.$LANG_TAG.'.php');
-else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/exporter.en.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/exporter.' . $LANG_TAG . '.php')){
+	include_once($SERVER_ROOT . '/content/lang/collections/specprocessor/exporter.' . $LANG_TAG . '.php');
+}else{
+	include_once($SERVER_ROOT . '/content/lang/collections/specprocessor/exporter.en.php');
+} 
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/customsearchtype.' . $LANG_TAG . '.php')){
+	include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.' . $LANG_TAG . '.php');
+}
+else{
+	include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.en.php');
+}
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -42,15 +51,16 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 	'minimumElevationInMeters'=>'Elevation Minimum (m)','maximumElevationInMeters'=>'Elevation Maximum (m)',
 	'verbatimElevation'=>'Verbatim Elevation','disposition'=>'Disposition','processingStatus'=>'Processing Status','dbpk'=>'Source Identifier (dbpk)');
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title><?php echo $LANG['OCC_EXP_MAN']; ?></title>
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
-		<script src="../../js/jquery-ui/jquery-ui.min.js" type="text/javascript"></script>
-		<link href="../../js/jquery-ui/jquery-ui.min.css" type="text/css" rel="Stylesheet" />
+		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script src="../../js/symb/shared.js" type="text/javascript"></script>
 		<script>
 			$(function() {
@@ -97,8 +107,9 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 	</head>
 	<body>
 		<!-- This is inner text! -->
-		<div id="innertext" style="background-color:white;">
-			<div style="float:right;width:165px;margin-right:50px">
+		<div role="main" id="innertext" style="background-color:white;">
+			<h1 class="page-heading screen-reader-only"><?= $LANG['OCC_EXP_MAN']; ?></h1>
+			<div style="float:right;width:165px;margin-right:100px">
 				<fieldset>
 					<legend><b><?php echo $LANG['EXP_TYPE']; ?></b></legend>
 					<form name="submenuForm" method="post" action="index.php">
@@ -126,7 +137,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 			<?php
 			if($collid && $isEditor){
 				echo '<div style="clear:both;">';
-				$filterOptions = array('EQUALS'=>'EQUALS','NOTEQUALS'=>'NOT EQUALS','STARTS'=>'STARTS WITH','LESSTHAN'=>'LESS THAN','GREATERTHAN'=>'GREATER THAN','LIKE'=>'CONTAINS','NOTLIKE'=>'NOT CONTAINS','NULL'=>'IS NULL','NOTNULL'=>'IS NOT NULL');
+				$filterOptions = array('EQUALS', 'NOT_EQUALS', 'STARTS_WITH', 'LESS_THAN', 'GREATER_THAN', 'LIKE', 'NOT_LIKE', 'IS_NULL', 'NOT_NULL');
 				if($displayMode == 1){
 					if($collMeta['manatype'] == 'Snapshot'){
 						?>
@@ -135,7 +146,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 								<legend><b><?php echo $LANG['EXPORT_BATCH_GEO']; ?></b></legend>
 								<div style="margin:15px;">
 									<?php echo $LANG['EXPORT_BATCH_GEO_EXPLAIN_1'].' '.'
-									<a href="../georef/batchgeoreftool.php?collid=<?php echo $collid; ?>" target="_blank">'.$LANG['BATCH_GEO_TOOLS'].'</a> '.
+									<a href="../georef/batchgeoreftool.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank">' . htmlspecialchars($LANG['BATCH_GEO_TOOLS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> '.
 									$LANG['EXPORT_BATCH_GEO_EXPLAIN_2']; ?>
 								</div>
 								<table>
@@ -205,7 +216,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 										<td colspan="2">
 											<div style="margin:10px;">
 												<input name="customfield1" type="hidden" value="georeferenceSources" />
-												<input name="customtype1" type="hidden" value="STARTS" />
+												<input name="customtype1" type="hidden" value="STARTS_WITH" />
 												<input name="customvalue1" type="hidden" value="georef batch tool" />
 												<input name="targetcollid" type="hidden" value="<?php echo $collid; ?>" />
 												<input name="schema" type="hidden" value="georef" />
@@ -257,9 +268,10 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 									</td>
 									<td>
 										<div style="margin:10px 0px;">
-											<input name="customtype2" type="radio" value="NULL" checked /> <?php echo $LANG['ARE_EMPTY']; ?><br/>
-											<input name="customtype2" type="radio" value="NOTNULL" /> <?php echo $LANG['HAVE_VALUES']; ?>
+											<input name="customtype2" type="radio" value="IS_NULL" checked /> <?php echo $LANG['ARE_EMPTY']; ?><br/>
+											<input name="customtype2" type="radio" value="NOT_NULL" /> <?php echo $LANG['HAVE_VALUES']; ?>
 											<input name="customfield2" type="hidden" value="decimallatitude" />
+											<input name="customvalue2" type="hidden" value="" />
 										</div>
 									</td>
 								</tr>
@@ -282,8 +294,8 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 											</select>
 											<select name="customtype1">
 												<?php
-												foreach($filterOptions as $filterValue => $filterDisplay){
-													echo '<option '.($customType[1]=='.$filterValue.'?'SELECTED':'').' value="'.$filterValue.'">'.$filterDisplay.'</option>';
+												foreach($filterOptions as $filterCode){
+													echo '<option ' . ($customType[1] == $filterCode ? 'SELECTED' : '') . ' value="'.$filterCode.'">'.$LANG[$filterCode].'</option>';
 												}
 												?>
 											</select>
@@ -295,7 +307,8 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 									<td colspan="2">
 										<div style="margin:10px;">
 											<input name="customfield3" type="hidden" value="locality" />
-											<input name="customtype3" type="hidden" value="NOTNULL" />
+											<input name="customtype3" type="hidden" value="NOT_NULL" />
+											<input name="customvalue3" type="hidden" value="" />
 											<input name="format" type="hidden" value="csv" />
 											<input name="cset" type="hidden" value="utf-8" />
 											<input name="zip" type="hidden" value="1" />
@@ -351,7 +364,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 											<div style="margin:10px 0px;">
 												<input type="checkbox" name="newrecs" value="1" /> <?php echo $LANG['EG_IN_PORTAL']; ?>
 												<a id="newrecsinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
-													<img src="../../images/info.png" style="width:13px;" />
+													<img src="../../images/info.png" style="width:1.2em;" />
 												</a>
 												<div id="newrecsinfodialog">
 													<?php echo $LANG['MORE_INFO_TEXT']; ?>
@@ -384,12 +397,12 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 												</select>
 												<select name="customtype<?php echo $i; ?>">
 													<?php
-													foreach($filterOptions as $filterValue => $filterDisplay){
-														echo '<option '.($customType[1]=='.$filterValue.'?'SELECTED':'').' value="'.$filterValue.'">'.$filterDisplay.'</option>';
+													foreach($filterOptions as $filterCode){
+														echo '<option ' . ($customType[$i] == $filterCode ? 'SELECTED' : '') . ' value="'.$filterCode.'">'.$LANG[$filterCode].'</option>';
 													}
 													?>
 												</select>
-												<input name="customvalue<?php echo $i; ?>" type="text" value="<?php echo $customValue[1]; ?>" style="width:200px;" />
+												<input name="customvalue<?= $i; ?>" type="text" value="<?php echo $customValue[1]; ?>" style="width:200px;" />
 											</div>
 											<?php
 										}
@@ -450,7 +463,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 											<input type="radio" name="schema" value="symbiota" CHECKED />
 											<?php echo $LANG['SYMB_NATIVE']; ?>
 											<a id="schemanativeinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
-												<img src="../../images/info.png" style="width:13px;" />
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a><br/>
 											<div id="schemanativeinfodialog">
 												<?php echo $LANG['SYMB_NATIVE_EXPLAIN']; ?>
@@ -458,7 +471,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 											<input type="radio" name="schema" value="dwc" />
 											Darwin Core
 											<a id="schemadwcinfo" href="#" onclick="return false" title="<?php echo $LANG['MORE_INFO']; ?>">
-												<img src="../../images/info.png" style="width:13px;" />
+												<img src="../../images/info.png" style="width:1.2em;" />
 											</a><br/>
 											<div id="schemadwcinfodialog">
 												<?php echo $LANG['DWC_EXPLAIN']; ?>

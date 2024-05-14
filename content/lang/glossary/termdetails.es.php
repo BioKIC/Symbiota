@@ -5,7 +5,7 @@ Language: Español (Spanish)
 ------------------
 */
 
-include_once($SERVER_ROOT.'/content/lang/glossary/addterm.en.php');
+include_once($SERVER_ROOT.'/content/lang/glossary/addterm.es.php');
 
 $LANG['G_MGMNT'] = 'Administración de Glosario';
 $LANG['LOAD'] = 'Cargando';
@@ -13,6 +13,7 @@ $LANG['PLEASE_RELATE'] = 'Por favor seleccione un término relacionado';
 $LANG['PLEASE_TRANS'] = 'Por favor seleccione una traducción del término';
 $LANG['PLEASE_IMG'] = 'Por favor cargue una imagen o introduzca la url de una imagen existente';
 $LANG['PLEASE_URL'] = 'Por favor introduzca una url para que la imagen sea guardada';
+$LANG['GOTO_PUBLIC_DISPLAY'] = 'Ir a exhibición pública';
 $LANG['DETAILS'] = 'Detalles';
 $LANG['REL_TERMS'] = 'Términos Relacionados';
 $LANG['IMGS'] = 'Imágenes';

@@ -143,20 +143,20 @@ class SpecProcNlpUtilities {
 		$retArr = array();
 		$cnt = 0;
 		$bestMatch = 0;
-		$sqlBase = 'SELECT cr.countryname, sp.statename, c.countyname '.
-			'FROM lkupcountry cr INNER JOIN lkupstateprovince sp ON cr.countryid = sp.countryid '.
-			'LEFT JOIN lkupcounty c ON sp.stateid = c.stateid WHERE ';
+		$sqlBase = 'SELECT cr.geoTerm AS countryname, sp.geoTerm AS statename, c.geoTerm AS countyname '.
+			'FROM geographicthesaurus cr INNER JOIN geographicthesaurus s ON cr.geoThesID = s.parentID '.
+			'LEFT JOIN geographicthesaurus c ON s.geoThesID = c.parentID WHERE ';
 		if($countrySeed || $stateSeed || $countySeed){
 			//First look for exact match
 			$sqlWhere = '';
 			if($countrySeed){
-				$sqlWhere .= 'AND (cr.countryName = "'.$countrySeed.'") ';
+				$sqlWhere .= 'AND (cr.geoTerm = "'.$countrySeed.'") ';
 			}
 			if($stateSeed){
-				$sqlWhere .= 'AND (sp.stateName = "'.$stateSeed.'") ';
+				$sqlWhere .= 'AND (s.geoTerm = "'.$stateSeed.'") ';
 			}
 			if($countySeed){
-				$sqlWhere .= 'AND ((c.countyname = "'.$stateSeed.'") OR (c.countyname LIKE "'.$stateSeed.'%")) ';
+				$sqlWhere .= 'AND ((c.geoTerm = "'.$stateSeed.'") OR (c.geoTerm LIKE "'.$stateSeed.'%")) ';
 			}
 			$rs = $this->conn->query($sqlBase.substr($sqlWhere,4));
 			while($r = $rs->fetch_object()){
@@ -170,13 +170,13 @@ class SpecProcNlpUtilities {
 				$sqlWhere = '';
 				//Nothing returns so lets go deeper
 				if($countrySeed){
-					$sqlWhere .= 'AND (SOUNDEX(cr.countryName) = SOUNDEX("'.$countrySeed.'")) ';
+					$sqlWhere .= 'AND (SOUNDEX(cr.geoTerm) = SOUNDEX("'.$countrySeed.'")) ';
 				}
 				if($stateSeed){
-					$sqlWhere .= 'AND (SOUNDEX(sp.stateName) = SOUNDEX("'.$stateSeed.'")) ';
+					$sqlWhere .= 'AND (SOUNDEX(s.geoTerm) = SOUNDEX("'.$stateSeed.'")) ';
 				}
 				if($countySeed){
-					$sqlWhere .= 'AND (SOUNDEX(c.countyname) = SOUNDEX("'.$stateSeed.'")) ';
+					$sqlWhere .= 'AND (SOUNDEX(c.geoTerm) = SOUNDEX("'.$stateSeed.'")) ';
 				}
 				$rs = $this->conn->query($sqlBase.substr($sqlWhere,4));
 				while($r = $rs->fetch_object()){
@@ -207,13 +207,13 @@ class SpecProcNlpUtilities {
 			//Look for possible matches
 			$sqlWhere = '';
 			//Split string into words separated by commas, semi-colons, or white spaces
-			$wildArr = preg_split("/[\s,;]+/",$wildStr);
+			$wildArr = preg_split("/[\s,;]+/", $wildStr);
 			foreach($wildArr as $k => $v){
 				//Clean values
 				$wildArr[$k] = trim($v);
-				$sqlWhere .= 'OR (SOUNDEX(cr.countryName) = SOUNDEX("'.$wildArr[$k].'")) '.
-					'OR (SOUNDEX(sp.stateName) = SOUNDEX("'.$wildArr[$k].'")) '.
-					'OR (SOUNDEX(c.countyName) = SOUNDEX("'.$wildArr[$k].'")) ';
+				$sqlWhere .= 'OR (SOUNDEX(cr.geoTerm) = SOUNDEX("'.$wildArr[$k].'")) '.
+					'OR (SOUNDEX(s.geoTerm) = SOUNDEX("'.$wildArr[$k].'")) '.
+					'OR (SOUNDEX(c.geoTerm) = SOUNDEX("'.$wildArr[$k].'")) ';
 			}
 			if($sqlWhere){
 				$rs = $this->conn->query($sqlBase.substr($sqlWhere,3));
@@ -228,7 +228,7 @@ class SpecProcNlpUtilities {
 			//Now let's see if we can figure out the best match
 			if(count($retArr) > 1){
 				$rateArr = array();
-				$unitArr = array('country','state','county');
+				$unitArr = array('country', 'state', 'county');
 				foreach($retArr as $mk => $mArr){
 					$rating = 0;
 					foreach($wildArr as $wk => $wv){
@@ -240,7 +240,7 @@ class SpecProcNlpUtilities {
 					}
 					$rateArr[$mk] = $rating;
 				}
-				asort($rateArr,SORT_NUMERIC);
+				asort($rateArr, SORT_NUMERIC);
 				end($rateArr);
 				$bestMatch = key($rateArr);
 			}

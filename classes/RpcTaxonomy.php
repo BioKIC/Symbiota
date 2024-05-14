@@ -79,12 +79,10 @@ class RpcTaxonomy extends RpcBase{
 		return $retStr;
 	}
 
-	public function getDynamicChildren($objId, $targetId, $displayAuthor, $isEditor){
+	public function getDynamicChildren($objId, $targetId, $displayAuthor, $limitToOccurrences, $isEditor){
 		$retArr = Array();
 		$childArr = Array();
 		//Sanitation
-		$objId = filter_var($objId,FILTER_SANITIZE_STRING);
-		if(!is_numeric($objId) && $objId != 'root') $objId = 0;
 		if(!is_numeric($targetId)) $targetId = 0;
 		if(!is_numeric($displayAuthor)) $displayAuthor = 0;
 		if(!is_numeric($isEditor)) $isEditor = 0;
@@ -153,11 +151,11 @@ class RpcTaxonomy extends RpcBase{
 			$rs1->free();
 		}
 		else{
+			$objId = filter_var($objId, FILTER_SANITIZE_NUMBER_INT);
 			//Get children, but only accepted children
-			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid '.
-				'FROM taxa AS t INNER JOIN taxstatus AS ts ON t.tid = ts.tid '.
-				'WHERE (ts.taxauthid = '.$this->taxAuthID.') AND (ts.tid = ts.tidaccepted) '.
-				'AND ((ts.parenttid = '.$objId.') OR (t.tid = '.$objId.')) ';
+			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid FROM taxa AS t INNER JOIN taxstatus AS ts ON t.tid = ts.tid ';
+			if($limitToOccurrences) $sql .= 'INNER JOIN taxaenumtree e ON t.tid = e.parenttid INNER JOIN omoccurrences o ON e.tid = o.tidInterpreted ';
+			$sql .=	'WHERE (ts.taxauthid = '.$this->taxAuthID.') AND (ts.tid = ts.tidaccepted) AND ((ts.parenttid = '.$objId.') OR (t.tid = '.$objId.')) ';
 			//echo $sql.'<br>';
 			$rs = $this->conn->query($sql);
 			$i = 0;

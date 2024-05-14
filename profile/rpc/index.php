@@ -3,7 +3,8 @@ include_once('../../config/symbini.php');
 @include_once($SERVER_ROOT.'/content/lang/prohibit.'.$LANG_TAG.'.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title><?php echo (isset($LANG['PAGE'])?$LANG['PAGE']:'Page'); ?></title>
 		<?php
@@ -17,13 +18,13 @@ header("Content-Type: text/html; charset=".$CHARSET);
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext">
-			<h1><?php echo (isset($LANG['FORBIDDEN'])?$LANG['FORBIDDEN']:'Forbidden'); ?></h1>
+		<div role="main" id="innertext">
+			<h1 class="page-heading"><?= $LANG['FORBIDDEN']; ?></h1>
 			<div style="font-weight:bold;">
 				<?php echo (isset($LANG['NO_PERMISSION'])?$LANG['NO_PERMISSION']:'You don\'t have permission to access this page'); ?>.
 			</div>
 			<div style="font-weight:bold;margin:10px;">
-				<a href="<?php echo $CLIENT_ROOT; ?>/index.php"><?php echo (isset($LANG['RETURN'])?$LANG['RETURN']:'Return to index page'); ?></a>
+				<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php"><?php echo htmlspecialchars((isset($LANG['RETURN'])?$LANG['RETURN']:'Return to index page'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 			</div>
 		</div>
 		<?php

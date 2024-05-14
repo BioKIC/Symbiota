@@ -3099,9 +3099,10 @@ class SpecProcNlpLbcc {
 
 	protected function isStateOrProvince($sp) {
 		if($sp) {
-			$sql = "SELECT * FROM lkupstateprovince lusp WHERE lusp.stateName = '".str_replace(array("\"", "'"), "", $sp)."'";
-			if($r2s = $this->conn->query($sql)){
-				if($r2 = $r2s->fetch_object()) return true;
+			$sql = 'SELECT geothesid FROM geographicthesaurus WHERE geolevel = 60 AND geoterm = "'.str_replace(array('"', "'"), '', $sp).'"';
+			if($rs = $this->conn->query($sql)){
+				if($r = $rs->fetch_object()) return true;
+				$rs->free();
 			}
 		}
 		return false;
@@ -3113,9 +3114,10 @@ class SpecProcNlpLbcc {
 			if(strcasecmp($c, "FORMOSA") == 0) return true;
 			if(strcasecmp($c, "TAIWAN") == 0) return true;
 			if(preg_match("/\\bU\\.?S\\.?S\\.?R\\b\\.?/", $c)) return true;
-			$sql = "SELECT * FROM lkupcountry luc WHERE luc.countryName = '".str_replace(array("\"", "'"), "", $c)."'";
-			if($r2s = $this->conn->query($sql)){
-				if($r2 = $r2s->fetch_object()) return true;
+			$sql = 'SELECT geothesid FROM geographicthesaurus WHERE geolevel = 50 AND geoterm = "'.str_replace(array('"', "'"), '', $c).'"';
+			if($rs = $this->conn->query($sql)){
+				if($r = $rs->fetch_object()) return true;
+				$rs->free();
 			}
 		}
 		return false;
@@ -3124,26 +3126,22 @@ class SpecProcNlpLbcc {
 	protected function getStatesFromCountry($c) {
 		$cResult = array();
 		if($c) {
-			$sql = "SELECT sp.stateName ".
-				"FROM lkupstateprovince sp INNER JOIN lkupcountry c ".
-				"ON (sp.countryID = c.countryID) ".
-				"WHERE c.countryName = '".str_replace(array("\"", "'"), "", $c)."'";
-			if($r2s = $this->conn->query($sql)) {
-				while($r2 = $r2s->fetch_object()) array_push($cResult, $r2->stateName);
+			$sql = 'SELECT s.geoterm FROM geographicthesaurus s INNER JOIN geographicthesaurus c ON (s.parentID = c.geoThesID) WHERE s.geoLevel = 60 AND c.geoterm = "'.str_replace(array('"', "'"), '', $c).'"';
+			if($rs = $this->conn->query($sql)) {
+				while($r = $rs->fetch_object()) array_push($cResult, $r->geoterm);
+				$rs->free();
 			}
 		}
 		return $cResult;
 	}
 
-	protected function getCounties($state) {
+	protected function getCounties($s) {
 		$cResult = array();
-		if($state) {
-			$sql = "SELECT c.countyName ".
-				"FROM lkupcounty c INNER JOIN lkupstateprovince sp ".
-				"ON (c.stateid = sp.stateid) ".
-				"WHERE sp.stateName = '".str_replace(array("\"", "'"), "", $state)."'";
-			if($r2s = $this->conn->query($sql)) {
-				while($r2 = $r2s->fetch_object()) array_push($cResult, ucwords($r2->countyName));
+		if($s) {
+			$sql = 'SELECT co.geoterm FROM geographicthesaurus co INNER JOIN geographicthesaurus s ON (co.parentID = s.geoThesID) WHERE co.geoLevel = 70 AND s.geoterm = "'.str_replace(array('"', "'"), '', $s).'"';
+			if($rs = $this->conn->query($sql)) {
+				while($r = $rs->fetch_object()) array_push($cResult, ucwords($r->geoterm));
+				$rs->free();
 			}
 		}
 		return $cResult;
@@ -3151,12 +3149,11 @@ class SpecProcNlpLbcc {
 
 	protected function getStateFromCounty($c, $ss=null, $country="") {
 		if($c) {
-			$sql = "SELECT cr.countryName, sp.stateName FROM (lkupstateprovince sp ".
-				"INNER JOIN lkupcountry cr ON (cr.countryid = sp.countryid)) ".
-				"INNER JOIN lkupcounty c ".
-				"ON (sp.stateid = c.stateid) WHERE c.countyName = '".str_replace(array("\"", "'"), "", $c)."'";
-			if($country) $sql .= " AND cr.cr.countryName = '".str_replace(array("\"", "'"), "", $country)."'";
-			//echo "\n\nSQL: ".$sql."\n\n";
+			$sql = 'SELECT cr.geoterm AS countryName, sp.geoterm AS stateName
+				FROM geographicthesaurus cr INNER JOIN geographicthesaurus sp ON cr.geoThesID = sp.parentID
+				INNER JOIN geographicthesaurus c ON sp.geoThesID = c.parentID
+				WHERE c.geoterm = "'.str_replace(array('"', "'"), '', $c).'"';
+			if($country) $sql .= ' AND cr.geoterm = "'.str_replace(array('"', "'"), '', $country).'"';
 			if($r2s = $this->conn->query($sql)) {
 				$num_rows = $r2s->num_rows;
 				if($num_rows) {
@@ -3180,19 +3177,18 @@ class SpecProcNlpLbcc {
 						}
 					}
 				}
+				$r2s->free();
 			}
 		}
 		return array();
 	}
 
-	protected function getCountryFromState($s) {
-		if($s) {
-			$sql = "SELECT c.countryName FROM lkupstateprovince sp INNER JOIN lkupcountry c ".
-				"ON (sp.countryid = c.countryid) WHERE sp.stateName = '".str_replace(array("\"", "'"), "", $s)."'";
-			//echo "\n\nSQL: ".$sql."\n\n";
-			if($r2s = $this->conn->query($sql)) {
-				$num_rows = $r2s->num_rows;
-				if($num_rows == 1 && $r2 = $r2s->fetch_object()) return $r2->countryName;
+	protected function getCountryFromState($state) {
+		if($state) {
+			$sql = 'SELECT c.geoTerm AS countryName FROM geographicthesaurus s INNER JOIN geographicthesaurus c ON s.parentID = c.geoThesID WHERE s.geoTerm = "Arizona"';
+			if($rs = $this->conn->query($sql)) {
+				if($r2 = $rs->fetch_object()) return $r2->countryName;
+				$rs->free();
 			}
 		}
 		return '';
@@ -5305,21 +5301,22 @@ class SpecProcNlpLbcc {
 		return '';
 	}
 
-	private function doCountyQuery($c, $state_province="") {
+	private function doCountyQuery($c, $stateProvince="") {
 		if($c) {
 			if(strlen($c) > 2 && !is_integer($c)) {
 				$result = array();
 				$c = trim($c, " \t\n\r\0\x0B,.:;!()\"\'\\~@#$%^&*_-");
 				$containsAmpersand = false;
+				$hasStateProvince = strlen($stateProvince) > 0;
 				if(preg_match("/(.+)&(.+)/", $c, $mats)) {
 					$c = trim($mats[1])." and ".trim($mats[2]);
 					$containsAmpersand = true;
 				}
-				$sql = "select lk1.countyName, lk2.stateName, lk3.countryName from lkupcounty lk1 INNER JOIN ".
-					"(lkupstateprovince lk2 inner join lkupcountry lk3 on lk2.countryid = lk3.countryid) ".
-					"on lk1.stateid = lk2.stateid ".
-					"where lk1.countyName = '".str_replace(array("\"", "'"), "", $c)."'";
-				if($state_province) $sql .= " AND lk2.stateName = '".$state_province."'";
+				$sql = 'SELECT cr.geoterm AS countryName, s.geoterm AS stateName, c.geoterm AS countyName
+					FROM geographicthesaurus cr INNER JOIN geographicthesaurus s ON cr.geoThesID = s.parentID
+					INNER JOIN geographicthesaurus c ON s.geoThesID = c.parentID
+					WHERE c.geoterm = "'.str_replace(array('"', "'"), '', $this->cleanInStr($c)).'" ';
+				if($hasStateProvince) $sql .= " AND s.geoterm = '".$this->cleanInStr($stateProvince)."'";
 				if($rs = $this->conn->query($sql)) {
 					if($rs->num_rows) {
 						if($r = $rs->fetch_object()) {
@@ -7884,6 +7881,13 @@ class SpecProcNlpLbcc {
 
 	public function setCatalogNumber($cn){
 		$this->catalogNumber = $cn;
+	}
+
+	private function cleanInStr($str){
+		$newStr = trim($str);
+		$newStr = preg_replace('/\s\s+/', ' ',$newStr);
+		$newStr = $this->conn->real_escape_string($newStr);
+		return $newStr;
 	}
 }
 ?>

@@ -52,5 +52,7 @@ $LANG['URL'] = 'URL';
 $LANG['BIOGRAPHY'] = 'Biographie';
 $LANG['PUBLIC_PROF'] = 'Le public peut voir les e-mails et la biographie sur le site Web (par exemple, la liste des photographes)';
 $LANG['CREATE_LOGIN'] = 'Créer une Compte';
-
+$LANG['ACCESSIBILITY_PREF'] = 'Préférences d\'accessibilité';
+$LANG['ACCESSIBILITY_PREF_DESC'] = 'Cochez pour indiquer une préférence pour les styles optimisés pour l\'accessibilité';
+$LANG['PROFILE_CREATION_DISABLED'] = 'La création d\'utilisateurs publics a été désactivée sur ce portail.';
 ?>

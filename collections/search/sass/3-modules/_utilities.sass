@@ -1,0 +1,26 @@
+.hide
+  display: none
+
+.suggestion-box
+  --height: 300px
+  --bbc: #005DAB;
+
+  background-color: white
+  position: absolute
+  z-index: 2
+  top: 44px
+  box-sizing: border-box
+  width: 100%
+  height: var(--height)
+  overflow-y: scroll
+  border-right: 2px solid white
+  border-right: 2px solid transparent
+  border-bottom: 2px solid transparent
+  border-left: 2px solid transparent
+  box-shadow: 0 0 0 2px var(--bbc)
+  padding: 5px
+  font-size: $font-size
+  &:focus,
+  &:active
+      outline: 0
+      border: 0

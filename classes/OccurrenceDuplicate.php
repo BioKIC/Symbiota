@@ -356,10 +356,10 @@ class OccurrenceDuplicate {
 			$result = $this->conn->query($sql);
 			while($row = $result->fetch_assoc()) {
 				foreach($row as $k => $v){
-					$vStr = trim($v);
-					$retArr[$row['occid']][$k] = $vStr;
+					if($v) $v = trim($v);
+					$retArr[$row['occid']][$k] = $v;
 					//Identify relevant fields
-					if($vStr) $relArr[$k] = '';
+					if($v) $relArr[$k] = '';
 				}
 			}
 			$result->free();
@@ -394,8 +394,8 @@ class OccurrenceDuplicate {
 		if(is_numeric($occid)) $queryTerms[] = 'o.occid = '.$occid;
 		$sql = 'SELECT c.institutioncode, c.collectioncode, c.collectionname, o.occid, o.catalognumber, '.
 			'o.recordedby, o.recordnumber, o.eventdate, o.verbatimeventdate, o.country, o.stateprovince, o.county, o.locality '.
-			'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid ';
-		if($recordedBy) $sql .= 'LEFT JOIN omoccurrencesfulltext f ON o.occid = f.occid ';
+			'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid ';
+		if($recordedBy) $sql .= 'INNER JOIN omoccurrencesfulltext f ON o.occid = f.occid ';
 		$sql .= 'WHERE o.occid != '.$currentOccid;
 		if($queryTerms){
 			$sql .= ' AND ('.implode(') AND (', $queryTerms).') ';
@@ -678,7 +678,7 @@ class OccurrenceDuplicate {
 							$sqlI2 = 'INSERT INTO omoccurduplicatelink(duplicateid,occid) VALUES ';
 							foreach($unlinkedArr as $v){
 								$sqlI2 .= '('.$dupId.','.$v.'),';
-								$outLink .= ' <a href="../individual/index.php?occid='.$v.'" target="_blank">'.$v.'</a>,';
+								$outLink .= ' <a href="../individual/index.php?occid=' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($v, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>,';
 							}
 							if($this->conn->query(trim($sqlI2,','))){
 								if($verbose) echo '<li style="margin-left:20px;">'.count($unlinkedArr).' duplicates linked ('.trim($outLink,' ,').')</li>';

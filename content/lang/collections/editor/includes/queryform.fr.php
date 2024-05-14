@@ -1,9 +1,13 @@
 <?php
 /*
 ------------------
-Language: English
+Language: Français (French)
 ------------------
 */
+
+
+
+include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.fr.php');
 
 $LANG['RECORD_SEARCH_FORM'] = "Formulaire de Recherche d'Enregistrement";
 $LANG['WILD_EXPLAIN'] = "Nom complet du collecteur tel qu'il est entré dans la base de données. Pour rechercher uniquement sur le nom de famille, placez le caractère générique (%) avant le nom (%Gentry).";
@@ -97,19 +101,9 @@ $LANG['VERBATIM_DEPTH'] = 'Profondeur Textuelle';
 $LANG['VERBATIM_ELE'] = 'Élévation Textuelle';
 $LANG['CUSTOM_FIELD'] = 'Champ Personnalisé';
 $LANG['SELECT_FIELD_NAME'] = 'Sélectionnez Nom du Champ';
-$LANG['AND'] = 'et';
-$LANG['OR'] = 'ou';
-$LANG['EQUALS'] = 'ÉQUIVAUT À';
-$LANG['NOT_EQUALS'] = 'PAS ÉGAL';
-$LANG['STARTS'] = 'COMMENCE AVEC';
-$LANG['LIKE'] = "CONTIENT";
-$LANG['NOT_LIKE'] = "NE CONTIENT PAS";
-$LANG['GREATER'] = 'PLUS GRAND QUE';
-$LANG['LESS'] = 'MOINS QUE';
-$LANG['NULL'] = 'EST NULL';
-$LANG['NOTNULL'] = 'EST NON NULLE';
 $LANG['SHOW_RECS_ALL'] = 'Afficher enregistrements pour tous utilisateurs (contrôle administrateur)';
-$LANG['COPY_SEARCH'] = 'Copier la recherche en tant que lien';
+$LANG['COPY_SEARCH'] = 'Copier recherche en tant que lien';
+$LANG['COPY_LINK'] = 'Copier Lien';
 $LANG['GO_LABEL_PRINT'] = "Aller au Module d'Impression d'Étiquettes";
 $LANG['DISPLAY_EDITOR'] = "Éditeur d'Affichage";
 $LANG['DISPLAY_TABLE'] = "Tableau d'Affichage";
@@ -124,5 +118,17 @@ $LANG['ELEV_MIN'] = 'Altitude Minimale';
 $LANG['ELEV_MAX'] = 'Altitude Maximale';
 $LANG['ASCENDING'] = 'ascendant';
 $LANG['DESCENDING'] = 'descendant';
-$LANG['OUTPUT'] = 'Record output';
+$LANG['OUTPUT'] = 'Enregistrer la sortie';
+$LANG['SELECT_FIELD'] = 'Nom de domaine';
+$LANG['OPERATOR'] = 'Opérateur';
+$LANG['EXPRESSION'] = 'Expression';
+$LANG['PARENTHESES'] = 'Parenthèses';
+$LANG['OPEN_PAREN_FIELD'] = 'Champ des parenthèses ouvertes';
+$LANG['CRITERIA'] = 'Critères';
+$LANG['CONDITION'] = 'Condition';
+$LANG['CUSTOM_VALUE'] = 'Valeur personnalisée';
+$LANG['CLOSE_PAREN_FIELD'] = 'Fermer le champ des parenthèses';
+$LANG['NEW_CUSTOM_FIELD'] = 'Ajouter un autre champ personnalisé';
+$LANG['ORDER_BY'] = 'Trier par';
+$LANG['ADD_CUSTOM_FIELD'] = 'Ajouter un Nouveau Filtre de Recherche Personnalisé';
 ?>

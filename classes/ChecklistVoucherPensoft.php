@@ -88,6 +88,9 @@ class ChecklistVoucherPensoft extends ChecklistVoucherReport {
 
 		//$file = $TEMP_DIR_ROOT.'/downloads/'.$this->getExportFileName().'.xlsx';
 		$file = $this->getExportFileName().'.xlsx';
+		ob_start();
+		ob_clean();
+		ob_end_flush();
 		header('Content-Description: Checklist Pensoft Export');
 		header('Content-Disposition: attachment; filename='.basename($file));
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

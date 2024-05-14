@@ -30,6 +30,8 @@ $LANG['CONTACT'] = 'Contact';
 $LANG['EMAIL'] = 'Email';
 $LANG['LAT'] = 'Latitude';
 $LANG['LONG'] = 'Longitude';
+$LANG['MAP'] = 'Open map';
+$LANG['MORE_INFO'] = 'Show more information';
 $LANG['CATEGORY'] = 'Category';
 $LANG['NO_CATEGORY'] = 'No Category';
 $LANG['ALLOW_PUBLIC_EDITS'] = 'Allow Public Edits';
@@ -121,5 +123,7 @@ $LANG['SECURITY_KEY'] = 'Security Key';
 $LANG['RECORDID'] = 'recordID';
 $LANG['SAVE_EDITS'] = 'Save Edits';
 $LANG['CREATE_COLL_2'] = 'Create New Collection';
+$LANG['TINYMCE_INFO'] = 'Collection description. You can access the text editing toolbar for this description 
+						by pressing key combination ALT + F10 on Windows or OPTION + F10 on MacOS.';
 
 ?>

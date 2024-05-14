@@ -7,7 +7,8 @@ $collidStr = array_key_exists('collidstr',$_REQUEST)?$_REQUEST['collidstr']:fals
 $csMode = array_key_exists('csmode',$_REQUEST)?$_REQUEST['csmode']:false;
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 	    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>">
 		<title><?php echo $DEFAULT_TITLE; ?> - Word Cloud Handler Collections</title>
@@ -23,7 +24,8 @@ $csMode = array_key_exists('csmode',$_REQUEST)?$_REQUEST['csmode']:false;
 	</head>
 	<body>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Word Cloud Handler</h1>
 			<?php
 			$cloudHandler = new WordCloud();
 			$cloudHandler->setWidth(800);
@@ -31,7 +33,7 @@ $csMode = array_key_exists('csmode',$_REQUEST)?$_REQUEST['csmode']:false;
 				$collidArr = explode(',',$collidStr);
 				foreach($collidArr as $collid){
 					$url = $cloudHandler->buildWordCloud($collid,$csMode);
-					echo '<div class="url-div"><a href="'.$url.'" target="_blank">'.$url.'</a></div>';
+					echo '<div class="url-div"><a href="' . htmlspecialchars($url, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($url, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE).'</a></div>';
 				}
 			}
 			else echo '<div>No collid target submitted</div>';

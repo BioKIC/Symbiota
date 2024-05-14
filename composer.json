@@ -1,6 +1,7 @@
 {
     "require": {
         "phpoffice/phpword": "^0.18.2",
-        "phpoffice/phpspreadsheet": "^1.18"
+        "phpoffice/phpspreadsheet": "^1.18",
+        "jumbojett/openid-connect-php": "^0.9.10"
     }
 }

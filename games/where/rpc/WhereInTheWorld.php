@@ -5,15 +5,11 @@ include_once('../classes/SearchArea.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $debug = (isset($_GET['Debug'])?true:false);
-$stateString = (isset($_GET['States'])?$_GET['States']:'');
+$stateString = (isset($_GET['States']) ? htmlspecialchars($_GET['States']) : '');
 $minLat = (isset($_GET['MinLat'])?$_GET['MinLat']:0);
 $maxLat = (isset($_GET['MaxLat'])?$_GET['MaxLat']:0);
 $minLon = (isset($_GET['MinLon'])?$_GET['MinLon']:0);
 $maxLon = (isset($_GET['MaxLon'])?$_GET['MaxLon']:0);
-
-//Sanitation
-$stateString = filter_var($stateString, FILTER_SANITIZE_STRING);
-
 
 $whereManager = new GamesWhereManager();
 $whereManager->setStateStr($stateString);

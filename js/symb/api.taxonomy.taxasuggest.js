@@ -1,7 +1,8 @@
 var acUrlBase = "/rpc/taxasuggest.php";
 var acUrl = acUrlBase;
 
-$(document).ready(function() {
+function initTaxaSuggest() {
+
 	if(typeof clientRoot !== 'undefined') acUrl = clientRoot + acUrlBase;
 	else{
 		var dirArr = window.location.pathname.split('/');
@@ -17,7 +18,7 @@ $(document).ready(function() {
 				acUrl = newUrl + acUrlBase;
 				loopCnt = loopCnt + 1;
 			}
-			}
+		}
 	}
 	
 	function extractLast( term ) {
@@ -77,7 +78,9 @@ $(document).ready(function() {
 				return false;
 			}
 		},{});
-});
+}
+
+$(document).ready(initTaxaSuggest);
 
 function initiateTaxonSuggest(inputID, rLow, rHigh){
 	$( "#"+inputID )
@@ -91,7 +94,7 @@ function initiateTaxonSuggest(inputID, rLow, rHigh){
 
 function urlExists(url){
     var http = new XMLHttpRequest();
-    http.open('HEAD', url);
+    http.open('HEAD', url, false);
     http.send();
     return http.status!=404;
 }

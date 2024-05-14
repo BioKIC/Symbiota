@@ -6,23 +6,37 @@ Language:  Español (Spanish)
 */
 
 $LANG['NAV_HOME'] = 'Inicio';
+$LANG['EXT_VOUCHERS_LINKED'] = 'vales externos han sido vinculados a la lista';
 $LANG['CHECKLIST_ADMIN'] = 'Administraci&oacute;n de Listados de Comprobaci&oacute;n';
 $LANG['RETURNCHECK'] = 'Regresar al Listado de Comprobaci&oacute;n';
 $LANG['ADDIMGVOUCHER'] = 'Agregar Im&aacute;gen Voucher';
 $LANG['EDITSEARCH'] = 'Editar Instrucci&oacute;n de B&uacute;squeda';
 $LANG['COUNTRY'] = 'Pa&iacute;s';
+$LANG['ENTER_MULT_COUNTRIES'] = 'Ingrese varios países separados por punto y coma';
 $LANG['STATE'] = 'Estado';
-$LANG['COUNTY'] = 'Municipio';
+$LANG['ENTER_MULT_STATES'] = 'Ingrese múltiples estados separados por punto y coma';
+$LANG['CONDADO'] = 'Condado';
+$LANG['ENTER_MULT_COUNTIES'] = 'Ingrese varios condados separados por punto y coma';
 $LANG['LOCALITY'] = 'Localidad';
-$LANG['TAXON'] = 'Tax&oacute;n';
+$LANG['TAXON'] = 'Taxón';
+$LANG['GEN_FAM_HIGHER'] = 'Género, familia o rango superior';
 $LANG['COLLECTION'] = 'Colecci&oacute;n';
 $LANG['TARGETCOLL'] = 'Buscar todas las Colecciones';
 $LANG['CHECKVOUCINSTRUC'] = 'Para utilizar las funciones de administraci&oacute;n de voucher, es necesario definir primeramente los t&eacute;rminos de b&uacute;squeda que se usar&aacute;n para limitar los registros de ocurrencia a los que fueron recolectados en las cercan&iacute;as del area de investigaci&oacute;n. ';
 $LANG['COLLECTOR'] = 'Colector';
+$LANG['MULTIPLE_COLLECTORS'] = 'Ingrese varios recopiladores separados por punto y coma';
 $LANG['LATN'] = 'Lat Norte';
+$LANG['LAT_NORTH'] = 'Latitud Norte';
+$LANG['FIND_COORD'] = 'Buscar coordenadas';
 $LANG['LATS'] = 'Lat Sur';
+$LANG['LAT_SOUTH'] = 'Latitud Sur';
 $LANG['LONGE'] = 'Long Este';
+$LANG['LONG_EAST'] = 'Longitud Este';
 $LANG['LONGW'] = 'Long Oeste';
+$LANG['LONG_WEST'] = 'Longitud Oeste';
+$LANG['EDIT_META_POLYGON'] = 'Editar metadatos y polígono';
+$LANG['SURE_DELETE_QUERY'] = '¿Está seguro de que desea eliminar las variables de consulta?';
+$LANG['ERROR'] = 'Error';
 $LANG['ONLYCOORD'] = 'Solamente incluir ocurrencias con coordenadas';
 $LANG['POLYGON_SEARCH'] = 'B&uacute;squeda basada en el pol&iacute;gono que define los l&iacute;mites de investigaci&oacute;n de la lista de verificaci&oacute;n';
 $LANG['EXCLUDE'] = 'Excluir especies cultivadas/cautivas';
@@ -31,19 +45,26 @@ $LANG['REMOVESEARCH'] = 'Quitar Declaraci&oacute;n de B&uacute;squeda';
 $LANG['NON_VOUCHERED'] = 'Taxa sin Vouchers';
 $LANG['MISSINGTAXA'] = 'Taxa Faltantes';
 $LANG['VOUCHCONF'] = 'Voucher Conflictivos';
+$LANG['EXTERNALVOUCHERS'] = 'Vouchers Externo (e.g. iNaturalist)';
+$LANG['LOOKUPEXT'] = 'Recuperar información de vouchers externos';
+$LANG['SAVEEXTVOUCH'] = 'Guardar vouchers externos en la lista';
+$LANG['EMPTY_LIST'] = 'La lista está vacía';
 $LANG['REPORTS'] = 'Reportes';
 $LANG['NONVOUCHTAX'] = 'Listado de Taxa sin vouchers';
 $LANG['OCCURNONVOUCH'] = 'Ocurrencias para taxa sin vouchers';
 $LANG['NEWOCCUR'] = 'Ocurrencias nuevas para todos los taxa';
 $LANG['DISPLAYMODE'] = 'Modo Mostrar';
 $LANG['TAXWITHOUTVOUCH'] = 'Taxa sin Vouchers';
+$LANG['EXCLUDES_CHILDREN_TAXA'] = '(excluye taxones de las listas de niños)';
 $LANG['LISTEDBELOW'] = 'A continuaci&oacute;n se enumeran las ocurrencias que pueden ser vinculadas de una vez a las especies dentro del listado de Comprobaci&oacute;n.';
 $LANG['CHECKLISTID'] = 'Checklist ID';
 $LANG['ADDNAMECURRTAX'] = ' Agregar nombre utilizando la taxonom&iacute;a actual';
+$LANG['ADD_VOUCHERS'] = 'Agregar Vales';
 $LANG['NOVOUCHLOCA'] = 'No se localizaron vouchers';
 $LANG['LISTEDBELOWARESPECINSTRUC'] = 'A continuaci&oacute;n se enumeran las especies de la lista de control que no han sido vinculadas a esp&eacute;cimenes voucher.
 Haga clic en el nombre para utilizar la instrucci&oacute;n de b&uacute;squeda de arriba para consultar de forma din&aacute;mica el conjunto de datos de ocurrencia de
 espec&iacute;menes voucher posibles. Utilice la lista desplegable a la derecha para mostrar los espec&iacute;menes en un formato de tabla.';
+$LANG['LISTEDBELOWEXTERNAL'] = "A continuaci&oacute;n se enumeran las especies de la lista. Usando las funciones de búsqueda del sitio web externo, localice una observaci&oacute;n que le sirva como posible comprobante para cada tax&oacute;n. Copie el ID de la observación (por ejemplo, de la &uacute;ltima parte de la URL) y p&eacute;guelo en el cuadro de texto correspondiente. Se pueden agregar m&uacute;ltiples comprobantes para cada tax&oacute;n. Utilice comas para separar los n&uacute;meros de identificaci&oacute;n. Symbiota buscará en el servicio externo posibles coincidencias, estas aparecerán como cuadros de texto blancos y el nombre de la especie se vinculará con el servicio externo. Haga clic en 'Recuperar información de vouchers externos' para cargar los datos del voucher para cada especie. Cuando esté listo, haga clic en 'Guardar vouchers externos en la lista' para enviar la información de los vouchers a Symbiota.";
 $LANG['ALLTAXACONTAINVOUCH'] = 'Todos los taxones contienen enlaces a vouchers';
 $LANG['ADDITIONAL'] = 'Consulte el Panel de opciones en la página central para obtener opciones adicionales de exportación e impresión que incorporan dinámicamente selecciones de opciones.';
 $LANG['FULLSPECLIST'] = 'Listado de especies completo (CSV)';
@@ -62,4 +83,6 @@ $LANG['REFRESHLIST'] = 'Actualizar Listado';
 $LANG['PREVIOUS'] = 'Anterior';
 $LANG['RECORDS'] = ' Registros';
 $LANG['NEXT'] = 'Siguiente';
+$LANG['IMG_EDIT'] = 'Editar imagen';
+
 ?>

@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcDuplicates.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -20,7 +22,6 @@ if(!in_array($matchMethod,array('dupe','exsiccati'))) $matchMethod = '';
 if(!preg_match('/^\d{4}\/\d{2}\/\d{2}$/',$evaluationDate)) $evaluationDate = '';
 if(!in_array($processingStatus,array('stage1','stage2','stage3','unprocessed'))) $processingStatus = '';
 if(!is_numeric($limit)) $limit = 100;
-$action = filter_var($action,FILTER_SANITIZE_STRING);
 
 $dupeManager = new SpecProcDuplicates();
 if($collid) $dupeManager->setCollID($collid);
@@ -35,10 +36,11 @@ if($action == 'buildDuplicateArr'){
 }
 $collMetaArr = $dupeManager->getCollMetaArr();
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE; ?> - Duplicate Georeferencing</title>
+	<title><?php echo $DEFAULT_TITLE .  ' - ' . $LANG['DUP_GEOREFERENCE']; ?></title>
 	<?php
 
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -63,58 +65,59 @@ $collMetaArr = $dupeManager->getCollMetaArr();
 <body style="margin-left:0px;margin-right:0px">
 	<div class='navpath'>
 		<a href="../../index.php">Home</a> &gt;&gt;
-		<a href="../misc/collprofiles.php?emode=1&collid=<?php echo $collid; ?>">Collection Management</a> &gt;&gt;
-		<b>Batch harvesting from Duplicates</b>
+		<a href="../misc/collprofiles.php?emode=1&collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo $LANG['COL_MNG']; ?></a> &gt;&gt;
+		<b><?php echo $LANG['BATCH_HARVEST_DUP']; ?></b>
 	</div>
 	<!-- inner text -->
-	<div id="innertext" style="background-color:white;">
+	<div role="main" id="innertext" style="background-color:white;">
+	<h1 class="page-heading"><?= $LANG['DUP_GEOREFERENCE']; ?></h1>
 		<?php
 		echo '<div id="page-title">'.$collMetaArr[$collid]['name'].' ('.$collMetaArr[$collid]['collcode'].')</div>';
 		if($isEditor){
 			?>
 			<fieldset>
-				<legend>Staging Variables</legend>
+				<legend><?php echo $LANG['STAGING_VARIABLES']; ?></legend>
 				<form name="stagingForm" method="post" action="duplicateharvest.php">
 					<div class="fieldGroup">
-						<div class="fieldLabel" style="float:left">Target Fields: </div>
+						<div class="fieldLabel" style="float:left"><?php echo $LANG['TARGET_FIELDS']; ?>: </div>
 						<div style="margin-left:5px;float:left">
-							<input name="fieldtarget" type="radio" value="all" <?php echo (!$fieldTarget||$fieldTarget=='all'?'CHECKED':''); ?> /> All fields<br/>
-							<input name="fieldtarget" type="radio" value="georef" <?php echo ($fieldTarget=='georef'?'CHECKED':''); ?> /> Georeference fields
+							<input name="fieldtarget" type="radio" value="all" <?php echo (!$fieldTarget||$fieldTarget=='all'?'CHECKED':''); ?> /> <?php echo $LANG['ALL_FIELDS']; ?><br/>
+							<input name="fieldtarget" type="radio" value="georef" <?php echo ($fieldTarget=='georef'?'CHECKED':''); ?> /> <?php echo $LANG['GEO_FIELDS']; ?>
 						</div>
 					</div>
 					<div class="fieldGroup">
-						<div class="fieldLabel" style="float:left">Matching method: </div>
+						<div class="fieldLabel" style="float:left"><?php echo $LANG['MATCH_METHOD']; ?>: </div>
 						<div style="margin-left:5px;float:left">
-							<input name="matchmethod" type="radio" value="dupe" <?php echo (!$matchMethod||$matchMethod=='dupe'?'CHECKED':''); ?> /> Duplicate specimen tables<br/>
-							<input name="matchmethod" type="radio" value="exsiccati" <?php echo ($matchMethod=='exsiccati'?'CHECKED':''); ?> /> Exsiccatae tables
+							<input name="matchmethod" type="radio" value="dupe" <?php echo (!$matchMethod||$matchMethod=='dupe'?'CHECKED':''); ?> /> <?php echo $LANG['DUP_SPEC_TABLES']; ?><br/>
+							<input name="matchmethod" type="radio" value="exsiccati" <?php echo ($matchMethod=='exsiccati'?'CHECKED':''); ?> /> <?php echo $LANG['EXS_TABLES']; ?>
 						</div>
 					</div>
 					<div class="fieldGroup">
-						<div class="fieldLabel" style="float:left">Records not evaluated since: </div>
+						<div class="fieldLabel" style="float:left"><?= $LANG['REC_NOT_EVAL_SINCE']; ?>: </div>
 						<div style="margin-left: 5px">
 							<input name="evaldate" type="date" value="" />
 						</div>
 					</div>
 					<div class="fieldGroup">
-						<span class="fieldLabel" style="float:left">Processing status: </span>
+						<span class="fieldLabel" style="float:left"><?= $LANG['PROC_STATUS']; ?>: </span>
 						<span style="margin-left: 5px">
 							<select name="processingstatus">
-								<option value="">All Records</option>
-								<option value="stage1" <?php echo ($processingStatus=='stage1'?'SELECTED':''); ?>>Stage 1</option>
-								<option value="stage2" <?php echo ($processingStatus=='stage2'?'SELECTED':''); ?>>Stage 2</option>
-								<option value="stage3" <?php echo ($processingStatus=='stage3'?'SELECTED':''); ?>>Stage 3</option>
-								<option value="unprocessed"  <?php echo ($processingStatus===''||$processingStatus=='unprocessed'?'SELECTED':''); ?>>Unprocessed</option>
+								<option value=""><?= $LANG['ALL_RECS']; ?></option>
+								<option value="stage1" <?php echo ($processingStatus=='stage1'?'SELECTED':''); ?>><?= $LANG['STAGE_1']; ?></option>
+								<option value="stage2" <?php echo ($processingStatus=='stage2'?'SELECTED':''); ?>><?= $LANG['STAGE_2']; ?></option>
+								<option value="stage3" <?php echo ($processingStatus=='stage3'?'SELECTED':''); ?>><?= $LANG['STAGE_3']; ?></option>
+								<option value="unprocessed"  <?php echo ($processingStatus===''||$processingStatus=='unprocessed'?'SELECTED':''); ?>><?= $LANG['UNPROCESSED']; ?></option>
 							</select>
 						</span>
 					</div>
 					<div class="buttonDiv" style="float:right;">
 						<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
-						<button name="formsubmit" type="submit" value="buildDuplicateArr">Build List</button>
+						<button name="formsubmit" type="submit" value="buildDuplicateArr"><?= $LANG['BUILD_LIST']; ?></button>
 					</div>
 					<div style="">
-						<span class="fieldLabel">Record limit: </span>
+						<span class="fieldLabel"><?= $LANG['REC_LIMIT']; ?>: </span>
 						<span style="margin-left: 5px">
-							<input name="limit" type="text" value="<?php echo $limit; ?>" style="width:100px" />
+							<input name="limit" type="text" value="<?= $limit; ?>" style="width:100px" />
 						</span>
 					</div>
 				</form>
@@ -130,8 +133,8 @@ $collMetaArr = $dupeManager->getCollMetaArr();
 								<tr>
 									<th><input name="all" type="checkbox" title="Select All" /></th>
 									<th>occid</th>
-									<th>Collection<br/>Code</th>
-									<th>Catalog<br/>Number</th>
+									<th><?= $LANG['COLL_CODE']; ?></th>
+									<th><?= $LANG['CAT_BR_NUM']; ?></th>
 									<?php
 									foreach($activeFieldArr as $fieldName => $code){
 										echo '<th>'.$fieldName.'</th>';
@@ -143,7 +146,7 @@ $collMetaArr = $dupeManager->getCollMetaArr();
 									//Output subject array
 									echo '<tr class="source-row">';
 									echo '<td><input name="all" type="checkbox" /></td>';
-									echo '<td><a href="../editor/occurrenceeditor.php?occid='.$occid.'" target="_blank">'.$occid.'</a></td>';
+									echo '<td><a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></td>';
 									echo '<td></td>';
 									echo '<td>'.$dupeArr[0]['catalogNumber']['v'].'</td>';
 									foreach($activeFieldArr as $fieldName => $code){
@@ -160,7 +163,7 @@ $collMetaArr = $dupeManager->getCollMetaArr();
 									for($i=1; $i < count($dupeArr); $i++){
 										echo '<tr>';
 										echo '<td></td>';
-										echo '<td><a href="../individual/index.php?occid='.$occid.'" target="_blank">'.$dupeArr[$i]['occid']['v'].'</a></td>';
+										echo '<td><a href="../individual/index.php?occid=' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($dupeArr[$i]['occid']['v'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></td>';
 										echo '<td>'.$collMetaArr[$dupeArr[$i]['collid']['v']]['collcode'].'</td>';
 										echo '<td>'.$dupeArr[$i]['catalogNumber']['v'].'</td>';
 										foreach($activeFieldArr as $fieldName => $code){
@@ -182,7 +185,7 @@ $collMetaArr = $dupeManager->getCollMetaArr();
 			}
 		}
 		else{
-			echo '<h2>You are not authorized to access this page</h2>';
+			echo '<h2>' . $LANG['NOT_AUTH'] .'</h2>';
 		}
 		?>
 	</div>

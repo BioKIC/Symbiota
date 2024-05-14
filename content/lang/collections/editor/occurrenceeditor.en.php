@@ -5,7 +5,7 @@ Language: English
 ------------------
 */
 
-include_once($SERVER_ROOT.'/content/lang/collections/editor/editorterms.en.php');
+include_once($SERVER_ROOT.'/content/lang/collections/fieldterms/occurrenceterms.en.php');
 
 $LANG['HOME'] = 'Home';
 $LANG['CLONES_CREATED'] = 'Success! The following new clone record(s) have been created';
@@ -26,7 +26,7 @@ $LANG['NEXT_REC'] = 'Next Record';
 $LANG['LAST_REC'] = 'Last Record';
 $LANG['NEW_REC'] = 'New Record';
 $LANG['OCCEDITOR'] = 'Occurrence Editor';
-$LANG['SEARCH_FILTER'] = 'Search/Filter';
+$LANG['SEARCH_FILTER'] = 'Open Record Search Form';
 $LANG['EDITOR'] = 'Editor';
 $LANG['CENTRAL_CROWD'] = 'Crowd Source Central';
 $LANG['PERS_MANAGEMENT'] = 'Personal Management';
@@ -50,6 +50,7 @@ $LANG['ADMIN'] = 'Admin';
 $LANG['COLLECTOR_INFO'] = 'Collector Info';
 $LANG['LONG_FORM'] = 'Long Form';
 $LANG['SHORT_FORM'] = 'Short Form';
+$LANG['DUPLICATES'] = 'Duplicates';
 $LANG['AUTO_SEARCH'] = 'Auto search';
 $LANG['OUT_ON_LOAN'] = 'Out On Loan';
 $LANG['TO'] = 'To';
@@ -58,17 +59,14 @@ $LANG['NOT_DEFINED'] = 'Not Defined';
 $LANG['SEARCHING_DUPE'] = 'Searching for Duplicates';
 $LANG['NO_DUPES_FOUND'] = 'No Duplicates Found';
 $LANG['DISPLAY_DUPES'] = 'Displaying Duplicates';
-$LANG['NUM_YEAR'] = 'Numeric Year';
-$LANG['NUM_MONTH'] = 'Numeric Month';
-$LANG['NUM_DAY'] = 'Numeric Day';
-$LANG['START_DOY'] = 'Start Day of Year';
-$LANG['END_DOY'] = 'End Day of Year';
 $LANG['EXS_TITLE'] = 'Exsiccati Title';
 $LANG['NUMBER'] = 'Number';
 $LANG['LATEST_ID'] = 'Latest Identification';
 $LANG['LIMITED_EDITING'] = 'Limited editing rights: use determination tab to edit identification';
 $LANG['NEED_FULL'] = 'Note: Full editing permissions are needed to edit an identification';
+$LANG['IDENTIFICATION_CONFIDENCE'] = 'ID Confidence';
 $LANG['UNDEFINED'] = 'Undefined';
+$LANG['TOGG_ADD_FIELDS'] = "Toggle Additional Field(s)";
 ///$LANG['ABSOLUTE'] = 'Absolute';
 ///$LANG['V_HIGH'] = 'Very High';
 ///$LANG['HIGH'] = 'High';
@@ -86,13 +84,16 @@ $LANG['TAXONOMIC_SECURITY'] = 'Taxonomic Security';
 $LANG['LOC_AND_TAX_SECURITY'] = 'Locality &amp; Taxonomic Security';
 $LANG['FULL_SECURITY'] = 'Full Security';
 $LANG['SECURITY_SETTINGS'] = 'Security Settings';
-$LANG['SEC_NOT_APPLIED'] = 'Security not applied';
+$LANG['SECURITY_NOT_APPLIED'] = 'Security not applied';
+$LANG['SECURITY_APPLIED'] = 'Security applied';
 $LANG['LOCK_SEC_SETTING'] = 'Lock Security Setting';
 $LANG['EXPLAIN_SEC_STATUS'] = 'Entering any text will lock security status on or off; leave blank to accept default security status';
 $LANG['UNCERTAINTY_METERS'] = 'Uncertainty in Meters';
-$LANG['GOOGLE_MAPS'] = 'Google Maps';
+$LANG['MAP_COORDS'] = 'Map Coordinates';
 $LANG['GEOLOCATE_LOC'] = 'GeoLocate Locality';
 $LANG['COORD_CLONE_TOOL'] = 'Coordinate Cloning Tool';
+$LANG['C'] = 'C';
+$LANG['F'] = 'F';
 $LANG['CONVERSION_TOOLS'] = 'Tools for converting additional formats';
 $LANG['RECALCULATE_COORDS'] = 'Recalculate Decimal Coordinates';
 $LANG['MIN_ELEVATION'] = 'Minumum Elevation in Meters';
@@ -195,5 +196,4 @@ $LANG['GEN_RES_ADD_SUCCESS'] = 'Genetic resource added successfully!';
 $LANG['ERROR_UNABLE_INSERT'] = 'ERROR: unable to INSERT text fragment';
 $LANG['ERROR_UNABLE_UPDATE'] = 'ERROR: unable to UPDATE text fragment';
 $LANG['ERROR_UNABLE_DELETE'] = 'ERROR: unable DELETE text fragment';
-
 ?>

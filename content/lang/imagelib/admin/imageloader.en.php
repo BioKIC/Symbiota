@@ -30,5 +30,6 @@ $LANG['MAP_REMOTE_IMGS'] = 'Map to remote images';
 $LANG['IMPORT_LOCAL'] = 'Import to local storage';
 $LANG['BASE_PATH'] = 'Base Path';
 $LANG['UPLOAD_IMGS'] = 'Upload Images';
+$LANG['VERIFY_MAPPING'] = 'Verify Mapping';
 
 ?>

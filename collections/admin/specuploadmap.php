@@ -7,21 +7,21 @@ include_once($SERVER_ROOT.'/content/lang/collections/admin/specupload.'.$LANG_TA
 header('Content-Type: text/html; charset='.$CHARSET);
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/admin/specupload.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
-$collid = $_REQUEST['collid'];
-$uploadType = $_REQUEST['uploadtype'];
-$uspid = array_key_exists('uspid',$_REQUEST)?$_REQUEST['uspid']:'';
-$autoMap = array_key_exists('automap',$_POST)?true:false;
-$action = array_key_exists('action',$_REQUEST)?$_REQUEST['action']:'';
-$ulPath = array_key_exists('ulpath',$_REQUEST)?$_REQUEST['ulpath']:'';
-$importIdent = array_key_exists('importident',$_REQUEST)?true:false;
-$importImage = array_key_exists('importimage',$_REQUEST)?true:false;
-$observerUid = array_key_exists('observeruid',$_POST)?$_POST['observeruid']:'';
-$matchCatNum = array_key_exists('matchcatnum',$_REQUEST)?true:false;
-$matchOtherCatNum = array_key_exists('matchothercatnum',$_REQUEST)&&$_REQUEST['matchothercatnum']?true:false;
-$versionData = array_key_exists('versiondata',$_REQUEST) && $_REQUEST['versiondata']?true:false;
-$verifyImages = array_key_exists('verifyimages',$_REQUEST) && $_REQUEST['verifyimages']?true:false;
-$processingStatus = array_key_exists('processingstatus',$_REQUEST)?$_REQUEST['processingstatus']:'';
-$dbpk = array_key_exists('dbpk',$_REQUEST)?$_REQUEST['dbpk']:'';
+$collid = htmlspecialchars(array_key_exists('collid',$_REQUEST) ? $_REQUEST['collid']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$uploadType = htmlspecialchars(array_key_exists('uploadtype',$_REQUEST) ? $_REQUEST['uploadtype']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$uspid = htmlspecialchars(array_key_exists('uspid',$_REQUEST) ? $_REQUEST['uspid']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$autoMap = array_key_exists('automap',$_POST) ? true : false;
+$action = htmlspecialchars(array_key_exists('action',$_REQUEST) ? $_REQUEST['action']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$ulPath = htmlspecialchars(array_key_exists('ulpath',$_REQUEST) ? $_REQUEST['ulpath']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$importIdent = array_key_exists('importident',$_REQUEST) ? true : false;
+$importImage = array_key_exists('importimage',$_REQUEST) ? true : false;
+$observerUid = htmlspecialchars(array_key_exists('observeruid',$_POST) ? $_POST['observeruid']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$matchCatNum = array_key_exists('matchcatnum',$_REQUEST) ? true : false;
+$matchOtherCatNum = array_key_exists('matchothercatnum',$_REQUEST)&&$_REQUEST['matchothercatnum'] ? true : false;
+$versionData = array_key_exists('versiondata',$_REQUEST) && $_REQUEST['versiondata'] ? true : false;
+$verifyImages = array_key_exists('verifyimages',$_REQUEST) && $_REQUEST['verifyimages'] ? true : false;
+$processingStatus = htmlspecialchars(array_key_exists('processingstatus',$_REQUEST) ? $_REQUEST['processingstatus']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$dbpk = htmlspecialchars(array_key_exists('dbpk',$_REQUEST) ? $_REQUEST['dbpk']: '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 
 if(strpos($uspid,'-')){
 	$tok = explode('-',$uspid);
@@ -101,16 +101,17 @@ if($isEditor && $collid){
 	$duManager->loadFieldMap();
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo $DEFAULT_TITLE.' '.(isset($LANG['SPEC_UPLOAD'])?$LANG['SPEC_UPLOAD']:'Specimen Uploader'); ?></title>
+	<title><?php echo $DEFAULT_TITLE.' '.(isset($LANG['SPEC_UPLOAD']) ? $LANG['SPEC_UPLOAD'] : 'Specimen Uploader'); ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
-	<script src="../../js/jquery.js" type="text/javascript"></script>
-	<script src="../../js/jquery-ui.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="../../js/symb/shared.js" type="text/javascript"></script>
 	<script>
 		function verifyMappingForm(f){
@@ -126,7 +127,7 @@ if($isEditor && $collid){
 				var obj = f.elements[i];
 				if(obj.name == "sf[]"){
 					if(sfArr.indexOf(obj.value) > -1){
-						alert("<?php echo (isset($LANG['ERR_UNIQUE_D'])?$LANG['ERR_UNIQUE_D']:'ERROR: Source field names must be unique (duplicate field: '); ?>"+obj.value+")");
+						alert("<?php echo (isset($LANG['ERR_UNIQUE_D']) ? $LANG['ERR_UNIQUE_D'] : 'ERROR: Source field names must be unique (duplicate field: '); ?>"+obj.value+")");
 						return false;
 					}
 					sfArr[sfArr.length] = obj.value;
@@ -148,7 +149,7 @@ if($isEditor && $collid){
 				else if(obj.name == "ID-sf[]"){
 					if(f.importident.value == "1"){
 						if(idSfArr.indexOf(obj.value) > -1){
-							alert("<?php echo (isset($LANG['ERR_UNIQUE_ID'])?$LANG['ERR_UNIQUE_ID']:'ERROR: Source field names must be unique (Identification: '); ?>"+obj.value+")");
+							alert("<?php echo (isset($LANG['ERR_UNIQUE_ID']) ? $LANG['ERR_UNIQUE_ID'] : 'ERROR: Source field names must be unique (Identification: '); ?>"+obj.value+")");
 							return false;
 						}
 						idSfArr[idSfArr.length] = obj.value;
@@ -157,7 +158,7 @@ if($isEditor && $collid){
 				else if(obj.name == "IM-sf[]"){
 					if(f.importimage.value == "1"){
 						if(imSfArr.indexOf(obj.value) > -1){
-							alert("<?php echo (isset($LANG['ERR_UNIQUE_IM'])?$LANG['ERR_UNIQUE_IM']:'ERROR: Source field names must be unique (Image: '); ?>"+obj.value+")");
+							alert("<?php echo (isset($LANG['ERR_UNIQUE_IM']) ? $LANG['ERR_UNIQUE_IM'] : 'ERROR: Source field names must be unique (Image: '); ?>"+obj.value+")");
 							return false;
 						}
 						imSfArr[imSfArr.length] = obj.value;
@@ -166,7 +167,7 @@ if($isEditor && $collid){
 				else if(obj.value != "" && obj.value != "unmapped"){
 					if(obj.name == "tf[]"){
 						if(tfArr.indexOf(obj.value) > -1){
-							alert("<?php echo (isset($LANG['SAME_TARGET_D'])?$LANG['SAME_TARGET_D']:'ERROR: Can\'t map to the same target field more than once ( '); ?>"+obj.value+")");
+							alert("<?php echo (isset($LANG['SAME_TARGET_D']) ? $LANG['SAME_TARGET_D'] : 'ERROR: Can\'t map to the same target field more than once ( '); ?>"+obj.value+")");
 							return false;
 						}
 						tfArr[tfArr.length] = obj.value;
@@ -174,7 +175,7 @@ if($isEditor && $collid){
 					else if(obj.name == "ID-tf[]"){
 						if(f.importident.value == "1"){
 							if(idTfArr.indexOf(obj.value) > -1){
-								alert("<?php echo (isset($LANG['SAME_TARGET_ID'])?$LANG['SAME_TARGET_ID']:'ERROR: Can\'t map to the same target field more than once (Identification: '); ?>"+obj.value+")");
+								alert("<?php echo (isset($LANG['SAME_TARGET_ID']) ? $LANG['SAME_TARGET_ID'] : 'ERROR: Can\'t map to the same target field more than once (Identification: '); ?>"+obj.value+")");
 								return false;
 							}
 							idTfArr[idTfArr.length] = obj.value;
@@ -183,7 +184,7 @@ if($isEditor && $collid){
 					else if(obj.name == "IM-tf[]"){
 						if(f.importimage.value == "1"){
 							if(imTfArr.indexOf(obj.value) > -1){
-								alert("<?php echo (isset($LANG['SAME_TARGET_IM'])?$LANG['SAME_TARGET_IM']:'ERROR: Can\'t map to the same target field more than once (Images: '); ?>"+obj.value+")");
+								alert("<?php echo (isset($LANG['SAME_TARGET_IM']) ? $LANG['SAME_TARGET_IM'] : 'ERROR: Can\'t map to the same target field more than once (Images: '); ?>"+obj.value+")");
 								return false;
 							}
 							imTfArr[imTfArr.length] = obj.value;
@@ -203,16 +204,16 @@ if($isEditor && $collid){
 			if(f.uploadtype.value == 7){
 				if(catalogNumberIndex == 0){
 					//Skeletal records require catalog number to be mapped
-					alert("<?php echo (isset($LANG['NEED_CAT'])?$LANG['NEED_CAT']:'ERROR: catalogNumber or otherCatalogNumbers is required for Skeletal File Uploads'); ?>");
+					alert("<?php echo (isset($LANG['NEED_CAT']) ? $LANG['NEED_CAT'] : 'ERROR: catalogNumber or otherCatalogNumbers is required for Skeletal File Uploads'); ?>");
 					return false;
 				}
 				else if(f.matchcatnum.checked == false && f.matchothercatnum.checked == false){
-					alert("<?php echo (isset($LANG['SEL_MATCH'])?$LANG['SEL_MATCH']:'ERROR: select which identifier will be used for record matching (required for Skeletal File imports)'); ?>");
+					alert("<?php echo (isset($LANG['SEL_MATCH']) ? $LANG['SEL_MATCH'] : 'ERROR: select which identifier will be used for record matching (required for Skeletal File imports)'); ?>");
 					return false;
 				}
 				else{
 					if((catalogNumberIndex == 1 && f.matchcatnum.checked == false) || (catalogNumberIndex == 2 && f.matchothercatnum.checked == false)){
-						alert("<?php echo (isset($LANG['ID_NOT_MATCH'])?$LANG['ID_NOT_MATCH']:'ERROR: identifier record matching does not match import fields (required for Skeletal File imports)'); ?>");
+						alert("<?php echo (isset($LANG['ID_NOT_MATCH']) ? $LANG['ID_NOT_MATCH'] : 'ERROR: identifier record matching does not match import fields (required for Skeletal File imports)'); ?>");
 						return false;
 					}
 				}
@@ -247,36 +248,36 @@ if($isEditor && $collid){
 			}
 		}
 	</script>
-	<style type="text/css">
+	<style>
 		.unmapped{ background: yellow; }
 		fieldset{  padding: 15px; }
 		legend{ font-weight: bold; }
 	</style>
 </head>
 <body>
-<?php
-$displayLeftMenu = (isset($collections_admin_specuploadMenu)?$collections_admin_specuploadMenu:false);
+	<?php
+$displayLeftMenu = (isset($collections_admin_specuploadMenu) ? $collections_admin_specuploadMenu:false);
 include($SERVER_ROOT.'/includes/header.php');
 ?>
 <div class="navpath">
-	<a href="../../index.php"><?php echo (isset($LANG['HOME'])?$LANG['HOME']:'Home'); ?></a> &gt;&gt;
-	<a href="../misc/collprofiles.php?collid=<?php echo $collid; ?>&emode=1"><?php echo (isset($LANG['COL_MGMNT'])?$LANG['COL_MGMNT']:'Collection Management Panel'); ?></a> &gt;&gt;
-	<a href="specuploadmanagement.php?collid=<?php echo $collid; ?>"><?php echo (isset($LANG['LIST_UPLOAD'])?$LANG['LIST_UPLOAD']:'List of Upload Profiles'); ?></a> &gt;&gt;
-	<b><?php echo (isset($LANG['SPEC_UPLOAD'])?$LANG['SPEC_UPLOAD']:'Specimen Uploader'); ?></b>
+	<a href="../../index.php"><?php echo htmlspecialchars((isset($LANG['HOME']) ? $LANG['HOME'] : 'Home'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+	<a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&emode=1"><?php echo htmlspecialchars((isset($LANG['COL_MGMNT']) ? $LANG['COL_MGMNT'] : 'Collection Management Panel'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+	<a href="specuploadmanagement.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo htmlspecialchars((isset($LANG['LIST_UPLOAD']) ? $LANG['LIST_UPLOAD'] : 'List of Upload Profiles'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
+	<b><?php echo (isset($LANG['SPEC_UPLOAD']) ? $LANG['SPEC_UPLOAD'] : 'Specimen Uploader'); ?></b>
 </div>
-<div id="innertext">
+<div role="main" id="innertext">
+	<h1 class="page-heading"><?= $LANG['UP_MODULE']; ?></h1>
 	<?php
-	echo '<h1>'.(isset($LANG['UP_MODULE'])?$LANG['UP_MODULE']:'Data Upload Module').'</h1>';
 	if($statusStr){
 		echo '<hr />';
 		echo '<div>'.$statusStr.'</div>';
 		echo '<hr />';
 	}
-	$recReplaceMsg = '<span style="color:orange"><b>'.(isset($LANG['CAUTION'])?$LANG['CAUTION']:'Caution').':</b></span> '.(isset($LANG['REC_REPLACE'])?$LANG['REC_REPLACE']:'Matching records will be replaced with incoming records');
+	$recReplaceMsg = '<span style="color:orange"><b>'.(isset($LANG['CAUTION']) ? $LANG['CAUTION'] : 'Caution').':</b></span> '.(isset($LANG['REC_REPLACE']) ? $LANG['REC_REPLACE'] : 'Matching records will be replaced with incoming records');
 	if($isEditor && $collid){
 		//Grab collection name and last upload date and display for all
 		echo '<div style="font-weight:bold;font-size:130%;">'.$duManager->getCollInfo('name').'</div>';
-		echo '<div style="margin:0px 0px 15px 15px;"><b>Last Upload Date:</b> '.($duManager->getCollInfo('uploaddate')?$duManager->getCollInfo('uploaddate'):(isset($LANG['NOT_REC'])?$LANG['NOT_REC']:'not recorded')).'</div>';
+		echo '<div style="margin:0px 0px 15px 15px;"><b>Last Upload Date:</b> '.($duManager->getCollInfo('uploaddate') ? $duManager->getCollInfo('uploaddate') : (isset($LANG['NOT_REC']) ? $LANG['NOT_REC'] : 'not recorded')).'</div>';
 		$processingList = array('unprocessed' => 'Unprocessed', 'stage 1' => 'Stage 1', 'stage 2' => 'Stage 2', 'stage 3' => 'stage 3', 'pending review' => 'Pending Review',
 			'expert required' => 'Expert Required', 'pending review-nfn' => 'Pending Review-NfN', 'reviewed' => 'Reviewed', 'closed' => 'Closed');
 		if(!$ulPath) $ulPath = $duManager->uploadFile();
@@ -290,7 +291,7 @@ include($SERVER_ROOT.'/includes/header.php');
 						<fieldset style="width:95%;">
 							<legend><?php echo $duManager->getTitle();?></legend>
 							<div style="margin:10px;">
-								<b><?php echo (isset($LANG['SOURCE_ID'])?$LANG['SOURCE_ID']:'Source Unique Identifier / Primary Key'); ?> (<span style="color:red"><?php echo (isset($LANG['REQ'])?$LANG['REQ']:'required'); ?></span>): </b>
+								<b><?php echo (isset($LANG['SOURCE_ID']) ? $LANG['SOURCE_ID'] : 'Source Unique Identifier / Primary Key'); ?> (<span style="color:red"><?php echo (isset($LANG['REQ']) ? $LANG['REQ'] : 'required'); ?></span>): </b>
 								<?php
 								$dbpk = $duManager->getDbpk();
 								$dbpkTitle = 'Core ID';
@@ -301,17 +302,17 @@ include($SERVER_ROOT.'/includes/header.php');
 								<div style="margin:10px;">
 									<div>
 										<input name="importspec" value="1" type="checkbox" checked />
-										<?php echo (isset($LANG['IMPORT_OCCS'])?$LANG['IMPORT_OCCS']:'Import Occurrence Records'); ?> (<a href="#" onclick="toggle('dwcaOccurDiv');return false;"><?php echo (isset($LANG['VIEW_DETS'])?$LANG['VIEW_DETS']:'view details'); ?></a>)
+										<?php echo (isset($LANG['IMPORT_OCCS']) ? $LANG['IMPORT_OCCS'] : 'Import Occurrence Records'); ?> (<a href="#" onclick="toggle('dwcaOccurDiv');return false;"><?php echo htmlspecialchars((isset($LANG['VIEW_DETS']) ? $LANG['VIEW_DETS'] : 'view details'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>)
 									</div>
 									<div id="dwcaOccurDiv" style="display:none;margin:20px;">
 										<div style="margin-bottom:5px">
 											<?php $duManager->echoFieldMapTable(true,'occur'); ?>
 											<div>
-												<?php echo '* '.(isset($LANG['UNVER'])?$LANG['UNVER']:'Unverified mappings are displayed in yellow'); ?>
+												<?php echo '* '.(isset($LANG['UNVER']) ? $LANG['UNVER'] : 'Unverified mappings are displayed in yellow'); ?>
 											</div>
 										</div>
 										<fieldset>
-											<legend><?php echo (isset($LANG['CUSTOM_FILT'])?$LANG['CUSTOM_FILT']:'Custom Occurrence Record Import Filters'); ?></legend>
+											<legend><?php echo (isset($LANG['CUSTOM_FILT']) ? $LANG['CUSTOM_FILT'] : 'Custom Occurrence Record Import Filters'); ?></legend>
 											<?php
 											$qArr = json_decode($duManager->getQueryStr(),true);
 											$queryArr = array();
@@ -345,58 +346,58 @@ include($SERVER_ROOT.'/includes/header.php');
 
 												?>
 												<div>
-													<?php echo (isset($LANG['FIELD'])?$LANG['FIELD']:'Field'); ?>:
+													<?php echo (isset($LANG['FIELD']) ? $LANG['FIELD'] : 'Field'); ?>:
 													<select name="filter<?php echo $x; ?>" style="margin-right:10px">
-														<option value=""><?php echo (isset($LANG['SEL_FIELD'])?$LANG['SEL_FIELD']:'Select Field Name'); ?></option>
+														<option value=""><?php echo (isset($LANG['SEL_FIELD']) ? $LANG['SEL_FIELD'] : 'Select Field Name'); ?></option>
 														<?php
 														foreach($sourceFields as $f){
-															echo '<option '.($savedField == strtolower($f)?'SELECTED':'').'>'.$f.'</option>';
+															echo '<option '.($savedField == strtolower($f) ? 'SELECTED' : '').'>'.$f.'</option>';
 														}
 														?>
 													</select>
-													<?php echo (isset($LANG['COND'])?$LANG['COND']:'Condition'); ?>:
+													<?php echo (isset($LANG['COND']) ? $LANG['COND'] : 'Condition'); ?>:
 													<select name="condition<?php echo $x; ?>" style="margin-right:10px">
-														<option value="EQUALS" <?php if($savedCondition == 'EQUALS') echo 'SELECTED'; ?>><?php echo (isset($LANG['EQUALS'])?$LANG['EQUALS']:'EQUALS'); ?></option>
-														<option value="STARTS" <?php if($savedCondition == 'STARTS') echo 'SELECTED'; ?>><?php echo (isset($LANG['STARTS_WITH'])?$LANG['STARTS_WITH']:'STARTS WITH'); ?></option>
-														<option value="LIKE" <?php if($savedCondition == 'LIKE') echo 'SELECTED'; ?>><?php echo (isset($LANG['CONTAINS'])?$LANG['CONTAINS']:'CONTAINS'); ?></option>
-														<option value="LESSTHAN" <?php if($savedCondition == 'LESSTHAN') echo 'SELECTED'; ?>><?php echo (isset($LANG['LESS_THAN'])?$LANG['LESS_THAN']:'LESS THAN'); ?></option>
-														<option value="GREATERTHAN" <?php if($savedCondition == 'GREATERTHAN') echo 'SELECTED'; ?>><?php echo (isset($LANG['GREATER_THAN'])?$LANG['GREATER_THAN']:'GREATER THAN'); ?></option>
-														<option value="ISNULL" <?php if($savedCondition == 'ISNULL') echo 'SELECTED'; ?>><?php echo (isset($LANG['IS_NULL'])?$LANG['IS_NULL']:'IS NULL'); ?></option>
-														<option value="NOTNULL" <?php if($savedCondition == 'NOTNULL') echo 'SELECTED'; ?>><?php echo (isset($LANG['NOT_NULL'])?$LANG['NOT_NULL']:'IS NOT NULL'); ?></option>
+														<option value="EQUALS" <?php if($savedCondition == 'EQUALS') echo 'SELECTED'; ?>><?= $LANG['EQUALS'] ?></option>
+														<option value="STARTS_WITH" <?php if($savedCondition == 'STARTS_WITH') echo 'SELECTED'; ?>><?= $LANG['STARTS_WITH'] ?></option>
+														<option value="LIKE" <?php if($savedCondition == 'LIKE') echo 'SELECTED'; ?>><?= $LANG['LIKE'] ?></option>
+														<option value="LESS_THAN" <?php if($savedCondition == 'LESS_THAN') echo 'SELECTED'; ?>><?= $LANG['LESS_THAN'] ?></option>
+														<option value="GREATER_THAN" <?php if($savedCondition == 'GREATER_THAN') echo 'SELECTED'; ?>><?= $LANG['GREATER_THAN'] ?></option>
+														<option value="IS_NULL" <?php if($savedCondition == 'IS_NULL') echo 'SELECTED'; ?>><?= $LANG['IS_NULL'] ?></option>
+														<option value="NOT_NULL" <?php if($savedCondition == 'NOT_NULL') echo 'SELECTED'; ?>><?= $LANG['NOT_NULL'] ?></option>
 													</select>
-													<?php echo (isset($LANG['VALUE'])?$LANG['VALUE']:'Value'); ?>:
+													<?php echo (isset($LANG['VALUE']) ? $LANG['VALUE'] : 'Value'); ?>:
 													<input name="value<?php echo $x; ?>" type="text" value="<?php echo $savedValue; ?>" />
 												</div>
 												<?php
 											}
 											?>
-											<div style="margin:5px"><?php echo '* '.(isset($LANG['MULT_TERMS'])?$LANG['MULT_TERMS']:'Adding multiple terms separated by semi-colon will filter as an OR condition'); ?></div>
+											<div style="margin:5px"><?php echo '* '.(isset($LANG['MULT_TERMS']) ? $LANG['MULT_TERMS'] : 'Adding multiple terms separated by semi-colon will filter as an OR condition'); ?></div>
 										</fieldset>
 									</div>
 									<div>
-										<input name="importident" value="1" type="checkbox" <?php echo (isset($metaArr['ident'])?'checked':'disabled') ?> />
+										<input name="importident" value="1" type="checkbox" <?php echo (isset($metaArr['ident']) ? 'checked' : 'disabled') ?> />
 										<?php
-										echo (isset($LANG['IMPORT_ID'])?$LANG['IMPORT_ID']:'Import Identification History');
+										echo (isset($LANG['IMPORT_ID']) ? $LANG['IMPORT_ID'] : 'Import Identification History');
 										if(isset($metaArr['ident'])){
-											echo '(<a href="#" onclick="toggle(\'dwcaIdentDiv\');return false;">'.(isset($LANG['VIEW_DETS'])?$LANG['VIEW_DETS']:'view details').'</a>)';
+											echo '(<a href="#" onclick="toggle(\'dwcaIdentDiv\');return false;">' . htmlspecialchars((isset($LANG['VIEW_DETS']) ? $LANG['VIEW_DETS'] : 'view details'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>)';
 											?>
 											<div id="dwcaIdentDiv" style="display:none;margin:20px;">
 												<?php $duManager->echoFieldMapTable(true,'ident'); ?>
 												<div>
-													<?php echo '* '.(isset($LANG['UNVER'])?$LANG['UNVER']:'Unverified mappings are displayed in yellow'); ?>
+													<?php echo '* '.(isset($LANG['UNVER']) ? $LANG['UNVER'] : 'Unverified mappings are displayed in yellow'); ?>
 												</div>
 											</div>
 											<?php
 										}
 										else{
-											echo '('.(isset($LANG['NOT_IN_DWC'])?$LANG['NOT_IN_DWC']:'not present in DwC-Archive').')';
+											echo '('.(isset($LANG['NOT_IN_DWC']) ? $LANG['NOT_IN_DWC'] : 'not present in DwC-Archive').')';
 										}
 										?>
 
 									</div>
 									<div>
-										<input name="importimage" value="1" type="checkbox" <?php echo (isset($metaArr['image'])?'checked':'disabled') ?> />
-										<?php echo (isset($LANG['IMP_IMG'])?$LANG['IMP_IMG']:'Import Images'); ?>
+										<input name="importimage" value="1" type="checkbox" <?php echo (isset($metaArr['image']) ? 'checked' : 'disabled') ?> />
+										<?php echo (isset($LANG['IMP_IMG']) ? $LANG['IMP_IMG'] : 'Import Images'); ?>
 										<?php
 										if(isset($metaArr['image'])){
 											echo '(<a href="#" onclick="toggle(\'dwcaImgDiv\');return false;">view details</a>)';
@@ -404,20 +405,20 @@ include($SERVER_ROOT.'/includes/header.php');
 											<div id="dwcaImgDiv" style="display:none;margin:20px;">
 												<?php $duManager->echoFieldMapTable(true,'image'); ?>
 												<div>
-													<?php echo '* '.(isset($LANG['UNVER'])?$LANG['UNVER']:'Unverified mappings are displayed in yellow'); ?>
+													<?php echo '* '.(isset($LANG['UNVER']) ? $LANG['UNVER'] : 'Unverified mappings are displayed in yellow'); ?>
 												</div>
 											</div>
 											<?php
 										}
 										else{
-											echo '('.(isset($LANG['NOT_IN_DWC'])?$LANG['NOT_IN_DWC']:'not present in DwC-Archive').')';
+											echo '('.(isset($LANG['NOT_IN_DWC']) ? $LANG['NOT_IN_DWC'] : 'not present in DwC-Archive').')';
 										}
 										?>
 									</div>
 									<div style="margin:10px 0px;">
 										<?php
-										if($uspid) echo '<button type="submit" name="action" value="Reset Field Mapping">'.(isset($LANG['RESET_MAP'])?$LANG['RESET_MAP']:'Reset Field Mapping').'</button>';
-										echo '<button name="action" type="submit" value="saveMapping" onclick="return verifySaveMapping(this.form)" style="margin-left:5px">'.(isset($LANG['SAVE_MAP'])?$LANG['SAVE_MAP']:'Save Mapping').'</button> ';
+										if($uspid) echo '<button type="submit" name="action" value="Reset Field Mapping">'.(isset($LANG['RESET_MAP']) ? $LANG['RESET_MAP'] : 'Reset Field Mapping').'</button>';
+										echo '<button name="action" type="submit" value="saveMapping" onclick="return verifySaveMapping(this.form)" style="margin-left:5px">'.(isset($LANG['SAVE_MAP']) ? $LANG['SAVE_MAP'] : 'Save Mapping').'</button> ';
 										if(!$uspid){
 											echo '<span id="newProfileNameDiv" style="margin-left:15px;color:orange;display:none">';
 											echo $LANG['NEW_PROF_TITLE'].': <input type="text" name="profiletitle" style="width:300px" value="'.$duManager->getTitle().'-'.date('Y-m-d').'" />';
@@ -430,24 +431,24 @@ include($SERVER_ROOT.'/includes/header.php');
 										<?php
 										if($isLiveData){
 											if($duManager->getCollInfo('colltype') == 'General Observations'){
-												echo (isset($LANG['TARGET_USER'])?$LANG['TARGET_USER']:'Target User').': ';
+												echo (isset($LANG['TARGET_USER']) ? $LANG['TARGET_USER'] : 'Target User').': ';
 												echo '<select name="observeruid">';
-												echo '<option value="">'.(isset($LANG['SEL_TAR_USER'])?$LANG['SEL_TAR_USER']:'Select Target User').'</option>';
+												echo '<option value="">'.(isset($LANG['SEL_TAR_USER']) ? $LANG['SEL_TAR_USER'] : 'Select Target User').'</option>';
 												echo '<option value="">----------------------------</option>';
 												$obsUidArr = $duManager->getObserverUidArr();
 												foreach($obsUidArr as $uid => $userName){
-													echo '<option value="'.$uid.'" '.($uid==$observerUid?'selected':'').'>'.$userName.'</option>';
+													echo '<option value="'.$uid.'" '.($uid==$observerUid ? 'selected' : '').'>'.$userName.'</option>';
 												}
 												echo '</select>';
 											}
 											?>
 											<div>
 												<input name="matchcatnum" type="checkbox" value="1" checked />
-												<?php echo (isset($LANG['MATCH_CAT'])?$LANG['MATCH_CAT']:'Match on Catalog Number'); ?>
+												<?php echo (isset($LANG['MATCH_CAT']) ? $LANG['MATCH_CAT'] : 'Match on Catalog Number'); ?>
 											</div>
 											<div>
-												<input name="matchothercatnum" type="checkbox" value="1" <?php echo ($matchOtherCatNum?'checked':''); ?> />
-												<?php echo (isset($LANG['MATCH_O_CAT'])?$LANG['MATCH_O_CAT']:'Match on Other Catalog Numbers'); ?>
+												<input name="matchothercatnum" type="checkbox" value="1" <?php echo ($matchOtherCatNum ? 'checked' : ''); ?> />
+												<?php echo (isset($LANG['MATCH_O_CAT']) ? $LANG['MATCH_O_CAT'] : 'Match on Other Catalog Numbers'); ?>
 											</div>
 											<ul style="margin-top:2px">
 												<li><?php echo $recReplaceMsg; ?></li>
@@ -458,12 +459,12 @@ include($SERVER_ROOT.'/includes/header.php');
 										?>
 										<div style="margin:10px 0px;">
 											<input name="verifyimages" type="checkbox" value="1" />
-											<?php echo (isset($LANG['VER_LINKS'])?$LANG['VER_LINKS']:'Verify image links'); ?>
+											<?php echo (isset($LANG['VER_LINKS']) ? $LANG['VER_LINKS'] : 'Verify image links'); ?>
 										</div>
 										<div style="margin:10px 0px;">
-											<?php echo (isset($LANG['PROC_STATUS'])?$LANG['PROC_STATUS']:'Processing Status'); ?>:
+											<?php echo (isset($LANG['PROC_STATUS']) ? $LANG['PROC_STATUS'] : 'Processing Status'); ?>:
 											<select name="processingstatus">
-												<option value=""><?php echo (isset($LANG['NO_SETTING'])?$LANG['NO_SETTING']:'Leave as is / No Explicit Setting'); ?></option>
+												<option value=""><?php echo (isset($LANG['NO_SETTING']) ? $LANG['NO_SETTING'] : 'Leave as is / No Explicit Setting'); ?></option>
 												<option value="">--------------------------</option>
 												<?php
 												foreach($processingList as $ps){
@@ -474,7 +475,7 @@ include($SERVER_ROOT.'/includes/header.php');
 										</div>
 										<div style="margin:10px;">
 											<button type="submit" name="action" value="Start Upload" onclick="this.form.action = 'specuploadprocessor.php'">
-												<?php echo (isset($LANG['START_UPLOAD'])?$LANG['START_UPLOAD']:'Start Upload'); ?>
+												<?php echo (isset($LANG['START_UPLOAD']) ? $LANG['START_UPLOAD'] : 'Start Upload'); ?>
 											</button>
 											<input type="hidden" name="uspid" value="<?php echo $uspid;?>" />
 											<input type="hidden" name="collid" value="<?php echo $collid;?>" />
@@ -492,7 +493,7 @@ include($SERVER_ROOT.'/includes/header.php');
 			}
 			else{
 				if($duManager->getErrorStr()) echo '<div style="font-weight:bold;">'.$duManager->getErrorStr().'</div>';
-				else echo '<div style="font-weight:bold;">'.(isset($LANG['UNK_ERR'])?$LANG['UNK_ERR']:'Unknown error analyzing upload').'</div>';
+				else echo '<div style="font-weight:bold;">'.(isset($LANG['UNK_ERR']) ? $LANG['UNK_ERR'] : 'Unknown error analyzing upload').'</div>';
 			}
 		}
 		elseif($uploadType == $NFNUPLOAD && $ulPath){
@@ -500,14 +501,14 @@ include($SERVER_ROOT.'/includes/header.php');
 			?>
 			<form name="filemappingform" action="specuploadprocessor.php" method="post" onsubmit="return verifyMappingForm(this)">
 				<fieldset style="width:95%">
-					<legend><?php echo (isset($LANG['NFN_IMPORT'])?$LANG['NFN_IMPORT']:'Notes from Nature File Import'); ?></legend>
+					<legend><?php echo (isset($LANG['NFN_IMPORT']) ? $LANG['NFN_IMPORT'] : 'Notes from Nature File Import'); ?></legend>
 					<?php
 					if($duManager->echoFieldMapTable(true, 'spec')){
 						?>
 						<div style="margin:10px 0px;">
-							<?php echo (isset($LANG['PROC_STATUS'])?$LANG['PROC_STATUS']:'Processing Status'); ?>:
+							<?php echo (isset($LANG['PROC_STATUS']) ? $LANG['PROC_STATUS'] : 'Processing Status'); ?>:
 							<select name="processingstatus">
-								<option value=""><?php echo (isset($LANG['NO_SETTING'])?$LANG['NO_SETTING']:'Leave as is / No Explicit Setting'); ?></option>
+								<option value=""><?php echo (isset($LANG['NO_SETTING']) ? $LANG['NO_SETTING'] : 'Leave as is / No Explicit Setting'); ?></option>
 								<option value="">--------------------------</option>
 								<?php
 								foreach($processingList as $ps){
@@ -517,7 +518,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							</select>
 						</div>
 						<div style="margin:20px;">
-							<button type="submit" name="action" value="Start Upload"><?php echo (isset($LANG['START_UPLOAD'])?$LANG['START_UPLOAD']:'Start Upload'); ?></button>
+							<button type="submit" name="action" value="Start Upload"><?php echo (isset($LANG['START_UPLOAD']) ? $LANG['START_UPLOAD'] : 'Start Upload'); ?></button>
 						</div>
 						<?php
 					}
@@ -543,17 +544,17 @@ include($SERVER_ROOT.'/includes/header.php');
 						//Primary key field is required and must be mapped
 						?>
 						<div style="margin:20px;">
-							<b><?php echo (isset($LANG['SOURCE_ID'])?$LANG['SOURCE_ID']:'Source Unique Identifier / Primary Key'); ?> (<span style="color:red"><?php echo (isset($LANG['REQ'])?$LANG['REQ']:'required'); ?></span>): </b>
+							<b><?php echo (isset($LANG['SOURCE_ID']) ? $LANG['SOURCE_ID'] : 'Source Unique Identifier / Primary Key'); ?> (<span style="color:red"><?php echo (isset($LANG['REQ']) ? $LANG['REQ'] : 'required'); ?></span>): </b>
 							<?php
 							$dbpk = $duManager->getDbpk();
 							$dbpkOptions = $duManager->getDbpkOptions();
 							?>
 							<select name="dbpk" onchange="pkChanged(this);">
-								<option value=""><?php echo (isset($LANG['SEL_KEY'])?$LANG['SEL_KEY']:'Select Source Primary Key'); ?></option>
+								<option value=""><?php echo (isset($LANG['SEL_KEY']) ? $LANG['SEL_KEY'] : 'Select Source Primary Key'); ?></option>
 								<option value="">----------------------------------</option>
 								<?php
 								foreach($dbpkOptions as $f){
-									echo '<option value="'.strtolower($f).'" '.($dbpk==strtolower($f)?'SELECTED':'').'>'.$f.'</option>';
+									echo '<option value="'.strtolower($f).'" '.($dbpk==strtolower($f) ? 'SELECTED' : '').'>'.$f.'</option>';
 								}
 								?>
 							</select>
@@ -575,22 +576,22 @@ include($SERVER_ROOT.'/includes/header.php');
 							?>
 							<div style="margin-left:15px;">
 								<a href="https://symbiota.org/wp-content/uploads/SymbiotaOccurrenceFields.pdf" target="_blank">SymbiotaOccurrenceFields.pdf</a><br/>
-								<a href="https://symbiota.org/symbiota-introduction/loading-specimen-data/" target="_blank"><?php echo (isset($LANG['LOADING_DATA'])?$LANG['LOADING_DATA']:'Loading Data into Symbiota'); ?></a>
+								<a href="https://symbiota.org/symbiota-introduction/loading-specimen-data/" target="_blank"><?php echo htmlspecialchars((isset($LANG['LOADING_DATA']) ? $LANG['LOADING_DATA'] : 'Loading Data into Symbiota'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 							</div>
 						</div>
 						<div style="margin:10px;">
 							<?php
 							if($uspid){
 								?>
-								<button type="submit" name="action" value="Reset Field Mapping" ><?php echo (isset($LANG['RESET_MAP'])?$LANG['RESET_MAP']:'Reset Field Mapping'); ?></button>
+								<button type="submit" name="action" value="Reset Field Mapping" ><?php echo (isset($LANG['RESET_MAP']) ? $LANG['RESET_MAP'] : 'Reset Field Mapping'); ?></button>
 								<?php
 							}
 							?>
-							<button type="submit" name="action" value="Automap Fields" ><?php echo (isset($LANG['AUTOMAP'])?$LANG['AUTOMAP']:'Automap Fields'); ?></button>
-							<button type="submit" name="action" value="Verify Mapping" ><?php echo (isset($LANG['VER_MAPPING'])?$LANG['VER_MAPPING']:'Verify Mapping'); ?></button>
-							<button type="submit" name="action" value="saveMapping" onclick="return verifySaveMapping(this.form)" ><?php echo (isset($LANG['SAVE_MAP'])?$LANG['SAVE_MAP']:'Save Mapping'); ?></button>
+							<button type="submit" name="action" value="Automap Fields" ><?php echo (isset($LANG['AUTOMAP']) ? $LANG['AUTOMAP'] : 'Automap Fields'); ?></button>
+							<button type="submit" name="action" value="Verify Mapping" ><?php echo (isset($LANG['VER_MAPPING']) ? $LANG['VER_MAPPING'] : 'Verify Mapping'); ?></button>
+							<button type="submit" name="action" value="saveMapping" onclick="return verifySaveMapping(this.form)" ><?php echo (isset($LANG['SAVE_MAP']) ? $LANG['SAVE_MAP'] : 'Save Mapping'); ?></button>
 							<span id="newProfileNameDiv" style="margin-left:15px;color:red;display:none">
-								<?php echo (isset($LANG['NEW_PROF_TITLE'])?$LANG['NEW_PROF_TITLE']:'New profile title'); ?>:
+								<?php echo (isset($LANG['NEW_PROF_TITLE']) ? $LANG['NEW_PROF_TITLE'] : 'New profile title'); ?>:
 								<input type="text" name="profiletitle" style="width:300px" value="<?php echo $duManager->getTitle().'-'.date('Y-m-d'); ?>" />
 							</span>
 						</div>
@@ -599,9 +600,9 @@ include($SERVER_ROOT.'/includes/header.php');
 							<?php
 							if($isLiveData || $uploadType == $SKELETAL){
 								if($duManager->getCollInfo('colltype') == 'General Observations'){
-									echo (isset($LANG['TARGET_USER'])?$LANG['TARGET_USER']:'Target User').': ';
+									echo (isset($LANG['TARGET_USER']) ? $LANG['TARGET_USER'] : 'Target User').': ';
 									echo '<select name="observeruid">';
-									echo '<option value="">'.(isset($LANG['SEL_TAR_USER'])?$LANG['SEL_TAR_USER']:'Select Target User').'</option>';
+									echo '<option value="">'.(isset($LANG['SEL_TAR_USER']) ? $LANG['SEL_TAR_USER'] : 'Select Target User').'</option>';
 									echo '<option value="">----------------------------</option>';
 									$obsUidArr = $duManager->getObserverUidArr();
 									foreach($obsUidArr as $uid => $userName){
@@ -612,11 +613,11 @@ include($SERVER_ROOT.'/includes/header.php');
 								?>
 								<div>
 									<input name="matchcatnum" type="checkbox" value="1" checked />
-									<?php echo (isset($LANG['MATCH_CAT'])?$LANG['MATCH_CAT']:'Match on Catalog Number'); ?>
+									<?php echo (isset($LANG['MATCH_CAT']) ? $LANG['MATCH_CAT'] : 'Match on Catalog Number'); ?>
 								</div>
 								<div>
-									<input name="matchothercatnum" type="checkbox" value="1" <?php echo ($matchOtherCatNum?'checked':''); ?> />
-									<?php echo (isset($LANG['MATCH_ON_CAT'])?$LANG['MATCH_ON_CAT']:'Match on Other Catalog Numbers'); ?>
+									<input name="matchothercatnum" type="checkbox" value="1" <?php echo ($matchOtherCatNum ? 'checked' : ''); ?> />
+									<?php echo (isset($LANG['MATCH_ON_CAT']) ? $LANG['MATCH_ON_CAT'] : 'Match on Other Catalog Numbers'); ?>
 								</div>
 								<ul style="margin-top:2px">
 									<?php
@@ -627,19 +628,21 @@ include($SERVER_ROOT.'/includes/header.php');
 								</ul>
 								<?php
 							}
+							$versionCheckedStr = '';
+							if($isLiveData) $versionCheckedStr = 'checked';
 							?>
 							<div style="margin:10px 0px;">
-								<input name="versiondata" type="checkbox" value="1" checked />
-								<?php echo (isset($LANG['VERSION_DATA_CHANGES'])?$LANG['VERSION_DATA_CHANGES']:'Version data changes'); ?>
+								<input name="versiondata" type="checkbox" value="1" <?php echo $versionCheckedStr; ?> />
+								<?php echo (isset($LANG['VERSION_DATA_CHANGES']) ? $LANG['VERSION_DATA_CHANGES'] : 'Version data changes'); ?>
 							</div>
 							<div style="margin:10px 0px;">
 								<input name="verifyimages" type="checkbox" value="1" />
-								<?php echo (isset($LANG['VER_LINKS_MEDIA'])?$LANG['VER_LINKS_MEDIA']:'Verify image links from associatedMedia field'); ?>
+								<?php echo (isset($LANG['VER_LINKS_MEDIA']) ? $LANG['VER_LINKS_MEDIA'] : 'Verify image links from associatedMedia field'); ?>
 							</div>
 							<div style="margin:10px 0px;">
-								<?php echo (isset($LANG['PROC_STATUS'])?$LANG['PROC_STATUS']:'Processing Status'); ?>:
+								<?php echo (isset($LANG['PROC_STATUS']) ? $LANG['PROC_STATUS'] : 'Processing Status'); ?>:
 								<select name="processingstatus">
-									<option value=""><?php echo (isset($LANG['NO_SETTING'])?$LANG['NO_SETTING']:'Leave as is / No Explicit Setting'); ?></option>
+									<option value=""><?php echo (isset($LANG['NO_SETTING']) ? $LANG['NO_SETTING'] : 'Leave as is / No Explicit Setting'); ?></option>
 									<option value="">--------------------------</option>
 									<?php
 									foreach($processingList as $ps){
@@ -650,19 +653,19 @@ include($SERVER_ROOT.'/includes/header.php');
 							</div>
 							<div style="margin:20px;">
 								<button type="submit" name="action" value="Start Upload" onclick="this.form.action = 'specuploadprocessor.php'">
-									<?php echo (isset($LANG['START_UPLOAD'])?$LANG['START_UPLOAD']:'Start Upload'); ?>
+									<?php echo (isset($LANG['START_UPLOAD']) ? $LANG['START_UPLOAD'] : 'Start Upload'); ?>
 								</button>
 							</div>
 						</div>
 						<?php
 						if($uploadType == $SKELETAL){
 							echo '<div style="margin-top:15px;">';
-							echo (isset($LANG['SKEL_EXPLAIN'])?$LANG['SKEL_EXPLAIN']:'');
+							echo (isset($LANG['SKEL_EXPLAIN']) ? $LANG['SKEL_EXPLAIN'] : '');
 							echo '<ul>';
-							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P1'])?$LANG['SKEL_EXPLAIN_P1']:'').'</li>';
-							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P2'])?$LANG['SKEL_EXPLAIN_P2']:'').'</li>';
-							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P3'])?$LANG['SKEL_EXPLAIN_P3']:'').'</li>';
-							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P4'])?$LANG['SKEL_EXPLAIN_P4']:'').'</li>';
+							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P1']) ? $LANG['SKEL_EXPLAIN_P1'] : '').'</li>';
+							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P2']) ? $LANG['SKEL_EXPLAIN_P2'] : '').'</li>';
+							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P3']) ? $LANG['SKEL_EXPLAIN_P3'] : '').'</li>';
+							echo '<li>'.(isset($LANG['SKEL_EXPLAIN_P4']) ? $LANG['SKEL_EXPLAIN_P4'] : '').'</li>';
 							echo '</ul>';
 							echo '</div>';
 						}
@@ -678,12 +681,12 @@ include($SERVER_ROOT.'/includes/header.php');
 		}
 	}
 	else{
-		if(!$isEditor || !$collid) echo '<div style="font-weight:bold;font-size:120%;">'.(isset($LANG['NOT_AUTH'])?$LANG['NOT_AUTH']:'ERROR: you are not authorized to upload to this collection').'</div>';
+		if(!$isEditor || !$collid) echo '<div style="font-weight:bold;font-size:120%;">'.(isset($LANG['NOT_AUTH']) ? $LANG['NOT_AUTH'] : 'ERROR: you are not authorized to upload to this collection').'</div>';
 		else{
 			echo '<div style="font-weight:bold;font-size:120%;">';
-			echo (isset($LANG['PAGE_ERROR'])?$LANG['PAGE_ERROR']:'').' = ';
+			echo (isset($LANG['PAGE_ERROR']) ? $LANG['PAGE_ERROR'] : '').' = ';
 			echo ini_get("upload_max_filesize").'; post_max_size = '.ini_get('post_max_size');
-			echo (isset($LANG['USE_BACK'])?$LANG['USE_BACK']:'Use the back arrows to get back to the file upload page.');
+			echo (isset($LANG['USE_BACK']) ? $LANG['USE_BACK'] : 'Use the back arrows to get back to the file upload page.');
 			echo '</div>';
 		}
 	}

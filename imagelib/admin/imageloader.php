@@ -3,10 +3,11 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImageImport.php');
 include_once($SERVER_ROOT.'/content/lang/imagelib/admin/imageloader.en.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/admin/imageloader.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/imagelib/admin/imageloader.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT . '/content/lang/imagelib/admin/imageloader.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $action = array_key_exists('action', $_POST) ? $_POST['action'] : '';
-$ulFileName = array_key_exists('ulfilename', $_POST) ? filter_var($_POST['ulfilename'], FILTER_SANITIZE_STRING) : '';
+$ulFileName = array_key_exists('ulfilename', $_POST) ? $_POST['ulfilename'] : '';
 
 $isEditor = false;
 if($IS_ADMIN) $isEditor = true;
@@ -24,15 +25,16 @@ if($isEditor){
 		$targetFields = $_POST['tf'];
 		for($x = 0; $x < count($targetFields); $x++){
 			if($sourceFields[$x] && $targetFields[$x] !== ''){
-				$sourceField = filter_var($sourceFields[$x], FILTER_SANITIZE_STRING);
-				$targetField = filter_var($targetFields[$x], FILTER_SANITIZE_STRING);
+				$sourceField = htmlspecialchars($sourceFields[$x], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+				$targetField = htmlspecialchars($targetFields[$x], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 				$fieldMap[$sourceField] = $targetField;
 			}
 		}
 	}
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE.' '.$LANG['IMG_LOADER']; ?></title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>" />
@@ -52,12 +54,12 @@ include($SERVER_ROOT.'/includes/header.php');
 
 ?>
 <div class="navpath">
-	<b><a href="../../index.php"><?php echo $LANG['HOME']; ?></a></b> &gt;&gt;
+	<b><a href="../../index.php"><?php echo htmlspecialchars($LANG['HOME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></b> &gt;&gt;
 	<b><?php echo $LANG['IMG_IMPORTER']; ?></b>
 </div>
 
-<h1><?php echo $LANG['IMG_IMPORTER']; ?></h1>
 <div  id="innertext">
+	<h1 class="page-heading"><?php echo $LANG['IMG_IMPORTER']; ?></h1>
 	<div style="margin-bottom:30px;">
 
 	</div>
@@ -150,7 +152,7 @@ include($SERVER_ROOT.'/includes/header.php');
 							* <?php echo $LANG['FIELDS_YELLOW']; ?>
 						</div>
 						<div style="margin:10px;">
-							<input type="submit" name="action" value="Verify Mapping" /><br/>
+							<button type="submit" name="action" value="Verify Mapping" ><?php echo $LANG['VERIFY_MAPPING']; ?></button><<br/>
 							<fieldset>
 								<legend><?php echo $LANG['LRG_IMG']; ?></legend>
 								<input name="lgimg" type="radio" value="0" checked /> <?php echo $LANG['LEAVE_BLANK']; ?><br/>

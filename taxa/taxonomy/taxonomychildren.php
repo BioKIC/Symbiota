@@ -26,9 +26,9 @@ $childrenArr = $taxonEditorObj->getChildren();
 			if($childrenArr){
 				foreach($childrenArr as $childTid => $childArr){
 					echo '<div style="margin:3px 10px;">';
-					echo '<a href="taxoneditor.php?tid='.$childTid.'"><i>'.$childArr['sciname'].'</i> '.$childArr['author'].'</a>';
+					echo '<a href="taxoneditor.php?tid=' . htmlspecialchars($childTid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><i>' . htmlspecialchars($childArr['sciname'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</i> ' . htmlspecialchars($childArr['author'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
 					if($childArr['accTid'] && $childArr['accTid'] != $childTid){
-						echo '<span style="margin-left:10px">&#10140; <a href="taxoneditor.php?tid='.$childArr['accTid'].'"><i>'.$childArr['accSciname'].'</i> '.$childArr['accAuthor'].'</a></span>';
+						echo '<span style="margin-left:10px">&#10140; <a href="taxoneditor.php?tid=' . htmlspecialchars($childArr['accTid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><i>' . htmlspecialchars($childArr['accSciname'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</i> ' . htmlspecialchars($childArr['accAuthor'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></span>';
 					}
 					echo '</div>';
 				}

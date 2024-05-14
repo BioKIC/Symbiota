@@ -1,155 +1,153 @@
-.title1-div{ 
-	padding: 25px;
-	font-size: 18px;
-	font-weight: bold;
+.title1-div {
+  padding: 25px;
+  font-size: 18px;
+  font-weight: bold;
 }
 
-.title2-div{ 
-	font-weight: bold; 
-	font-size: 120%; 
+.title2-div {
+  font-weight: bold;
+  font-size: 120%;
 }
 
-#tabs-div{
-	min-height: 400px;
-	overflow: auto;
-	margin: 10px;
-	clear: both;
+#tabs-div {
+  min-height: 400px;
+  overflow: auto;
+  margin: 10px;
+  clear: both;
 }
 
-#media-div{
-	float: right;
+#media-div {
+  float: right;
 }
 
-#media-div div{
-	float: right;
-	margin-right: 10px;	
+#media-div div {
+  float: right;
+  margin-right: 10px;
 }
 
-#collicon-div{
-	float: left;
-	margin: 15px 0px;
-	text-align: center;
-	font-weight: bold;
-	width: 120px;
+#collicon-div {
+  float: left;
+  margin: 15px 0px;
+  text-align: center;
+  font-weight: bold;
+  width: 120px;
 }
 
-#collicon-div img{
-	height: 50px;
-	width: 50ps;
+#collicon-div img {
+  height: 50px;
+  width: 50ps;
 }
 
-#occur-div{
-	clear: both;
-	margin-left: 60px;
+#occur-div {
+  clear: both;
+  margin-left: 60px;
 }
 
-#loan-div{
-	float: right;
-	color: red;
-	font-weight: bold;
+#loan-div {
+  float: right;
+  color: red;
+  font-weight: bold;
 }
 
-#association-div{
-	float: right; 
-	width: 45%;
+#association-div {
+  float: right;
+  width: 45%;
 }
 
-#determination-div{
-	margin-left: 10px;
+#determination-div {
+  margin-left: 10px;
 }
 
-.idqualifier-div{
-	margin-left: 10px;
+.idqualifier-div {
+  margin-left: 10px;
 }
 
-.taxonremarks-div{
-	margin-left: 10px;
+.taxonremarks-div {
+  margin-left: 10px;
 }
 
-.identremarks-div{
-	margin-left: 10px;
+.identremarks-div {
+  margin-left: 10px;
 }
 
-.identref-div{
-	margin-left: 10px;
+.identref-div {
+  margin-left: 10px;
 }
 
-#recordnumber-div{
-	margin-left: 10px;
+#recordnumber-div {
+  margin-left: 10px;
 }
-#locremarks-div{
-	margin-left: 10px;
-}
-
-#georefremarks-div{
-	margin-left: 10px;
-	clear: both;
+#locremarks-div {
+  margin-left: 10px;
 }
 
-#elev-div{
-	margin-left: 10px;
+#georefremarks-div {
+  margin-left: 10px;
+  clear: both;
 }
 
-#depth-div{
-	margin-left: 10px;
+#elev-div {
+  margin-left: 10px;
 }
 
-.paleofield-div{
-	float: left;
-	margin-right: 25px
+#depth-div {
+  margin-left: 10px;
 }
 
-#rights-div{
-	margin: 5px 0px 5px 0px;
+.paleofield-div {
+  float: left;
+  margin-right: 25px;
 }
 
-.thumbnail-div{ 
-	max-width:200; 
-	float:left; 
-	text-align:center; 
-	padding:5px 
+#rights-div {
+  margin: 5px 0px 5px 0px;
 }
 
-#contact-div{
-	margin-top: 10px;
-	clear: both;
+.thumbnail-div {
+  max-width: 200;
+  float: left;
+  text-align: center;
+  padding: 5px;
 }
 
-#openeditor-div{
-	margin-bottom: 10px;
+#contact-div {
+  clear: both;
 }
 
-.occur-ref{ 
-	margin: 10px 0px;
+#openeditor-div {
+  margin-bottom: 10px;
 }
 
-#dupestab-div{
-	padding: 15px;
+.occur-ref {
+  margin: 10px 0px;
 }
 
-.trait-div{ 
-	margin:20px; 
+#dupestab-div {
+  padding: 15px;
 }
 
-.trait-name{ 
-	font-weight:bold; 
+.trait-div {
+  margin: 20px;
 }
 
-.notice-span{
-	color: orange;
+.trait-name {
+  font-weight: bold;
 }
 
-fieldset{ 
-	margin: 10px; 
-	padding: 15px; 
-	width: 90% 
+.notice-span {
+  color: orange;
 }
 
-legend{ 
-	font-weight: bold; 
+fieldset {
+  margin: 10px;
+  padding: 15px;
+  width: 90%;
 }
 
-label{ 
-	font-weight: bold; 
+legend {
+  font-weight: bold;
 }
 
+label {
+  font-weight: bold;
+}

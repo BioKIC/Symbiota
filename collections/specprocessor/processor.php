@@ -35,7 +35,8 @@ if(in_array($action, array('dlnoimg','unprocnoimg','noskel','unprocwithdata'))){
 
 $statusStr = "";
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>Specimen Processor Control Panel</title>
 		<?php
@@ -48,13 +49,14 @@ $statusStr = "";
 		include($SERVER_ROOT.'/includes/header.php');
 		echo '<div class="navpath">';
 		echo '<a href="../../index.php">Home</a> &gt;&gt; ';
-		echo '<a href="../misc/collprofiles.php?collid='.$collid.'&emode=1">Collection Control Panel</a> &gt;&gt; ';
-		echo '<a href="index.php?collid='.$collid.'&tabindex='.$tabIndex.'"><b>Specimen Processor</b></a> &gt;&gt; ';
+		echo '<a href="../misc/collprofiles.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&emode=1">Collection Control Panel</a> &gt;&gt; ';
+		echo '<a href="index.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) .'&tabindex=' . htmlspecialchars($tabIndex, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><b>Specimen Processor</b></a> &gt;&gt ; ';
 		echo '<b>Processing Handler</b>';
 		echo '</div>';
 		?>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Specimen Processor Control Panel</h1>
 			<h2><?php echo $specManager->getCollectionName(); ?></h2>
 			<?php
 			if($isEditor){
@@ -149,7 +151,7 @@ $statusStr = "";
 				}
 			}
 			?>
-			<div style="font-weight:bold;font-size:120%;"><a href="index.php?collid=<?php echo $collid.'&tabindex='.$tabIndex; ?>"><b>Return to Specimen Processor</b></a></div>
+			<div style="font-weight:bold;font-size:120%;"><a href="index.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&tabindex=' . htmlspecialchars($tabIndex, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><b>Return to Specimen Processor</b></a></div>
 		</div>
 		<?php
 		include($SERVER_ROOT.'/includes/footer.php');

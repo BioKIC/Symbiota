@@ -64,7 +64,10 @@ class TaxonSearchSupport{
 				$sql = 'SELECT tid, sciname FROM taxa WHERE rankid > 20 AND rankid < 180 AND sciname LIKE "'.$this->queryString.'%" LIMIT 30';
 			}
 			elseif($this->taxonType == TaxaSearchType::COMMON_NAME){
-				$sql = 'SELECT DISTINCT tid, vernacularname AS sciname FROM taxavernaculars WHERE vernacularname LIKE "%'.$this->queryString.'%" LIMIT 50 ';
+				$sql = 'SELECT DISTINCT v.tid, CONCAT(v.vernacularname, " (", t.sciname, ")") AS sciname
+					FROM taxavernaculars v INNER JOIN taxa t ON v.tid = t.tid
+					WHERE v.vernacularname LIKE "%'.$this->queryString.'%" LIMIT 50';
+				//$sql = 'SELECT DISTINCT tid, vernacularname AS sciname FROM taxavernaculars WHERE vernacularname LIKE "%'.$this->queryString.'%" LIMIT 50 ';
 			}
 			else{
 				$sql = 'SELECT tid, sciname FROM taxa WHERE sciname LIKE "'.$this->queryString.'%" LIMIT 20';
@@ -99,12 +102,13 @@ class TaxonSearchSupport{
 	//Setters and getters
 	public function setQueryString($queryString){
 		//$queryString = $this->cleanInStr($queryString);
-		$queryString = preg_replace('/[\'"+\-=@$%]+/i', '', $queryString);
+		$queryString = preg_replace('/[\+\=@$%]+/i', '', $queryString);
 		if(strpos($queryString, ' ')){
+			$queryString = str_ireplace(array('"', "'"), '_', $queryString);
 			$queryString = preg_replace('/\s{1}x{1}$/i', ' _', $queryString);
 			$queryString = preg_replace('/\s{1}x{1}\s{1}/i', ' _ ', $queryString);
-			$queryString = str_ireplace(' x', ' _', $queryString);
 			$queryString = str_ireplace(' x ', ' _ ', $queryString);
+			$queryString = str_ireplace(' x', ' _', $queryString);
 		}
 		$this->queryString = $queryString;
 	}

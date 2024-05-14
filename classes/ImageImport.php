@@ -17,7 +17,6 @@ class ImageImport{
 
 	function __construct() {
 		set_time_limit(2000);
-		ini_set('auto_detect_line_endings', true);
 		$this->conn = MySQLiConnectionFactory::getCon("write");
 
 		$this->setUploadTargetPath();

@@ -3,9 +3,9 @@ include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLoans.php');
 require_once $SERVER_ROOT.'/vendor/phpoffice/phpword/bootstrap.php';
 
-$collId = $_REQUEST['collid'];
-$identifier = array_key_exists('identifier',$_REQUEST)?$_REQUEST['identifier']:0;
-$loanType = array_key_exists('loantype',$_REQUEST)?$_REQUEST['loantype']:0;
+$collId = array_key_exists('collid', $_REQUEST) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$identifier = array_key_exists('identifier',$_REQUEST) ? filter_var($_REQUEST['identifier'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$loanType = array_key_exists('loantype',$_REQUEST) ? filter_var($_REQUEST['loantype'], FILTER_SANITIZE_NUMBER_INT) : 0;
 $outputMode = $_POST['outputmode'];
 $languageDef = $_POST['languagedef'];
 
@@ -354,6 +354,9 @@ if($outputMode == 'doc'){
 	$targetFile = $SERVER_ROOT.'/temp/report/'.$identifier.'_invoice.docx';
 	$phpWord->save($targetFile, 'Word2007');
 
+	ob_start();
+	ob_clean();
+	ob_end_flush();
 	header('Content-Description: File Transfer');
 	header('Content-type: application/force-download');
 	header('Content-Disposition: attachment; filename='.basename($targetFile));
@@ -364,11 +367,12 @@ if($outputMode == 'doc'){
 }
 else{
 	?>
-	<html>
+	<!DOCTYPE html>
+	<html lang="<?php echo $LANG_TAG ?>">
 		<head>
 			<title><?php echo $identifier; ?> Invoice</title>
 			<?php
-	
+
 			include_once($SERVER_ROOT.'/includes/head.php');
 			?>
 			<style type="text/css">
@@ -408,9 +412,10 @@ else{
 						invoice.style.border = '2px solid #03fc88';
 					}
 				}
-			</script>			
+			</script>
 		</head>
 		<body style="background-color:#ffffff;">
+			<h1 class="page-heading screen-reader-only">Invoice</h1>
 			<div class="controls">
 				<button id="edit" style="font-weight: bold;" onclick="toggleEdits();">Edit Invoice</button>
 			</div>

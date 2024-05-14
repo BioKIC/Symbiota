@@ -159,7 +159,7 @@ class TaxonProfile extends Manager {
 			}
 			if($imgObj['occid']) $imgAnchor = '../collections/individual/index.php?occid='.$imgObj['occid'];
 			if($useThumbnail) if($imgObj['thumbnailurl']) $imgUrl = $imgThumbnail;
-			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\''.$imgAnchor.'\');return false;">';
+			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\'' . htmlspecialchars($imgAnchor, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '\');return false;">';
 			$titleStr = $imgObj['caption'];
 			if($imgObj['sciname'] != $this->taxonName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
 			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
@@ -244,7 +244,7 @@ class TaxonProfile extends Manager {
 		if($tidStr){
 			$sql = 'SELECT tm.url, t.sciname '.
 					'FROM taxamaps tm INNER JOIN taxa t ON tm.tid = t.tid '.
-					'WHERE (t.tid IN('.$tidStr.'))';
+					'WHERE (t.tid IN('.$tidStr.')) ORDER BY tm.initialtimestamp DESC';
 			//echo $sql;
 			$result = $this->conn->query($sql);
 			if($row = $result->fetch_object()){
@@ -419,9 +419,9 @@ class TaxonProfile extends Manager {
 			}
 		}
 		if((isset($CALENDAR_TRAIT_PLOTS) && $CALENDAR_TRAIT_PLOTS > 0) && $this->rankId > 180) {
-			$retStr .= '<li><a href="plottab.php?tid='.$this->tid.'">'.($LANG['CALENDAR_TRAIT_PLOT']?$LANG['CALENDAR_TRAIT_PLOT']:'Traits Plots').'</a></li>';
+			$retStr .= '<li><a href="plottab.php?tid=' . htmlspecialchars($this->tid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars(($LANG['CALENDAR_TRAIT_PLOT']?$LANG['CALENDAR_TRAIT_PLOT']:'Traits Plots'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';
 		}
-		$retStr .= '<li><a href="resourcetab.php?tid='.$this->tid.'">'.($LANG['RESOURCES']?$LANG['RESOURCES']:'Resources').'</a></li>';
+		$retStr .= '<li><a href="resourcetab.php?tid=' . htmlspecialchars($this->tid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars(($LANG['RESOURCES']?$LANG['RESOURCES']:'Resources'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';
 		$retStr .= '</ul>';
 		foreach($descArr as $dArr){
 			foreach($dArr as $id => $vArr){
@@ -453,11 +453,13 @@ class TaxonProfile extends Manager {
 	//Taxon Link functions
 	private function setLinkArr(){
 		if($this->linkArr === false && $this->tid){
+			$this->linkArr = array();
 			$sql = 'SELECT DISTINCT l.tlid, l.url, l.icon, l.title, l.notes
 				FROM taxalinks l LEFT JOIN taxaenumtree e ON l.tid = e.parenttid
 				WHERE (e.tid IN('.$this->tid.') OR l.tid IN('.$this->tid.')) ORDER BY l.sortsequence, l.title';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
+				$this->linkArr = array();
 				$this->linkArr[$r->tlid]['title'] = $r->title;
 				$this->linkArr[$r->tlid]['url'] = str_replace('--SCINAME--',rawurlencode($this->taxonName),$r->url);
 				$this->linkArr[$r->tlid]['icon'] = $r->icon;
@@ -607,7 +609,7 @@ class TaxonProfile extends Manager {
 	//Misc functions
 	private function getChildrenClid($clid){
 		$clidArr = array($clid);
-		$sqlBase = 'SELECT clidchild FROM fmchklstchildren WHERE clid IN(';
+		$sqlBase = 'SELECT clidchild FROM fmchklstchildren WHERE clid != clidchild AND clid IN(';
 		$sql = $sqlBase.$clid.')';
 		do{
 			$childStr = '';
@@ -728,7 +730,7 @@ class TaxonProfile extends Manager {
 		if ((1 <= $numOccs) && ($numOccs <= $limitOccs)) {
 			$occSrcUrl = '../collections/list.php?usethes=1&taxa='.$this->tid;
 			if($collidStr != 'all') $occSrcUrl .= '&db='.$collidStr;
-			$occMsg = '<a class="btn" href="'.$occSrcUrl.'" target="_blank">Explore '.number_format($numOccs).' occurrences</a>';
+			$occMsg = '<a class="btn" href="' . htmlspecialchars($occSrcUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">Explore ' . htmlspecialchars(number_format($numOccs), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ' occurrences</a>';
 		} elseif ($numOccs > $limitOccs) {
 			$occMsg = number_format($numOccs).' occurrences';
 		} elseif ($numOccs == 0) {
@@ -824,7 +826,7 @@ class TaxonProfile extends Manager {
 			//Direct parent checklist
 			$sql = 'SELECT c.clid, c.name '.
 				'FROM fmchecklists c INNER JOIN fmchklstchildren cp ON c.clid = cp.clid '.
-				'WHERE (cp.clidchild = '.$clid.')';
+				'WHERE cp.clid != cp.clidchild AND (cp.clidchild = '.$clid.')';
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
 				$retArr[$r->clid] = $r->name;

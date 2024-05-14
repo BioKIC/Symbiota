@@ -25,7 +25,7 @@ class OccurrenceAccessStats extends Manager{
 
 	public function recordAccessEventByArr($occidArr, $accessType){
 		$status = true;
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+		if(!empty($GLOBALS['STORE_STATISTICS'])){
 			if($occurAccessID = $this->insertAccessEvent($accessType)){
 				foreach($occidArr as $occid){
 					if(is_numeric($occid)){
@@ -41,7 +41,7 @@ class OccurrenceAccessStats extends Manager{
 
 	public function recordAccessEvent($occid, $accessType){
 		$status = false;
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+		if(!empty($GLOBALS['STORE_STATISTICS'])){
 			if(is_numeric($occid)){
 				$this->verboseMode = 1;
 				$this->setLogFH($this->logPath);
@@ -55,7 +55,7 @@ class OccurrenceAccessStats extends Manager{
 
 	public function batchRecordEventsBySql($sqlFrag, $accessType){
 		$status = true;
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+		if(!empty($GLOBALS['STORE_STATISTICS'])){
 			$this->verboseMode = 1;
 			$this->setLogFH($this->logPath);
 			if($occurAccessID = $this->insertAccessEvent($accessType, $sqlFrag)){
@@ -67,7 +67,7 @@ class OccurrenceAccessStats extends Manager{
 
 	public function insertAccessEvent($accessType, $queryStr = null){
 		$occurAccessID = false;
-		if(isset($GLOBALS['STORE_STATISTICS'])){
+		if(!empty($GLOBALS['STORE_STATISTICS'])){
 			$remoteAddr = $_SERVER['REMOTE_ADDR'];
 			$userData = @get_browser();
 			if($userData) $userData = json_encode($userData);
@@ -91,16 +91,18 @@ class OccurrenceAccessStats extends Manager{
 
 	public function insertAccessOccurrence($occurAccessID, $occid){
 		$status = false;
-		$sql = 'INSERT INTO omoccuraccesslink(occurAccessID, occid) VALUES(?, ?)';
-		$stmt = $this->conn->stmt_init();
-		$stmt->prepare($sql);
-		$stmt->bind_param('ii', $occurAccessID, $occid);
-		if($stmt->execute()) $status = true;
-		else{
-			$this->errorMessage = date('Y-m-d H:i:s').' - ERROR creating access occurrence instance: '.$this->conn->error;
-			$this->logOrEcho($this->errorMessage);
+		if(!empty($GLOBALS['STORE_STATISTICS'])){
+			$sql = 'INSERT INTO omoccuraccesslink(occurAccessID, occid) VALUES(?, ?)';
+			$stmt = $this->conn->stmt_init();
+			$stmt->prepare($sql);
+			$stmt->bind_param('ii', $occurAccessID, $occid);
+			if($stmt->execute()) $status = true;
+			else{
+				$this->errorMessage = date('Y-m-d H:i:s').' - ERROR creating access occurrence instance: '.$this->conn->error;
+				$this->logOrEcho($this->errorMessage);
+			}
+			$stmt->close();
 		}
-		$stmt->close();
 		return $status;
 	}
 

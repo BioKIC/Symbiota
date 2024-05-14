@@ -4,6 +4,12 @@
  Language: Français (French)
  ------------------
  */
+
+
+$LANG['FLAGGED_COMMENT'] = "Commentaire signalé comme inapproprié. Le commentaire ne sera pas accessible au public jusqu'à ce qu'il soit examiné par un administrateur";
+$LANG['OCCURRENCE_PROFILE'] = "Profil d'occurrence";
+$LANG['SKIP_NAV'] = 'Sauter la Navigation';
+$LANG['FULL_RECORD_DETAILS'] = 'Détails Complets du Dossier';
 $LANG['DETAILS'] = 'Détails';
 $LANG['MAP'] = 'Carte';
 $LANG['GENETIC'] = 'Génétique';
@@ -152,4 +158,13 @@ $LANG['CHECKING'] = 'Vérification des archives';
 $LANG['RESTORE_RECORD'] = 'Restore Record';
 $LANG['RECORD_DELETED'] = 'Enregistrement supprimé';
 $LANG['VALUE'] = 'Valeur';
+$LANG['LAT_LNG'] = 'Latitude/Longitude';
+
+//Used within OccurrenceIndividual class
+$LANG['INAPPROPRIATE'] = 'Commentaire inapproprié signalé';
+$LANG['REPORTED_AS_INAPPROPRIATE'] = 'Le commentaire suivant a été enregistré comme inapproprié';
+$LANG['EMAIL_NOT_DEFINED'] = "ERREUR : adresse e-mail de l'administrateur du portail non définie dans le fichier de configuration central";
+$LANG['PRIVATE_STATUS'] = 'statut privé';
+$LANG['UNABLE_TO_VERIFY_TARGET'] = 'ERREUR lors de la suppression du bon : impossible de vérifier la liste de contrôle cible pour le bon';
+$LANG['PERMISSION_ERROR'] = "ERREUR lors de la suppression du bon : erreur d'autorisation";
 ?>

@@ -1,7 +1,7 @@
 <?php
 include_once($SERVER_ROOT.'/classes/ChecklistVoucherAdmin.php');
 
-class ChecklistVoucherManager extends  ChecklistVoucherAdmin{
+class ChecklistVoucherManager extends ChecklistVoucherAdmin{
 
 	private $tid;
 	private $taxonName;
@@ -162,15 +162,18 @@ class ChecklistVoucherManager extends  ChecklistVoucherAdmin{
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
 			if($r->securitystatus == 0){
-				//Set occurrence
-				$sqlRare = 'UPDATE omoccurrences o INNER JOIN taxstatus ts1 ON o.tidinterpreted = ts1.tid '.
-					'INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
-					'SET o.localitysecurity = NULL '.
-					'WHERE (o.localitysecurity = 1) AND (o.localitySecurityReason IS NULL) AND (ts1.taxauthid = 1) AND (ts2.taxauthid = 1) '.
-					'AND o.stateprovince = "'.$rareLocality.'" AND ts2.tid = '.$this->tid;
-				//echo $sqlRare; exit;
-				if(!$this->conn->query($sqlRare)){
-					$this->errorMessage = "ERROR resetting locality security during taxon delete: ".$this->conn->error;
+				$sqlRare = 'UPDATE omoccurrences o INNER JOIN taxstatus ts1 ON o.tidinterpreted = ts1.tid
+					INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted
+					SET o.localitysecurity = 0
+					WHERE (o.localitysecurity = 1) AND (o.localitySecurityReason IS NULL) AND (ts1.taxauthid = 1) AND (ts2.taxauthid = 1)
+					AND o.stateprovince = ? AND ts2.tid = ?';
+				if($stmt = $this->conn->prepare($sqlRare)){
+					$stmt->bind_param('si', $rareLocality, $this->tid);
+					$stmt->execute();
+					if($stmt->error){
+						$this->errorMessage = 'ERROR resetting locality security during taxon delete: '.$stmt->error;
+					}
+					$stmt->close();
 				}
 			}
 		}
@@ -256,22 +259,6 @@ class ChecklistVoucherManager extends  ChecklistVoucherAdmin{
 		}
 		$this->errorMessage =  'ERROR: Neither the target taxon nor a sysnonym is present in this checklists. Taxon needs to be added.';
 		return false;
-	}
-
-	public function deleteVoucher($voucherID){
-		$status = false;
-		if(is_numeric($voucherID)){
-			$sql = 'DELETE FROM fmvouchers WHERE (voucherID = ?)';
-			if($stmt = $this->conn->prepare($sql)) {
-				$stmt->bind_param('i', $voucherID);
-				$stmt->execute();
-				if($stmt->affected_rows) $status = true;
-				elseif($stmt->error) $this->errorMessage = 'ERROR deleting vouchers: '.$stmt->error;
-				$stmt->close();
-			}
-			else $this->errorMessage = 'ERROR preparing statement for voucher deletion: '.$this->conn->error;
-		}
-		return $status;
 	}
 
 	//Setters and getters

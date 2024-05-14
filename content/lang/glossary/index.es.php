@@ -5,10 +5,8 @@ Language: Español (Spanish)
 ------------------
 */
 
-include_once($SERVER_ROOT.'/content/lang/glossary/addterm.en.php');
+include_once($SERVER_ROOT.'/content/lang/glossary/addterm.es.php');
 
-$LANG['PLEASE_REFINE'] = 'Por favor seleccione el idioma y grupo taxonómico para ver el listado de términos.';
-$LANG['PLEASE_TO_DWNLD'] = 'Por favor seleccione un idioma primario y un grupo taxonómico para descargar.';
 $LANG['PLEASE_TRANSL'] = 'Por favor seleccione un máximo de traducciones para la Tabla de Traducciones. Por favor asegúrese de no seleccionar el idioma primario.';
 $LANG['PLEASE_ONE'] = 'Por favor seleccione al menos una traducción para la Tabla de Traducciones. Por favor asegúrese de no seleccionar el idioma primario.';
 $LANG['HOME'] = 'Inicio';
@@ -26,9 +24,12 @@ $LANG['LANG'] = 'Idioma';
 $LANG['SEARCH_TERM'] = 'Término de Búsqueda';
 $LANG['SEARCH_DEF'] = 'Buscar entre las definiciones';
 $LANG['SEARCH_TERMS'] = 'Buscar/Explorar Términos';
-$LANG['NO_GLOSS'] = 'Un glosario aún no ha sido establecido para este portal';
-$LANG['DISP_SRC'] = '(Desplegar Fuentes)';
-$LANG['ADD_SRC'] = '(Añadir Fuentes)';
+$LANG['TERMS'] = 'Términos';
+$LANG['FOR'] = 'para';
+$LANG['IN'] = 'en';
+$LANG['KEYWORD'] = 'con palabra clave';
+$LANG['DISP_SRC'] = 'Desplegar Fuentes';
+$LANG['ADD_SRC'] = 'Añadir Fuentes';
 $LANG['TAX_CONTR'] = 'Contribuyentes para Grupo Taxonómico';
 $LANG['TERM_CONTR'] = 'Términos y Definiciones contribuídas por';
 $LANG['IMG_CONTR'] = 'Imágenes contribuídas por';

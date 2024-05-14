@@ -3,22 +3,26 @@ include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GlossaryManager.php');
 require_once $SERVER_ROOT.'/vendor/phpoffice/phpword/bootstrap.php';
 
-header("Content-Type: text/html; charset=".$CHARSET);
+header('Content-Type: text/html; charset=' . $CHARSET);
 ini_set('max_execution_time', 3600);
 
 $language = array_key_exists('searchlanguage',$_POST)?$_POST['searchlanguage']:'';
 $taxon = array_key_exists('searchtaxa',$_POST)?$_POST['searchtaxa']:'';
+$searchTerm = array_key_exists('searchterm',$_REQUEST)?$_REQUEST['searchterm']:'';
+$deepSearch = array_key_exists('deepsearch',$_POST)?$_POST['deepsearch']:0;
 $exportType = array_key_exists('exporttype',$_POST)?$_POST['exporttype']:'';
 $translations = array_key_exists('language',$_POST)?$_POST['language']:array();
 $definitions = array_key_exists('definitions',$_POST)?$_POST['definitions']:'';
 $images = array_key_exists('images',$_POST)?$_POST['images']:'';
 
 //Sanitation
-$language = filter_var($language,FILTER_SANITIZE_STRING);
-$taxon = filter_var($taxon,FILTER_SANITIZE_STRING);
-$exportType = filter_var($exportType,FILTER_SANITIZE_STRING);
-$definitions = filter_var($definitions,FILTER_SANITIZE_STRING);
-$images = filter_var($images,FILTER_SANITIZE_STRING);
+$language = htmlspecialchars($language, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$taxon = htmlspecialchars($taxon, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$searchTerm = htmlspecialchars($searchTerm, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+if(!is_numeric($deepSearch)) $relatedLanguage = 0;
+$exportType = htmlspecialchars($exportType, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$definitions = htmlspecialchars($definitions, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+$images = htmlspecialchars($images, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
 
 $fileName = '';
 $citationFormat = $DEFAULT_TITLE.'. '.date('Y').'. ';
@@ -47,8 +51,11 @@ $imageCellStyle = array('valign'=>'top','width'=>2520,'borderSize'=>0,'borderCol
 
 $section = $phpWord->addSection(array('pageSizeW'=>12240,'pageSizeH'=>15840,'marginLeft'=>1080,'marginRight'=>1080,'marginTop'=>1080,'marginBottom'=>1080,'headerHeight'=>100,'footerHeight'=>0));
 $glosManager = new GlossaryManager();
+$subTitle = '';
+if($language) $subTitle .= 'language: '.$language;
+if($searchTerm) $subTitle .= '; search term: '.$searchTerm;
 if($exportType == 'translation'){
-	$exportArr = $glosManager->getExportArr($language,$taxon,0,$translations,$definitions);
+	$exportArr = $glosManager->getExportArr($language, $taxon, $searchTerm, $deepSearch, 0, $translations, $definitions);
 	if(in_array($language,$translations)){
 		foreach($translations as $k => $trans){
 			if($trans == $language) unset($translations[$k]);
@@ -59,16 +66,24 @@ if($exportType == 'translation'){
 		unset($exportArr['meta']);
 
 		//ksort($exportArr, SORT_STRING | SORT_FLAG_CASE);
-		$fileName = $metaArr['sciname'].'_TranslationTable';
+		$fileName = 'GlossaryTranslation';
+		$sciname = '';
+		if(isset($metaArr['sciname'])){
+			$sciname = $metaArr['sciname'];
+			$fileName .= '_'.$sciname;
+		}
 
 		$header = $section->addHeader();
-		$header->addPreserveText($metaArr['sciname'].' - p.{PAGE} '.date("Y-m-d"),null,array('align'=>'right'));
+		$header->addPreserveText($sciname.' - p.{PAGE} '.date("Y-m-d"),null,array('align'=>'right'));
 		$textrun = $section->addTextRun('titlePara');
 		if(isset($GLOSSARY_BANNER) && $GLOSSARY_BANNER){
 			$textrun->addImage($glosManager->getDomain() . $CLIENT_ROOT . '/images/layout/' . $GLOSSARY_BANNER, array('width'=>500, 'align'=>'center'));
 			$textrun->addTextBreak(1);
 		}
-		$textrun->addText(htmlspecialchars('Translation Table for '.$metaArr['sciname']),'titleFont');
+		$titleStr = 'Translation Table';
+		if($sciname) $titleStr .= ' for '.$sciname;
+		$textrun->addText(htmlspecialchars($titleStr),'titleFont');
+		if($subTitle) $textrun->addText(' ('.trim($subTitle).')', 'transDefTextFont');
 		$textrun->addTextBreak(1);
 		if($definitions == 'nodef'){
 			$table = $section->addTable('exportTable');
@@ -104,6 +119,7 @@ if($exportType == 'translation'){
 			foreach($exportArr as $glossId => $glossArr){
 				$textrun = $section->addTextRun('transTermPara');
 				$textrun->addText(htmlspecialchars($glossArr['term']),'transMainTermDefFont');
+				$translationStr = '';
 				foreach($translations as $trans){
 					$termStr = '[No Translation]';
 					if(array_key_exists('trans', $glossArr)){
@@ -111,8 +127,9 @@ if($exportType == 'translation'){
 							$termStr = $glossArr['trans'][$trans]['term'];
 						}
 					}
-					$textrun->addText(htmlspecialchars(' ('.$trans.': '.$termStr.')'),'transTransTermNodefFont');
+					$translationStr .= $trans.': '.$termStr.', ';
 				}
+				if($translationStr) $textrun->addText(htmlspecialchars(' ('.trim($translationStr,', ').')'), 'transTransTermNodefFont');
 				if($definitions == 'onedef'){
 					if($glossArr['definition']){
 						$textrun = $section->addTextRun('transDefPara');
@@ -121,15 +138,15 @@ if($exportType == 'translation'){
 					}
 				}
 				elseif($definitions == 'alldef'){
-					$listItemRun = $section->addListItemRun(0,null,'transDefList');
+					$listItemRun = $section->addListItemRun(0, null, 'transDefList');
 					if($glossArr['definition']){
-						$listItemRun->addText(htmlspecialchars($glossArr['definition']),'transDefTextFont');
+						$listItemRun->addText(htmlspecialchars($glossArr['definition']), 'transDefTextFont');
 					}
 					else{
-						$listItemRun->addText(htmlspecialchars('[No Definition]'),'transDefTextFont');
+						$listItemRun->addText(htmlspecialchars('[No Definition]'), 'transDefTextFont');
 					}
 					foreach($translations as $trans){
-						$listItemRun = $section->addListItemRun(0,null,'transDefList');
+						$listItemRun = $section->addListItemRun(0, null, 'transDefList');
 
 						if(array_key_exists('trans', $glossArr)){
 							if(array_key_exists($trans,$glossArr['trans'])){
@@ -184,26 +201,38 @@ if($exportType == 'translation'){
 		$textrun->addText(htmlspecialchars($citationFormat),'transTransTermNodefFont');
 	}
 }
-elseif($exportType == 'singlelanguage'){
-	$exportArr = $glosManager->getExportArr($language,$taxon,$images);
+else{
+	$exportArr = $glosManager->getExportArr($language, $taxon, $searchTerm, $deepSearch, $images);
 	if($exportArr){
 		$metaArr = $exportArr['meta'];
 		unset($exportArr['meta']);
 		//ksort($exportArr, SORT_STRING | SORT_FLAG_CASE);
-		$fileName = $metaArr['sciname'].'_SingleLanguage';
+		$fileName = 'Glossary';
+		$sciname = '';
+		if(isset($metaArr['sciname'])){
+			$sciname = $metaArr['sciname'];
+			$fileName .= '_'.$sciname;
+		}
 
 		$header = $section->addHeader();
-		$header->addPreserveText($metaArr['sciname'].' - p.{PAGE} '.date("Y-m-d"),null,array('align'=>'right'));
+		$header->addPreserveText($sciname.' - p.{PAGE} '.date("Y-m-d"),null,array('align'=>'right'));
 		$textrun = $section->addTextRun('titlePara');
 		if(isset($GLOSSARY_BANNER) && $GLOSSARY_BANNER){
 			$textrun->addImage($glosManager->getDomain() . $CLIENT_ROOT . '/images/layout/' . $GLOSSARY_BANNER, array('width'=>500, 'align'=>'center'));
 			$textrun->addTextBreak(1);
 		}
-		$textrun->addText(htmlspecialchars('Single Language Glossary for '.$metaArr['sciname']),'titleFont');
+		$titleStr = 'Glossary';
+		if($sciname) $titleStr .= 'for '.$sciname;
+		$textrun->addText(htmlspecialchars($titleStr),'titleFont');
+		if($subTitle) $textrun->addText(' ('.trim($subTitle).')', 'transDefTextFont');
 		$textrun->addTextBreak(1);
 		foreach($exportArr as $singleEx => $singleExArr){
 			$textrun = $section->addTextRun('transTermPara');
-			$textrun->addText(htmlspecialchars($singleExArr['term']),'transMainTermDefFont');
+			$textrun->addText(htmlspecialchars($singleExArr['term']), 'transMainTermDefFont');
+			if(isset($singleExArr['searchTerm']) && $singleExArr['searchTerm'] != $singleExArr['term']){
+				$textrun->addText(' redirected from ', 'transDefTextFont');
+				$textrun->addText(htmlspecialchars($singleExArr['searchTerm']), 'transMainTermDefFont');
+			}
 			if($singleExArr['definition']){
 				$textrun = $section->addTextRun('transDefPara');
 				$textrun->addText(htmlspecialchars($singleExArr['definition']),'transDefTextFont');
@@ -264,7 +293,7 @@ elseif($exportType == 'singlelanguage'){
 		if(isset($metaArr['references'])){
 			$section->addTextBreak(1);
 			$textrun = $section->addTextRun('titlePara');
-			$textrun->addText(htmlspecialchars('References'),'transTransTermDefFont');
+			$textrun->addText('References', 'transTransTermDefFont');
 			$referencesArr = $metaArr['references'];
 			ksort($referencesArr);
 			foreach($referencesArr as $ref){
@@ -304,9 +333,12 @@ elseif($exportType == 'singlelanguage'){
 
 $fileName = str_replace(array(' ', '/'), '_', $fileName);
 $fileName = preg_replace('/[^0-9A-Za-z\-_]/', '', $fileName);
-$targetFile = $SERVER_ROOT.'/temp/report/'.$fileName.'.docx';
+$targetFile = $SERVER_ROOT.'/temp/report/'.$fileName.'_'.date('Y-m-d').'.docx';
 $phpWord->save($targetFile, 'Word2007');
 
+ob_start();
+ob_clean();
+ob_end_flush();
 header('Content-Description: File Transfer');
 header('Content-type: application/force-download');
 header('Content-Disposition: attachment; filename='.basename($targetFile));

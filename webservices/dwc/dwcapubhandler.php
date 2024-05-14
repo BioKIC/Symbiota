@@ -8,7 +8,7 @@
  *       Format: cond=<field1>-<optional operator>:<value1>;<field2>-<optional operator>:<value2>
  *       Fields allowed: catalogNumber, otherCatalogNumbers, occurrenceID, family, sciname, country, stateProvince, county, municipality, recordedBy, recordNumber, eventDate,
  *       	decimalLatitude, decimalLongitude, minimumElevationInMeters, maximumElevationInMeters, cultivationStatus, processingStatus, dateLastModified, dateEntered, dbpk
- *       Optional operators: EQUALS, NULL, NOTNULL, START, LIKE, LESSTHAN, GREATERTHAN
+ *       Optional operators: EQUALS, IS_NULL, NOT_NULL, START_WITH, LIKE, LESS_THAN, GREATER_THAN
  *       Note the dash separating the field and operator; operator is not case specific
  *       Multiple conditions can be supplied separated by semicolons
  *       Multiple values can be supplied separated by commas
@@ -104,8 +104,10 @@ $dwcaHandler->setPublicationGuid($pubGuid);
 $dwcaHandler->setRequestPortalGuid($requestPortalGuid);
 
 $archiveFile = $dwcaHandler->createDwcArchive();
+ob_start();
+ob_clean();
+ob_end_flush();
 if ($archiveFile) {
-	ob_start();
 	header('Content-Description: DwC-A File Transfer');
 	header('Content-Type: application/zip');
 	header('Content-Disposition: attachment; filename=' . basename($archiveFile));

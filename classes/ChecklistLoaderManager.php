@@ -20,8 +20,7 @@ class ChecklistLoaderManager extends Manager {
 
 	public function uploadCsvList($thesId){
 		set_time_limit(300);
-		ini_set("max_input_time",300);
-		ini_set('auto_detect_line_endings', true);
+		ini_set('max_input_time',300);
 		$successCnt = 0;
 
 		$fh = fopen($_FILES['uploadfile']['tmp_name'],'r') or die("Can't open file. File may be too large. Try uploading file in sections.");
@@ -40,7 +39,9 @@ class ChecklistLoaderManager extends Manager {
 			ob_flush();
 			flush();
 			while($valueArr = fgetcsv($fh)){
-				$sciNameStr = $this->cleanInStr($valueArr[$headerArr["sciname"]]);
+				//Remove UTF-8 NO-BREAK SPACE codepoints
+				$sciNameStr = str_replace(chr(194).chr(160), ' ', $valueArr[$headerArr['sciname']]);
+				$sciNameStr = $this->cleanInStr($sciNameStr);
 				if($sciNameStr){
 					$tid = 0;
 					$rankId = 0;
@@ -60,7 +61,7 @@ class ChecklistLoaderManager extends Manager {
 							'WHERE ts.taxauthid = 1 ';
 					}
 					$cleanSciName = $this->encodeString($sciNameArr['sciname']);
-					$sql .= 'AND (t.sciname IN("'.$sciNameStr.'"'.($cleanSciName?',"'.$cleanSciName.'"':'').'))';
+					$sql .= 'AND (t.sciname IN("'.$sciNameStr.'"'.($cleanSciName && $cleanSciName != $sciNameStr ?',"'.$cleanSciName.'"':'').'))';
 					$rs = $this->conn->query($sql);
 					if($rs){
 						while($row = $rs->fetch_object()){
@@ -106,7 +107,6 @@ class ChecklistLoaderManager extends Manager {
 							}
 
 							$sql = 'INSERT INTO fmchklsttaxalink (tid,clid'.$sqlInsert.') VALUES ('.$tid.', '.$this->clid.$sqlValues.')';
-							//echo $sql; exit;
 							if($this->conn->query($sql)){
 								$successCnt++;
 							}

@@ -8,7 +8,7 @@ Language: Français (French)
 $LANG['H_HOME'] = 'Accueil';
 
 $LANG['H_SEARCH'] = 'Rechercher';
-$LANG['H_COLLECTIONS'] = 'Collections';
+$LANG['H_COLLECTIONS'] = 'Rechercher des Collections';
 $LANG['H_MAP'] = 'Carte';
 $LANG['H_MAP_SEARCH'] = 'Rechercher Carte';
 $LANG['H_TAXONOMIC_EXPLORER'] = 'Explorateur Taxonomique';
@@ -44,4 +44,29 @@ $LANG['H_MY_PROFILE'] = 'Mon Profill';
 $LANG['H_LOGOUT'] = 'Se Déconnecter';
 $LANG['H_LOGIN'] = 'Se connecter';
 $LANG['H_NEW_ACCOUNT'] = 'Nouveau Compte';
+$LANG['TOGGLE_508_OFF'] = "Utiliser la Mise en Page de Formulaire Condensé";
+$LANG['TOGGLE_508_ON'] = "Basculer la Disposition Verticale du Formulaire";
+$LANG['SELECT_LANGUAGE'] = 'Sélectionnez une langue';
+
+$LANG['CONTACT_US'] = 'Contactez-Nous';
+$LANG['LOGIN'] = 'Se Connecter';
+$LANG['SEARCH_COLLECTIONS'] = 'Rechercher des Collections';
+$LANG['CHECKLISTS'] = 'Listes de Contrôle';
+$LANG['ABOUT_SYMBIOTA'] = 'À Propos de Symbiote';
+$LANG['HELP'] = 'Aide';
+$LANG['SPECIMENS'] = 'Spécimens';
+$LANG['IMG_CONTR'] = 'Contributeurs d\'images';
+$LANG['OBS'] = 'Observations';
+
+$LANG['NAV_HOME'] = 'Maison';
+$LANG['NAV_IMG_LIB'] = 'Bibliothèque d\'Images';
+$LANG['NAV_IMG_CONTR'] = 'Contributeurs d\'Images';
+$LANG['NAV_IMG_SEARCH'] = 'Recherche d\'Image';
+$LANG['SKIP_NAV'] = 'Sauter la Navigation';
+
+// Footer-specific
+$LANG['ACCESSIBILITY_OPTIONS'] = 'Options d\'accessibilité';
+$LANG['ACCESSIBILITY_OPTIONS_DESCRIPTION'] = 'D\'autres fonctionnalités d\'accessibilité seront ajoutées au fil du temps. Basculez ceux qui correspondent à vos besoins.';
+$LANG['CLOSE'] = 'Fermer';
+
 ?>

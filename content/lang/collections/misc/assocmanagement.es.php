@@ -1,7 +1,9 @@
 <?php
 /*
 ------------------
-Language: English
+Language: Español
+Translated by: Samanta Orellana
+Date Translated: 2021-08-18
 ------------------
 */
 

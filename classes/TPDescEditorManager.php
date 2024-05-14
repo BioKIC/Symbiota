@@ -130,7 +130,7 @@ class TPDescEditorManager extends TPEditorManager{
 					elseif($stmt->error) $this->errorMessage = $stmt->error;
 					$stmt->close();
 				}
-				echo $this->conn->error;
+				$this->errorMessage = $this->conn->error;
 			}
 		}
 		return $status;
@@ -176,7 +176,7 @@ class TPDescEditorManager extends TPEditorManager{
 	public function updateDescriptionBlock($postArr){
 		$status = false;
 		if(is_numeric($postArr['tdbid'])){
-			$blockFieldArr = array('source' => 's', 'sourceurl' => 's', 'displaylevel' => 'i', 'notes' => 's' );
+			$blockFieldArr = array( 'caption' => 's', 'source' => 's', 'sourceurl' => 's', 'displaylevel' => 'i', 'notes' => 's', 'langid' => 's' );
 			$sqlFrag = '';
 			$paramArr = array();
 			$paramType = '';
@@ -194,16 +194,23 @@ class TPDescEditorManager extends TPEditorManager{
 				$sql = 'UPDATE taxadescrblock SET ' . trim($sqlFrag, ', ') . ' WHERE (tdbid = ?)';
 				if($stmt = $this->conn->prepare($sql)){
 					if($stmt->bind_param($paramType, ...$paramArr)){
-						$stmt->execute();
-						if($stmt->affected_rows) $status = true;
-						elseif($stmt->error) $this->errorMessage = $stmt->error;
-						$stmt->close();
+						if($stmt->execute()){
+							if($stmt->affected_rows >= 0){ 
+								$status = true; 
+							}
+							elseif($stmt->error){
+								 $this->errorMessage = $stmt->error; 
+							}
+							$stmt->close();
+						}
+						else  $this->errorMessage = $stmt->error;
 					}
-					else echo 'error binding: '.$stmt->error.'<br>';
+					else  $this->errorMessage = $stmt->error;
 				}
-				else echo 'error preparing statement: '.$this->conn->error.'<br>';
+				else  $this->errorMessage = $this->conn->error;
 			}
 			// Temp code until total refactor: transfer selected fields to decription profile
+			unset($postArr['caption']);
 			if(isset($postArr['source'])){
 				$postArr['publication'] = $postArr['source'];
 			}
@@ -213,7 +220,9 @@ class TPDescEditorManager extends TPEditorManager{
 			if(isset($postArr['sourceurl'])){
 				$postArr['urlTemplate'] = $postArr['sourceurl'];
 			}
-			if($this->updateDescriptionProfile($postArr)) $status = true;
+			if($status){
+				if($this->updateDescriptionProfile($postArr)) $status = true;
+			}
 		}
 		return $status;
 	}

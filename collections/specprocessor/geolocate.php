@@ -9,9 +9,9 @@ header("Content-Type: text/html; charset=".$CHARSET);
 $collid = array_key_exists('collid',$_REQUEST) && is_numeric($_REQUEST['collid']) ? $_REQUEST['collid'] : 0;
 $customArr = array();
 for($h = 1; $h < 4; $h++){
-	$customArr[$h]['f'] = array_key_exists('customfield'.$h,$_REQUEST)?filter_var($_REQUEST['customfield'].$h,FILTER_SANITIZE_STRING):'';
-	$customArr[$h]['t'] = array_key_exists('customtype'.$h,$_REQUEST)?filter_var($_REQUEST['customtype'].$h,FILTER_SANITIZE_STRING):'';
-	$customArr[$h]['v'] = array_key_exists('customvalue'.$h,$_REQUEST)?filter_var($_REQUEST['customvalue'].$h,FILTER_SANITIZE_STRING):'';
+	$customArr[$h]['f'] = array_key_exists('customfield' . $h, $_REQUEST) ? htmlspecialchars($_REQUEST['customfield'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . $h : '';
+	$customArr[$h]['t'] = array_key_exists('customtype' . $h, $_REQUEST) ? htmlspecialchars($_REQUEST['customtype'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . $h : '';
+	$customArr[$h]['v'] = array_key_exists('customvalue' . $h, $_REQUEST) ? htmlspecialchars($_REQUEST['customvalue'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . $h : '';
 }
 
 $dlManager = new OccurrenceDownload();
@@ -22,20 +22,22 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
  	$isEditor = true;
 }
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title><?php echo $LANG['OCC_EXP_MAN']; ?></title>
 		<?php
 
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<script src="../../js/jquery-3.2.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 		<script src="../../js/symb/shared.js" type="text/javascript"></script>
 		<script src="../../js/symb/geolocate.js?ver=3" type="text/javascript"></script>
 	</head>
 	<body>
 		<!-- This is inner text! -->
-		<div id="innertext" style="background-color:white;">
+		<div role="main" id="innertext" style="background-color:white;">
+			<h1 class="page-heading screen-reader-only">GeoLocate CoGe Export Manager</h1>
 			<?php
 			if($collid && $isEditor){
 				if($ACTIVATE_GEOLOCATE_TOOLKIT){
@@ -90,13 +92,13 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 											'georeferenceVerificationStatus'=>'Georeference Verification Status','georeferenceRemarks'=>'Georeference Remarks',
 											'minimumElevationInMeters'=>'Elevation Minimum (m)','maximumElevationInMeters'=>'Elevation Maximum (m)',
 											'verbatimElevation'=>'Verbatim Elevation','disposition'=>'Disposition');
-										$conditionArr = array('EQUALS'=>'EQUALS','NOTEQUALS'=>'NOT EQUALS','STARTS'=>'STARTS WITH','LIKE'=>'CONTAINS','NOTLIKE'=>'DOES NOT CONTAIN','NULL'=>'IS NULL','NOTNULL'=>'IS NOT NULL');
+										$conditionArr = array('EQUALS', 'NOT_EQUALS', 'STARTS_WITH', 'LIKE', 'NOT_LIKE', 'IS_NULL', 'NOT_NULL');
 										foreach($customArr as $i => $unitArr){
 											$field = $unitArr['f'];
 											$type = $unitArr['t'];
 											if($i == 1 && !$field){
 												$field = 'decimalLatitude';
-												$type = 'NULL';
+												$type = 'IS_NULL';
 											}
 											?>
 											<div style="margin:10px 0px;">
@@ -111,8 +113,8 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 												</select>
 												<select name="customtype<?php echo $i; ?>" onchange="cogeUpdateCount(this)">
 													<?php
-													foreach($conditionArr as $condKey => $condValue){
-														echo '<option '.($condKey == $type ? 'SELECTED' : '').' value="'.$condKey.'">'.$condValue.'</option>';
+													foreach($conditionArr as $condCode){
+														echo '<option ' . ($condCode == $type ? 'SELECTED' : '') . ' value="' . $condCode . '">' . $LANG[$condCode] . '</option>';
 													}
 													?>
 												</select>
@@ -135,11 +137,11 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 												$dwcaHandler->setVerboseMode(0);
 												$dwcaHandler->setOverrideConditionLimit(true);
 												if(!$customArr[1]['f']){
-													$dwcaHandler->addCondition('decimallatitude','NULL');
-													$dwcaHandler->addCondition('decimallongitude','NULL');
+													$dwcaHandler->addCondition('decimallatitude','IS_NULL');
+													$dwcaHandler->addCondition('decimallongitude','IS_NULL');
 												}
-												$dwcaHandler->addCondition('locality','NOTNULL');
-												$dwcaHandler->addCondition('catalognumber','NOTNULL');
+												$dwcaHandler->addCondition('locality','NOT_NULL');
+												$dwcaHandler->addCondition('catalognumber','NOT_NULL');
 												echo '<span id="countdiv">'.$dwcaHandler->getOccurrenceCnt().'</span> records';
 												?>
 												<span id="recalspan" style="color:orange;display:none;"><?php echo $LANG['RECALCULATING']; ?>... <img src="../../images/workingcircle.gif" style="width:13px;" /></span>
@@ -149,7 +151,7 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 												<b><?php echo $LANG['COGE_AUTH']; ?>:</b>
 												<span id="coge-status" style="width:150px;color:red;"><?php echo $LANG['DISCONNECTED']; ?></span>
 												<span style="margin-left:40px"><button name="cogeCheckStatusButton" type="button" value="Check Status" onclick="cogeCheckAuthentication()"><?php echo $LANG['CHECK_STATUS']; ?></button></span>
-												<span style="margin-left:40px"><a href="http://coge.geo-locate.org" target="_blank" onclick="startAuthMonitoring()"><?php echo $LANG['LOGIN_COGE']; ?></a></span>
+												<span style="margin-left:40px"><a href="http://coge.geo-locate.org" target="_blank" onclick="startAuthMonitoring()"><?php echo htmlspecialchars($LANG['LOGIN_COGE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></span>
 											</div>
 										</fieldset>
 										<fieldset id="coge-communities" style="margin:10px;padding:10px;">
@@ -200,7 +202,7 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 											</div>
 										</div>
 										<div style="margin:20px;">
-											<a href="../editor/editreviewer.php?collid=<?php echo $collid; ?>&display=2"><?php echo $LANG['REVIEW_APPROVE_EDITS']; ?></a>
+											<a href="../editor/editreviewer.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&display=2"><?php echo htmlspecialchars($LANG['REVIEW_APPROVE_EDITS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 										</div>
 										<div style="margin:20px;">
 											<b>* <?php echo $LANG['DEFAULT_QUERY']; ?></b>

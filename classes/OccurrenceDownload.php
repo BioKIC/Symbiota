@@ -109,6 +109,9 @@ class OccurrenceDownload{
 			fclose($fh);
 		}
 		//Send data file out
+		ob_start();
+		ob_clean();
+		ob_end_flush();
 		header('Content-Description: '.$contentDesc);
 		header('Content-Type: '.$this->getContentType());
 		header('Content-Disposition: attachment; filename='.$fileName);
@@ -298,7 +301,7 @@ class OccurrenceDownload{
 			'o.occurrenceid, o.catalognumber, o.sciname, o.recordedby, o.recordnumber, IFNULL(CAST(o.eventdate AS CHAR),o.verbatimeventdate) as eventdate, '.
 			'o.decimallatitude, o.decimallongitude, o.datelastmodified, o.recordenteredby, o.genericcolumn2, '.
 			'IFNULL(i.thumbnailurl,i.url) AS thumbnailurl, o.processingstatus '.
-			'FROM omoccurrences o LEFT JOIN omcollections c ON o.collid = c.collid '.
+			'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid '.
 			'INNER JOIN images i ON o.occid = i.occid '.
 			'WHERE c.colltype = "Preserved Specimens" '.
 			'AND o.processingstatus IN("pending review","reviewed", "closed") AND (o.localitysecurity IS NULL OR o.localitysecurity = 0) ';
@@ -318,7 +321,7 @@ class OccurrenceDownload{
 			$itemElem->appendChild($itemTitleElem);
 			$collLinkElem = $newDoc->createElement('collectionName',$r->collectionname.' ('.$r->instcode.')');
 			$itemElem->appendChild($collLinkElem);
-			$catalogLinkElem = $newDoc->createElement('catalogNumber',$r->catalognumber);
+			$catalogLinkElem = $newDoc->createElement('catalogNumber', $r->catalognumber ?? '');
 			$itemElem->appendChild($catalogLinkElem);
 
 			if($r->guidtarget){
@@ -329,7 +332,7 @@ class OccurrenceDownload{
 				if($r->guidtarget == 'catalogNumber'){
 					$occID = $r->catalognumber;
 				}
-				$guidLinkElem = $newDoc->createElement('occurrenceID',$occID);
+				$guidLinkElem = $newDoc->createElement('occurrenceID', $occID ?? '');
 				$itemElem->appendChild($guidLinkElem);
 			}
 
@@ -350,21 +353,21 @@ class OccurrenceDownload{
 			$tnLinkElem->appendChild($newDoc->createTextNode($tnUrl));
 			$itemElem->appendChild($tnLinkElem);
 
-			$latLinkElem = $newDoc->createElement('decimalLatitude',$r->decimallatitude);
+			$latLinkElem = $newDoc->createElement('decimalLatitude',$r->decimallatitude ?? '');
 			$itemElem->appendChild($latLinkElem);
-			$lngLinkElem = $newDoc->createElement('decimalLongitude',$r->decimallongitude);
+			$lngLinkElem = $newDoc->createElement('decimalLongitude',$r->decimallongitude ?? '');
 			$itemElem->appendChild($lngLinkElem);
 			$eventDateLinkElem = $newDoc->createElement('verbatimEventDate');
-			$eventDateLinkElem->appendChild($newDoc->createTextNode($r->eventdate));
+			$eventDateLinkElem->appendChild($newDoc->createTextNode($r->eventdate ?? ''));
 			$itemElem->appendChild($eventDateLinkElem);
 			//$pubDateLinkElem = $newDoc->createElement('pubDate',$r->datelastmodified);
 			$pubDateLinkElem = $newDoc->createElement('pubDate',gmdate(DATE_RSS, strtotime($r->datelastmodified)));
 			$itemElem->appendChild($pubDateLinkElem);
-			$creatorLinkElem = $newDoc->createElement('creator',$r->recordenteredby);
+			$creatorLinkElem = $newDoc->createElement('creator', $r->recordenteredby ?? '');
 			$itemElem->appendChild($creatorLinkElem);
 
 			if($r->genericcolumn2){
-				$ipAddr = $newDoc->createElement('ipAddress',$r->genericcolumn2);
+				$ipAddr = $newDoc->createElement('ipAddress', $r->genericcolumn2 ?? '');
 				$itemElem->appendChild($ipAddr);
 				//<decimalLatitudeTranscribing>Transcription Lat</decimalLatitudeTranscribing>
 				//<decimalLongitudeTranscribing>Transcription Long</decimalLongitudeTranscribing>
@@ -380,7 +383,7 @@ class OccurrenceDownload{
 	public function addCondition($field, $cond, $value = ''){
 		if($field){
 			if(!trim($cond)) $cond = 'EQUALS';
-			if($value || ($cond == 'NULL' || $cond == 'NOTNULL')){
+			if($value || ($cond == 'IS_NULL' || $cond == 'NOT_NULL')){
 				$this->conditionArr[$field][$cond][] = $this->cleanInStr($value);
 			}
 		}
@@ -412,33 +415,33 @@ class OccurrenceDownload{
 
 	private function getSqlFragment($field, $cond, $valueArr){
 		$sqlFrag = '';
-		if($cond == 'NULL'){
+		if($cond == 'IS_NULL'){
 			$sqlFrag .= 'OR o.'.$field.' IS NULL ';
 		}
-		elseif($cond == 'NOTNULL'){
+		elseif($cond == 'NOT_NULL'){
 			$sqlFrag .= 'OR o.'.$field.' IS NOT NULL ';
 		}
 		elseif($cond == 'EQUALS'){
 			$sqlFrag .= 'OR o.'.$field.' IN("'.implode('","',$valueArr).'") ';
 		}
-		elseif($cond == 'NOTEQUALS'){
+		elseif($cond == 'NOT_EQUALS'){
 			$sqlFrag .= 'OR o.'.$field.' NOT IN("'.implode('","',$valueArr).'") OR o.'.$field.' IS NULL ';
 		}
 		else{
 			foreach($valueArr as $value){
-				if($cond == 'STARTS'){
+				if($cond == 'STARTS_WITH'){
 					$sqlFrag .= 'OR o.'.$field.' LIKE "'.$value.'%" ';
 				}
 				elseif($cond == 'LIKE'){
 					$sqlFrag .= 'OR o.'.$field.' LIKE "%'.$value.'%" ';
 				}
-				elseif($cond == 'NOTLIKE'){
+				elseif($cond == 'NOT_LIKE'){
 					$sqlFrag .= 'OR o.'.$field.' NOT LIKE "%'.$value.'%" OR o.'.$field.' IS NULL ';
 				}
-				elseif($cond == 'LESSTHAN'){
+				elseif($cond == 'LESS_THAN'){
 					$sqlFrag .= 'OR o.'.$field.' < "'.$value.'" ';
 				}
-				elseif($cond == 'GREATERTHAN'){
+				elseif($cond == 'GREATER_THAN'){
 					$sqlFrag .= 'OR o.'.$field.' > "'.$value.'" ';
 				}
 			}
@@ -498,7 +501,7 @@ class OccurrenceDownload{
 					'o.georeferenceRemarks, o.minimumElevationInMeters, o.maximumElevationInMeters, o.verbatimElevation, '.
 					'IFNULL(o.modified,o.datelastmodified) AS modified, o.occid, CONCAT("urn:uuid:", o.recordID) AS recordID ';
 			}
-			$sql .= 'FROM omcollections c INNER JOIN omoccurrences o ON c.collid = o.collid LEFT JOIN taxa t ON o.tidinterpreted = t.tid ';
+			$sql .= 'FROM omcollections c INNER JOIN omoccurrences o ON c.collid = o.collid LEFT JOIN taxa t ON o.tidinterpreted = t.tid LEFT JOIN taxstatus ts ON t.tid = ts.tid ';
 			$sql .= $this->setTableJoins($this->sqlWhere);
 			$this->applyConditions();
 			$sql .= $this->sqlWhere;
@@ -731,18 +734,9 @@ class OccurrenceDownload{
 
 	private function encodeStr($inStr){
 		$retStr = $inStr;
-		if($this->charSetSource){
-			if($this->charSetOut == 'UTF-8' && $this->charSetSource == 'ISO-8859-1'){
-				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1',true) == "ISO-8859-1"){
-					$retStr = utf8_encode($inStr);
-					//$retStr = iconv("ISO-8859-1//TRANSLIT","UTF-8",$inStr);
-				}
-			}
-			elseif($this->charSetOut == "ISO-8859-1" && $this->charSetSource == 'UTF-8'){
-				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1') == "UTF-8"){
-					$retStr = utf8_decode($inStr);
-					//$retStr = iconv("UTF-8","ISO-8859-1//TRANSLIT",$inStr);
-				}
+		if($retStr){
+			if($this->charSetOut && $this->charSetOut != $this->charSetSource){
+				$retStr = mb_convert_encoding($retStr, $this->charSetOut, mb_detect_encoding($retStr));
 			}
 		}
 		return $retStr;

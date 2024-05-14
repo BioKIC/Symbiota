@@ -3,250 +3,402 @@ include_once('../../config/symbini.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 include_once($SERVER_ROOT.'/content/lang/collections/tools/mapaids.'.$LANG_TAG.'.php');
 
+if($MAPPING_BOUNDARIES){
+	$boundaryArr = explode(";",$MAPPING_BOUNDARIES);
+	$latCenter = ($boundaryArr[0]>$boundaryArr[2]?((($boundaryArr[0]-$boundaryArr[2])/2)+$boundaryArr[2]):((($boundaryArr[2]-$boundaryArr[0])/2)+$boundaryArr[0]));
+	$lngCenter = ($boundaryArr[1]>$boundaryArr[3]?((($boundaryArr[1]-$boundaryArr[3])/2)+$boundaryArr[3]):((($boundaryArr[3]-$boundaryArr[1])/2)+$boundaryArr[1]));
+} else{
+	$latCenter = 42.877742;
+	$lngCenter = -97.380979;
+}
+
 $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
-		<title><?php echo $DEFAULT_TITLE; ?> - Point-Radius Aid</title>
+	<title><?php echo $DEFAULT_TITLE; ?> - Point-Radius Aid</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-		<script src="//maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing<?php echo (isset($GOOGLE_MAP_KEY) && $GOOGLE_MAP_KEY?'&key='.$GOOGLE_MAP_KEY:''); ?>"></script>
+
+		<?php
+		include_once($SERVER_ROOT.'/includes/leafletMap.php');
+		include_once($SERVER_ROOT.'/includes/googleMap.php');
+		?>
+
 		<script type="text/javascript">
-			var map;
-			var startLocation;
-			var currentMarker;
-			var errCircle;
+		var map;
 
-			function initialize(){
-				var latCenter = opener.document.getElementById("decimallatitude").value;
-				var lngCenter = opener.document.getElementById("decimallongitude").value;
-				if(latCenter){
-					document.getElementById("latbox").value = latCenter;
-					document.getElementById("lngbox").value = lngCenter;
+		//Global temp Values
+		let errRadius = 0;
+		let latlng;
+
+		//Map Center
+		let latCenter;
+		let lngCenter;
+
+		//Inputs
+		let radiusInput;
+		let latInput;
+		let lngInput;
+
+		const checkCoord = (coord, range) => {
+			return !isNaN(coord) && coord <= range && coord >= -range;
+		}
+
+		//Function for reading reading lat lng inputs
+		function getLatLng() {
+			const pos = [
+				parseFloat(document.getElementById("latbox").value),
+				parseFloat(document.getElementById("lngbox").value)
+			];
+
+			if(checkCoord(pos[0], 90) && checkCoord(pos[1], 180)) {
+				return pos;
+			}
+
+			return false;
+		}
+		//Funciton for setting lat lng inputs
+		function setLatLngForm(lat, lng) {
+			document.getElementById("latbox").value = parseFloat(lat).toFixed(5);
+			document.getElementById("lngbox").value = parseFloat(lng).toFixed(5);
+		}
+
+		//Function For refreshing markers based upon user input
+		//Function For Submission
+		function SubmitCoordinates(lat, lng) {
+			opener.document.getElementById("decimallatitude").value = lat;
+			opener.document.getElementById("decimallongitude").value = lng;
+		}
+
+		function errRadiusChanged(e) {
+			try {
+				errRadius = parseFloat(e.value);
+			} catch {
+				errRadius = 0;
+			}
+		}
+
+		function getErrorRadius() {
+			if(opener.document.getElementById("coordinateuncertaintyinmeters") && opener.document.getElementById("coordinateuncertaintyinmeters").value){
+				errRadius = opener.document.getElementById("coordinateuncertaintyinmeters").value;
+				document.getElementById("errRadius").value = opener.document.getElementById("coordinateuncertaintyinmeters").value;
+			}
+		}
+
+		function leafletInit() {
+			//Setup Map Canvas
+			map = new LeafletMap('map_canvas', {
+				center: [latCenter, lngCenter], 
+				zoom: 7,
+            lang: "<?php echo $LANG_TAG; ?>"
+			});
+
+			var drawnItems = new L.FeatureGroup();
+			map.mapLayer.addLayer(drawnItems);
+
+			var drawControl = new L.Control.Draw({
+				draw: {
+					...map.DEFAULT_DRAW_OPTIONS,
+					marker: true,
+					polygon: false,
+					circle: false,
+					rectangle: false,
+				},
+				edit: {
+					featureGroup: drawnItems,
 				}
-				var errRadius = 0;
-				if(opener.document.getElementById("coordinateuncertaintyinmeters") && opener.document.getElementById("coordinateuncertaintyinmeters").value){
-					errRadius = opener.document.getElementById("coordinateuncertaintyinmeters").value;
-					document.getElementById("errRadius").value = opener.document.getElementById("coordinateuncertaintyinmeters").value;
+			});
+
+			map.mapLayer.addControl(drawControl);
+			const markerControl = document.querySelector(".leaflet-draw-draw-marker");
+			if(markerControl) markerControl.click();
+
+			let marker;
+
+			function createMarker(lat, lng)  {
+				drawnItems.clearLayers();
+				if(marker) map.mapLayer.removeLayer(marker);
+
+				latlng = [lat,lng];
+				setLatLngForm(lat, lng);
+
+				marker = L.marker([lat, lng])
+
+				if(errRadius && errRadius > 0) {
+					marker.addTo(map.mapLayer);
+					L.circle([lat, lng], errRadius)
+						.on('drag', e=> {
+							const pos = e.target.getLatLng()
+
+							setLatLngForm(pos.lat, pos.lng);
+
+							map.mapLayer.removeLayer(marker)
+							marker = L.marker([pos.lat, pos.lng])
+							.addTo(map.mapLayer) 
+						})
+						.setStyle(map.DEFAULT_SHAPE_OPTIONS)
+					.addTo(drawnItems);
+
+					map.mapLayer.on('draw:deleted', e => {
+						map.mapLayer.removeLayer(marker);
+					})
+
+					map.mapLayer.on('draw:editresize', e => {
+						document.getElementById("errRadius").value = e.layer._mRadius.toFixed(5);
+					})
+
+					map.mapLayer.on('draw:edited', function(e) {
+						latlng = getLatLng();
+						errRadius = parseFloat(document.getElementById("errRadius").value);
+					})
+
+					map.mapLayer.on('draw:editstop', e => {
+						setLatLngForm(latlng[0], latlng[1]);
+						document.getElementById("errRadius").value = errRadius;
+					})
+
+					map.mapLayer.on('draw:editstop', e => {
+						map.mapLayer.removeLayer(marker);
+						marker = L.marker([latlng[0], latlng[1]])
+						.addTo(map.mapLayer) 
+					})
+
+				} else {
+					marker.on('drag', e => {
+						const pos = e.target.getLatLng();
+						setLatLngForm(pos.lat, pos.lng);
+					})
+
+					map.mapLayer.on('draw:editstop', e => {
+						setLatLngForm(latlng[0], latlng[1]);
+					})
+
+					map.mapLayer.on('draw:edited', function(e) {
+						latlng = getLatLng();
+					})
+
+					marker.addTo(drawnItems);
+
+					map.mapLayer.setView(latlng, map.mapLayer.getZoom());
 				}
+			} 
 
-				var dmOptions = {
-					mapTypeId: google.maps.MapTypeId.TERRAIN,
-					scaleControl: true
-				};
+			onFormChange = (event) => { 
+				errRadius = parseFloat(event.target.value);
+				const pos = getLatLng();
+				if(pos) createMarker(pos[0], pos[1]);
+			}
+			if(radiusInput) radiusInput.addEventListener("change", onFormChange);
+			latInput.addEventListener("change", onFormChange);
+			lngInput.addEventListener("change", onFormChange);
 
-				map = new google.maps.Map(document.getElementById("map_canvas"), dmOptions);
+			map.mapLayer.on('draw:created', function(e) {
+				//Clear between Draws
+				if(e.layerType === "marker") {
+					const lat = e.layer._latlng.lat;
+					const lng = e.layer._latlng.lng;
+					createMarker(lat, lng)
 
-				var polyOptions = {
+				} 
+
+				if(markerControl) { 
+					setTimeout(() => markerControl.click(), 50);
+				}
+			})
+
+			//Draw marker if one exists
+		if(latlng) {
+				createMarker(latlng[0], latlng[1]);
+			}
+		}
+
+		function googleInit() {
+			//Setup Map Canvas
+			map = new GoogleMap('map_canvas', {
+				center: new google.maps.LatLng(latCenter, lngCenter), 
+				zoom: 7
+			});
+
+			let radiusInput = document.getElementById("errRadius");
+
+			let polyOptions = {
+				strokeWeight: 0,
+				fillOpacity: 0.45,
+				editable: false,
+				draggable: false
+			};
+
+			let drawingManager = new google.maps.drawing.DrawingManager({
+				drawingMode: null,
+				drawingControl: false,
+				circleOptions: polyOptions
+			});
+
+			drawingManager.setMap(map.mapLayer);
+
+			let marker;
+			let errCircle;
+
+			function createMarker(lat, lng) {
+				latlng = [lat, lng];
+				setLatLngForm(lat, lng);
+				//Clears Last Marker Off Map
+				if(marker) marker.setMap();
+				marker = new google.maps.Marker({
+					position: new google.maps.LatLng(lat, lng),
+					draggable: true,
+					map: map.mapLayer
+				});
+
+				marker.addListener('position_changed', function(){
+					let newLatLng = (marker.getPosition());
+					setLatLngForm(newLatLng.lat(), newLatLng.lng());
+				});
+				drawError();
+			}
+
+			function drawError() {
+				if(!marker || isNaN(errRadius) || errRadius <= 0) return;
+			if(errCircle) errCircle.setMap();
+
+				errCircle = new google.maps.Circle({
+					center: new google.maps.LatLng(latlng[0], latlng[1]),
+					//Convert to Meters
+					radius: errRadius,
 					strokeWeight: 0,
 					fillOpacity: 0.45,
-					editable: false,
-					draggable: false
-				};
-
-				var drawingManager = new google.maps.drawing.DrawingManager({
-					drawingMode: null,
-					drawingControl: false,
-					circleOptions: polyOptions
-				});
-
-				drawingManager.setMap(map);
-
-				if(latCenter && lngCenter){
-					startLocation = new google.maps.LatLng(latCenter,lngCenter);
-					setMarker();
-				}
-
-				google.maps.event.addListener(map, 'click', function(event) {
-					mapZoom = map.getZoom();
-					startLocation = event.latLng;
-					setTimeout("placeMarker()", 500);
-				});
-				setErrorRadius(latCenter, lngCenter, errRadius);
-
-				if(!errCircle){
-					if(latCenter){
-						map.setCenter(new google.maps.LatLng(latCenter,lngCenter));
-						map.setZoom(16);
-					}
-					else{
-						var bounds = new google.maps.LatLngBounds();
-						<?php
-						$boundArr = array();
-						if($MAPPING_BOUNDARIES){
-							$boundArr = explode(";",$MAPPING_BOUNDARIES);
-						}
-						if(!$boundArr || count($boundArr) != 4){
-							$boundArr[0] = 51;
-							$boundArr[1] = -65;
-							$boundArr[2] = 25;
-							$boundArr[3] = -125;
-						}
-						echo 'bounds.extend(new google.maps.LatLng('.$boundArr[2].','.$boundArr[3].'));'."\n";
-						echo 'bounds.extend(new google.maps.LatLng('.$boundArr[0].','.$boundArr[1].'));'."\n";
-						?>
-						map.fitBounds(bounds);
-						map.panToBounds(bounds);
-					}
-				}
-			}
-
-			function placeMarker() {
-				if(currentMarker) currentMarker.setMap();
-				if(mapZoom == map.getZoom()){
-					setMarker();
-				}
-			}
-
-			function setMarker(){
-				currentMarker = new google.maps.Marker({
-					position: startLocation,
+					editable: true,
 					draggable: true,
-					map: map
+					map: map.mapLayer
 				});
-				currentMarker.addListener('position_changed', function(){
-					var latLng = (currentMarker.getPosition());
-					document.getElementById("latbox").value = latLng.lat().toFixed(6);
-					document.getElementById("lngbox").value = latLng.lng().toFixed(6);
+				google.maps.event.addListener(errCircle, 'radius_changed', function(){
+					var radius = (errCircle.getRadius());
+					document.getElementById("errRadius").value = radius.toFixed(5);
 				});
-				if(errCircle) errCircle.bindTo('center', currentMarker, 'position');
 
-				document.getElementById("latbox").value = startLocation.lat().toFixed(6);
-				document.getElementById("lngbox").value = startLocation.lng().toFixed(6);
-
-				map.setCenter(currentMarker.getPosition());
-				if(map.getZoom() < 8) map.setZoom(8);
+				errCircle.bindTo('center', marker, 'position');
 			}
 
-			function setErrorRadius(latValue, lngValue, errRadius){
-				errRadius = parseInt(errRadius);
-				if(latValue && lngValue && isNumeric(errRadius) && errRadius > 0){
-					errCircle = new google.maps.Circle({
-						center: new google.maps.LatLng(latValue, lngValue),
-						radius: errRadius,
-						strokeWeight: 0,
-						fillOpacity: 0.45,
-						editable: true,
-						draggable: true,
-						map: map
-					});
-					google.maps.event.addListener(errCircle, 'radius_changed', function(){
-						var radius = (errCircle.getRadius());
-						document.getElementById("errRadius").value = radius.toFixed(0);
-					});
-					errCircle.bindTo('center', currentMarker, 'position');
-					var bounds = errCircle.getBounds();
-					map.fitBounds(bounds);
-					map.panToBounds(bounds);
-				}
-			}
 
-			function coordinatesChanged(){
-				var latValue = document.getElementById("latbox").value;
-				var lngValue = document.getElementById("lngbox").value;
-				if(validateCoordinates(latValue,lngValue)){
-					currentMarker.setPosition(new google.maps.LatLng(latValue,lngValue));
-					map.setCenter(currentMarker.getPosition());
-					if(map.getZoom() < 8) map.setZoom(8);
-				}
+			onFormChange = (event) => { 
+				errRadius = parseFloat(event.target.value);
+				const pos = getLatLng();
+				if(pos) createMarker(pos[0], pos[1]);
 			}
+			if(radiusInput) radiusInput.addEventListener("change", onFormChange);
+			latInput.addEventListener("change", onFormChange);
+			lngInput.addEventListener("change", onFormChange);
 
-			function errRadiusChanged(inputObj){
-				var radius = parseInt(inputObj.value,10);
-				if(errCircle){
-					if(radius){
-						errCircle.setRadius(radius);
-						var bounds = errCircle.getBounds();
-						map.fitBounds(bounds);
-						map.panToBounds(bounds);
-					}
-					else{
-						errCircle.setMap(null);
-						errCircle = null;
-					}
-				}
-				else{
-					if(currentMarker){
-						setErrorRadius(currentMarker.getPosition().lat(), currentMarker.getPosition().lng(), radius);
-					}
-				}
+			//Draw marker if one exists
+		if(latlng) {
+				createMarker(latlng[0], latlng[1]);
+				map.mapLayer.setCenter(marker.getPosition());
 			}
+			//Setup OnClick Listeners
+			google.maps.event.addListener(map.mapLayer, 'click', function(e) {
 
-			function updateParentForm(f){
-				opener.document.getElementById("decimallatitude").value = f.latbox.value;
-				opener.document.getElementById("decimallongitude").value = f.lngbox.value;
-				try{
-					if(opener.document.getElementById("coordinateuncertaintyinmeters")){
-						opener.document.getElementById("coordinateuncertaintyinmeters").value = f.errRadius.value;
-						opener.document.getElementById("coordinateuncertaintyinmeters").onchange();
-					}
-					if(opener.document.getElementById("geodeticdatum")){
-						opener.document.getElementById("geodeticdatum").value = "WGS84";
-						opener.document.getElementById("geodeticdatum").onchange();
-					}
-					opener.document.getElementById("decimallatitude").onchange();
-					opener.document.getElementById("decimallongitude").onchange();
-					opener.document.getElementById("saveEditsButton").disabled = false;
+				createMarker(e.latLng.lat(), e.latLng.lng());
+			if(errRadius) {
+					drawError();
 				}
-				catch(myErr){
-					//alert("Unable to trigger onchange");
-				}
-				finally{
-					self.close();
-					return false;
-				}
-			}
+			}) 
+		}
 
-			function validateCoordinates(latValue,lngValue){
-				if(!isNumeric(latValue)){
-					alert("Latitude must be a numeric value only");
-					return false;
-				}
-				else if(!isNumeric(lngValue)){
-					alert("Longitude must be a numeric value only");
-					return false;
-				}
-				else if(parseInt(Math.abs(latValue)) > 90){
-					alert("Latitude coordinates are out-of-range (e.g. > 90 or < -90)");
-					return false;
-				}
-				else if(parseInt(Math.abs(lngValue)) > 180){
-					alert("Longitude coordinates are out-of-range (e.g. > 180 or < -180)");
-					return false;
-				}
-				return true;
-			}
+		function initialize() {
+			let lat = opener.document.getElementById("decimallatitude").value;
+			let lng = opener.document.getElementById("decimallongitude").value;
 
-			function isNumeric(n) {
-				return !isNaN(parseFloat(n)) && isFinite(n);
+			const data = document.getElementById('service-container');
+			latCenter = parseFloat(data.getAttribute('data-lat'));
+			lngCenter = parseFloat(data.getAttribute('data-lng'));
+
+			radiusInput = document.getElementById("errRadius");
+			latInput = document.getElementById("latbox");
+			lngInput = document.getElementById("lngbox");
+			getErrorRadius();
+
+			if(lat && lng) {
+				if(checkCoord(lat, 90) && checkCoord(lng, 180)) {
+					setLatLngForm(lat, lng);
+					latlng = [lat, lng];
+				} else {
+					alert(`Error: Not Coordinates lat: ${lat}, lng: ${lng}`);
+				}
+			} 
+			<?php if(empty($GOOGLE_MAP_KEY)) { ?> 
+			leafletInit();
+		<?php } else { ?> 
+			googleInit();
+	<?php } ?>
+		}
+
+		function updateParentForm(f) {
+			opener.document.getElementById("decimallatitude").value = f.latbox.value;
+			opener.document.getElementById("decimallongitude").value = f.lngbox.value;
+			try{
+				if(opener.document.getElementById("coordinateuncertaintyinmeters")){
+					opener.document.getElementById("coordinateuncertaintyinmeters").value = f.errRadius.value;
+					opener.document.getElementById("coordinateuncertaintyinmeters").onchange();
+				}
+				if(opener.document.getElementById("geodeticdatum")){
+					opener.document.getElementById("geodeticdatum").value = "WGS84";
+					opener.document.getElementById("geodeticdatum").onchange();
+				}
+				opener.document.getElementById("decimallatitude").onchange();
+				opener.document.getElementById("decimallongitude").onchange();
+				opener.document.getElementById("saveEditsButton").disabled = false;
 			}
+			catch(myErr){
+				//alert("Unable to trigger onchange");
+			}
+			finally{
+				self.close();
+				return false;
+			}
+		}
 		</script>
-
+		<style>
+         body { padding:0; margin:0 }
+			html, body, #map_canvas { width:100%; height: 100%;}
+         .screen-reader-only{ 
+            position: absolute;
+            left: -10000px;
+         }
+      </style>
 	</head>
-	<body style="background-color:#ffffff;" onload="initialize()">
-		<div style="">
-			<form name="coordform" action="" method="post" onsubmit="return false">
-				<div style="float:right;margin:5px 20px">
-					<button name="addcoords" type="button" onclick="updateParentForm(this.form);">Submit Coordinates</button><br/>
-					<button name="refreshbutton" type="button" onclick="return false">Refresh Map</button>
-				</div>
-				<div style="margin:3px 20px 3px 0px;">
-					Click on the map to capture coordinates, or drag marker.
-					<?php if($errMode) echo 'Enter uncertainty to create an error radius circle around the marker. '; ?>
-					The Submit Coordinates button will transfer the information to form.
-				</div>
-				<div style="margin-right:10px;">
-					<b>Latitude:</b> <input type="text" id="latbox" name="lat" onchange="coordinatesChanged()" style="width:100px" />
-					<b>Longitude:</b> <input type="text" id="lngbox" name="lon" onchange="coordinatesChanged()" style="width:100px" />
-				<?php
-				if($errMode){
-					?>
-					<b>Uncertainty in Meters:</b> <input type="text" id="errRadius" name="errRadius" size="13" onchange="errRadiusChanged(this)" />
-					<?php
-				}
-				?>
-				</div>
-			</form>
-			<div id='map_canvas' style='width:100%; height:88%; clear:both;'></div>
+	<body style="display:flex; flex-direction: column;background-color:#ffffff;" onload="initialize()">
+		<h1 class="page-heading screen-reader-only">Point-Radius Aid</h1>
+		<div
+			id="service-container" 
+			class="service-container" 
+			data-lat="<?= htmlspecialchars($latCenter)?>"
+			data-lng="<?= htmlspecialchars($lngCenter)?>"
+			>
 		</div>
+		<form style="padding:0.5rem" name="coordform" action="" method="post" onsubmit="return false">
+			<div style="float:right;">
+				<button name="addcoords" type="button" onclick="updateParentForm(this.form);">
+					<b><?php echo isset($LANG['SUBMIT'])? $LANG['SUBMIT']: 'Submit' ?></b> 
+				</button><br/>
+			</div>
+			<div style="margin:3px 20px 3px 0px;">
+			<?php echo isset($LANG['MPR_INSTRUCTIONS']) ?$LANG['MPR_INSTRUCTIONS']: 'Click once to capture coordinates. Click on the submit coordinate button to transfer coordinates.' ?>
+			<?php if($errMode) echo isset($LANG['MPR_UNCERTAINTY_INSTRUCTIONS']) ?$LANG['MPR_UNCERTAINTY_INSTRUCTIONS']: 'Enter uncertainty to create an error radius circle around the marker. '?>
+			</div>
+			<div style="margin-right:10px;">
+				<b><?php echo isset($LANG['MPR_LAT'])? $LANG['MPR_LAT']: 'Latitude' ?>:</b> 
+				<input type="text" id="latbox" name="lat" style="width:100px" />
+				<b><?php echo isset($LANG['MPR_LNG'])? $LANG['MPR_LNG']: 'Longitude' ?>:</b> 
+				<input type="text" id="lngbox" name="lon" style="width:100px" />
+				<?php if($errMode):?>
+				<b>
+				<?php echo isset($LANG['UNCERTAINTY_METERS']) ?$LANG['UNCERTAINTY_METERS']: 'Uncertainty in Meters'?>:
+				</b>
+				<input type="text" id="errRadius" name="errRadius" size="13" />
+				<?php endif?>
+			</div>
+		</form>
+		<div id='map_canvas'></div>
 	</body>
 </html>

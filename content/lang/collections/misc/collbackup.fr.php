@@ -5,9 +5,10 @@ Language: Français (French)
 ------------------
 */
 
-$LANG['OCC_DWNLD'] = 'Téléchargement des Occurrences';
-$LANG['DWN_MOD'] = 'Nodule à Télécharger';
-$LANG['DATA_SET'] = 'Base de Données';
-$LANG['DOWNLOADING'] = 'Téléchargement du Fichier de Sauvegarde';
 
+$LANG['OCCURRENCE_DOWNLOAD'] = 'Téléchargement des Occurrences';
+$LANG['DOWNLOAD_MODULE'] = 'Nodule à Télécharger';
+$LANG['ENCODING'] = "Encodage des ensembles de données";
+$LANG['DOWNLOAD'] = 'Télécharger';
+$LANG['DOWNLOADING'] = 'Téléchargement du Fichier de Sauvegarde';
 ?>

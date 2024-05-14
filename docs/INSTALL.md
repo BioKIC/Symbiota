@@ -8,7 +8,7 @@
   - Recommended configuration adjustments: upload_max_filesize = 100M (or expected file size upload), max_input_vars = 2000, memory_limit = 256M, post_max_size = 100M
   - Optional: Pear package Image_Barcode2 (https://pear.php.net/package/Image_Barcode2) – enables barcodes on specimen labels
   - Optional: Install Pear Mail for SMTP mail support: https://pear.php.net/package/Mail/redirected
-- MariaDB (v10.3+) or MySQL (v5.7+)
+- MariaDB (v10.3+) Development and testing performed using MariaDB. If you are using Oracle MySQL instead, please [report any issues](https://github.com/BioKIC/Symbiota/issues/new).
 - GIT Client - not required, though recommend for installation and updating source code
 
 ## INSTRUCTIONS
@@ -23,10 +23,10 @@
       - CREATE USER 'symbwriter'@'localhost' IDENTIFIED BY 'password2';
       - GRANT SELECT,EXECUTE ON `symbdb`.\* TO `symbreader`@localhost;
       - GRANT SELECT,UPDATE,INSERT,DELETE,EXECUTE ON `symbdb`.\* TO `symbwriter`@localhost;
-   3. Load base database schema from scripts: <SymbiotaBaseFolder>/config/schema/3.0/db_schema-3.0.sql 
+   3. Load base database schema from scripts: <SymbiotaBaseFolder>/config/schema/3.0/db_schema-3.0.sql
       - Run db_schema-3.0.sql to install the core table structure
       - From MySQL commandline: SOURCE <BaseFolderPath>/config/schema/3.0/db_schema-3.0.sql
-   4. If needed, run database patch scripts to bring database up to current structure 
+   4. If needed, run database patch scripts to bring database up to current structure
       - Make sure to run the scripts in the correct order e.g. db_schema_patch-3.1.sql, db_schema_patch-3.2.sql, etc.
       - From MySQL commandline: SOURCE /BaseFolderPath/config/schema/3.0/patches/db_schema_patch-3.x.sql
 3. Configure the Symbiota Portal - modify following configuration files; running /config/setup.sh will create the following required files and permissions
@@ -50,13 +50,20 @@
       The head.php file is included within the <head> tag of each page.
       Thus, you can modify this file to globally change design of portal.
    6. Misc: rename usagepolicy_template.php to usagepolicy.php, and modify as needed
-4. File permissions - the web server needs write access to the following files and their subdirectories  (e.g. sudo chmod -R 777 temp/)
-   - /content/collections/ 
+4. File permissions - the web server needs write access to the following files and their subdirectories (e.g. sudo chmod -R 777 temp/)
+   - /api/storage/framework
+   - /api/storage/logs
+   - /content/collections/
    - /content/collicon/
    - /content/dwca/
    - /content/geolocate/
    - /content/logs/
-   - /temp/ 
+   - /temp/
+5. Misc configurations and recommendations
+   - Install robots.txt file within root directory - The robots.txt file is a standard method used by websites to indicate to visiting web crawlers and other web robots which portions of the website they are allowed to visit and under what conditions. A robots.txt template can be found within the /includes directory. This file should be moved into the domain's root directory, which may or may not be the Symbiota root directory. The file paths listed within the file should be adjusted to match the portal installation path (e.g., start with $CLIENT_ROOT). See links below for more information:
+     - https://developers.google.com/search/docs/crawling-indexing/robots/create-robots-txt
+     - https://en.wikipedia.org/wiki/Robots.txt
+   - Refer to the [third party authentication instructions](https://github.com/BioKIC/Symbiota/blob/master/docs/third_party_auth_setup.md) for specifics about third party authentication setup.
 
 ## DATA
 
@@ -67,10 +74,10 @@
       It is highly recommend that you change the password, or better yet, create a new admin user, assign admin rights, and then delete default admin user.
       Management control panel for permissions is available within Data Managment Panel on the sitemap page.
    2. Taxonomic Thesaurus - Taxon names are stored within the 'taxa' table.
-      Taxonomic hierarchy and placement definitions are controled in the 'taxstatus' table. 
-      A recursive data relationship within the 'taxstatus' table defines the taxonomic hierarchy. 
-      While multiple taxonomic thesauri can be defined, one of the thesauri needs to function as the central taxonomy. 
-      Names must be added in order from upper taxonomic levels to lower (e.g. kingdom, class, order, variety). 
+      Taxonomic hierarchy and placement definitions are controled in the 'taxstatus' table.
+      A recursive data relationship within the 'taxstatus' table defines the taxonomic hierarchy.
+      While multiple taxonomic thesauri can be defined, one of the thesauri needs to function as the central taxonomy.
+      Names must be added in order from upper taxonomic levels to lower (e.g. kingdom, class, order, variety).
       Accepted names must be loaded before non-accepted names.
       1. Names can be added one-by-one using taxonomic management tools (see sitemap.php)
       2. Name can be imported from taxnomic authorities (e.g. Catalog of Life, WoRMS, TROPICOS, etc)

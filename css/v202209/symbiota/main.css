@@ -18,14 +18,14 @@
 
 /* Fonts imports
   ========================================================================== */
-@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
 
 /* Global variables and components
    ========================================================================== */
-@import 'base.css';
-@import 'variables.css';
-@import 'header.css';
-@import 'footer.css';
+@import "base.css";
+@import "variables.css";
+@import "header.css";
+@import "footer.css";
 
 /* Global styles
    ========================================================================== */
@@ -118,6 +118,10 @@ hr {
   line-height: 1.5;
 }
 
+#popup-innertext {
+  font-size: 1.2rem;
+}
+
 .navpath {
   margin: 10px auto;
   width: 100%;
@@ -153,7 +157,6 @@ hr {
 }
 
 #tabs div:first-child {
-  padding: ;
 }
 
 #tabs a {
@@ -168,37 +171,6 @@ hr {
 #tabs table {
   width: 90%;
 }
-
-.ui-tabs .ui-tabs-panel {
-  padding: 10px 4px;
-}
-
-/* styled table */
-table.styledtable {
-  table-layout: auto;
-  width: 100%;
-  border-collapse: collapse;
-}
-
-table.styledtable th {
-  text-align: left;
-  padding: 4px;
-  border: 1px solid gray;
-  background-color: #dbe5f1;
-  color: black;
-}
-
-table.styledtable td {
-  padding: 3px;
-  border: 1px solid gray;
-  background-color: #efefef;
-}
-
-table.styledtable tr.alt td {
-  color: #000000;
-  background-color: #dfdfdf;
-}
-
 
 /***********************************************************************/
 
@@ -261,9 +233,23 @@ table.styledtable tr.alt td {
   background-color: var(--darkest-color);
 }
 
+.button-danger {
+  background-color: var(--danger-color, var(--darkest-color));
+}
+
 .button-primary:hover,
-.button-secondary:hover {
+.button-secondary:hover,
+.button-danger:hover 
+{
   background-color: var(--medium-color);
+}
+
+.button-primary:disabled,
+.button-secondary:disabled,
+.button-danger:disabled
+{
+	opacity: 50%;
+	pointer-events: none;
 }
 
 .button-primary:hover > a,
@@ -318,4 +304,61 @@ table.styledtable tr.alt td {
   .text-big {
     font-size: 2.5rem;
   }
+}
+/* -------------------- */
+
+.top-breathing-room-rel {
+  margin-top: 1rem;
+}
+
+.top-breathing-room-rel-sm {
+  margin-top: 0.5rem;
+}
+
+.left-breathing-room-rel {
+  margin-left: 1rem;
+}
+
+.bottom-breathing-room {
+  margin-bottom: 10px;
+}
+
+.bottom-breathing-room-rel {
+  margin-bottom: 1rem;
+}
+
+.bottom-breathing-room-rel-sm {
+  margin-bottom: 0.5rem;
+}
+
+.justify-center {
+  display: flex;
+  justify-content: center;
+}
+
+.cat-icon-div {
+  width: 4rem;
+  height: 3rem;
+}
+
+.collection-checkbox {
+  width: 25px;
+  padding-top: 8px;
+}
+
+.no-margin {
+  margin: 0;
+}
+
+.search-bar {
+  width: 25rem;
+}
+
+.float-right {
+  float: right;
+}
+
+.ui-autocomplete {
+  /* from https://stackoverflow.com/questions/32517694/jquery-autocomplete-dropdown-is-transparent */
+  background-color: inherit;
 }

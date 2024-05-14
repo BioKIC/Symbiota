@@ -135,8 +135,9 @@ class OmCollections extends Manager{
 			if(isset($postArr['sortSeq']) && is_numeric($postArr['sortSeq'])) $retArr['sortSeq'] = $postArr['sortSeq'];
 		}
 		if(isset($postArr['ccpk']) && is_numeric($postArr['ccpk'])) $retArr['ccpk'] = $postArr['ccpk'];
-		$retArr['securityKey'] = (isset($postArr['securityKey'])?$postArr['securityKey']:NULL);
-		$retArr['recordID'] = (isset($postArr['recordID'])?$postArr['recordID']:NULL);
+		$retArr['securityKey'] = (!empty($postArr['securityKey'])?$postArr['securityKey']:NULL);
+		$retArr['collectionGuid'] = (!empty($postArr['collectionGuid'])?$postArr['collectionGuid']:NULL);
+		if(!$retArr['collectionGuid'] && !empty($postArr['recordID'])) $retArr['collectionGuid'] = $postArr['recordID'];
 		return $retArr;
 	}
 

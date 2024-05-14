@@ -5,11 +5,11 @@ header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/exsiccati/batchimport.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
-$ometid = array_key_exists('ometid',$_REQUEST)?$_REQUEST['ometid']:0;
-$collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
-$source1 = array_key_exists('source1',$_POST)?$_POST['source1']:0;
-$source2 = array_key_exists('source2',$_POST)?$_POST['source2']:0;
-$formSubmit = array_key_exists('formsubmit',$_POST)?$_POST['formsubmit']:'';
+$ometid = array_key_exists('ometid',$_REQUEST) ? filter_var($_REQUEST['ometid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$collid = array_key_exists('collid',$_REQUEST) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$source1 = array_key_exists('source1',$_POST) ? filter_var($_POST['source1'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$source2 = array_key_exists('source2',$_POST) ? filter_var($_POST['source2'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$formSubmit = array_key_exists('formsubmit',$_POST) ? htmlspecialchars($_POST['formsubmit'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
 
 $statusStr = '';
 $isEditor = 0;
@@ -35,7 +35,8 @@ if($isEditor && $formSubmit){
 }
 
 ?>
-<html>
+<!DOCTYPE html>
+<html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<title><?php echo $DEFAULT_TITLE; ?> Exsiccatae Batch Transfer</title>
 	<?php
@@ -120,7 +121,8 @@ if($isEditor && $formSubmit){
 		<a href="batchimport.php">Batch Import Module</a>
 	</div>
 	<!-- This is inner text! -->
-	<div id="innertext">
+	<div role="main" id="innertext">
+		<h1 class="page-heading">Exsiccatae Batch Import</h1>
 		<?php
 		if($statusStr){
 			echo '<hr/>';

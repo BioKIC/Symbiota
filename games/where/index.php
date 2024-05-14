@@ -17,7 +17,7 @@ $whereManager = new GamesWhereManager();
 
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="<?php echo $LANG_TAG ?>">
 	<head>
 		<title>Where in the World</title>
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
@@ -32,8 +32,8 @@ $whereManager = new GamesWhereManager();
 			.thumb:hover span { visibility:visible; top:100px; left:1350px; }
 		</style>
 		<script src="js/ol.js" type="text/javascript"></script>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery.js" type="text/javascript"></script>
-		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 		<script type="text/javascript">
 			var parameters = location.search.substring(1);
 			if(parameters.substring(0,5) == "Debug") var Debug = parameters.substring(6,7);
@@ -467,11 +467,12 @@ $whereManager = new GamesWhereManager();
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="<?php echo $CLIENT_ROOT; ?>/index.php">Home</a> &gt;&gt;
+			<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">Home</a> &gt;&gt;
 			<b>Where in the World Game</b>
 		</div>
 		<!-- This is inner text! -->
-		<div id="innertext">
+		<div role="main" id="innertext">
+			<h1 class="page-heading">Where in the World Game</h1>
 			<h2>Where in the World do these plants grow?</h2>
 			<table>
 				<tr>

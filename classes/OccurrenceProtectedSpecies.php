@@ -84,27 +84,32 @@ class OccurrenceProtectedSpecies extends OccurrenceMaintenance {
 	}
 
 	public function setTaxonFilter($searchTaxon){
-		$sql = 'SELECT ts.tidaccepted FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE t.sciname LIKE "'.$searchTaxon.'%" AND ts.taxauthid = 1';
-		$rs = $this->conn->query($sql);
-		if($rs) {
-			while($r = $rs->fetch_object()){
-				$this->taxaArr[] = $r->tidaccepted;
-			}
-		}
-		$rs->free();
-
-		if($this->taxaArr){
-			//Get synonyms
-			$sql = 'SELECT tid  FROM taxstatus WHERE tidaccepted IN('.implode(',',$this->taxaArr).")";
-			$rs = $this->conn->query($sql);
-			if($rs) {
-				while($r = $rs->fetch_object()){
-					$this->taxaArr[] = $r->tid;
+		$searchTaxon = trim($searchTaxon).'%';
+		if($searchTaxon){
+			$sql = 'SELECT ts.tidaccepted FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE t.sciname LIKE ? AND ts.taxauthid = 1';
+			if($stmt = $this->conn->prepare($sql)){
+				$stmt->bind_param('s', $searchTaxon);
+				$stmt->execute();
+				$stmt->bind_result($tid);
+				while($stmt->fetch()){
+					$this->taxaArr[] = $tid;
 				}
+				$stmt->close();
 			}
-			$rs->free();
+
+			if($this->taxaArr){
+				//Get synonyms
+				$sql = 'SELECT tid FROM taxstatus WHERE tidaccepted IN('.implode(',',$this->taxaArr).")";
+				$rs = $this->conn->query($sql);
+				if($rs) {
+					while($r = $rs->fetch_object()){
+						$this->taxaArr[] = $r->tid;
+					}
+				}
+				$rs->free();
+			}
+			else $this->taxaArr[] = 0;
 		}
-		else $this->taxaArr[] = 0;
 	}
 
 	public function getSpecimenCnt(){

@@ -42,9 +42,10 @@ class DwcArchiverBaseManager extends Manager{
 					$this->writeOutRecord($r);
 				}
 				$rs->free();
+				fclose($this->fileHandler);
 			}
 			else{
-				$this->logOrEcho("ERROR creating attribute (MeasurementOrFact file: ".$this->conn->error."\n");
+				$this->logOrEcho('ERROR writing out to extension file: '.$this->conn->error."\n");
 				$this->logOrEcho("\tSQL: ".$sql."\n");
 			}
 		}
@@ -77,16 +78,17 @@ class DwcArchiverBaseManager extends Manager{
 		$retStr = $inStr;
 		if($inStr && $this->charSetSource){
 			if($this->charSetOut == 'UTF-8' && $this->charSetSource == 'ISO-8859-1'){
-				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1',true) == "ISO-8859-1"){
-					$retStr = utf8_encode($inStr);
-					//$retStr = iconv("ISO-8859-1//TRANSLIT","UTF-8",$inStr);
+				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1',true) == 'ISO-8859-1'){
+					$retStr = mb_convert_encoding($inStr, 'UTF-8', 'ISO-8859-1');
 				}
 			}
-			elseif($this->charSetOut == "ISO-8859-1" && $this->charSetSource == 'UTF-8'){
-				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1') == "UTF-8"){
-					$retStr = utf8_decode($inStr);
-					//$retStr = iconv("UTF-8","ISO-8859-1//TRANSLIT",$inStr);
+			elseif($this->charSetOut == 'ISO-8859-1' && $this->charSetSource == 'UTF-8'){
+				if(mb_detect_encoding($inStr,'UTF-8,ISO-8859-1') == 'UTF-8'){
+					$retStr = mb_convert_encoding($inStr, 'ISO-8859-1', 'UTF-8');
 				}
+			}
+			else{
+				$retStr = mb_convert_encoding($inStr, $this->charSetOut, mb_detect_encoding($inStr));
 			}
 		}
 		return $retStr;

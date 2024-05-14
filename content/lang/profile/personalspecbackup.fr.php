@@ -5,7 +5,7 @@ Language: Français (French)
 ------------------
 */
 
-$LANG['PERS_SPEC_BACKUP'] = 'Sauvegarde des Spécimens Personnels';
+$LANG['PERS_SPEC_BACKUP'] = 'Sauvegarde des Dossiers Personnels';
 $LANG['BACK_COMPLETE'] = 'Sauvegarde Terminée';
 $LANG['CLICK'] = 'Cliquez sur le fichier pour télécharger';
 $LANG['DOWNLOAD_MOD'] = 'Module à Télécharger';

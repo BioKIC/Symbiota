@@ -18,29 +18,6 @@ $(document).ready(function() {
 		}
 	});
 
-	//Misc fields with lookups
-	$("#fcountry").autocomplete({
-		source: "rpc/lookupCountry.php", 
-		minLength: 2,
-		autoFocus: true
-	});
-
-	$("#fstateprovince").autocomplete({
-		source: function( request, response ) {
-			$.getJSON( "rpc/lookupState.php", { term: request.term, country: document.defaultform.country.value }, response );
-		},
-		minLength: 2,
-		autoFocus: true
-	});
-
-	$("#fcounty").autocomplete({ 
-		source: function( request, response ) {
-			$.getJSON( "rpc/lookupCounty.php", { term: request.term, "state": document.defaultform.stateprovince.value }, response );
-		},
-		minLength: 2,
-		autoFocus: true
-	});
-
 	$( "#fexstitle" ).autocomplete({
 		source: "rpc/exsiccatisuggest.php",
 		minLength: 2,

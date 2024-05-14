@@ -18,5 +18,9 @@ $LANG['HIDE_LOC_DETAILS'] = 'Esconder Detalles de Seguridad';
 $LANG['ACCEPT_STATUS'] = 'Estado de Aceptación';
 $LANG['UNACCEPT_REASON'] = 'Razón de No Ser Aceptado';
 $LANG['SUBMIT_NEW_NAME'] = 'Enviar Nuevo Nombre';
+$LANG['GENUS_NAME'] = 'Género o Nombre Base';
+$LANG['EPITHET'] = 'Epíteto';
+$LANG['INFRA_EPITHET_FIELD'] = 'Campo de epíteto infraespecífico';
+$LANG['RANK_FIELD'] = 'Campo de clasificación';
 
 ?>

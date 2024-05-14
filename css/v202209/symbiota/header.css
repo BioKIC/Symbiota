@@ -25,6 +25,7 @@ header {
 
 .top-login > .button {
   margin-left: 0.8rem;
+  display: inline-block;
 }
 
 .top-brand {
@@ -76,6 +77,15 @@ header a:hover {
   text-decoration: none;
 }
 
+.image-container {
+  width: 100%;
+}
+
+.image-container img {
+  width: 100%;
+  height: auto;
+}
+
 /* MENU */
 .menu-wrapper {
   position: sticky;
@@ -103,17 +113,23 @@ header a:hover {
 }
 
 .hamb-line {
-  background: white;
   display: block;
   height: 2px;
   position: relative;
   width: 24px;
 }
 
+.hamb-label {
+  display: block;
+  height: 2px;
+  position: relative;
+  width: 24px;
+  font-size: 4rem;
+}
+
 .hamb-line::before,
 .hamb-line::after {
-  background: white;
-  content: '';
+  content: "";
   display: block;
   height: 100%;
   position: absolute;
@@ -184,8 +200,8 @@ ul.menu {
   header {
     gap: 0;
     grid-template-areas:
-      'top'
-      'menu';
+      "top"
+      "menu";
     grid-template-rows: auto fit-content(100%);
     background-image: var(--header-bg-image);
     background-position: center;
@@ -197,7 +213,7 @@ ul.menu {
   .top-wrapper {
     background-color: var(--header-bg-color);
     display: grid;
-    grid-template-areas: 'brand login';
+    grid-template-areas: "brand login";
     grid-template-columns: 3fr 1fr;
     align-items: center;
     min-width: 0;
@@ -207,7 +223,7 @@ ul.menu {
 
   .top-login {
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto auto auto;
   }
 
   .top-brand {

@@ -15,6 +15,7 @@ $LANG['IMAGE_FILE_TYPE'] = 'Image file must be a JPG, GIF, or PNG (type = ';
 $LANG['HOME'] = 'Home';
 $LANG['COL_MNT'] = 'Collection Management';
 $LANG['OCC_IMAGE_SUBMIT'] = 'Occurrence Image Submission';
+$LANG['UPLOAD'] = 'Upload the File';
 $LANG['MANUAL_UPLOAD'] = 'Manual Occurrence Image Upload';
 $LANG['WEB_READY_RECOMMENDED'] = 'Uploading web-ready images recommended. Upload image size can not be greater than 10MB';
 $LANG['ENTER_URL_EXPLAIN'] = 'Enter a web accessable URL to an image.
@@ -30,6 +31,7 @@ $LANG['PROCESSING_STATUS'] = 'Processing Status';
 $LANG['SKELETAL_DATA'] = 'Skeletal Data';
 $LANG['CAT_NUM'] = 'Catalog Number';
 $LANG['SCINAME'] = 'Scientific Name';
+$LANG['SCINAMEAUTH'] = 'Scientific Name Authorship';
 $LANG['FAMILY'] = 'Family';
 $LANG['COUNTRY'] = 'Country';
 $LANG['STATE_PROVINCE'] = 'State/Province';

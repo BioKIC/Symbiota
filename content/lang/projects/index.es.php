@@ -6,10 +6,11 @@ Language: Espa�ol (Spanish)
 */
 
 $LANG['INVPROJ'] = 'Proyectos de Inventario';
+$LANG['INVPROJLIST'] = 'Lista de proyectos de inventario';
 $LANG['PROJMANAG'] = 'Administradores de Proyectos:';
 $LANG['METADATA'] = 'Metadatos';
 $LANG['INVMANAG'] = 'Administradores de Inventarios';
-$LANG['CHECKMANAG'] = 'Administraci&oacute;n de Listados de Comprobaci&oacute;n';
+$LANG['CHECKMANAG'] = 'Administración de Listados de Comprobaci&oacute;n';
 $LANG['MANAG'] = 'Administradores';
 $LANG['DESCRIP'] = 'Descripci&oacute;n';
 $LANG['NOTES'] = 'Notas';
@@ -42,4 +43,27 @@ $LANG['CHOOSEUSER'] = 'Elija un usuario desde la lista desplegable';
 $LANG['ADDNEWPR'] = 'Ingresar un Proyecto Nuevo';
 $LANG['TOGGLEEDIT'] = 'Intercambia Funciones de Edici&oacute;n';
 $LANG['MAPREP'] = 'Mapea representaci&oacute;n de listados de comprobaci&oacute;n';
+$LANG['PENCIL_ALT'] = 'imagen de un lápiz sobre papel, que indica alternar el modo de edición';
+$LANG['QUESTION_ALT'] = 'imagen de un signo de interrogación para obtener más información sobre las listas de especies de investigación';
+$LANG['GLOBE_ALT'] = 'imagen de un globo terráqueo, que indica una versión de la lista de verificación superpuesta en un mapa';
+$LANG['TRIANGLE_ALT'] = 'una imagen de un triángulo. Solo se usa para hacer que la ventana emergente parezca más una burbuja de diálogo';
+$LANG['EDIT'] = 'Editar';
+$LANG['KEY'] = 'Clave';
+$LANG['KEY_SYMBOL'] = 'Símbolo clave';
+$LANG['ADD_NEW'] = 'Agregar nuevo proyecto';
+$LANG['EDIT'] = 'Editar proyecto';
+
+//Manager Tab
+$LANG['INVENTORY_PROJECT_MANAGERS'] = 'Gestores de proyectos de inventario';
+$LANG['ADD_NEW_MANAGER'] = 'Agregar un nuevo gerente';
+$LANG['ADD_TO_MANAGER_LIST'] = 'Agregar a la lista de administradores';
+$LANG['SELECT_USER'] = 'Seleccione un usuario';
+
+//Checklist Tab
+$LANG['ADD_A_CHECKLIST'] = 'Agregar una lista de verificación';
+$LANG['SELECT_CHECKLIST_TO_ADD'] = 'Seleccione la lista de verificación para agregar';
+$LANG['ADD_CHECKLIST'] = 'Agregar lista de verificación';
+$LANG['DELETE_A_CHECKLIST'] = 'Eliminar una lista de verificación';
+$LANG['SELECT_CHECKLIST_TO_DELETE'] = 'Seleccione la lista de verificación para eliminar';
+$LANG['DELETE_CHECKLIST'] = 'Eliminar lista de verificación';
 ?>

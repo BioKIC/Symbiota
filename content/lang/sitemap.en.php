@@ -10,7 +10,7 @@ $LANG['HOME'] = 'Home';
 $LANG['COLLECTIONS'] = 'Collections';
 $LANG['SEARCHENGINE'] = 'Search Engine';
 $LANG['SEARCH_COLL'] = 'search collections';
-$LANG['LISTOFCOLL'] = 'list of collection participating in project';
+$LANG['LISTOFCOLL'] = 'list of collections participating in project';
 $LANG['COLLSTATS'] = 'Collection Statistics';
 $LANG['EXSICC'] = 'Exsiccati Index';
 $LANG['DATA_PUBLISHING'] = 'Data Publishing';
@@ -36,7 +36,8 @@ $LANG['BUILDDKEY'] = 'dynamically build a key using georeferenced specimen recor
 $LANG['MANAGTOOL'] = 'Data Management Tools';
 $LANG['ADMIN'] = 'Administrative Functions (Super Admins only)';
 $LANG['USERPERM'] = 'User Permissions';
-$LANG['TAXINTER'] = 'Taxonomic Interest User Permissions';
+// TODO: Identification Editor features need to be reviewed and refactored
+//$LANG['TAXINTER'] = 'Taxonomic Interest User Permissions';
 $LANG['TAXONOMIC_CLEANER'] = 'Global Taxonomic Name Cleaner';
 $LANG['CREATENEWCOLL'] = 'Create a New Collection or Observation Profile';
 $LANG['GEOTHESAURUS'] = 'Geographic Thesaurus';
@@ -126,6 +127,7 @@ $LANG['IMGSORTORD'] = 'Edit Image Sorting Order';
 $LANG['ADDNEWIMG'] = 'Add a new image';
 $LANG['DATASETS'] = 'Datasets';
 $LANG['ALLPUBDAT'] = 'All Publicly Viewable Datasets';
-$LANG['DATMANPAG'] = 'Dataset Management Page</a> - datasets you are authorized to edit';
-
+$LANG['DATMANPAG'] = 'Dataset Management Page';
+$LANG['DATA_AUTHORIZED_TO_EDIT'] = 'datasets you are authorized to edit';
+$LANG['MANAGE_TAXON_THUMBNAILS'] = 'Manage Taxon Profile Map Thumbnails';
 ?>

@@ -10,20 +10,20 @@ class SpecUpload{
 	protected $skipOccurFieldArr = array();
 
 	protected $title = '';
-	protected $platform;
-	protected $server;
-	protected $port;
-	protected $username;
-	protected $password;
-	protected $code;
-	protected $path;
-	protected $pKField;
-	protected $schemaName;
-	protected $queryStr;
-	protected $storedProcedure;
+	protected $platform = '';
+	protected $server = '';
+	protected $port = 0;
+	protected $username = '';
+	protected $password = '';
+	protected $code = '';
+	protected $path = '';
+	protected $pKField = '';
+	protected $schemaName = '';
+	protected $queryStr = '';
+	protected $storedProcedure = '';
 	protected $lastUploadDate;
-	protected $uploadType;
-	private $securityKey;
+	protected $uploadType = '';
+	private $securityKey = '';
 	protected $paleoSupport = false;
 	protected $materialSampleSupport = false;
 
@@ -284,10 +284,10 @@ class SpecUpload{
 						$vArr = explode(':',$varStr);
 						$sql .= 'AND '.$vArr[0];
 						switch($vArr[1]){
-							case 'ISNULL':
+							case 'IS_NULL':
 								$sql .= ' IS NULL ';
 								break;
-							case 'ISNOTNULL':
+							case 'NOT_NULL':
 								$sql .= ' IS NOT NULL ';
 								break;
 							default:
@@ -342,7 +342,7 @@ class SpecUpload{
 				$this->schemaName = $row->SchemaName;
 				$this->code = $row->code;
 				if(!$this->path) $this->path = $row->path;
-				$this->pKField = strtolower($row->pkfield);
+				$this->pKField = strtolower($row->pkfield ?? '');
 				$this->queryStr = $row->querystr;
 				$this->storedProcedure = $row->cleanupsp;
 				$this->lastUploadDate = $row->uploaddate;

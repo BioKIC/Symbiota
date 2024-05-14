@@ -1,7 +1,9 @@
 <?php
 /*
 ------------------
-Language: English
+Language: Español (Spanish)
+Translated by: Samanta Orellana
+Date Translated: 2021-08-18
 ------------------
 */
 
@@ -14,8 +16,8 @@ $LANG['STATISTICS'] = 'Estadísticas';
 $LANG['SELECT_COLS'] = 'Seleccionar Colecciones para ser Analizadas';
 $LANG['REC_CRITERIA'] = 'Criterios de Registros';
 $LANG['PARENT_CRITERIA'] = 'Taxón Superior';
-$LANG['SEL_OR_DESEL'] = 'Seleccionar/Deseleccionar todo';
-$LANG['MORE_INFO'] = 'más información';
+$LANG['SEL_OR_DESEL'] = 'Seleccionar/Deseleccionar Todo';
+$LANG['MORE_INFO'] = 'Más Información';
 $LANG['RUN_STATS'] = 'Ejecutar Estadísticas';
 $LANG['UPDATE_STATS'] = 'Actualizar Estadísticas';
 $LANG['NO_COLLECTIONS'] = 'Actualmente no hay colecciones para analizar.';
@@ -61,5 +63,17 @@ $LANG['GEO_DIST'] = 'Distribución Geográfica';
 $LANG['COUNTRY'] = 'País';
 $LANG['SPEC_W_COUNTRY'] = 'Total de Especímenes con País';
 $LANG['SPEC_WO_COUNTRY'] = 'Especímenes sin País o Georreferenciación';
+$LANG['SELECT_DESELECT'] = 'Seleccionar/Deseleccionar';
+$LANG['VIEW_STATS'] = 'Ver Estadísticas';
+$LANG['UPDATE_OBSERVATION_STATS'] = 'Actualizar Estadísticas de Observación';
+$LANG['OBSERVATION_COLLECTIONS'] = 'Colecciones de Observación';
+$LANG['SPECIMEN_COLLECTIONS'] = 'Colecciones de Especímenes';
+$LANG['EXPAND'] = 'Expandir';
+$LANG['CONDENSE'] = 'Condensar';
+$LANG['OBSERVATION'] = 'Observación';
+$LANG['SPECIMEN'] = 'Muestra';
+$LANG['SAVE_CSV'] = 'Guardar CSV';
+$LANG['GENERAL_STATISTICS'] = 'Estadísticas Generales';
+$LANG['STATS_PER_COL'] = 'Estadísticas por colección';
 
 ?>

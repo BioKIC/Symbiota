@@ -12,8 +12,10 @@ $LANG['OF'] = 'de';
 $LANG['NEXT'] = 'Suivants';
 $LANG['LAST'] = 'Dernière';
 $LANG['TABLE_VIEW'] = 'Vue du Tableau des Occurrences';
-$LANG['SEARCH_FILTER'] = 'Rechercher / Filtrer';
+$LANG['TABLE_VIEW_DESC'] = 'Le tableau affiche les informations sur les occurrences avec des colonnes indiquant l\'ID Symbiota, la famille, la date de l\'événement, l\'auteur, l\'emplacement et d\'autres détails';
+$LANG['SEARCH_FILTER'] = 'Ouvrir le Formulaire de Recherche d\'Enregistrement';
 $LANG['BATCH_UPDATE'] = 'Mise à Jour Par Lots';
+$LANG['BATCH_TOOL'] = 'Outil de mise à jour par lots';
 $LANG['FIELD_NAME'] = 'Nom du champ';
 $LANG['SELECT_FIELD'] = 'Sélectionner Nom du Champ';
 $LANG['CURRENT_VALUE'] = 'Valeur Actuelle';
@@ -41,5 +43,10 @@ $LANG['NEW_WINDOW'] = 'ouvrir dans nouvelle fenêtre';
 $LANG['CLICK_ID'] = 'Cliquez sur identifiant Symbiota dans la première colonne pour ouvrir éditeur.';
 $LANG['NONE_FOUND'] = 'Aucun enregistrement trouvé correspondant à requête';
 $LANG['NOT_AUTH'] = "Vous n'êtes pas autorisé à accéder à cette page";
+$LANG['IMG_SEARCH'] = 'Bouton Rechercher';
+$LANG['IMG_EDIT'] = 'Bouton Modifier';
+$LANG['IMG_LINK'] = 'Bouton Lier';
+$LANG['SKIP_SEARCH'] = 'Passer au contenu du tableau';
+$LANG['SAME_WINDOW'] = 'ouvrir dans la même fenêtre';
 
 ?>

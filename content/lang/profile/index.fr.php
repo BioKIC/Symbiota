@@ -27,5 +27,6 @@ $LANG['REST_PWD'] = '\'Réinitialiser le mot de passe';
 $LANG['REMEMBER_LOGIN'] = "Ne me souviens pas nom d\'utilisateur?";
 $LANG['RETRIEVE'] = 'Récupérer le nom d\'utilisateur';
 $LANG['YOUR_EMAIL'] = 'Votre E-mail';
-
+$LANG['OID_LOGIN'] = 'Connectez-vous avec l\'OID';
+$LANG['THIRD_PARTY_LOGIN'] = 'Connectez-vous à l\'aide d\'une authentification tierce';
 ?>

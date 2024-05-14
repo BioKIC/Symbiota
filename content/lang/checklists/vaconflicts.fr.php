@@ -10,6 +10,7 @@ $LANG['POSS_CONFLICTS'] = 'Conflits Possibles d\'&Eacute;chantillons';
 $LANG['POSS_CONFLICTS'] = "Liste des échantillons pour lesquels les identifications actuelles sont en conflit avec la liste. 
 		Les conflits d'échantillons sont généralement dus à des annotations récentes de spécimens situés dans la collection. 
 		Cliquez sur ID de Liste pour ouvrir le volet d'édition de cet enregistrement.";
+$LANG['CONFLICT_COUNT'] = 'Nombre de Conflits';
 $LANG['CHECK_ID'] = 'ID de Liste';
 $LANG['VOUCHER_SPEC'] = '&Eacute;chantillon';
 $LANG['CORRECTED_ID'] = "ID d'&Eacute;chantillon corrigé";

@@ -21,7 +21,7 @@ final class HtmlResultPrinter extends ResultPrinter
      * @var string
      */
     private const PAGE_HEADER = <<<'EOT'
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
     <head>
         <meta charset="utf-8"/>

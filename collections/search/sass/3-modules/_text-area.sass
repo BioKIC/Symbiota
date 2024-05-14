@@ -1,0 +1,78 @@
+/* Text Area ********************************************************************************/
+.text-area-container
+  --bg: $neon-lighter-gray
+  --bg-hover1: rgba(0,0,0,0.08)
+  --bbc: rgba(0,0,0,.42)
+  --opaq1: .08
+  --padding: 10px 
+  --fz: 16px
+  margin: 10px auto
+  width: 100%
+  max-width: 600px
+
+  label
+    position: relative
+    width: 100%
+    display: inline-block
+  
+    span
+      &::after, &::before
+          position: absolute
+          transition: 200ms ease-in-out
+
+      &::after
+        position: absolute
+        top: 0
+        transition: 200ms ease-in-out
+      
+      // Text Area label
+      &::before
+          content: attr(data-label)
+          left: 16px
+          top: 0
+          bottom: 0
+          margin: auto
+          pointer-events: none
+          height: 12px
+          font-size: var(--fz)
+          // color: gray
+          line-height: 1
+          // display: inline
+            transform: translateY(-22px)
+            background-color: white
+            padding: 2px 4px
+      
+  textarea
+    &:focus
+    ~ span
+          &::before
+              top: (-$text-area-height) + 40px
+              font-size: $font-size-small
+              color: $accent-color
+    box-sizing: border-box
+    resize: none
+    border: 0
+    height: $text-area-height
+    padding: var(--padding)
+    font-size: $font-size
+    &:focus,
+    &:active
+        outline: 0
+        border: 0
+
+  .text-area--outlined
+     > textarea
+          border: 1px solid var(--bbc)
+          border-radius: 0
+          &:focus
+              box-shadow: 0 0 0 2px $accent-color
+              border-color: transparent
+        
+          &:focus,
+          &:valid
+              ~ span
+                  &::before
+                      transform: translateY(-22px)
+                      background-color: white
+                      padding: 2px 4px
+             

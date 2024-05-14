@@ -200,6 +200,9 @@ foreach($labelArr as $occid => $occArr){
 $targetFile = $SERVER_ROOT.'/temp/report/'.$PARAMS_ARR['un'].'_annoLabel_'.date('Y-m-d').'_'.time().'.docx';
 $phpWord->save($targetFile, 'Word2007');
 
+ob_start();
+ob_clean();
+ob_end_flush();
 header('Content-Description: File Transfer');
 header('Content-type: application/force-download');
 header('Content-Disposition: attachment; filename='.basename($targetFile));

@@ -1,7 +1,6 @@
 body{
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 12px;
-	width: 820px;
 }
 
 #innertext{
@@ -13,15 +12,10 @@ body{
 #titleDiv{
 	font-weight: bold;
 	font-size: 16px;
-	width: 820px;
-}
-
-#querySymbolDiv{
-	float:right;
+	width: 900px;
 }
 
 #navDiv{
-	width: 820px;
 	clear: both;	
 }
 
@@ -29,8 +23,9 @@ body{
 }
 
 #occdiv{
-	position: relative;
-	width: 795px;
+	width: 900px;
+	resize:both;
+	overflow:auto; /* something other than visible */
 }
 
 #admindiv{
@@ -45,11 +40,6 @@ body{
 #dupesDiv{
 	float:left;
 	margin:5px 5px;
-}
-
-#dateToggleDiv{
-	float:left;
-	margin:15px 5px;
 }
 
 #dupeMsgDiv{
@@ -68,15 +58,6 @@ body{
 	border:2px outset blue;
 	background-color: white;
 	padding:3px;
-}
-
-#dateextradiv{
-	clear: both;
-	padding:10px;
-	margin:5px;
-	border:1px solid gray;
-	display:none;
-	height:20px;
 }
 
 #idrefToggleDiv{
@@ -137,6 +118,14 @@ body{
 	width:	90px;
 }
 
+#eventDate2Div {
+	float:	left;
+}
+
+#eventDate2Div input{
+	width:	90px;
+}
+
 #associatedCollectorsDiv {
 	float:	left;
 }
@@ -151,24 +140,6 @@ body{
 
 #verbatimEventDateDiv input{
 	width:	180px;
-}
-
-#ymdDiv {
-	float:	left;
-	margin-left: 5px;
-}
-
-#ymdDiv input{
-	width:	40px;
-}
-
-#dayOfYearDiv {
-	float:	left;
-	margin-left: 5px;
-}
-
-#dayOfYearDiv input{
-	width:	40px;
 }
 
 #endDateDiv {
@@ -278,12 +249,56 @@ body{
 	width:	95%;
 }
 
+#geography1-div{
+	display: none;
+}
+
+#continentDiv{
+	float:	left;
+}
+
+#continentDiv input{
+	width:	150px;
+}
+
+#waterBodyDiv{
+	float:	left;
+}
+
+#waterBodyDiv input{
+	width:	150px;
+}
+
+#islandGroupDiv{
+	float:	left;
+}
+
+#islandGroupDiv input{
+	width:	150px;
+}
+
+#islandDiv{
+	float:	left;
+}
+
+#islandDiv input{
+	width:	150px;
+}
+
 #countryDiv{
 	float:	left;
 }
 
 #countryDiv input{
 	width:	150px;
+}
+
+#countryCodeDiv{
+	float:	left;
+}
+
+#countryCodeDiv input{
+	width:	50px;
 }
 
 #stateProvinceDiv{
@@ -312,7 +327,7 @@ body{
 
 #locationIdDiv{
 	float:	left;
-	margin-left: 25px;
+	margin-left: 5px;
 }
 
 #locationIdDiv input{
@@ -321,7 +336,6 @@ body{
 
 #localityDiv{
 	clear:	both;
-	margin:	4px 0px 2px 0px;
 }
 
 #localityDiv textarea{
@@ -384,14 +398,14 @@ body{
 	width:	70px;
 }
 
-#googleDiv{
+#mapIconDiv{
 	float:	left;
 	margin-top:18px;
 	cursor:	pointer;
 	padding:3px;
 }
 
-#googleDiv img{
+#mapIconDiv img{
 	border:	0px;
 	width:	13px;
 }
@@ -633,7 +647,6 @@ body{
 
 #lifeStageDiv{
 	float: left;
-	margin:2px;
 }
 
 #lifeStageDiv input{
@@ -642,7 +655,6 @@ body{
 
 #sexDiv{
 	float: left;
-	margin:2px;
 }
 
 #sexDiv input{
@@ -651,7 +663,6 @@ body{
 
 #individualCountDiv{
 	float: left;
-	margin: 2px;
 }
 
 #individualCountDiv input{
@@ -660,7 +671,6 @@ body{
 
 #samplingProtocolDiv{
 	float: left;
-	margin: 2px;
 }
 
 #samplingProtocolDiv input{
@@ -669,7 +679,6 @@ body{
 
 #preparationsDiv{
 	float:left;
-	margin:2px;
 }
 
 #preparationsDiv input{
@@ -678,7 +687,6 @@ body{
 
 #reproductiveConditionDiv{
 	float:left;
-	margin:2px;
 }
 
 #reproductiveConditionDiv select{
@@ -689,9 +697,24 @@ body{
 	width:140px;
 }
 
+#behaviorDiv{
+	float: left;
+}
+
+#behaviorDiv input{
+	width: 140px;
+}
+
+#vitalityDiv{
+	float: left;
+}
+
+#vitalityDiv input{
+	width: 140px;
+}
+
 #establishmentMeansDiv{
 	float: left;
-	margin: 2px;
 }
 
 #establishmentMeansDiv input{
@@ -705,7 +728,6 @@ body{
 
 #typeStatusDiv{
 	float:left;
-	margin:3px;
 }
 
 #typeStatusDiv input{
@@ -714,7 +736,6 @@ body{
 
 #dispositionDiv{
 	float:left;
-	margin:3px;
 }
 
 #dispositionDiv input{
@@ -723,7 +744,6 @@ body{
 
 #occurrenceIdDiv{
 	float:left;
-	margin:3px;
 }
 
 #occurrenceIdDiv input{
@@ -732,7 +752,6 @@ body{
 
 #fieldNumberDiv{
 	float:left;
-	margin:3px;
 }
 
 #fieldNumberDiv input{
@@ -741,7 +760,6 @@ body{
 
 #institutionCodeDiv{
 	float:left;
-	margin:3px;
 }
 
 #institutionCodeDiv input{
@@ -750,7 +768,6 @@ body{
 
 #collectionCodeDiv{
 	float:left;
-	margin:3px;
 }
 
 #collectionCodeDiv input{
@@ -759,7 +776,6 @@ body{
 
 #ownerInstitutionCodeDiv{
 	float:left;
-	margin:3px;
 }
 
 #ownerInstitutionCodeDiv input{
@@ -768,7 +784,6 @@ body{
 
 #basisOfRecordDiv{
 	float:left;
-	margin:3px;	
 }
 
 #basisOfRecordDiv input{
@@ -777,7 +792,6 @@ body{
 
 #languageDiv{
 	float:left;
-	margin:4px 3px;	
 }
 
 #languageDiv input{
@@ -786,12 +800,10 @@ body{
 
 #labelProjectDiv{
 	float:left;
-	margin:5px 3px;
 }
 
 #duplicateQuantityDiv{
 	float:left;
-	margin:3px;
 }
 
 #duplicateQuantityDiv input{
@@ -800,7 +812,6 @@ body{
 
 #dataGeneralizationsDiv{
 	float:left;
-	margin:3px;
 }
 
 #dataGeneralizationsDiv input{
@@ -862,7 +873,7 @@ body{
 /*Misc styling*/
 img.docimg { 
 	border:			0px;
-	width:			9px;
+	width:			11px;
 	margin-bottom:	2px; 
 }
 

@@ -14,6 +14,7 @@ $LANG['SPEC_LIST'] = 'Species List';
 $LANG['BATCH_LINK'] = 'Batch Linking';
 $LANG['NOT_FOUND'] = 'Listed below are specimens identified to a species not found in the checklist.
                         Use the form to add the names and link the vouchers as a batch action.';
+$LANG['SELECT_ALL'] = 'Select All';
 $LANG['SPEC_ID'] = 'Specimen ID';
 $LANG['COLLECTOR'] = 'Collector';
 $LANG['LOCALITY'] = 'Locality';

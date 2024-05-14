@@ -66,7 +66,7 @@ class Iterator implements \Iterator
      *
      * @return bool
      */
-    public function valid()
+    public function valid(): bool
     {
         return $this->position < $this->subject->getSheetCount() && $this->position >= 0;
     }
