@@ -78,23 +78,8 @@ if($isEditor){
 			?>
 			<form id="loaderform" name="loaderform" action="taxonomyloader.php" method="post" onsubmit="return verifyLoadForm(this)">
 				<fieldset>
-					<legend><b><?php echo $LANG['ADD_NEW_TAXON']; ?></b></legend>
-					<div>
-						<div class="left-column">
-							<label for="sciname"> 
-								<?php echo $LANG['TAXON_NAME']; ?>: 
-							</label>
-						</div>
-						<input type="text" id="sciname" name="sciname" class="search-bar-long" value="" onchange="parseName(this.form)"/>
-					</div>
-					<div>
-						<div class="left-column">
-							<label for="author">
-								<?php echo $LANG['AUTHOR']; ?>:
-							</label>
-						</div>
-						<input type='text' id='author' name='author' class='search-bar-long' />
-					</div>
+					<!-- TODO add button for autoparsing with accessibility in mind -->
+					<legend><b><?php echo (isset($LANG['ADD_NEW_TAXON']) ? $LANG['ADD_NEW_TAXON'] : 'Add a New Taxon'); ?></b></legend>
 					<div style="clear:both;">
 						<div class="left-column"> 
 							<label for="rankid">
@@ -116,6 +101,23 @@ if($isEditor){
 						</select>
 						<script src="../../js/symb/taxa.taxonomyloader.js"> </script>
 					</div>
+					<div>
+						<div class="left-column">
+							<label for="sciname"> 
+								<?php echo $LANG['TAXON_NAME']; ?>: 
+							</label>
+						</div>
+						<input type="text" id="sciname" name="sciname" class="search-bar-long" value="" onchange="parseName(this.form)"/>
+					</div>
+					<div>
+						<div class="left-column">
+							<label for="author">
+								<?php echo $LANG['AUTHOR']; ?>:
+							</label>
+						</div>
+						<input type='text' id='author' name='author' class='search-bar-long' />
+					</div>
+					
 					<div style="clear:both;">
 						<div class="left-column">
 							<label id="unitind1label" for="unitind1">
@@ -152,6 +154,22 @@ if($isEditor){
 								</div>
 								<input type='text' id='unitind3' name='unitind3' onchange="updateFullname(this.form)" class='search-bar-extraShort' aria-label='<?php echo $LANG['UNITNAME3']; ?>:' title='<?php echo $LANG['RANK_FIELD']; ?>'/>
 								<input type='text' id='unitname3' name='unitname3' onchange="updateFullname(this.form)" class='search-bar' aria-label="<?php echo $LANG['INFRA_EPITHET_FIELD']; ?>" title="<?php echo $LANG['INFRA_EPITHET_FIELD']; ?>" />
+							</div>
+							<div id="div3hide" style="clear:both;display:none;">
+								<div class="left-column">
+									<label for="">
+										<?php echo $LANG['UNITNAME4']; ?>:
+									</label>
+								</div>
+								<input type='text' id='cultivarEpithet' name='cultivarEpithet' onchange="updateFullname(this.form)" class='search-bar' aria-label="<?php echo $LANG['UNITNAME4']; ?>" title="<?php echo $LANG['UNITNAME4']; ?>" />
+							</div>
+							<div id="div4hide" style="clear:both;display:none;">
+								<div class="left-column">
+									<label for="tradeName">
+										<?php echo $LANG['UNITNAME5']; ?>:
+									</label>
+								</div>
+								<input type='text' id='tradeName' name='tradeName' onchange="updateFullname(this.form)" class='search-bar' aria-label="<?php echo $LANG['UNITNAME5']; ?>" title="<?php echo $LANG['UNITNAME5']; ?>" />
 							</div>
 					<?php
 					}?>
@@ -235,8 +253,11 @@ if($isEditor){
 			</div>
 			<?php
 		}
-		include($SERVER_ROOT.'/includes/footer.php');
+		
 		?>
 	</div>
+	<?php
+	include($SERVER_ROOT . '/includes/footer.php');
+	?>
 </body>
 </html>

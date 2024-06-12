@@ -1,5 +1,6 @@
 <?php
 include_once('../config/symbini.php');
+include_once($SERVER_ROOT.'/classes/TaxonomyEditorManager.php');
 if ($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/list.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/collections/list.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT . '/content/lang/collections/list.en.php');
 include_once($SERVER_ROOT . '/classes/OccurrenceListManager.php');
@@ -268,6 +269,11 @@ $_SESSION['citationvar'] = $searchVar;
 								$prevCollid = 0;
 								foreach ($occurArr as $occid => $fieldArr) {
 									$collId = $fieldArr['collid'];
+									$taxonEditorObj = new TaxonomyEditorManager();
+									$taxonEditorObj->setTid($fieldArr['tid']);
+									$taxonEditorObj->setTaxon();
+									$splitSciname = $taxonEditorObj->splitSciname();
+									$nonItalicizedScinameComponent = trim((!empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '') . (!empty($splitSciname['cultivarEpithet']) ? ("'" . $splitSciname['cultivarEpithet'] . "' ") : '') . (!empty($splitSciname['tradeName']) ? ($splitSciname['tradeName'] . ' ') : ''));
 									if ($collId != $prevCollid) {
 										$prevCollid = $collId;
 										$isEditor = false;
@@ -309,10 +315,16 @@ $_SESSION['citationvar'] = $searchVar;
 										echo '<img src="' . $fieldArr['img'] . '" style="height:70px" alt="' . (isset($LANG['IMG_OCC']) ? $LANG['IMG_OCC'] : 'Image Associated With the Occurence') . '"/></a></div>';
 									}
 									echo '<div style="margin:4px;">';
+									
+
 									if (isset($fieldArr['sciname'])) {
 										$sciStr = '<span style="font-style:italic;">' . $fieldArr['sciname'] . '</span>';
-										if (isset($fieldArr['tid']) && $fieldArr['tid']) $sciStr = '<i> <a target="_blank" href="../taxa/index.php?tid=' . strip_tags($fieldArr['tid']) . '">' . strip_tags($sciStr) . '</a> </i>' ;
 										if (isset($fieldArr['author']) && $fieldArr['author']) $sciStr .= ' ' . $fieldArr['author'];
+										if (isset($fieldArr['tid']) && $fieldArr['tid']){
+											$sciStr = '<a target="_blank" href="../taxa/index.php?tid=' . strip_tags($fieldArr['tid']) . '">'
+											. '<i> ' . strip_tags($splitSciname['base']) . '</i>'
+											. (!empty($nonItalicizedScinameComponent) ? (' ' . $nonItalicizedScinameComponent) : '') . '</a>' ;
+										} 
 										echo $sciStr;
 									} elseif ($fieldArr['localitysecurity'] > 1) {
 										echo (isset($LANG['ID_PROTECTED']) ? $LANG['ID_PROTECTED'] : 'Identification Protected');;

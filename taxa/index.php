@@ -76,9 +76,23 @@ if($SYMB_UID){
 <?php
 $displayLeftMenu = false;
 include($SERVER_ROOT.'/includes/header.php');
+
+$splitSciname = $taxonManager->splitSciname();
+$nonItalicizedScinameComponent = trim((!empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '') . (!empty($splitSciname['cultivarEpithet']) ? ("'" . $splitSciname['cultivarEpithet'] . "' ") : '') . (!empty($splitSciname['tradeName']) ? ($splitSciname['tradeName'] . ' ') : ''));
 ?>
 <div id="popup-innertext">
-	<h1 class="page-heading"><?= $taxonManager->getTaxonName() ?></h1>
+	<div style="display: flex; align-items: center;">
+		<h1 class="page-heading left-breathing-room-rel"><?= '<i>' . $splitSciname['base'] . '</i> ' . $nonItalicizedScinameComponent ?></h1>
+		<div class="left-breathing-room-rel" id="parent-link-div">
+			<?php
+			$parentLink = 'index.php?tid='.$taxonManager->getParentTid().'&clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&taxauthid='.$taxAuthId;
+			echo '&nbsp;<a title="Go to Parent Taxon" href="' . htmlspecialchars($parentLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><img class="navIcon" src="../images/toparent.png" style="width:1.3em" title="' . $LANG['GO_TO_PARENT'] . '" /></a>';
+			if($taxonManager->isForwarded()){
+				echo '<span id="redirectedfrom"> (' . $LANG['REDIRECT'] . ': <i>' . $taxonManager->getSubmittedValue('sciname') . '</i> ' . $taxonManager->getSubmittedValue('author') . ')</span>';
+			}
+			?>
+		</div>
+	</div>
 	<?php
 	if($taxonManager->getTaxonName()){
 		if(count($taxonManager->getAcceptedArr()) == 1){
@@ -101,17 +115,6 @@ include($SERVER_ROOT.'/includes/header.php');
 							<?php
 						}
 						?>
-						<div id="scinameDiv">
-							<?php echo '<span id="'.($taxonManager->getRankId() > 179?'sciname':'taxon').'">'.$taxonManager->getTaxonName().'</span>'; ?>
-							<span id="author"><?php echo $taxonManager->getTaxonAuthor(); ?></span>
-							<?php
-							$parentLink = 'index.php?tid='.$taxonManager->getParentTid().'&clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&taxauthid='.$taxAuthId;
-							echo '&nbsp;<a href="' . htmlspecialchars($parentLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '"><img class="navIcon" src="../images/toparent.png" style="width:1.3em" title="' . $LANG['GO_TO_PARENT'] . '" /></a>';
-							if($taxonManager->isForwarded()){
-						 		echo '<span id="redirectedfrom"> (' . $LANG['REDIRECT'] . ': <i>' . $taxonManager->getSubmittedValue('sciname') . '</i> ' . $taxonManager->getSubmittedValue('author') . ')</span>';
-						 	}
-						 	?>
-						</div>
 						<?php
 						if($linkArr = $taxonManager->getLinkArr()){
 							?>

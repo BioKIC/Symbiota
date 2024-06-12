@@ -1,14 +1,19 @@
 <?php
 include_once('Manager.php');
+include_once($SERVER_ROOT . '/traits/TaxonomyTrait.php');
 
 class TaxonProfile extends Manager {
+	use TaxonomyTrait;
 
 	protected $tid;
 	protected $rankId;
 	private $parentTid;
 	private $taxAuthId = 1;
-	private $taxonName;
-	private $taxonAuthor;
+	private $sciName;
+
+	private $cultivarEpithet;
+	private $tradeName;
+	private $author;
 	private $taxonFamily;
 	private $acceptance = true;
 	private $forwarded = false;
@@ -42,16 +47,20 @@ class TaxonProfile extends Manager {
 	private function setTaxon(){
 		$status = false;
 		if($this->tid){
-			$sql = 'SELECT tid, sciname, author, rankid FROM taxa WHERE (tid = '.$this->tid.') ';
+			$sql = 'SELECT tid, sciname, cultivarEpithet, tradeName, author, rankid FROM taxa WHERE (tid = '.$this->tid.') ';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->submittedArr['tid'] = $r->tid;
 				$this->submittedArr['sciname'] = $r->sciname;
+				$this->submittedArr['cultivarEpithet'] = $r->cultivarEpithet;
+				$this->submittedArr['tradeName'] = $r->tradeName;
 				$this->submittedArr['author'] = $r->author;
 				$this->submittedArr['rankid'] = $r->rankid;
 				$this->tid = $r->tid;
-				$this->taxonName = $r->sciname;
-				$this->taxonAuthor = $r->author;
+				$this->sciName = $r->sciname;
+				$this->cultivarEpithet = $r->cultivarEpithet;
+				$this->tradeName = $r->tradeName;
+				$this->author = $r->author;
 				$this->rankId = $r->rankid;
 			}
 			$rs->free();
@@ -79,8 +88,8 @@ class TaxonProfile extends Manager {
 				if(count($this->acceptedArr) == 1){
 					$this->forwarded = true;
 					$this->tid = key($this->acceptedArr);
-					$this->taxonName = $this->acceptedArr[$this->tid]['sciname'];
-					$this->taxonAuthor = $this->acceptedArr[$this->tid]['author'];
+					$this->sciName = $this->acceptedArr[$this->tid]['sciname'];
+					$this->author = $this->acceptedArr[$this->tid]['author'];
 					$this->rankId = $this->acceptedArr[$this->tid]['rankid'];
 					$this->taxonFamily = $this->acceptedArr[$this->tid]['family'];
 					$this->parentTid = $this->acceptedArr[$this->tid]['parenttid'];
@@ -161,8 +170,8 @@ class TaxonProfile extends Manager {
 			if($useThumbnail) if($imgObj['thumbnailurl']) $imgUrl = $imgThumbnail;
 			echo '<div class="tptnimg"><a href="#" onclick="openPopup(\'' . htmlspecialchars($imgAnchor, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '\');return false;">';
 			$titleStr = $imgObj['caption'];
-			if($imgObj['sciname'] != $this->taxonName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
-			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->taxonName.' image" />';
+			if($imgObj['sciname'] != $this->sciName) $titleStr .= ' (linked from '.$imgObj['sciname'].')';
+			echo '<img src="'.$imgUrl.'" title="'.$titleStr.'" alt="'.$this->sciName.' image" />';
 			/*
 			if($length) echo '<img src="'.$imgUrl.'" title="'.$imgObj['caption'].'" alt="'.$spDisplay.' image" />';
 			//else echo '<img class="delayedimg" src="" delayedsrc="'.$imgUrl.'" />';
@@ -461,7 +470,7 @@ class TaxonProfile extends Manager {
 			while($r = $rs->fetch_object()){
 				$this->linkArr = array();
 				$this->linkArr[$r->tlid]['title'] = $r->title;
-				$this->linkArr[$r->tlid]['url'] = str_replace('--SCINAME--',rawurlencode($this->taxonName),$r->url);
+				$this->linkArr[$r->tlid]['url'] = str_replace('--SCINAME--',rawurlencode($this->sciName),$r->url);
 				$this->linkArr[$r->tlid]['icon'] = $r->icon;
 				$this->linkArr[$r->tlid]['notes'] = $r->notes;
 			}
@@ -758,11 +767,11 @@ class TaxonProfile extends Manager {
 	}
 
 	public function getTaxonName(){
-		return $this->taxonName;
+		return $this->sciName;
 	}
 
 	public function getTaxonAuthor(){
-		return $this->taxonAuthor;
+		return $this->author;
 	}
 
 	public function getTaxonFamily(){
