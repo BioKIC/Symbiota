@@ -15,8 +15,9 @@
   /* border: none; */
 }
 
-.inner-search input {
+.inner-search .input-text-container input {
   padding: 0;
+  margin-bottom: 0;
 }
 
 .inner-search h3 {
@@ -77,7 +78,7 @@
 /* INPUTS */
 .inner-search .assistive-text {
   color: var(--body-text-color);
-  font-size: 1em;
+  font-size: 0.9rem;
 }
 
 .inner-search .invalid {
@@ -170,7 +171,7 @@
   display: grid;
   -ms-grid-columns: 2fr 1fr;
   grid-template-columns: 2fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 1rem;
   -webkit-box-align: self-start;
   -ms-flex-align: self-start;
   align-items: self-start;
@@ -308,10 +309,10 @@
 .inner-search .chip {
   display: inline-block;
   background: #e0e0e0;
-  padding: 0 12px;
-  margin: 5px 0;
+  padding: 0 0.9rem;
+  margin: 0.5rem 0.3rem;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 .inner-search .chip:hover {
@@ -419,7 +420,7 @@
 }
 
 .inner-search .accordions label.accordion-header {
-  font-size: 16px;
+  font-size: 1.3rem;
   text-transform: uppercase;
   font-weight: 600;
   text-align: center;
@@ -487,8 +488,8 @@
   --fz: 16px;
   margin: 0 auto;
   padding-top: 14px;
+  margin-bottom: 1rem;
   width: 100%;
-  max-width: 600px;
 }
 
 .inner-search .input-text-container label {
@@ -508,7 +509,7 @@
 .inner-search .text-area-container textarea ~ span::before,
 .input-text-container label input:valid ~ span::before,
 .input-text-container label input:invalid ~ span::before {
-  font-size: 1.45rem;
+  font-size: 1rem;
   color: var(--body-text-color);
 }
 
@@ -611,7 +612,7 @@
   position: absolute;
   top: 0;
   left: 1rem;
-  font-size: 1.45rem;
+  font-size: 1rem;
   line-height: 1;
 }
 

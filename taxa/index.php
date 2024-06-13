@@ -466,7 +466,7 @@ include($SERVER_ROOT.'/includes/header.php');
 				?>
 				<div style="margin-left: 15px;font-weight:bold;font-size:120%;">
 					<?php echo $LANG['DID_YOU_MEAN'];?>
-					<div style=margin-left:25px;>
+					<div style="margin-left:25px;">
 						<?php
 						foreach($matchArr as $t => $n){
 							echo '<a href="index.php?tid=' . htmlspecialchars($t, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($n, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a><br/>';

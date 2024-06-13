@@ -386,7 +386,7 @@ if($isEditor){
 						?>
 						<div id="admintab">
 						        <section class="fieldset-like">
-								<h1><span><b><?php echo $LANG['EDITOR']; ?></b></span></h1>
+								<h2><span><b><?php echo $LANG['EDITOR']; ?></b></span></h2>
 								<form name="editform" action="datasetmanager.php" method="post" onsubmit="return validateEditForm(this)">
 									<div>
 										<label for="name"><?php echo $LANG['NAME']; ?></label>
@@ -415,7 +415,7 @@ if($isEditor){
 								</form>
 								</section>
 							<section class="fieldset-like">
-								<h1><span><b><?php echo $LANG['DEL_DS']; ?></b></span></h1>
+								<h2><span><b><?php echo $LANG['DEL_DS']; ?></b></span></h2>
 								<form name="editform" action="datasetmanager.php" method="post" onsubmit="return confirm('<?php echo $LANG['SURE_DEL_DS_PERM']; ?>')">
 									<div style="margin:15px;">
 										<input name="datasetid" type="hidden" value="<?php echo $datasetId; ?>" />
@@ -468,7 +468,7 @@ if($isEditor){
 							</div>
 							<div style="margin:15px;">
 								<section class="fieldset-like">
-									<h1><span><b><?php echo $LANG['ADD_USER']; ?></b></span></h1>
+									<h2><span><b><?php echo $LANG['ADD_USER']; ?></b></span></h2>
 									<form name="addform" action="datasetmanager.php" method="post" onsubmit="return validateUserAddForm(this)">
 										<div title="<?php echo $LANG['TYPE_LOGIN']; ?>">
 											<?php echo $LANG['LOGIN_NAME']; ?>:

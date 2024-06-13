@@ -156,7 +156,7 @@ include($SERVER_ROOT.'/includes/header.php');
 	</div>
 	<div style="clear:both">
 		<section class="fieldset-like">
-			<h1><span><?= $LANG['GLOBAL_PROTECTIONS'] ?></span></h1>
+			<h2><span><?= $LANG['GLOBAL_PROTECTIONS'] ?></span></h2>
 			<br/>
 			<?php
 			if($isEditor){
@@ -218,7 +218,7 @@ include($SERVER_ROOT.'/includes/header.php');
 			?>
 		</section>
 		<section class="fieldset-like">
-			<h1><span><?= $LANG['STATE_PROTECTIONS'] ?></span></h1>
+			<h2><span><?= $LANG['STATE_PROTECTIONS'] ?></span></h2>
 			<?php
 			$stateList = $rsManager->getStateList();
 			$emptyList = true;

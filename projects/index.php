@@ -286,7 +286,7 @@ if(!$researchList && !$editMode){
 					</ul>
 					<div id="mdtab">
 						<section class="fieldset-like background-gray-light">
-							<h1> <span> <?php echo ($newProj ? (isset($LANG['ADD_NEW']) ? $LANG['ADD_NEW'] : 'Add New Project') : (isset($LANG['EDIT']) ? $LANG['EDIT'] : 'Edit Project'));  ?> </span> </h1>
+							<h2> <span> <?php echo ($newProj ? (isset($LANG['ADD_NEW']) ? $LANG['ADD_NEW'] : 'Add New Project') : (isset($LANG['EDIT']) ? $LANG['EDIT'] : 'Edit Project'));  ?> </span> </h2>
 							<form name='projeditorform' action='index.php' method='post' onsubmit="return validateProjectForm(this)">
 								<section class="gridlike-form">
 									<div class="bottom-breathing-room gridlike-form-row">

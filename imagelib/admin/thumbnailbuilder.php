@@ -101,7 +101,7 @@ if(!$buildMediumDerivatives && $imgManager->getManagementType() == 'Live Data') 
 			}
 			?>
 			<section class="fieldset-like">
-				<h1> <span> <?php echo $LANG['THUMB_BUILDER']; ?> </span> </h1>
+				<h2> <span> <?php echo $LANG['THUMB_BUILDER']; ?> </span> </h2>
 				<div>
 					<?php
 					$reportArr = $imgManager->getReportArr();

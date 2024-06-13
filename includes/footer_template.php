@@ -12,9 +12,7 @@
 	<div class="logo-gallery">
 		<button id="accessibility-options-button" type="button" class="btn btn-primary  accessibility-option-button">
 			<span class="button__item-container">
-				<span class="button__item-container__item-text">
-					<?= $LANG['ACCESSIBILITY_OPTIONS']; ?>
-				</span>
+				<?= $LANG['ACCESSIBILITY_OPTIONS']; ?>
 				<span>
 					<img alt="accessibility icon of a person" src="<?php echo $CLIENT_ROOT ?>/images/accessibility_FILL0_wght400_GRAD0_opsz24.svg" />
 				</span>

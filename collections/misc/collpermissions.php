@@ -136,7 +136,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			if(!$isGenObs){
 				?>
 				<section class="fieldset-like">
-				<h1><span><b><?php echo (isset($LANG['ADMINS'])?$LANG['ADMINS']:'Administrators'); ?></b></span></h1>
+				<h2><span><b><?php echo (isset($LANG['ADMINS'])?$LANG['ADMINS']:'Administrators'); ?></b></span></h2>
 					<?php
 					if(array_key_exists('admin',$collPerms)){
 						?>
@@ -168,7 +168,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			}
 			?>
 			<section class="fieldset-like">
-				<h1><span><b><?php echo (isset($LANG['EDITORS'])?$LANG['EDITORS']:'Editors'); ?></b></span></h1> 
+				<h2><span><b><?php echo (isset($LANG['EDITORS'])?$LANG['EDITORS']:'Editors'); ?></b></span></h2> 
 				<?php
 				if(array_key_exists('editor',$collPerms)){
 					?>
@@ -203,7 +203,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			if(!$isGenObs){
 				?>
 				<section class="fieldset-like">
-					<h1><span><b><?php echo (isset($LANG['RARE_SP_READERS'])?$LANG['RARE_SP_READERS']:'Rare Species Readers'); ?></b></span></h1>
+					<h2><span><b><?php echo (isset($LANG['RARE_SP_READERS'])?$LANG['RARE_SP_READERS']:'Rare Species Readers'); ?></b></span></h2>
 					<?php
 					if(array_key_exists('rarespp',$collPerms)){
 						?>
@@ -239,7 +239,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			$userArr = $permManager->getUsers();
 			?>
 			<section class="fieldset-like">
-				<h1><span><b><?php echo (isset($LANG['ADD_NEW_USER'])?$LANG['ADD_NEW_USER']:'Add a New Admin/Editor/Reader'); ?></b></span></h1>
+				<h2><span><b><?php echo (isset($LANG['ADD_NEW_USER'])?$LANG['ADD_NEW_USER']:'Add a New Admin/Editor/Reader'); ?></b></span></h2>
 				<form name="addrights" action="collpermissions.php" method="post" onsubmit="return verifyAddRights(this)">
 					<div>
 					    <label for="uid"><?php echo $LANG['SEL_USER'] ?></label>
@@ -281,7 +281,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			if(!$isGenObs && $genObsArr){
 				?>
 				<section class="fieldset-like">
-					<h1><span><b><?php echo (isset($LANG['PERS_OBS_SPONSOR'])?$LANG['PERS_OBS_SPONSOR']:'Personal Observation Management Sponsorship'); ?></b></span></h1>					<div style="margin:10px">
+					<h2><span><b><?php echo (isset($LANG['PERS_OBS_SPONSOR'])?$LANG['PERS_OBS_SPONSOR']:'Personal Observation Management Sponsorship'); ?></b></span></h2>					<div style="margin:10px">
 					<?php echo (isset($LANG['SPONSOR_EXPLAIN'])?$LANG['SPONSOR_EXPLAIN']:'
 						Collection administrators listed above can sponsor users for Personal Observation Management.
 						This allows users to enter field data as observations that are linked directly to their user profile, print labels,
@@ -361,7 +361,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 			//Checklist / Dataset sponsorship
 				?>
 				<section class="fieldset-like">
-					<h1><span><b><?php echo (isset($LANG['CHECKLIST_SPONSOR'])?$LANG['CHECKLIST_SPONSOR']:'Checklist / Dataset Management Sponsorship'); ?></b></span></h1>
+					<h2><span><b><?php echo (isset($LANG['CHECKLIST_SPONSOR'])?$LANG['CHECKLIST_SPONSOR']:'Checklist / Dataset Management Sponsorship'); ?></b></span></h2>
 					<div style="margin:10px">
 					<?php echo (isset($LANG['CHECKLIST_SPONSOR_EXPLAIN'])?$LANG['CHECKLIST_SPONSOR_EXPLAIN']:'
 						Collection administrators listed above can sponsor users for Checklist and Dataset Management.

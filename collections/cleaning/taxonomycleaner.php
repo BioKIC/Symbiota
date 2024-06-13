@@ -248,7 +248,7 @@ elseif($activeCollArr){
 					</div>
 					<div class="top-breathing-room-rel-sm">
 						<section class="fieldset-like">
-							<h1> <span> <?php echo (isset($LANG['ACTION_MENU']) ? $LANG['ACTION_MENU'] : 'Action Menu'); ?> </span> </h1>
+							<h2> <span> <?php echo (isset($LANG['ACTION_MENU']) ? $LANG['ACTION_MENU'] : 'Action Menu'); ?> </span> </h2>
 							<form name="maincleanform" action="taxonomycleaner.php" method="post" onsubmit="return verifyCleanerForm(this)">
 								<div style="margin-bottom:15px;">
 									<b><?php echo $LANG['SPECS_NOT_INDEXED']; ?></b>
@@ -335,7 +335,7 @@ elseif($activeCollArr){
 				?>
 				<div style="margin:0px 0px 20px 20px;font-weight:bold;font-size:120%;"><?php echo $LANG['BATCH_TAXON_CLEAN']; ?></div>
 				<section class="fieldset-like">
-					<h1> <span> <?php echo $LANG['COL_SELECTOR']; ?> </span> </h1>
+					<h2> <span> <?php echo $LANG['COL_SELECTOR']; ?> </span> </h2>
 					<form name="selectcollidform" action="taxonomycleaner.php" method="post" onsubmit="return checkSelectCollidForm(this)">
 						<div><input name="selectall" type="checkbox" onclick="selectAllCollections(this);" /> <?php echo $LANG['SEL_UNSEL_ALL']; ?></div>
 						<?php

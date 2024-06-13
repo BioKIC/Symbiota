@@ -20,11 +20,11 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					<div class="welcome-text bottom-breathing-room-rel">
 						<?= (isset($LANG['H_WELCOME'])?$LANG['H_WELCOME']:'Welcome') . ' ' . $USER_DISPLAY_NAME ?>!
 					</div>
-					<span style="white-space: nowrap; padding: 0.8rem;" class="button button-tertiary bottom-breathing-room-rel">
-						<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= (isset($LANG['H_MY_PROFILE'])?$LANG['H_MY_PROFILE']:'My Profile') ?></a>
+					<span style="white-space: nowrap;" class="button button-tertiary bottom-breathing-room-rel">
+						<a href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= (isset($LANG['H_MY_PROFILE'])?$LANG['H_MY_PROFILE']:'My Profile') ?></a>
 					</span>
-					<span style="white-space: nowrap; padding: 0.8rem;" class="button button-secondary bottom-breathing-room-rel">
-						<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= (isset($LANG['H_LOGOUT'])?$LANG['H_LOGOUT']:'Sign Out') ?></a>
+					<span style="white-space: nowrap;" class="button button-secondary bottom-breathing-room-rel">
+						<a href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= (isset($LANG['H_LOGOUT'])?$LANG['H_LOGOUT']:'Sign Out') ?></a>
 					</span>
 					<?php
 				} else {

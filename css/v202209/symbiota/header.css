@@ -21,11 +21,12 @@ header {
 
 .top-login {
   padding-bottom: 20px;
+  padding-right: 1rem;
 }
 
 .top-login > .button {
-  margin-left: 0.8rem;
-  display: inline-block;
+  margin-left: 0.4rem;
+  margin-right: 0.4rem;
 }
 
 .top-brand {
@@ -159,10 +160,14 @@ ul.menu {
 .menu a {
   display: block;
   color: var(--header-font-color);
-  font-size: 1.4rem;
   font-weight: 600;
   letter-spacing: 1px;
   text-align: center;
+}
+
+.menu label {
+  font-weight: 600;
+  letter-spacing: 1px;
 }
 
 .menu li {

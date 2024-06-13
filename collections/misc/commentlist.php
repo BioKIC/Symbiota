@@ -124,9 +124,9 @@ if($isEditor){
 			<div class="justify-center">
 				<h1 class="page-heading">Occurrence Comments For: <?php echo $collMeta['name']; ?></h1>
 				<section class="fieldset-like fieldset-like--small-float-right">
-						<h1>
+						<h2>
 							<span><?php echo $LANG['FILTER_OPT'];?></span>
-						</h1>
+						</h2>
 						<form name="optionform" action="commentlist.php" method="post">
 							<div>
 								<label for="commenter"> <?php echo (isset($LANG['COMMENTER']) ? $LANG['COMMENTER'] : 'Commenter'); ?>:</label>

@@ -152,7 +152,7 @@ if(isset($_REQUEST['llpoint'])) {
 		<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<style type="text/css">
-		.panel-content a{ outline-color: transparent; font-size: 12px; font-weight: normal; }
+		.panel-content a{ outline-color: transparent; font-size: .9rem; font-weight: normal; }
 		.ui-front { z-index: 9999999 !important; }
 		</style>
 		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
@@ -188,7 +188,7 @@ if(isset($_REQUEST['llpoint'])) {
 			resize: horizontal;
 			border-left: 2px, solid, black;
 			height: 100%;
-			width: 390px;
+			width: 29rem;
 			position: fixed;
 			z-index: 20;
 			top: 0;
@@ -354,21 +354,25 @@ if(isset($_REQUEST['llpoint'])) {
 		function legendRow(id, color, innerHTML) {
 
 			return (
-				`<div style="display:table-row;">
-<div style="display:table-cell;vertical-align:middle;padding-bottom:5px;" >
-<input
-data-role="none"
-id="${id}"
-class="color"
-onchange="onColorChange(this)"
-style="cursor:pointer;border:1px black solid;height:12px;width:12px;margin-bottom:-2px;font-size:0px;"
-value="${color}"
-/>
-</div>
-<div style="display:table-cell;vertical-align:middle;padding-left:8px;"> = </div>
-<div style="display:table-cell;width:250px;vertical-align:middle;padding-left:8px;">${innerHTML}</div>
-</div>
-<div style="display:table-row;height:8px;"></div>`
+			`<div style="display:table-row;height: 2rem">
+				<div style="display:table-cell;vertical-align:middle;" >
+					<div style="display:flex; align-items:center">
+						<input
+						data-role="none"
+						id="${id}"
+						class="color"
+						onchange="onColorChange(this)"
+						style="cursor:pointer;border:1px black solid;height:1rem;width:1rem;margin-bottom:-2px;font-size:0px;"
+						value="${color}"
+						/>
+					</div>
+				</div>
+				<div style="display:table-cell;vertical-align:middle;padding-left:8px;"> = </div>
+				<div style="display:table-cell;vertical-align:middle;padding-left:8px;">
+					${innerHTML}
+				</div>
+			</div>
+			<div style="display:table-row;height:8px;"></div>`
 			)
 		}
 
@@ -398,7 +402,7 @@ value="${color}"
 				if(prev_family !== taxa.family) {
 					if(taxaHtml) taxaHtml += "</div>";
 
-					taxaHtml += `<div style="margin-left:5px;"><h3>${taxa.family}</h3></div>`;
+					taxaHtml += `<h2 style="margin-bottom:0.5rem">${taxa.family}</h2>`;
 					taxaHtml += "<div style='display:table;'>";
 					prev_family = taxa.family;
 				}
@@ -753,7 +757,7 @@ value="${color}"
 							})
 						}))
 					.on('click', function() { openRecord(record) })
-					.bindTooltip(`<div style="font-size:1.5rem">${record.id}</div>`)
+					.bindTooltip(`<div style="font-size:1rem">${record.id}</div>`)
 
 					markers.push(marker);
 
@@ -770,7 +774,7 @@ value="${color}"
 				for(let value of Object.values(legendMap)) {
 					const colorCluster = (cluster) => {
 						let childCount = cluster.getChildCount();
-cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?></div>`);
+cluster.bindTooltip(`<div style="font-size:1rem"><?=$LANG['CLICK_TO_EXPAND']?></div>`);
 						return new L.DivIcon.CustomColor({
 							html: `<div style="background-color: #${value.color};"><span>` + childCount + '</span></div>',
 							className: `marker-cluster`,
@@ -1852,20 +1856,27 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 		>
 		</div>
 		<div>
-			<button onclick="document.getElementById('defaultpanel').style.width='380px';  " style="position:absolute;top:0;left:0;margin:0px;z-index:10;font-size: 14px;">&#9776; <b>Open Search Panel</b></button>
+			<button onclick="document.getElementById('defaultpanel').style.width='29rem';  " style="position:absolute;top:0;left:0;margin:0px;z-index:10; gap: 0.2rem">
+				<span style="padding-bottom:0.2rem">
+					&#9776; 
+				</span>
+				<b>Open Search Panel</b>
+			</button>
 		</div>
 		<div id='map' style='width:100vw;height:100vh;z-index:1'></div>
-		<div id="defaultpanel" class="sidepanel" style="width: <?= $menuClosed? '0': '390px'?>">
-			<div class="panel-content">
-				<span style="position:absolute; top:0.7rem; right:0.7rem; z-index:1">
-					<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">
-						<?php echo (isset($LANG['H_HOME'])?$LANG['H_HOME']:'Home'); ?>
-					</a>
-					<button onclick="document.getElementById('defaultpanel').style.width='0px'" style="margin-left:1rem">&times</button>
+		<div id="defaultpanel" class="sidepanel"  <?= $menuClosed? 'style="width: 0"': ''?>>
+			<div class="menu" style="display:flex; align-items: center; background-color: var(--darkest-color); height: 2rem">
+				<a style="text-decoration: none; margin-left: 0.5rem;" href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">
+					<?php echo (isset($LANG['H_HOME'])?$LANG['H_HOME']:'Home'); ?>
+				</a>
+				<span style="display: flex; flex-grow: 1; margin-right:1rem; justify-content: right">
+					<a onclick="document.getElementById('defaultpanel').style.width='0px'">Hide Panel</a>
 				</span>
+			</div>
+			<div class="panel-content">
 				<div id="mapinterface">
 					<div id="accordion">
-						<h3 style="padding-left:30px;"><?php echo (isset($LANG['SEARCH_CRITERIA'])?$LANG['SEARCH_CRITERIA']:'Search Criteria and Options'); ?></h3>
+						<h3 style="margin-top:0"><?php echo (isset($LANG['SEARCH_CRITERIA'])?$LANG['SEARCH_CRITERIA']:'Search Criteria and Options'); ?></h3>
 						<div id="tabs1" style="padding:0px;height:100%">
 							<form name="mapsearchform" id="mapsearchform" data-ajax="false">
 								<ul>
@@ -1873,8 +1884,8 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 									<li><a href="#searchcriteria"><span><?php echo htmlspecialchars((isset($LANG['CRITERIA'])?$LANG['CRITERIA']:'Criteria'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></span></a></li>
 									<li><a href="#mapoptions"><span><?php echo htmlspecialchars((isset($LANG['MAP_OPTIONS'])?$LANG['MAP_OPTIONS']:'Map Options'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></span></a></li>
 								</ul>
-								<div id="searchcollections" style="">
-									<div class="mapinterface">
+								<div id="searchcollections" style="font-size: 1rem">
+									<div >
 										<?php
 										$collList = $mapManager->getFullCollectionList($catId);
 										$specArr = (isset($collList['spec'])?$collList['spec']:null);
@@ -1902,13 +1913,13 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 										?>
 									</div>
 								</div>
-								<div id="searchcriteria" style="">
-									<div style="height:25px;">
+								<div id="searchcriteria" style="padding-top: 0.5rem">
+									<div>
 										<!-- <div style="float:left;<?php echo (isset($SOLR_MODE) && $SOLR_MODE?'display:none;':''); ?>">
 Record Limit:
 <input data-role="none" type="text" id="recordlimit" style="width:75px;" name="recordlimit" value="<?php echo ($recLimit?$recLimit:""); ?>" title="Maximum record amount returned from search." onchange="return checkRecordLimit(this.form);" />
 										</div> -->
-										<div style="float:right;">
+										<div style="display:flex; gap: 1rem; justify-content: right; height: 2rem">
 											<input type="hidden" id="selectedpoints" value="" />
 											<input type="hidden" id="deselectedpoints" value="" />
 											<input type="hidden" id="selecteddspoints" value="" />
@@ -1931,7 +1942,11 @@ Record Limit:
 									</div>
 									<div style="margin:5 0 5 0;"><hr /></div>
 									<div>
-										<span style=""><input data-role="none" type="checkbox" name="usethes" value="1" <?php if($mapManager->getSearchTerm('usethes') || !$submitForm) echo "CHECKED"; ?> ><?php echo (isset($LANG['INCLUDE_SYNONYMS'])?$LANG['INCLUDE_SYNONYMS']:'Include Synonyms'); ?></span>
+										<span style="">
+											<input data-role="none" id="usethes" type="checkbox" name="usethes" value="1" <?php if($mapManager->getSearchTerm('usethes') || !$submitForm) echo "CHECKED"; ?> >
+										<label for="usethes">
+											<?php echo (isset($LANG['INCLUDE_SYNONYMS'])?$LANG['INCLUDE_SYNONYMS']:'Include Synonyms'); ?>
+										</label>
 									</div>
 									<div>
 										<div style="margin-top:5px;">
@@ -2228,7 +2243,7 @@ Record Limit:
 									</div>
 								</div>
 							</div>
-							<div id="symbology" style="">
+							<div id="symbology" style="font-size: 1rem">
 								<div style="height:40px;margin-bottom:15px;">
 								<div style="float:left;">
 										<div>
@@ -2264,7 +2279,7 @@ Record Limit:
 									</div>
 								</div>
 							</div>
-							<div id="maptaxalist" >
+							<div id="maptaxalist" style="font-size: 1rem">
 								<div style="height:40px;margin-bottom:15px;">
 									<?php
 									?>

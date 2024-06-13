@@ -519,11 +519,24 @@ else{
 	<style type="text/css">
 		fieldset{ padding:15px }
 		fieldset > legend{ font-weight:bold; }
-		.fieldGroupDiv{ clear:both; margin-bottom: 1rem; overflow: auto}
-		.fieldDiv{ float:left; margin-right: 1rem;}
 		select{ height: 20px; margin-bottom: 2px; }
 		#identifierDiv img{ width:10px; margin-left: 5px; }
 		#innertext{ background-color: white; margin: 0px 10px; }
+		.fieldGroupDiv { 
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			margin-bottom: 1rem;
+			input {
+				margin: 0
+			}
+			a {
+				display: flex;
+			}
+		}
+		.fieldDiv{ 
+			display: inline;
+		}
 
 		.editimg{ width: 15px; }
 		

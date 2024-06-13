@@ -193,7 +193,7 @@ include($SERVER_ROOT.'/includes/header.php');
 		$varBase = 'clid='.$clid.'&pid='.$pid;
 		$varChildren = $varBase.'&targetclid='.$targetClid.'&parentclid='.$parentClid.'&targetpid='.$targetPid.'&transmethod='.$transferMethod.'&copyattributes='.$copyAttributes;
 		?>
-		<div id="tabs" style="margin:10px;">
+		<div id="tabs" style="margin:10px; font-size: 1rem">
 			<ul>
 				<li><a href="#admintab"><span><?= $LANG['ADMIN']; ?></span></a></li>
 				<li><a href="checklistadminmeta.php?<?php echo $varBase; ?>"><span><?php echo $LANG['DESCRIPTION'];?></span></a></li>
@@ -237,12 +237,12 @@ include($SERVER_ROOT.'/includes/header.php');
 						echo "<div>" . $LANG['NOEDITOR'] . "</div>\n";
 					}
 					?>
-                    <section class="fieldset-like">
-							<h2><span><?php echo $LANG['ADDNEWUSER']; ?></span></h2>
-						<form name="adduser" action="checklistadmin.php" method="post" onsubmit="return verifyAddUser(this)">
-							<div>
-							    <label for="editoruid"><?php echo $LANG['SELECTUSER']; ?></label>
-								<select id="editoruid" name="editoruid">
+                    <section class="fieldset-like" style="width:fit-content">
+							<h3><span><?php echo $LANG['ADDNEWUSER']; ?></span></h3>
+						<form name="adduser" action="checklistadmin.php" method="post" onsubmit="return verifyAddUser(this)" style="display:flex; gap:0.5rem; align-items: center; flex-wrap: wrap">
+								<div style="display:flex; gap:0.5rem; align-items: center; flex-wrap: nowrap">
+							    <label style="white-space:nowrap"for="editoruid"><?php echo $LANG['SELECTUSER']; ?></label>
+								<select style="width:100%" id="editoruid" name="editoruid">
 									<option value=""><?php echo $LANG['SELECTUSER']; ?></option>
 									<option value="">------------------------------</option>
 									<?php
@@ -252,10 +252,10 @@ include($SERVER_ROOT.'/includes/header.php');
 									}
 									?>
 								</select>
+								</div>
 								<button name="submitaction" type="submit" value="addEditor" aria-label="<?php echo $LANG['ADDEDITOR'];?>"><?php echo $LANG['ADDEDITOR'];?></button>
 								<input type="hidden" name="pid" value="<?php echo $pid; ?>" />
 								<input type="hidden" name="clid" value="<?php echo $clid; ?>" />
-							</div>
 						</form>
 					</section>
 				</div>

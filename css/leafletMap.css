@@ -1,12 +1,12 @@
  /* This increases the font size of the layer toggle */
 .leaflet-control-layers-expanded .leaflet-control-layers-list {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .leaflet-control-scale-line {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .leaflet-control-attribution {
-	font-size: 1.5rem;
+	font-size: 1rem;
 }

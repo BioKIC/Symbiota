@@ -1,6 +1,16 @@
 #innertext ul {
-        margin-left: 1.5rem;
-        padding: .25rem 0 .5rem 0;
+    margin-left: 1.5rem;
+    padding: .25rem 0 .5rem 0;
+}
+
+#innertext .fieldset-like ul {
+    margin-left: 2.5rem;
+    padding: .25rem 0 .5rem 0;
+}
+
+#innertext .fieldset-like .description {
+    margin-left: 1.5rem;
+    padding: .25rem 0 .5rem 0;
 }
 
 li {
@@ -20,7 +30,7 @@ div#keymodule {
 }
 
 #admin{
-        margin: 2rem 0 1rem 1rem;
+        margin: 2rem 0 0rem 0rem;
         padding-left: 1rem;
         padding-right: 1rem;
 }
@@ -34,7 +44,7 @@ div#adminobservation{
 }
 
 div#symbiotaschema{
-        margin: 1.5rem 0 0 1rem;
+        margin: 1.5rem 0 0 0rem;
 }
 
 div#symbiotaschema img{
@@ -46,5 +56,5 @@ div#symbiotaschema img{
 }
 
 .description{
-        margin-left: .5rem;
+ margin-left: 0.5rem;
 }

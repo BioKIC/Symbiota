@@ -81,7 +81,7 @@ else{
 	<style type="text/css">
 		#tabs a{
 			outline-color: transparent;
-			font-size: 12px;
+			font-size: 0.9rem;
 			font-weight: normal;
 		}
 	</style>
