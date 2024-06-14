@@ -21,10 +21,10 @@ $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ??
 $SHOULD_USE_HARVESTPARAMS = $SHOULD_USE_HARVESTPARAMS ?? false;
 
 $_SESSION['citationvar'] = $searchVar;
+
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
-
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
 	<title><?php echo $DEFAULT_TITLE . ' ' . $LANG['PAGE_TITLE']; ?></title>
@@ -40,20 +40,11 @@ $_SESSION['citationvar'] = $searchVar;
 		var urlQueryStr = "<?php if($searchVar) echo $searchVar . '&page=' . $pageNumber; ?>";
 
 		$(document).ready(function() {
-			<?php
-			if ($searchVar) {
-				?>
-				sessionStorage.querystr = "<?php echo $searchVar; ?>";
-				<?php
+			if(window.location.search)
+				sessionStorage.querystr = window.location.search.replace("?",'');
+			else if(sessionStorage.querystr) {
+				window.location = "list.php?" + sessionStorage.querystr + "&tabindex=<?= $tabIndex ?>";
 			}
-			else {
-				?>
-				if (sessionStorage.querystr) {
-					window.location = "list.php?" + sessionStorage.querystr + "&tabindex=<?php echo $tabIndex ?>";
-				}
-				<?php
-			}
-			?>
 
 			$('#tabs').tabs({
 				active: <?php echo $tabIndex; ?>,

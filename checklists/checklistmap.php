@@ -224,7 +224,7 @@ $metaJson = json_encode($clMeta);
             }
 
             if(clMeta && clMeta.footprintwkt) {
-               cl_footprint_shape = loadMapShape("polygon", { polygonLoader: () => clMeta.footprintwkt });
+               cl_footprint_shape = loadMapShape("polygon", { polygonLoader: () => ({wkt: clMeta.footprintwkt}) });
             }
 
             <?php if(empty($GOOGLE_MAP_KEY)):?>

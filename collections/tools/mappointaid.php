@@ -24,7 +24,9 @@ $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 		include_once($SERVER_ROOT.'/includes/leafletMap.php');
 		include_once($SERVER_ROOT.'/includes/googleMap.php');
 		?>
-
+		<style>
+			html, body, #map_canvas { width:100%; height: 100%; padding:0; margin:0}
+		</style>
 		<script type="text/javascript">
 		var map;
 
@@ -273,7 +275,6 @@ $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 					const lat = e.layer._latlng.lat;
 					const lng = e.layer._latlng.lng;
 					createMarker(lat, lng)
-
 				} 
 			})
 
@@ -363,7 +364,7 @@ $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 			lngInput.addEventListener("change", onFormChange);
 
 			//Draw marker if one exists
-		if(latlng) {
+         if(latlng) {
 				createMarker(latlng[0], latlng[1]);
 				map.mapLayer.setCenter(marker.getPosition());
 			}
@@ -381,10 +382,7 @@ $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 			let lat = opener.document.getElementById("decimallatitude").value;
 			let lng = opener.document.getElementById("decimallongitude").value;
 
-			const data = document.getElementById('service-container');
-			latCenter = parseFloat(data.getAttribute('data-lat'));
-			lngCenter = parseFloat(data.getAttribute('data-lng'));
-
+         const data = document.getElementById('service-container');
 			radiusInput = document.getElementById("errRadius");
 			latInput = document.getElementById("latbox");
 			lngInput = document.getElementById("lngbox");
@@ -397,8 +395,14 @@ $errMode = array_key_exists("errmode",$_REQUEST)?$_REQUEST["errmode"]:1;
 				} else {
 					alert(`Error: Not Coordinates lat: ${lat}, lng: ${lng}`);
 				}
-			} 
-			<?php if(empty($GOOGLE_MAP_KEY)) { ?> 
+            latCenter = parseFloat(lat);
+            lngCenter = parseFloat(lng);
+         } else {
+            latCenter = parseFloat(data.getAttribute('data-lat'));
+            lngCenter = parseFloat(data.getAttribute('data-lng'));
+         } 
+
+			<?php if(empty($GOOGLE_MAP_KEY)): ?> 
 			leafletInit();
 			<?php } else { ?> 
 			googleInit();
