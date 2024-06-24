@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['REVIEW_CROWDSOURCING_RECORDS'] = 'Review Crowdsourced Records';
 $LANG['CROWDSOURCING_REVIEW'] = 'Crowdsourcing Review';
 $LANG['HOME'] = 'Home';
 $LANG['SCORE_BOARD'] = 'Score Board';

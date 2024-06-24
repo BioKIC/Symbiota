@@ -62,4 +62,5 @@ $LANG['MAP_LINK'] = 'Map Link';
 $LANG['SEE_MAP_POINT'] = 'See map point';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'Record count exceeds limit';
 $LANG['NO_RECORDS'] = 'No records found matching the query';
+$LANG['SEARCH_RESULTS_LIST'] = 'Search Results (List)';
 ?>

@@ -122,7 +122,7 @@ if($isEditor && $formSubmit){
 
 	<!-- inner text -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Duplicate Manager</h1>
+		<h1 class="page-heading"><?php echo $LANG['DUPLICATE_MANAGER']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

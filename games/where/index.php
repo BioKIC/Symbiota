@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once('classes/GamesWhereManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/games/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $generalVariable = $_REQUEST['var1'];
@@ -472,7 +474,7 @@ $whereManager = new GamesWhereManager();
 		</div>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Where in the World Game</h1>
+			<h1 class="page-heading"><?php echo $LANG['WHERE_GAME']; ?></h1>
 			<h2>Where in the World do these plants grow?</h2>
 			<table>
 				<tr>

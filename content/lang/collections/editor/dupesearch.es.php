@@ -4,7 +4,7 @@
 Language: Español
 ------------------
 */
-
+$LANG['DUPL_RECORD_SEARCH'] = 'Búsqueda de Registros Duplicados';
 $LANG['EXS_DUPE'] = 'Duplicados de Exsiccati';
 $LANG['POSSIBLE_EXACT_DUPES'] = 'Posibles Duplicados EXACTOS';
 $LANG['DUPE_CAT_NUM'] = 'Número de Catálogo Duplicado';

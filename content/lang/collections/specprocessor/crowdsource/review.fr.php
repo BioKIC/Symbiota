@@ -6,7 +6,7 @@ Date Translated: 2023-12-19
 Translated by: Google Translate
 ------------------
 */
-
+$LANG['REVIEW_CROWDSOURCING_RECORDS'] = 'Examiner les Enregistrements Participatifs';
 $LANG['CROWDSOURCING_REVIEW'] = 'Revue de crowdsourcing';
 $LANG['HOME'] = 'Accueil';
 $LANG['SCORE_BOARD'] = 'Tableau des scores';

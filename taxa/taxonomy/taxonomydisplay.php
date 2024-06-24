@@ -81,7 +81,7 @@ if($IS_ADMIN || array_key_exists('Taxonomy', $USER_RIGHTS)){
 		<a href="taxonomydisplay.php"><b><?= $LANG['TAX_TREE_VIEWER'] ?></b></a>
 	</div>
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Central Taxonomic Thesaurus</h1>
+		<h1 class="page-heading"><?php $LANG['CENTRAL_TAXANOMIC_THESAURUS']; ?></h1>
 		<?php
 		if($statusStr){
 			$statusStr = str_replace(';', '<br/>', htmlspecialchars($statusStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE));

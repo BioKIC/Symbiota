@@ -1,5 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/checklists/tools/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/checklists/tools/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/checklists/tools/index.en.php');
+
 header('Content-Type: text/html; charset=' . $CHARSET);
 header('Location: '.$CLIENT_ROOT.'/index.php');
 ?>
@@ -18,8 +21,8 @@ header('Location: '.$CLIENT_ROOT.'/index.php');
 		?>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Checklist Tools</h1>
-			<h1 class="page-heading">Forbidden</h1>
+			<h1 class="page-heading"><?php echo $LANG['CHECKLIST_TOOLS']; ?></h1>
+			<h1 class="page-heading"><?php echo $LANG['FORBIDDEN']; ?></h1>
 			<div style="font-weight:bold;">
 				You don't have permission to access this page.
 			</div>

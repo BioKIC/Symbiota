@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['OCCUR_COMMENTS'] = 'Occurrence Comments For';
 $LANG['COMMENTS_LISTING'] = 'Comments Listing';
 $LANG['HOME'] = 'Home';
 $LANG['COL_MANAGE'] = 'TEST Collection Management';

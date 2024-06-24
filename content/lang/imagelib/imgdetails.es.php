@@ -7,7 +7,7 @@ Date Translated: 2024/03/26
 ------------------
 */
 
-
+$LANG['IMG_DETAILS'] = 'Detalles de la Imagen';
 $LANG['ERROR_FILE_PATH'] = 'ERROR: Se debe ingresar la ruta del archivo';
 $LANG['ENTER_TAXON_NAME'] = 'Ingrese el nombre del taxón al que se transferirá la imagen';
 $LANG['TAXON_PROFILE_EDITING'] = 'Ir a la página de edición del perfil de taxón';

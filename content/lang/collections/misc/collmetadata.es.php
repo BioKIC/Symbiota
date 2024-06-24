@@ -6,7 +6,8 @@ Language: Español (Spanish)
 */
 
 include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.es.php');
-
+$LANG['EDIT_METADATA'] = 'Editar Metadatos y Contactos de la Colección';
+$LANG['COLLECTION_METADATA_EDITOR'] = 'Pestaña Editor de Metadatos de Colección';
 $LANG['ADD_SUCCESS'] = 'Nueva colección agregada exitosamente';
 $LANG['ADD_STUFF'] = 'Agregar contactos, enlaces de recursos o dirección de institución a continuación';
 $LANG['COL_PROFS'] = 'Perfiles de colección';

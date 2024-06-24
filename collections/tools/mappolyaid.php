@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
-include_once($SERVER_ROOT.'/content/lang/collections/tools/mapaids.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/tools/mapaids.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/tools/mapaids.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/tools/mapaids.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $formName = array_key_exists("formname",$_REQUEST)?$_REQUEST["formname"]:"";
@@ -236,7 +238,7 @@ else{
 		</style>
 	</head>
 	<body style="background-color:#ffffff;" onload="initialize()">
-		<h1 class="page-heading screen-reader-only">Coordinate Polygon Aid</h1>
+		<h1 class="page-heading screen-reader-only"><?php echo $LANG['COOR_POLYGON_AID']; ?></h1>
 		<div style="float:right" style="margin-left:20px;">
          <button type="submit" name="addcoords" onclick="updateParentForm()">
             <?php echo isset($LANG['SAVE_N_CLOSE'])? $LANG['SAVE_N_CLOSE'] :'Save and Close'?>

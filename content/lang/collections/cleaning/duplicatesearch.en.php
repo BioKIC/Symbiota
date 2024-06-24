@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['DUPL_CATALOG'] = 'Duplicate Catalog Number Cleaning Tool';
 $LANG['OCC_CLEANER'] = 'Occurrence Cleaner';
 $LANG['SEL_SPECIMENS'] = 'Please select specimens to be merged!';
 $LANG['HOME'] = 'Home';

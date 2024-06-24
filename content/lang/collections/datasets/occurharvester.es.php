@@ -6,7 +6,7 @@ Translated by: Google Translate
 Date Translated: 2024/04/08
 ------------------
 */
-
+$LANG['ADD_OCCUR_TO_DATASET'] = 'Agregar Apariciones al Conjunto de Datos';
 $LANG['OCCUR_HARV'] = 'Recolector de Ocurrencias';
 $LANG['UNABLE_TO_LOCATE'] = 'no se puede localizar el registro de ocurrencia';
 $LANG['HOME'] = 'Inicio';

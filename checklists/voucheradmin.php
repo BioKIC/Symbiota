@@ -108,7 +108,7 @@ include($SERVER_ROOT.'/includes/header.php');
 </div>
 <!-- This is inner text! -->
 <div id='innertext'>
-	<h1 class="page-heading">Voucher Administration</h1>
+	<h1 class="page-heading"><?php echo $LANG['VOUCHER_ADMIN']; ?></h1>
 <div class="voucher-admin-header">
 	<a href="checklist.php?clid=<?php echo htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
 		<?php echo $clManager->getClName(); ?>

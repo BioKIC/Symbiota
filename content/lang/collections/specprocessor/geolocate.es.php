@@ -8,7 +8,7 @@ Date Translated: 2022-01-09
 */
 
 include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.es.php');
-
+$LANG['GEOLOCATE_COGE_EXPORT_MANAGER'] = 'Gestor de Exportación GeoLocate CoGe';
 $LANG['OCC_EXP_MAN'] = 'Administrador de Exportación de Ocurrencias';
 $LANG['GEO_COM_TOOL'] = 'Herramientas de la Comunidad GeoLocate';
 $LANG['GEO_COM_TOOL_EXPLAIN'] = 'Este módulo extrae registros de especímenes que tienen detalles de localidad en el texto, pero carecen de coordenadas decimales.

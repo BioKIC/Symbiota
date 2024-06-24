@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['TAX_CLEANING_TOOL'] = 'Outil de Nettoyage de Taxonomie';
 $LANG['OCC_TAX_CLEAN'] = 'Nettoyeur de taxons d\'occurrence';
 $LANG['SCINAME_NOT_FOUND'] = 'Nom scientifique introuvable dans le thésaurus.';
 $LANG['REMAP_SUCCESS'] = 'Taxon remappé avec succès !';

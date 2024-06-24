@@ -145,7 +145,7 @@ if(!$IS_ADMIN){
 	</head>
 	<body onload="<?php echo $onLoadStr; ?>">
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Duplicate Record Search</h1>
+			<h1 class="page-heading"><?php echo $LANG['DUPL_RECORD_SEARCH']; ?></h1>
 			<?php
 			if($statusStr){
 				?>

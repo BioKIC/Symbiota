@@ -136,7 +136,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
       <?php
 			// if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
 		?>
-      <h1 class="page-heading screen-reader-only" style="margin-top:30px;">Checklist Map</h1>
+      <h1 class="page-heading screen-reader-only" style="margin-top:30px;"><?php echo $LANG['CHECKLIST_MAP_TITLE']; ?></h1>
 		<div id="map_canvas"></div>
       <div 
         id="service-container" 

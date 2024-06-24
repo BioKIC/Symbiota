@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['GEOREFERENCE_CLONE'] = 'Georeference Clone Tool';
 $LANG['SEARCH_FORM'] = 'Search Form';
 $LANG['LOCALITY'] = 'Locality';
 $LANG['LOCALITY_MISSING_ERROR'] = 'Locality field must have a value';

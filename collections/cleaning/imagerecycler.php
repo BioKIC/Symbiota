@@ -58,7 +58,7 @@ if($isEditor){
 	if($collid){
 		?>
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Image Recycler</h1>
+			<h1 class="page-heading"><?php echo $LANG['IMAGE_RECYCLER'] ?></h1>
 			<form name="imgdelform" action="imagerecycler.php" method="post" enctype="multipart/form-data" onsubmit="return verifyRecycleForm(this)">
 				<fieldset style="width:90%;">
 					<legend style="font-weight:bold;font-size:120%;"><?php echo $LANG['BATCH_IMAGE_REMOVER'] ?></legend>

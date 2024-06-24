@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImageLibraryBrowser.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/contributors.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/imagelib/contributors.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/imagelib/contributors.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $imgManager = new ImageLibraryBrowser();
@@ -8,7 +10,7 @@ $imgManager = new ImageLibraryBrowser();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> Photographer List</title>
+	<title><?php echo $DEFAULT_TITLE; ?> <?php echo $LANG['PHOTOGRAPHER_LIST']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	include_once($SERVER_ROOT.'/includes/googleanalytics.php');
@@ -28,7 +30,7 @@ $imgManager = new ImageLibraryBrowser();
 
 	<!-- This is inner text! -->
 	<div role="main" id="innertext" style="height:100%">
-		<h1 class="page-heading">Photographer List</h1>
+		<h1 class="page-heading"><?php echo $LANG['PHOTOGRAPHER_LIST']; ?></h1>
 		<?php
 		$pList = $imgManager->getPhotographerList();
 		if($pList){

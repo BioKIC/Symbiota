@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['LOGIN'] = 'Connexion';
 $LANG['INVALID_LOGIN'] = 'Nom d\'utilisateur invalide';
 $LANG['INVALID_EMAIL'] = 'Email invalide';
 $LANG['INCORRECT'] = "Votre nom d'utilisateur ou mot de passe était incorrect. Veuillez réessayer.<br/> Si vous ne parvenez pas à vous souvenir de vos identifiants de connexion, utilisez les commandes ci-dessous pour récupérer votre identifiant ou réinitialiser votre mot de passe.";

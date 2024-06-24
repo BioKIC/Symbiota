@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ReferenceManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/references/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/references/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/references/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 if(!$SYMB_UID) header('Location: ../profile/index.php?refurl=../references/index.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
@@ -77,7 +79,7 @@ if(!$formSubmit || $formSubmit != 'Search References'){
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Reference Management</h1>
+		<h1 class="page-heading"><?php echo $LANG['REFERENCE_MANAGEMENT']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

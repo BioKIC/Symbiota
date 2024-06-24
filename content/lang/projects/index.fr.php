@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['VIEW_INVETORY_PROJECTS'] = 'Afficher le Projet d\'Inventaire';
 $LANG['INVPROJ'] = 'Projets d&apos;Inventaire';
 $LANG['PROJMANAG'] = 'Chefs de Projet:';
 $LANG['INVPROJLIST'] = 'Liste des projets d\'inventaire';

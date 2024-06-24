@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecUpload.php');
-include_once($SERVER_ROOT.'/content/lang/collections/admin/uploadreviewer.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/admin/uploadreviewer.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/admin/uploadreviewer.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/admin/uploadreviewer.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -69,7 +70,7 @@ if($SYMB_UID){
 	?>
 </head>
 <body style="margin-left: 0px; margin-right: 0px;background-color:white;">
-	<h1 class="page-heading">Data Upload Reviewer</h1>
+	<h1 class="page-heading"><?php echo $LANG['DATA_UPLOAD_REVIEWER']; ?></h1>
 	<!-- inner text -->
 	<div id="">
 		<?php

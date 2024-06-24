@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceExsiccatae.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/exsiccati/batchimport.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/exsiccati/batchimport.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/exsiccati/batchimport.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/exsiccati/batchimport.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -122,7 +125,7 @@ if($isEditor && $formSubmit){
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Exsiccatae Batch Import</h1>
+		<h1 class="page-heading"><?php echo $LANG['EXSICCATAE_BATCH_IMPORT']; ?></h1>
 		<?php
 		if($statusStr){
 			echo '<hr/>';

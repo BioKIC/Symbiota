@@ -6,7 +6,7 @@ Date Translated: 2023-12-19
 Translated by: Google Translate
 ------------------
 */
-
+$LANG['CROWDSOURCING_ADMIN'] = 'Administración de Crowdsourcing';
 $LANG['CROWDSOURCE_EXPLAIN'] = 'Ce module peut être utilisé pour soumettre et gérer des enregistrements pour la saisie de données par le
 			grand public. Pour plus d\'informations, consultez le
 			<a href="https://biokic.github.io/symbiota-docs/coll_manager/crowdsource/edit/">

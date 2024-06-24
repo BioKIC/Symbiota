@@ -7,6 +7,7 @@ Language: Español (Spanish)
 
 include_once('sharedterms.es.php');
 
+$LANG['SEARCH'] = 'Buscar';
 $LANG['PAGE_TITLE'] = 'Par&aacute;metros de B&uacute;squeda de Colecciones';
 $LANG['TAXON_HEADER'] = 'Criterios Taxonomicos';
 $LANG['INCLUDE_SYNONYMS'] = 'Incluir Sin&oacute;nimos';

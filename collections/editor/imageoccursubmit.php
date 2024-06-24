@@ -112,7 +112,7 @@ elseif(file_exists('includes/config/occurVarDefault.php')){
 		<b><?php echo $LANG['OCC_IMAGE_SUBMIT']?></b>
 	</div>
 	<div role="main" id="innertext">
-		<h1 class="page-heading"><?php echo 'Occurrence Image Submission: ' . $collMap['collectionname']; ?></h1>
+		<h1 class="page-heading"><?php echo '' . $LANG['IMAGE_SUBMIT'] . ': ' . $collMap['collectionname']; ?></h1>
 		<?php
 		if($statusStr){
 			echo '<div style="margin:15px;color:'.(stripos($statusStr,'error') !== false?'red':'green').';">'.$statusStr.'</div>';

@@ -4,6 +4,7 @@
 Language: English
 ------------------
 */
+$LANG['VIEW_INVETORY_PROJECTS'] = 'View Inventory Project';
 
 $LANG['INVPROJ'] = 'Inventory Projects';
 $LANG['INVPROJLIST'] = 'Inventory Project List';

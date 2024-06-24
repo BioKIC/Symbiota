@@ -4,7 +4,7 @@
 Language: Español (Spanish)
 ------------------
 */
-
+$LANG['TAX_CLEANING_TOOL'] = 'Herramienta de Limpieza de Taxonomía';
 $LANG['OCC_TAX_CLEAN'] = 'Limpiador de taxones de ocurrencia';
 $LANG['SCINAME_NOT_FOUND'] = 'Nombre científico no encontrado en el Tesauro.';
 $LANG['REMAP_SUCCESS'] = '¡Taxón reasignado exitosamente!';

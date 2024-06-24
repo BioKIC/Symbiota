@@ -1,6 +1,7 @@
 <?php
    include_once('../../config/symbini.php');
-   include_once($SERVER_ROOT.'/content/lang/collections/tools/mapaids.'.$LANG_TAG.'.php');
+   if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/tools/mapaids.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/tools/mapaids.' . $LANG_TAG . '.php');
+	else include_once($SERVER_ROOT . '/content/lang/collections/tools/mapaids.en.php');
    include_once($SERVER_ROOT.'/classes/ChecklistAdmin.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
@@ -64,7 +65,7 @@ else{
 		</style>
 	</head>
 	<body style="background-color:#ffffff; display:flex; flex-direction:column;">
-		<h1 class="page-heading" style="margin-left:5px;">Taxon Map</h1>
+		<h1 class="page-heading" style="margin-left:5px;"><?php echo $LANG['TAXON_MAP']; ?></h1>
 		<div style="float:right;margin-top:5px;margin-bottom:5px;margin-right:15px;margin-left:5px;">
 			<button name="closebutton" type="button" onclick="self.close()">
 				<?php echo isset($LANG['SAVE_N_CLOSE'])? $LANG['SAVE_N_CLOSE'] :'Save and Close'?>

@@ -169,6 +169,7 @@ $LANG['NO_UNPROCESSED'] = 'There are no unprocessed records to';
 $LANG['UNIDENTIFIED_ERROR'] = 'Unidentified Error';
 
 // ocrprocessor.php
+$LANG['OP_CHARACTER_RECOGNITION'] = 'Optical Character Recognition';
 $LANG['PLS_SEL_PROC_STATUS'] = 'Please select a processing status';
 $LANG['ENTER_PATT_MATCH'] = 'Please enter a pattern matching string for extracting the catalog number';
 $LANG['SEL_OCR_INPUT'] = 'Please select/enter an OCR input source file';
@@ -218,5 +219,14 @@ $LANG['OCR_SOURCE'] = 'OCR Source';
 $LANG['OCR_SOURCE_EXPLAIN'] = 'Short string describing OCR Source (e.g. ABBYY, Tesseract, etc). This value is placed in source field with current date appended.';
 $LANG['LOAD_OCR_FILES'] = 'Load OCR Files';
 
+
+//processor.php
+$LANG['SPEC_PROCESSOR_CONTROL_PANEL'] = 'Specimen Processor Control Panel';
+
+//reports.php
+$LANG['REPORTS'] = 'Reports';
+
+//wordcloudhandler.php
+$LANG['WORD_CLOUD_HANDLER'] = 'Word Cloud Handler';
 
 ?>

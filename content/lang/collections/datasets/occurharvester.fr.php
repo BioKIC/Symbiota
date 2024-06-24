@@ -6,7 +6,7 @@ Translated by: Google Translate
 Date Translated: 2024/04/08
 ------------------
 */
-
+$LANG['ADD_OCCUR_TO_DATASET'] = 'Ajouter des Occurrences à l\'ensemble de Données';
 $LANG['OCCUR_HARV'] = 'Récolteur d\'Occurrences';
 $LANG['UNABLE_TO_LOCATE'] = 'impossible de localiser l\'enregistrement d\'occurrence';
 $LANG['HOME'] = 'Accueil';

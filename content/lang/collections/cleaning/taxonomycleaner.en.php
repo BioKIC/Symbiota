@@ -4,6 +4,7 @@
 Language: English
 ------------------
 */
+$LANG['TAX_CLEANING_TOOL'] = 'Taxonomy Cleaning Tool';
 
 $LANG['OCC_TAX_CLEAN'] = 'Occurrence Taxon Cleaner';
 $LANG['SCINAME_NOT_FOUND'] = 'Scientific name not found in Thesaurus.';

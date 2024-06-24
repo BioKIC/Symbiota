@@ -2,6 +2,8 @@
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ActionManager.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceActionManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/request/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/request/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/request/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $aManager = new ActionManager();
@@ -108,7 +110,7 @@ if (isset($_POST['formsubmit'])) {
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Action Requests</h1>
+		<h1 class="page-heading"><?php echo $LANG['ACTION_REQUEST']; ?></h1>
 		<div id="tabs" style="margin:0px;">
 	        <?php
 	        if($RequestTrackingIsActive!=1){

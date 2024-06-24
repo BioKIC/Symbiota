@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once ($SERVER_ROOT.'/classes/UtilityFunctions.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/includes/useagepolicy_template.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/includes/useagepolicy_template.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/includes/useagepolicy_template.en.php');
 header("Content-Type: text/html; charset=" . $CHARSET);
 $serverHost = UtilityFunctions::getDomain();
 ?>
@@ -26,7 +28,7 @@ $serverHost = UtilityFunctions::getDomain();
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Guidelines for Acceptable Use of Data</h1>
+		<h1 class="page-heading"><?php echo $LANG['ACCEPTABLE_GUIDELINES']; ?></h1>
 		<h2>Recommended Citation Formats</h2>
 		<p>Use one of the following formats to cite data retrieved from the <?php echo $DEFAULT_TITLE; ?> network:</p>
 		<h3>General Citation</h3>

@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['VOUCHER_ADMIN'] = 'Administration des bons';
 $LANG['NAV_HOME'] = 'Accueil';
 $LANG['EXT_VOUCHERS_LINKED'] = '5 bons externes ont été liés à la liste';
 $LANG['CHECKLIST_ADMIN'] = 'Administration d\'Liste';

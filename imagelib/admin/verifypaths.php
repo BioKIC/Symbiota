@@ -2,6 +2,8 @@
 //error_reporting(E_ALL);
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/config/dbconnection.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/admin/verifypaths.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/imagelib/admin/verifypaths.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/imagelib/admin/verifypaths.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $action = array_key_exists("action",$_REQUEST)?$_REQUEST["action"]:"";
@@ -32,7 +34,7 @@ $verifyPathsObj = new VerifyPaths();
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Image Path Verification</h1>
+		<h1 class="page-heading"><?php echo $LANG['IMAGE_PATH_VERIFICATION']; ?></h1>
 		<div>Clicking the button below will go through all the images in the image directory and
 		verify mapping within the database. Two following two error files will be produced:</div>
 

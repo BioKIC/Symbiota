@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['DYNAMIC_MAP'] = 'Dynamic Map';
 $LANG['CHECKLIST_GENERATOR'] = 'Dynamic Checklist Generator';
 $LANG['CLICK_MAP'] = 'You must first click on map to capture coordinate points';
 $LANG['HOME'] = 'Home';

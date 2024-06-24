@@ -1,7 +1,10 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/PermissionsManager.php');
-include_once($SERVER_ROOT.'/content/lang/collections/misc/collpermissions.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collpermissions.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/misc/collpermissions.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/misc/collpermissions.en.php');
+
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 //Sanitization
@@ -129,7 +132,7 @@ if($collMetadata['colltype'] == 'General Observations') $isGenObs = 1;
 
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading"><?php echo $LANG['COL_PERMISSIONS'] . ' for: ' . $collMetadata['collectionname']; ?></h1>
+		<h1 class="page-heading"><?php echo $LANG['COL_PERMISSIONS'] . ': ' . $collMetadata['collectionname']; ?></h1>
 		<?php
 		if($isEditor){
 			$collPerms = $permManager->getCollectionEditors($collId);

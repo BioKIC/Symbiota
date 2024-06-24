@@ -4,7 +4,7 @@
 Language: Français
 ------------------
 */
-
+$LANG['DUPLICATE_MANAGER'] = 'Gestionnaire de Duplications';
 $LANG['DUP_CLUSTERING'] = 'Regroupement de Doublons';
 $LANG['TITLE_VALUE'] = 'Le champ Titre doit avoir une valeur';
 $LANG['PERS_MANAGE_MENU'] = 'Personal Management Menu';

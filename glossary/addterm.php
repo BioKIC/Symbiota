@@ -1,7 +1,9 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GlossaryManager.php');
-include_once($SERVER_ROOT.'/content/lang/glossary/addterm.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/glossary/addterm.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/glossary/addterm.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/glossary/addterm.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../profile/index.php?refurl='.$CLIENT_ROOT.'/glossary/addterm.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -115,7 +117,7 @@ if($isEditor){
 <body>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Add New Glossary Term</h1>
+		<h1 class="page-heading"><?php echo $LANG['ADD_GLOSSARY_TERM']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

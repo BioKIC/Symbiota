@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCollectionProfile.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collyearstats.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/misc/collyearstats.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/misc/collyearstats.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ini_set('max_execution_time', 1200); //1200 seconds = 20 minutes
 
@@ -40,7 +42,7 @@ if($collId){
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Year Statistics</h1>
+			<h1 class="page-heading"><?php echo $LANG['YEAR_STATS']; ?></h1>
 			<fieldset id="yearstatsbox" style="clear:both;margin-top:15px;width:97%;">
 				<legend><b>Month Totals</b></legend>
 				<table class="styledtable" style="font-size:12px;width:98%;">

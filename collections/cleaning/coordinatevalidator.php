@@ -3,6 +3,8 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCleaner.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/cleaning/coordinatevalidator.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/cleaning/coordinatevalidator.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/cleaning/coordinatevalidator.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:'';
@@ -81,7 +83,7 @@ if($IS_ADMIN) $isEditor = 1;
 	</div>
 	<!-- inner text -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Coordinate Validator</h1>
+		<h1 class="page-heading"><?php echo $LANG['COOR_VALIDATOR']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

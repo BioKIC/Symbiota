@@ -4,6 +4,7 @@
 Language: English
 ------------------
 */
+$LANG['ADD_GLOSSARY_TERM'] = 'Add New Glossary Term';
 
 $LANG['GLOSSARY'] = 'Glossary';
 $LANG['ADD_TERM'] = 'Add New Term';

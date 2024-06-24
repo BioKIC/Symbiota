@@ -5,6 +5,7 @@ Language: English
 ------------------
 */
 
+$LANG['ADD_OCCUR_TO_DATASET'] = 'Add Occurrences to Dataset';
 $LANG['OCCUR_HARV'] = 'Occurrence Harvester';
 $LANG['UNABLE_TO_LOCATE'] = 'unable to locate occurrence record';
 $LANG['HOME'] = 'Home';

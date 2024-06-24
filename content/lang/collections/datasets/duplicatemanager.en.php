@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['DUPLICATE_MANAGER'] = 'Duplicate Manager';
 $LANG['DUP_CLUSTERING'] = 'Duplicate Clustering';
 $LANG['TITLE_VALUE'] = 'Title field must have a value';
 $LANG['PERS_MANAGE_MENU'] = 'Personal Management Menu';

@@ -181,7 +181,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		<?php
 			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
 		?>
-		<h1 class="page-heading screen-reader-only">Map Point Helper</h1>
+		<h1 class="page-heading screen-reader-only"><?php echo $LANG['MAP_POINT_HELPER']; ?></h1>
 		<div style="padding:0.5rem; width: fit-content; height:fit-content" class="minimal-header-margin">
 			<div>
 				<?php echo isset($LANG['MPR_INSTRUCTIONS']) ?$LANG['MPR_INSTRUCTIONS']: 'Click once to capture coordinates. Click on the submit button to transfer coordinates.' ?>

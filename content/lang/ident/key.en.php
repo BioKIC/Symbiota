@@ -36,4 +36,5 @@ $LANG['DISPRESSPEC'] = 'Load Species List';
 $LANG['DISPLAY'] = 'Display';
 $LANG['SCINAME'] = 'Scientific Name';
 $LANG['COMMON'] = 'Common Name';
+$LANG['KEY'] = 'Key';
 ?>

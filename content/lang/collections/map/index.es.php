@@ -8,7 +8,7 @@ Date Translated: 2021-06-23
 */
 include_once($SERVER_ROOT.'/content/lang/collections/harvestparams.es.php');
 include_once('mapshared.es.php');
-
+$LANG['MAP_INTERFACE'] = 'Interfaz del Mapa';
 $LANG['SEARCH_CRITERIA'] = 'Criterios y opciones de búsqueda';
 $LANG['CRITERIA'] = 'Criterios';
 $LANG['COLLECTIONS'] = 'Colecciones';

@@ -4,7 +4,7 @@
 Language: Espa&ntilde;ol
 ------------------
 */
-
+$LANG['CROWDSOURCING_ADMIN'] = 'Administración de Crowdsourcing';
 $LANG['CROWDSOURCE_EXPLAIN'] = 'Esta herramienta es para entregar y gestionar registros para el ingreso de datos por
 							el publico general. Por m&aacute;s informaci&oacute;n revisa a
 							<a href=" https://biokic.github.io/symbiota-docs/es/coll_manager/crowdsource/">

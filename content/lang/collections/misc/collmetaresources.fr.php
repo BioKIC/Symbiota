@@ -6,7 +6,7 @@ Language: Français (French)
 */
 
 include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.fr.php');
-
+$LANG['CONTACTS_RESOURCE_TAB'] = 'Onglet Contacts et Ressources';
 $LANG['LINK_RESOURCE'] = 'Liste des Ressources Liées';
 $LANG['ENGLISH'] = 'Anglais';
 $LANG['SPANISH'] = 'Espagnol';

@@ -4,7 +4,6 @@
 Language: English
 ------------------
 */
-
 $LANG['INSTITUTION_EDITOR'] = 'Institution Editor';
 $LANG['SELECT_COLLECTION'] = 'Select a collection to be added';
 $LANG['HOME'] = 'Home';

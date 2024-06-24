@@ -6,7 +6,7 @@ Language: French
 */
 include_once($SERVER_ROOT.'/content/lang/collections/harvestparams.fr.php');
 include_once('mapshared.fr.php');
-
+$LANG['MAP_INTERFACE'] = 'Interface Cartographique';
 $LANG['SEARCH_CRITERIA'] = 'Critères et Options de Recherche';
 $LANG['CRITERIA'] = 'Critères';
 $LANG['COLLECTIONS'] = 'Collections';

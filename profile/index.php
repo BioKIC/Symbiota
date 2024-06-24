@@ -15,7 +15,10 @@ if($SYMB_UID){
 }
 
 include_once($SERVER_ROOT.'/classes/ProfileManager.php');
-include_once($SERVER_ROOT.'/content/lang/profile/index.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/profile/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/profile/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/profile/index.en.php');
+
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $THIRD_PARTY_OID_AUTH_ENABLED = $THIRD_PARTY_OID_AUTH_ENABLED ?? false;
@@ -199,7 +202,7 @@ include($SERVER_ROOT.'/includes/header.php');
 ?>
 <!-- inner text -->
 <div role="main" id="innertext" style="padding-left:0px;margin-left:0px;">
-	<h1 class="page-heading screen-reader-only">Login</h1>
+	<h1 class="page-heading screen-reader-only"><?php echo $LANG['LOGIN']; ?></h1>
 	<?php
 	if($statusStr){
 		$color = 'green';

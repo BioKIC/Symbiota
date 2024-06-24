@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['DATA_CLEANING_TOOL'] = 'Data Cleaning Tools';
 $LANG['OCC_CLEANER'] = 'Occurrence Cleaner';
 $LANG['COLL_MNGMT'] = 'Collection Management';
 $LANG['DATA_CLEAN'] = 'Data Cleaning Module';

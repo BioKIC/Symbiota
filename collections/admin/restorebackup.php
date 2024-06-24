@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecUploadDwca.php');
-include_once($SERVER_ROOT.'/content/lang/collections/admin/restorebackup.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/admin/restorebackup.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/admin/restorebackup.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/admin/restorebackup.en.php');
 include_once($SERVER_ROOT.'/content/lang/collections/admin/specupload.'.$LANG_TAG.'.php');
 
 header("Content-Type: text/html; charset=".$CHARSET);
@@ -153,7 +154,7 @@ include($SERVER_ROOT.'/includes/header.php');
 </div>
 <!-- This is inner text! -->
 <div role="main" id="innertext">
-	<h1 class="page-heading">Restore Collection from Backup File</h1>
+	<h1 class="page-heading"><?php echo $LANG['RESTORE_COLLEC_FROM_LIST']; ?></h1>
 	<?php
 	$recReplaceMsg = '<span style="color:orange"><b>'.(isset($LANG['CAUTION'])?$LANG['CAUTION']:'Caution').':</b></span> '.(isset($LANG['MATCH_REPLACE'])?$LANG['MATCH_REPLACE']:'Matching records will be replaced with incoming records');
 	if($isEditor){

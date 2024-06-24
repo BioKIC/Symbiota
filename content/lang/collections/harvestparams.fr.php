@@ -7,6 +7,7 @@ Language: Français (French)
 
 include_once('sharedterms.fr.php');
 
+$LANG['SEARCH'] = 'Rechercher';
 $LANG['PAGE_TITLE'] = 'Paramètres de Recherche de Collection';
 $LANG['TAXON_HEADER'] = 'Critères Taxonomiques';
 $LANG['INCLUDE_SYNONYMS'] = 'Inclure Synonymes';

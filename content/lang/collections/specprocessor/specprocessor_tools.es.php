@@ -171,6 +171,7 @@ $LANG['NO_UNPROCESSED'] = 'No hay registros sin procesar';
 $LANG['UNIDENTIFIED_ERROR'] = 'Error no identificado';
 
 // ocrprocessor.php
+$LANG['OP_CHARACTER_RECOGNITION'] = 'Reconocimiento óptico de Caracteres';
 $LANG['PLS_SEL_PROC_STATUS'] = 'Por favor seleccione un estado de procesamiento';
 $LANG['ENTER_PATT_MATCH'] = 'Ingrese una cadena que coincida con el patrón para extraer el número de catálogo';
 $LANG['SEL_OCR_INPUT'] = 'Seleccione/ingrese un archivo fuente de entrada OCR';
@@ -219,5 +220,15 @@ $LANG['SOURCE_PATH_EXPLAIN'] = 'Ruta del archivo o URL a la carpeta que contiene
 $LANG['OCR_SOURCE'] = 'Fuente de OCR';
 $LANG['OCR_SOURCE_EXPLAIN'] = 'Cadena corta que describe la fuente de OCR (por ejemplo, ABBYY, Tesseract, etc.). Este valor se coloca en el campo fuente con la fecha actual adjunta.';
 $LANG['LOAD_OCR_FILES'] = 'Cargar archivos OCR';
+
+//processor.php
+$LANG['SPEC_PROCESSOR_CONTROL_PANEL'] = 'Panel de Control del Procesador de Muestras';
+
+//reports.php
+
+$LANG['REPORTS'] = 'Informes';
+
+//wordcloudhandler.php
+$LANG['WORD_CLOUD_HANDLER'] = 'Manejador de Nube de Palabras';
 
 ?>

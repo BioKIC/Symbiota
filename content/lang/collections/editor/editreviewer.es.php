@@ -4,7 +4,7 @@
 Language: Español
 ------------------
 */
-
+$LANG['OCCUR_EDIT_REVIEWER'] = 'Revisor de Edición de Ocurrencia';
 $LANG['HOME'] = 'Inicio';
 $LANG['EDIT_REVIEWER'] = 'Revisor de Edición de Especímenes';
 $LANG['PREVIOUS'] = '';

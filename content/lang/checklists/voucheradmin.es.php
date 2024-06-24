@@ -4,7 +4,7 @@
 Language:  Español (Spanish)
 ------------------
 */
-
+$LANG['VOUCHER_ADMIN'] = 'Administración de vales';
 $LANG['NAV_HOME'] = 'Inicio';
 $LANG['EXT_VOUCHERS_LINKED'] = 'vales externos han sido vinculados a la lista';
 $LANG['CHECKLIST_ADMIN'] = 'Administraci&oacute;n de Listados de Comprobaci&oacute;n';

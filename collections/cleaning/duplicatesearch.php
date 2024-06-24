@@ -104,7 +104,7 @@ if($collMap){
 		<b><?php echo $LANG['DUP_OCCS']; ?></b>
 	</div>
 	<div role="main" id="innertext" style="background-color:white; margin:10px; width: 100%; max-width: 100%; padding: 0px;">
-		<h1 class="page-heading">Duplicate Catalog Number Cleaning Tool</h1>
+		<h1 class="page-heading"><?php echo $LANG['DUPL_CATALOG']; ?></h1>
 		<?php
 		if($collMap && $isEditor){
 			if($IS_ADMIN && $limit < 900) echo '<div style="max-width: 1000px">'.$LANG['SUPERADMIN_NOTICE'].'</div>';

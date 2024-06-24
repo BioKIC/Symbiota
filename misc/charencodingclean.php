@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/config/dbconnection.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/misc/charencodingclean.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/misc/charencodingclean.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/misc/charencodingclean.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -12,7 +14,7 @@ header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
 	</head>
 
 	<body>
-    <h1 class="page-heading">Character Encoding Cleaner</h1>
+    <h1 class="page-heading"><?php echo $LANG['CHAR_ENCODING_CLEANER']; ?></h1>
 		<div>
 			<b>READ ME:</b> This page is for cleaning central database tabels that may contain mixed latin and UTF-8 character sets.
 			This module will convert mixed character sets to UTF-8. If you want to convert from UTF-8 to another character set,

@@ -1,5 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/georef/geolocate.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/georef/geolocate.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/georef/geolocate.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $locality = $_REQUEST['locality'];
@@ -104,7 +107,7 @@ if(isset($PORTAL_GUID) && $PORTAL_GUID){
 
 <body>
 	<div id="container">
-		<h1 class="page-heading screen-reader-only">GEOLocate Tool</h1>
+		<h1 class="page-heading screen-reader-only"><?php echo $LANG['GEO_LOCATE_TOOL']; ?></h1>
 		<div>
 			<iframe id="Iframe1" src="//www.geo-locate.org/web/WebGeoreflight.aspx?v=1&georef=run|true|true|true|false|false|false|false|0&tab=locality&<?php echo $urlVariables; ?>"></iframe>
 		</div>

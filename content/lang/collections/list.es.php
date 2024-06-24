@@ -77,4 +77,6 @@ $LANG['MAP_LINK'] = 'Lien vers la Carte';
 $LANG['SEE_MAP_POINT'] = 'Voir le point sur la carte';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'El recuento de registros supera el límite';
 $LANG['NO_RECORDS'] = 'No se encontraron registros que coincidan con la consulta';
+$LANG['SEARCH_RESULTS_LIST'] = 'Resultados de la Búsqueda (Lista)';
+
 ?>

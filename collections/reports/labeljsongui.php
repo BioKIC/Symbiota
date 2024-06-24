@@ -1,5 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports/labeljsongui.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports/labeljsongui.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/reports/labeljsongui.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 ?>
 <!DOCTYPE html>
@@ -17,7 +20,7 @@ header("Content-Type: text/html; charset=".$CHARSET);
 	</head>
 	<body>
     <div class="top-breathing-room-rel bottom-breathing-room-rel" style="text-align: center;">
-      <h1 class="page-heading">Label Format Visual Editor</h1>
+      <h1 class="page-heading"><?php echo $LANG['LABEL_FORMAT']; ?></h1>
     </div>
     <main>
       <div>

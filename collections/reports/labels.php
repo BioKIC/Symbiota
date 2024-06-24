@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLabel.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports/labels.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports/labels.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/reports/labels.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = filter_var($_POST['collid'], FILTER_SANITIZE_NUMBER_INT);
@@ -94,7 +97,7 @@ else{
 			</style>
 		</head>
 		<body>
-			<h1 class="page-heading screen-reader-only">Labels</h1>
+			<h1 class="page-heading screen-reader-only"><?php echo $LANG['LABELS']; ?></h1>
 			<div>
 				<?php
 				if($action && $isEditor){

@@ -30,6 +30,6 @@ $LANG['NO_TAXA_FOUND'] = 'No se encontraron taxones que coincidan con su búsque
 $LANG['TAX_EXPLORE'] = 'Explorador Taxonómico';
 $LANG['EDITOR_MODE'] = 'Modo de Editor';
 $LANG['CENTRAL_THESAURUS'] = 'Tesauro Central';
-
+$LANG['CENTRAL_TAXANOMIC_THESAURUS'] = 'Tesauro Taxonómico Central';
 
 ?>

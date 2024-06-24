@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceGeorefTools.php');
-include_once($SERVER_ROOT.'/content/lang/collections/georef/georefclone.' . $LANG_TAG . '.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/georef/georefclone.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/georef/georefclone.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/georef/georefclone.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/header.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/header.en.php');
 else include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
@@ -200,7 +201,7 @@ alert("<?php echo isset($LANG['LOCALITY_INVALID_ERROR'])? $LANG['LOCALITY_INVALI
 		/>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext" style="margin-top: <?php echo $topVal; ?>">
-			<h1 class="page-heading">Georeference Clone Tool</h1>
+			<h1 class="page-heading"><?php echo $LANG['GEOREFERENCE_CLONE']; ?></h1>
 			<fieldset style="padding:10px;">
             <legend><b>
                <?php echo isset($LANG['SEARCH_FORM'])? $LANG['SEARCH_FORM']:'Search Form' ?>

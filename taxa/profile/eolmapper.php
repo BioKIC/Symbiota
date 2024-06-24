@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/EOLManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/taxa/profile/eolmapper.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/taxa/profile/eolmapper.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/taxa/profile/eolmapper.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
 header("Expires: Sat, 26 Jul 1997 05:00:00 GMT"); // Date in the past
@@ -41,7 +43,7 @@ include($SERVER_ROOT.'/includes/header.php');
 </div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Encyclopedia of Life Linkage Manager</h1>
+		<h1 class="page-heading"><?php echo $LANG['ENCYCLOPEDIA_OF_LIFE_LINKAGE']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

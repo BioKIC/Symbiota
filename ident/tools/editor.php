@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/KeyEditorManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/ident/tools/editor.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/ident/tools/editor.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/ident/tools/editor.en.php');
 header("Cache-control: private; Content-Type: text/html; charset=".$CHARSET);
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../ident/tools/editor.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
@@ -36,7 +38,7 @@ if($isEditor && $action){
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> Identification Character Editor</title>
+	<title><?php echo $DEFAULT_TITLE; ?> <?php echo $LANG['IDENTIFICATION_CHAR_FINDER']; ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -87,7 +89,7 @@ if($isEditor && $action){
 </head>
 <body>
 <div role="main" id="innertext">
-	<h1 class="page-heading">Identification Character Editor</h1>
+	<h1 class="page-heading"><?php echo $LANG['IDENTIFICATION_CHAR_FINDER']; ?></h1>
 	<?php
 	if($isEditor && $tid){
 		?>

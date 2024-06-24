@@ -170,8 +170,8 @@ include($SERVER_ROOT.'/includes/header.php');
 	<b><?php echo $LANG['CHECKLIST_ADMIN']; ?></b>
 </div>
 <div id='innertext'>
-	<h1 class="page-heading">Manage Checklist</h1>
-	<div style="color:#990000;font-size:125%;font-weight:bold;margin:0px 10px 10px 0px;">
+	<h1 class="page-heading"><?php echo $LANG['MANAGE_CHECKLIST']; ?></h1>
+	<div style="color:#990000;font-size:20px;font-weight:bold;margin:0px 10px 10px 0px;">
 		<a href="checklist.php?clid=<?php echo $clid . '&pid=' . $pid; ?>">
 			<?php echo $clManager->getClName(); ?>
 		</a>

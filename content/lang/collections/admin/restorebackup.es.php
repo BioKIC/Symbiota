@@ -4,7 +4,7 @@
 Language: Español (Spanish)
 ------------------
 */
-
+$LANG['RESTORE_COLLEC_FROM_LIST'] = 'Restaurar colección desde archivo de copia de seguridad';
 $LANG['RESTORE'] = 'Restaurar Respaldo';
 $LANG['PATH_EMPTY'] = 'La dirección al archivo está vacía. Por favor seleccione el archivo que va a ser restaurado.';
 $LANG['MUST_ZIP'] = 'El archivo debe ser un archivo ZIP (.zip) descargado como un archivo de respaldo Symbiota.';
