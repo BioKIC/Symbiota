@@ -227,6 +227,7 @@ class OccurrenceTaxaManager {
 			$tidInArr = array();
 			$taxonType = $this->taxaArr['taxontype'];
 			foreach($this->taxaArr['taxa'] as $searchTaxon => $searchArr){
+				$cleanedSearchTaxon = $this->cleanInStr($searchTaxon);
 				if(isset($searchArr['taxontype'])) $taxonType = $searchArr['taxontype'];
 				if($taxonType == TaxaSearchType::TAXONOMIC_GROUP){
 					//Class, order, or other higher rank
@@ -251,10 +252,10 @@ class OccurrenceTaxaManager {
 					//$sqlWhereTaxa .= 'OR (((ts.family = "'.$searchTaxon.'") AND (ts.taxauthid = '.$this->taxAuthId.')) OR o.sciname = "'.$searchTaxon.'") ';
 					if(isset($searchArr['tid'])){
 						$tidArr = array_keys($searchArr['tid']);
-						$sqlWhereTaxa .= 'OR ((ts.family = "'.$searchTaxon.'") OR (ts.tid IN('.implode(',', $tidArr).'))) ';
+						$sqlWhereTaxa .= 'OR ((ts.family = "'.$cleanedSearchTaxon.'") OR (ts.tid IN('.implode(',', $tidArr).'))) ';
 					}
 					else{
-						$sqlWhereTaxa .= 'OR ((o.family = "'.$searchTaxon.'") OR (o.sciname = "'.$searchTaxon.'")) ';
+						$sqlWhereTaxa .= 'OR ((o.family = "'.$cleanedSearchTaxon.'") OR (o.sciname = "'.$cleanedSearchTaxon.'")) ';
 					}
 				}
 				else{
