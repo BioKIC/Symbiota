@@ -739,6 +739,10 @@ class OccurrenceCollectionProfile extends OmCollections{
 					$pTID = $r->TID;
 				}
 				$rs->free();
+				if (!$pTID){
+					echo "<script>alert('Error: Parent Taxon not found!');</script>";
+        			return $returnArr;
+				}
 				$sqlWhere .= 'AND ((o.sciname = "'.$this->cleanInStr($taxon).'") OR (o.tidinterpreted IN(SELECT DISTINCT tid FROM taxaenumtree WHERE taxauthid = 1 AND parenttid IN('.$pTID.')))) ';
 			}
 			if($country) $sqlWhere .= 'AND o.country = "'.$this->cleanInStr($country).'" ';
