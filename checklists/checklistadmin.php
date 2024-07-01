@@ -223,7 +223,7 @@ include($SERVER_ROOT.'/includes/header.php');
 											<input name="pid" type="hidden" value="<?php echo $pid; ?>" />
 											<input name="deleteuid" type="hidden" value="<?php echo $uid; ?>" />
 											<input name="submitaction" type="hidden" value="DeleteEditor" />
-											<input name="submit" type="image" src="../images/drop.png" style="width:1em; margin:0;" alt="<?php echo $LANG['DROP_ICON_FOR_EDITOR']; ?>" />
+											<input name="submit" type="image" src="../images/drop.png" style="width:1em; margin:0;" onclick="return confirm('<?php echo ($LANG['EDITOR_DELETE']) . '\n' . htmlspecialchars($uNameArr['name'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '?' ?>');" alt="<?php echo $LANG['DROP_ICON_FOR_EDITOR']; ?>" />
 										</form>
 									</div>
 								</li>
@@ -277,7 +277,7 @@ include($SERVER_ROOT.'/includes/header.php');
 											<input name="clid" type="hidden" value="<?php echo $clid; ?>" />
 											<input name="pid" type="hidden" value="<?php echo $pid; ?>" />
 											<input name="submitaction" type="hidden" value="deleteProject" />
-											<input name="submit" type="image" src="../images/drop.png" style="width:1em;" alt="<?php echo $LANG['DROP_ICON_FOR_DELETE_PROJECT']; ?>" />
+											<input name="submit" type="image" src="../images/drop.png" style="width:1em;" onclick="return confirm('<?php echo ($LANG['PROJECT_DELETE']) . ' ' . htmlspecialchars($pName, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '?'?>');" alt="<?php echo $LANG['DROP_ICON_FOR_DELETE_PROJECT']; ?>" />
 										</form>
 										<?php
 									}
