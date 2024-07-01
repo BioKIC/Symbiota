@@ -1,6 +1,7 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT . '/classes/ImageLibrarySearch.php');
+include_once($SERVER_ROOT.'/classes/UuidFactory.php');
 if($LANG_TAG != 'en' && !file_exists($SERVER_ROOT . '/content/lang/imagelib/search.' . $LANG_TAG . '.php')) $LANG_TAG = 'en';
 include_once($SERVER_ROOT . '/content/lang/imagelib/search.' . $LANG_TAG . '.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
@@ -18,6 +19,7 @@ $pageNumber = array_key_exists('page', $_REQUEST) ? filter_var($_REQUEST['page']
 $cntPerPage = array_key_exists('cntperpage', $_REQUEST) && is_numeric($_REQUEST['cntperpage']) ? filter_var($_REQUEST['cntperpage'], FILTER_SANITIZE_NUMBER_INT) : 200;
 
 $action = $_REQUEST['submitaction'] ?? '';
+$localCsrfToken = UuidFactory::getUuidV4();
 
 if(!$useThes && !$action) $useThes = 1;
 if(!$taxonType && isset($DEFAULT_TAXON_SEARCH)) $taxonType = $DEFAULT_TAXON_SEARCH;
@@ -37,7 +39,7 @@ $imgLibManager->setImageType($imageType);
 if(isset($_REQUEST['db'])) $imgLibManager->setCollectionVariables($_REQUEST);
 
 $statusStr = '';
-if($action == 'batchAssignTag'){
+if($action == 'batchAssignTag' && isset($_REQUEST['csrf']) && isset($_SESSION['csrf']) &&  $_REQUEST['csrf'] == $_SESSION['csrf']){
 	$statusCnt = $imgLibManager->batchAssignImageTag($_POST);
 	$statusArr = explode('-', $statusCnt);
 	if(isset($statusArr[0]) && is_numeric($statusArr[0])){
@@ -129,6 +131,7 @@ if($action == 'batchAssignTag'){
 	<div role="main" id="innertext">
 		<h1 class="page-heading"><?= $LANG['IMAGE_SEARCH']; ?></h1>
 		<form name="imagesearchform" id="imagesearchform" action="search.php?<?=$imgLibManager->getQueryTermStr()?>" method="post">
+			<input name="csrf" type="hidden" value="<?php echo $_SESSION['csrf'] ?? $localCsrfToken; ?>" />
 			<?php
 			if($statusStr){
 				echo '<div id="action-status-div">' . $statusStr . '</div>';
