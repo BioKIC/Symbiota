@@ -7,6 +7,7 @@ Language: Français (French)
 
 include_once('checklist.fr.php');
 
+$LANG['MANAGE_CHECKLIST'] = 'Gérer la liste de contrôle';
 $LANG['NO_PERMISSIONS'] = 'Vous n\'êtes pas autorisé à créer une liste. Veuillez contacter un administrateur.';
 $LANG['ERR_DELETING_CHECKLIST'] = 'ERREUR lors de la suppression de la liste';
 $LANG['ERR_ADDING_CHILD'] = 'ERREUR lors de l\'ajout du lien vers la liste des enfants';

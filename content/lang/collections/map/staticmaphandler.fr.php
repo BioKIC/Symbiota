@@ -5,7 +5,7 @@ Language: French
 ------------------
 */
 include_once('mapshared.fr.php');
-
+$LANG['STATIC_DIST_MAP_GENERATOR'] = 'Générateur de carte de distribution statique';
 $LANG['BUILD_MAPS'] = 'Construire une carte(s)';
 $LANG['BOUNDS'] = 'Limites';
 $LANG['LOWER_BOUND'] = 'Limite Inférieure';

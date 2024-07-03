@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/MapSupport.php');
-include_once($SERVER_ROOT.'/content/lang/collections/map/staticmaphandler.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/map/staticmaphandler.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/map/staticmaphandler.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/map/staticmaphandler.en.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
 
 $mapManager = new MapSupport();
@@ -435,7 +436,7 @@ rowTemplate.innerHTML = `<tr><td><a target="_blank" href=\"<?php echo $CLIENT_RO
          data-lng="<?= htmlspecialchars($longCen)?>"
       ></div>
       <div role="main" id="innertext">
-         <h1 class="page-heading">Static distribution map generator</h1>
+         <h1 class="page-heading"><?php echo $LANG['STATIC_DIST_MAP_GENERATOR']; ?></h1>
          <div style="display:flex; justify-content:center">
             <div id="map" style="width:50rem;height:50rem;"></div>
          </div>

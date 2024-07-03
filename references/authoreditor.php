@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ReferenceManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/references/authoreditor.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/references/authoreditor.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/references/authoreditor.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 if(!$SYMB_UID) header('Location: ../profile/index.php?refurl=../references/index.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
@@ -51,7 +53,7 @@ if(!$addAuth){
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET;?>">
-	<title><?php echo $DEFAULT_TITLE; ?> Author Management</title>
+	<title><?php echo $DEFAULT_TITLE; ?> <?php echo $LANG['AUTHOR_MANAGEMENT']; ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -71,14 +73,14 @@ if(!$addAuth){
 		?>
 		<div class='navpath'>
 			<a href='../index.php'>Home</a> &gt;&gt;
-			<a href='authoreditor.php'> <b>Author Management</b></a>
+			<a href='authoreditor.php'> <b><?php echo $LANG['AUTHOR_MANAGEMENT']; ?></b></a>
 		</div>
 		<?php
 	}
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Author Management</h1>
+		<h1 class="page-heading"><?php echo $LANG['AUTHOR_MANAGEMENT']; ?></h1>
 		<?php
 		if($isEditor){
 			if($statusStr){

@@ -4,6 +4,8 @@ include_once($SERVER_ROOT.'/classes/SpecProcessorManager.php');
 include_once($SERVER_ROOT.'/classes/ImageLocalProcessor.php');
 include_once($SERVER_ROOT.'/classes/ImageProcessor.php');
 include_once($SERVER_ROOT.'/classes/SpecProcessorOcr.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
 
 header("Content-Type: text/html; charset=".$CHARSET);
 
@@ -56,7 +58,7 @@ $statusStr = "";
 		?>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Specimen Processor Control Panel</h1>
+			<h1 class="page-heading"><?php echo $LANG['SPEC_PROCESSOR_CONTROL_PANEL']; ?></h1>
 			<h2><?php echo $specManager->getCollectionName(); ?></h2>
 			<?php
 			if($isEditor){

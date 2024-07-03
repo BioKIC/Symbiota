@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['GEO_CLEANING_TOOLS'] = 'Herramientas de Limpieza Geográfica';
 $LANG['POL_UNITS_STANDARD'] = 'Political Units Standardization';
 $LANG['SEL_COUNTRY'] = 'Select a country value';
 $LANG['SEL_STATE'] = 'Seleccionar un valor para estado';

@@ -12,6 +12,7 @@ $LANG['OF'] = 'of';
 $LANG['NEXT'] = 'Next';
 $LANG['LAST'] = 'Last';
 $LANG['TABLE_VIEW'] = 'Occurrence Table View';
+$LANG['TABLE_DISPLAY'] = 'Occurrence Table Display';
 $LANG['TABLE_VIEW_DESC'] = 'Table displays occurrence information with columns showing Symbiota ID, Family, Event Date, Author, Location, and other details';
 $LANG['SEARCH_FILTER'] = 'Open Record Search Form';
 $LANG['BATCH_UPDATE'] = 'Batch Update';

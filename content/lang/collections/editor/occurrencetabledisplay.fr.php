@@ -12,6 +12,7 @@ $LANG['OF'] = 'de';
 $LANG['NEXT'] = 'Suivants';
 $LANG['LAST'] = 'Dernière';
 $LANG['TABLE_VIEW'] = 'Vue du Tableau des Occurrences';
+$LANG['TABLE_DISPLAY'] = 'Affichage du Tableau des Occurrences';
 $LANG['TABLE_VIEW_DESC'] = 'Le tableau affiche les informations sur les occurrences avec des colonnes indiquant l\'ID Symbiota, la famille, la date de l\'événement, l\'auteur, l\'emplacement et d\'autres détails';
 $LANG['SEARCH_FILTER'] = 'Ouvrir le Formulaire de Recherche d\'Enregistrement';
 $LANG['BATCH_UPDATE'] = 'Mise à Jour Par Lots';

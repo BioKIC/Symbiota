@@ -15,4 +15,7 @@ $LANG['ADD_REFERENCE_POINT'] = 'Ajouter un Point de Référence';
 
 $LANG['ENTER_IN_DMS'] = 'Entrez au format D:M:S';
 $LANG['ENTER_IN_DECIMAL'] = 'Entrez au format décimal';
+$LANG['GOOGLE_MAP'] = 'Google Map';
+$LANG['LEAFLET_MAP'] = 'Carte du Dépliant';
+$LANG['TAXON_MAP'] = 'Carte des Taxons';
 ?>

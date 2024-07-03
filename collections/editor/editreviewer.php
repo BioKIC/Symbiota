@@ -203,7 +203,7 @@ $navStr .= '</div>';
 		?>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext" style="min-width:1100px">
-			<h1 class="page-heading">Occurrence Edit Reviewer</h1>
+			<h1 class="page-heading"><?php echo $LANG['OCCUR_EDIT_REVIEWER']; ?></h1>
 			<?php
 			if($collid && $isEditor){
 				?>

@@ -148,7 +148,7 @@ if($action && $isEditor){
 	<!-- inner text -->
 	<div role="main" id="innertext">
 		<?php
-		echo '<h1 class="page-heading">Geography Cleaning Tools: ' . $collMap['collectionname'] . ' (' . $collMap['code'] . ')</h1>';
+		echo '<h1 class="page-heading">' . $LANG['GEO_CLEANING_TOOLS'] . ': ' . $collMap['collectionname'] . ' (' . $collMap['code'] . ')</h1>';
 		if($statusStr){
 			?>
 			<hr/>

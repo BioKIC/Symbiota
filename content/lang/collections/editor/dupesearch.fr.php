@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['DUPL_RECORD_SEARCH'] = 'Recherche d\'enregistrements en Double';
 $LANG['EXS_DUPE'] = 'Exsiccati Doublons';
 $LANG['POSSIBLE_EXACT_DUPES'] = 'Doublons EXACTS Possibles';
 $LANG['DUPE_CAT_NUM'] = 'Numéro de Catalogue en Double';

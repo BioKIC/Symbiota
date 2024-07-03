@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/KeyCharDeficitManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/ident/tools/chardeficit.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/ident/tools/chardeficit.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/ident/tools/chardeficit.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $action = array_key_exists("action",$_REQUEST)?$_REQUEST["action"]:"";
@@ -21,7 +24,7 @@ if($IS_ADMIN || array_key_exists("KeyEditor",$USER_RIGHTS) || array_key_exists("
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title><?php echo $DEFAULT_TITLE; ?> Character Deficit Finder</title>
+	<title><?php echo $DEFAULT_TITLE; ?> <?php echo $LANG['CHAR_DEFICIT_FINDER']; ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
@@ -52,7 +55,7 @@ if($IS_ADMIN || array_key_exists("KeyEditor",$USER_RIGHTS) || array_key_exists("
 	?>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Character Deficit Finder</h1>
+		<h1 class="page-heading"><?php echo $LANG['CHAR_DEFICIT_FINDER']; ?></h1>
   		<form action="chardeficit.php" method="get">
 			<?php
 		 	if($editable){

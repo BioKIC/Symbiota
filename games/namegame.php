@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GamesManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/games/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $clid = array_key_exists('clid', $_REQUEST) ? filter_var($_REQUEST['clid'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -564,7 +566,7 @@ $imgloc = "../images/games/namegame/";
 	?>
 	<div role="main" id="innertext">
 		<div style="width:100%;text-align:center;">
-			<h1 class="page-heading screen-reader-only">Name Guessing Game</h1>
+			<h1 class="page-heading screen-reader-only"><?php echo $LANG['NAME_GUESSING_GAME']; ?></h1>
 		</div>
 		<div style="width:100%;text-align:center;margin:10px;">
 			I am thinking of a species found within the following checklist: <b><?php echo $clName;?></b><br/>

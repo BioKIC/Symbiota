@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/KeyCharAdmin.php');
+if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/ident/admin/taxonomylinkage.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/ident/admin/taxonomylinkage.en.php');
+else include_once($SERVER_ROOT.'/content/lang/ident/admin/taxonomylinkage.'.$LANG_TAG.'.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $cid = array_key_exists('cid',$_REQUEST)?$_REQUEST['cid']:0;
@@ -72,7 +74,7 @@ $tLinks = $keyManager->getTaxonRelevance();
 	</script>
 </head>
 <body>
-	<h1 class="page-heading">Link Character to Taxa</h1>
+	<h1 class="page-heading"><?php echo $LANG['LINK_CHARACTER_TO_TAXA']; ?></h1>
 	<div id="tlinkdiv" style="margin:15px;">
 		<div style="margin:10px;">
 			<b>Taxonomic relevance of character</b> -

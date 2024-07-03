@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
-include_once($SERVER_ROOT.'/content/lang/collections/listtabledisplay.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/listtabledisplay.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/listtabledisplay.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/listtabledisplay.en.php');
+
 include_once($SERVER_ROOT.'/classes/OccurrenceListManager.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
@@ -56,7 +58,7 @@ $searchVar = $collManager->getQueryTermStr();
 	<script src="../js/symb/collections.list.js?ver=9" type="text/javascript"></script>
 </head>
 <body style="margin-left: 0px; margin-right: 0px;background-color:white;">
-	<h1 class="page-heading left-breathing-room-rel">Search Results (Table)</h1>
+	<h1 class="page-heading left-breathing-room-rel"><?php echo $LANG['SEARCH_RESULTS_TABLE']; ?></h1>
 	<div>
 		<div style="width:65rem;margin-bottom:5px;">
 			<div style="float:right;">

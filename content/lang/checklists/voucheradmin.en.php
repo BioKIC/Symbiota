@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['VOUCHER_ADMIN'] = 'Voucher Administration';
 $LANG['NAV_HOME'] = 'Home';
 $LANG['EXT_VOUCHERS_LINKED'] = 'external vouchers have been linked to checklist';
 $LANG['CHECKLIST_ADMIN'] = 'Checklist Administration';

@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ReportsManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/reports.en.php');
 
 $rm = new ReportsManager();
 
@@ -15,7 +17,7 @@ $rm = new ReportsManager();
     </style>
 </head>
 <body>
-    <h1 class="page-heading">Reports</h1>
+    <h1 class="page-heading"><?php echo $LANG['REPORTS']; ?></h1>
 <h3>New identifications to the species level (by determiner)</h3>
 <table>
     <thead><tr><th>Full Name</th><th>Number of Determinations</th></tr></thead>

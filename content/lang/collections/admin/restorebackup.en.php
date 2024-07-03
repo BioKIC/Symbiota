@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['RESTORE_COLLEC_FROM_LIST'] = 'Restore Collection from Backup File';
 $LANG['RESTORE'] = 'Restore Backup';
 $LANG['PATH_EMPTY'] = 'File path is empty. Please select the file that is to be restored.';
 $LANG['MUST_ZIP'] = 'File must be a ZIP file (.zip) downloaded as a Symbiota backup.';

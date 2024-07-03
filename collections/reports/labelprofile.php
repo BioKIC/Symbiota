@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLabel.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports/labelprofile.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports/labelprofile.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/reports/labelprofile.en.php');
+
 header('Content-Type: text/html; charset='.$CHARSET);
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/reports/labelprofile.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -138,7 +141,7 @@ $isGeneralObservation = (($labelManager->getMetaDataTerm('colltype') == 'General
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Specimen Label Manager</h1>
+		<h1 class="page-heading"><?php echo $LANG['SPEC_LABEL_MANAGER']; ?></h1>
 		<div style="width:700px"><span style="color:orange;font-weight:bold;">In development!</span> We are currently working on developing a new system that will allow collection managers and general users to create their own custom label formats that can be saved within the collection and user profiles. We are trying our best to develop these tools with minimum disruptions to normal label printing. More details to provided in the near future.</div>
 		<?php
 		if($statusStr){

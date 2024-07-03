@@ -8,6 +8,7 @@ Date Translated: 2024-02-05
 */
 
 //Following used in mapcoordaid.php
+$LANG['TAXON_MAP'] = 'Carte des Taxons';
 $LANG['SAVE_N_CLOSE'] = 'Sauver et fermer';
 $LANG['COORD_AID_HELP_TEXT'] = 'Cliquez sur la carte pour commencer à dessiner ou sélectionnez parmi les commandes de forme pour dessiner les limites de cette forme.';
 
@@ -19,6 +20,8 @@ $LANG['MBB_SOUTHERN'] = 'Southern Lat';
 $LANG['MBB_WESTERN'] = 'Western Long';
 
 //Following used in mappointaid.php
+$LANG['POINT_RADIUS_AID'] = 'Aide Point-Rayon';
+$LANG['MAP_POINT_HELPER'] = 'Aide aux points de carte';
 $LANG['MPR_TITLE'] = 'Mappeur de coordonnées';
 $LANG['MPR_INSTRUCTIONS'] = 'Cliquez une fois pour capturer les coordonnées. Cliquez sur le bouton Soumettre pour transférer les coordonnées.';
 $LANG['MPR_UNCERTAINTY_INSTRUCTIONS'] = "Entrez l'incertitude pour créer un cercle de rayon d'erreur autour du marqueur.";
@@ -29,6 +32,8 @@ $LANG['SUBMIT'] = 'Soumettre';
 $LANG['UNCERTAINTY_METERS'] = 'Incertitude en Mètres';
 
 //Following used in mappolyaid.php
+$LANG['COOR_POLYGON_AID'] = 'Coordonner l\'Aide du Polygone';
+$LANG['MAP_POLYGON_HELPER'] = 'Aide à la cartographie des polygones';
 $LANG['POLYGON_FORMATTING'] = 'Formatage des polygones';
 $LANG['REDRAW'] = 'Redessiner';
 $LANG['TRIM_DIGITS'] = 'Couper à 6 chiffres significatifs';

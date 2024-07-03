@@ -4,6 +4,7 @@ include_once($SERVER_ROOT.'/classes/OccurrenceDownload.php');
 include_once($SERVER_ROOT.'/classes/DwcArchiverCore.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/geolocate.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/geolocate.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/geolocate.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST) && is_numeric($_REQUEST['collid']) ? $_REQUEST['collid'] : 0;
@@ -37,7 +38,7 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 	<body>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext" style="background-color:white;">
-			<h1 class="page-heading screen-reader-only">GeoLocate CoGe Export Manager</h1>
+			<h1 class="page-heading screen-reader-only"><?php echo $LANG['GEOLOCATE_COGE_EXPORT_MANAGER']; ?></h1>
 			<?php
 			if($collid && $isEditor){
 				if($ACTIVATE_GEOLOCATE_TOOLKIT){

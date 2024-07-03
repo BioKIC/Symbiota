@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceExsiccatae.php');
+
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/exsiccati/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/exsiccati/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/exsiccati/index.en.php');
 header('Content-Type: text/html; charset='.$CHARSET);
 
 $ometid = array_key_exists('ometid',$_REQUEST) ? filter_var($_REQUEST['ometid'], FILTER_SANITIZE_NUMBER_INT) : 0;
@@ -289,7 +292,7 @@ if($ometid) unset($selectLookupArr[$ometid]);
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext" style="width:95%;">
-		<h1 class="page-heading">Exsiccatae</h1>
+		<h1 class="page-heading"><?php echo $LANG['EXSICATTAE']; ?></h1>
 		<?php
 		if($statusStr){
 			echo '<hr/>';

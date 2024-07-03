@@ -2,6 +2,8 @@
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/KeyDataManager.php');
 include_once($SERVER_ROOT.'/content/lang/ident/key.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/ident/key.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/ident/key.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/ident/key.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $isEditor = false;
@@ -117,7 +119,7 @@ if($chars){
 
 ?>
 <div role="main" id="innertext">
-	<h1 class="page-heading screen-reader-only">Key</h1>
+	<h1 class="page-heading screen-reader-only"><?php echo $LANG['KEY']; ?></h1>
 	<?php
 	if($isEditor){
 		?>

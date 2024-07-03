@@ -1,6 +1,8 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/LanguageAdmin.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/admin/langmanager.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/admin/langmanager.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/admin/langmanager.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 if(!$SYMB_UID) header('Location: '.$CLIENT_ROOT.'/profile/index.php?refurl=../content/lang/admin/langmanager.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
@@ -37,7 +39,7 @@ if($SYMB_UID){
 		</div>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Language Variables Manager</h1>
+			<h1 class="page-heading"><?php echo $LANG['LANG_VARIABLES_MANAGER']; ?></h1>
 			<div style="margin:20px"><b>Source path:</b> <?php echo '<a href="' . htmlspecialchars($refUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($refUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></div>
 			<div style="margin:20px">
 				<table class="styledtable">

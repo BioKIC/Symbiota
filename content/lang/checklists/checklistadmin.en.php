@@ -7,6 +7,7 @@ Language: English
 
 include_once('checklist.en.php');
 
+$LANG['MANAGE_CHECKLIST'] = 'Manage Checklist';
 $LANG['NO_PERMISSIONS'] = 'You do not have permission to create a Checklist. Please contact an administrator.';
 $LANG['ERR_DELETING_CHECKLIST'] = 'ERROR deleting checklist';
 $LANG['ERR_ADDING_CHILD'] = 'ERROR adding child checklist link';

@@ -122,7 +122,7 @@ if($isEditor){
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
 			<div class="justify-center">
-				<h1 class="page-heading">Occurrence Comments For: <?php echo $collMeta['name']; ?></h1>
+				<h1 class="page-heading"><?php echo $LANG['OCCUR_COMMENTS']; ?>: <?php echo $collMeta['name']; ?></h1>
 				<section class="fieldset-like fieldset-like--small-float-right">
 						<h1>
 							<span><?php echo $LANG['FILTER_OPT'];?></span>

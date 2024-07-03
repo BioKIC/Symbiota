@@ -30,5 +30,5 @@ $LANG['NO_TAXA_FOUND'] = 'Aucun taxon trouvé correspondant à votre recherche';
 $LANG['TAX_EXPLORE'] = 'Explorateur de taxonomie';
 $LANG['EDITOR_MODE'] = 'Mode éditeur';
 $LANG['CENTRAL_THESAURUS'] = 'Thésaurus Central';
-
+$LANG['CENTRAL_TAXANOMIC_THESAURUS'] = 'Thésaurus Taxonomique Central';
 ?>

@@ -7,6 +7,7 @@ Language: Español (Spanish)
 
 include_once('checklist.es.php');
 
+$LANG['MANAGE_CHECKLIST'] = 'Administrar lista de verificación';
 $LANG['NO_PERMISSIONS'] = 'No tienes permiso para crear una lista. Por favor contacte a un administrador.';
 $LANG['ERR_DELETING_CHECKLIST'] = 'ERROR al eliminar la lista';
 $LANG['ERR_ADDING_CHILD'] = 'ERROR al agregar el enlace de la lista infantil';

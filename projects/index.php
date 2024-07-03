@@ -2,7 +2,9 @@
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImInventories.php');
 include_once($SERVER_ROOT.'/classes/MapSupport.php');
-include_once($SERVER_ROOT.'/content/lang/projects/index.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/projects/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/projects/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/projects/index.en.php');
+
 header('Content-Type: text/html; charset='.$CHARSET);
 
 $pid = array_key_exists('pid',$_REQUEST)?$_REQUEST['pid']:'';
@@ -231,7 +233,7 @@ if(!$researchList && !$editMode){
 
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading screen-reader-only">View Inventory Project</h1>
+		<h1 class="page-heading screen-reader-only"><?php echo $LANG['VIEW_INVETORY_PROJECTS']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

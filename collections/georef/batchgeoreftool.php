@@ -110,7 +110,7 @@ if($isEditor && $submitAction){
 		<a class="screen-reader-only" href="#queryform-section"><?php echo $LANG['SKIP_NAV'] ?></a>
 		<!-- This is inner text! -->
 		<div  id='innertext'>
-			<h1 class="page-heading">Batch Georeferencing Tool</h1>
+			<h1 class="page-heading"><?php echo $LANG['BATCH_GEO_TOOLS']; ?></h1>
 			<?php
 			if($collid){
 				?>

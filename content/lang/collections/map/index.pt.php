@@ -7,7 +7,7 @@ Date Translated: 2024-02-16
 ------------------
 */
 include_once($SERVER_ROOT.'/content/lang/collections/harvestparams.pt.php');
-
+$LANG['MAP_INTERFACE'] = 'Interface do Mapa';
 $LANG['SEARCH_CRITERIA'] = 'Critérios de Pesquisa';
 $LANG['CRITERIA'] = 'Critérios';
 $LANG['COLLECTIONS'] = 'Coleções';

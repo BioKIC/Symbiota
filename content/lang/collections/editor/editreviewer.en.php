@@ -4,7 +4,7 @@
 Language: English
 ------------------
 */
-
+$LANG['OCCUR_EDIT_REVIEWER'] = 'Occurrence Edit Reviewer';
 $LANG['HOME'] = 'Home';
 $LANG['EDIT_REVIEWER'] = 'Specimen Edit Reviewer';
 $LANG['PREVIOUS'] = 'Previous';

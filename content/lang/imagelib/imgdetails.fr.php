@@ -6,7 +6,7 @@ Translated by: Google Translate
 Date Translated: 2024/03/26
 ------------------
 */
-
+$LANG['IMG_DETAILS'] = 'Détails de l\'Image';
 $LANG['ERROR_FILE_PATH'] = 'ERREUR : Le chemin du fichier doit être saisi';
 $LANG['ENTER_TAXON_NAME'] = 'Entrez un nom de taxon vers lequel l\'image sera transférée';
 $LANG['TAXON_PROFILE_EDITING'] = 'Aller à la page d\'édition du profil de taxon';

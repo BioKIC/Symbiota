@@ -7,7 +7,7 @@ Date Translated: 2021-08-18
 ------------------
 */
 
-$LANG['COL_PERMISSIONS'] = 'Permisos de Colección';
+$LANG['COL_PERMISSIONS'] = 'Permisos de recopilación para';
 $LANG['PLS_SEL_USER'] = 'Por favor seleccionar un usuario de la lista';
 $LANG['SEL_PERMISSIONS'] = 'Por favor seleccionar el permiso que desea asignar a este usuario';
 $LANG['SEL_OBS'] = 'Por favor seleccione un proyecto de Manejo de Observaciones Personales';

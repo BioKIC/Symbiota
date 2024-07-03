@@ -4,7 +4,7 @@
 Language: Spanish 
 ------------------
 */
-
+$LANG['GEOREFERENCE_CLONE'] = 'Herramienta de Clonación de Georeferencia';
 $LANG['SEARCH_FORM'] = 'Formulario de Búsqueda';
 $LANG['LOCALITY'] = 'Localidad';
 $LANG['LOCALITY_MISSING_ERROR'] = 'El campo de localidad debe tener un valor.';

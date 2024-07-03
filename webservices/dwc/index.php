@@ -1,12 +1,15 @@
 <?php
 include_once('../../config/symbini.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/prohibit.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/prohibit.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/prohibit.en.php');
+
 header('Content-Type: text/html; charset=' . $CHARSET);
 header('Location: '.$CLIENT_ROOT.'/index.php');
 ?>
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 	<head>
-		<title>Forbidden</title>
+		<title><?php echo $LANG['FORBIDDEN']; ?></title>
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
@@ -18,7 +21,7 @@ header('Location: '.$CLIENT_ROOT.'/index.php');
 		?>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Forbidden</h1>
+			<h1 class="page-heading"><?php echo $LANG['FORBIDDEN']; ?></h1>
 			<div style="font-weight:bold;">
 				You don't have permission to access this page.
 			</div>

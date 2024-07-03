@@ -4,7 +4,7 @@
 Language: Español (Spanish)
 ------------------
 */
-
+$LANG['ADD_GLOSSARY_TERM'] = 'Ajouter un nouveau terme de glossaire';
 $LANG['GLOSSARY'] = 'Glosario';
 $LANG['ADD_TERM'] = 'Añadir Nuevo Término';
 $LANG['PLEASE_ADD_TERM'] = 'Por favor introducir un valor en el campo de término';

@@ -62,4 +62,5 @@ $LANG['MAP_LINK'] = 'Lien vers la Carte';
 $LANG['SEE_MAP_POINT'] = 'Voir le point sur la carte';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'Le nombre d\'enregistrements dépasse la limite';
 $LANG['NO_RECORDS'] = 'Aucun enregistrement trouvé correspondant à la requête';
+$LANG['SEARCH_RESULTS_LIST'] = 'Résultats de la Recherche (Liste)';
 ?>

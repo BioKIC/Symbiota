@@ -279,7 +279,7 @@ else{
 		</script>
 	</head>
 	<body style="background-color:#ffffff;" onload="initialize()">
-         <h1 class="page-heading screen-reader-only">Map Polygon Helper</h1>
+         <h1 class="page-heading screen-reader-only"><?php echo $LANG['MAP_POLYGON_HELPER']; ?></h1>
 		<div id="map_canvas" style="width:100%;height:600px;"></div>
 		<div style="width:100%;">
 			<div id="helptext" style="display:none;margin:5px 0px">

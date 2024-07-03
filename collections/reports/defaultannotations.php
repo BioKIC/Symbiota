@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLabel.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports/defaultannotations.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports/defaultannotations.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/reports/defaultannotations.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = $_POST["collid"];
@@ -49,7 +52,7 @@ if($SYMB_UID){
 		</style>
 	</head>
 	<body style="background-color:#ffffff;">
-		<h1 class="page-heading screen-reader-only">Default Annotations</h1>
+		<h1 class="page-heading screen-reader-only"><?php echo $LANG['DEFAULT_ANNOTATIONS']; ?></h1>
 		<div>
 			<?php
 			if($isEditor){

@@ -3,6 +3,7 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcessorManager.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
@@ -70,7 +71,7 @@ $procManager->setProjVariables('OCR Harvest');
 	}
 </script>
 <div style="margin:15px;">
-	<h1 class="page-heading screen-reader-only">Optical Character Recognition</h1>
+	<h1 class="page-heading screen-reader-only"><?php echo $LANG['OP_CHARACTER_RECOGNITION']; ?></h1>
 	<?php
 	$cntTotal = $procManager->getSpecWithImage();
 	$cntUnproc = $procManager->getSpecWithImage($procStatus);

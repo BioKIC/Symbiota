@@ -1,6 +1,7 @@
 <?php
 include_once('../../config/symbini.php');
-include_once($SERVER_ROOT . '/content/lang/collections/misc/collprofiles.' . $LANG_TAG . '.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collprofiles.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/misc/collprofiles.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/misc/collprofiles.en.php');
 include_once($SERVER_ROOT . '/classes/OccurrenceCollectionProfile.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceEditorManager.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
@@ -217,7 +218,7 @@ if ($SYMB_UID) {
 			if ($collData['collectioncode']) $codeStr .= '-' . $collData['collectioncode'];
 			$codeStr .= ')';
 			$_SESSION['colldata'] = $collData;
-			echo '<h1 class="page-heading">Collection Profile for: ' . $collData['collectionname'] . $codeStr . '</h1>';
+			echo '<h1 class="page-heading">' . $LANG['COLLEC_PROFILE'] . ': ' . $collData['collectionname'] . $codeStr . '</h1>';
 			// GBIF citations widget
 			if ($datasetKey) {
 				echo '<div style="margin-left: 10px; margin-bottom: 20px;">';

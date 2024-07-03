@@ -2,6 +2,8 @@
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SpecProcessorManager.php');
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/specprocessor/index.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
 
 $collid = filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT);
 $menu = !empty($_REQUEST['menu']) ? 1 : 0;
@@ -17,7 +19,7 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 }
 ?>
 <div role="main" id="innertext" style="background-color:white;">
-	<h1 class="page-heading screen-reader-only">Reports</h1>
+	<h1 class="page-heading screen-reader-only"><?php echo $LANG['REPORTS']; ?></h1>
 	<?php
 	if($isEditor){
 		$reportTypes = array(0 => 'General Stats', 1 => 'User Stats');

@@ -144,7 +144,7 @@ if($imgArr){
 	 -->
 	<div role="main" id="innertext">
 		<!-- This is inner text! -->
-		<h1 class="page-heading">Image Details</h1>
+		<h1 class="page-heading"><?php echo $LANG['IMG_DETAILS']; ?></h1>
 		<?php
 		if($imgArr){
 			?>

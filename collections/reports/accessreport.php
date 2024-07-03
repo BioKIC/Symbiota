@@ -1,6 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceAccessStats.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/reports/accessreport.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/reports/accessreport.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/reports/accessreport.en.php');
 
 if(!$SYMB_UID) header('Location: ../../profile/index.php?refurl=../collections/reports/accessstatsreview.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 header("Content-Type: text/html; charset=".$CHARSET);
@@ -110,7 +112,7 @@ else{
 		?>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext" style="min-width:1100px">
-			<h1 class="page-heading">Occurrence Access Reporting</h1>
+			<h1 class="page-heading"><?php echo $LANG['OCCUR_ACCESS_REPORTING']; ?></h1>
 			<div>
 				<div style="float:left;font-size:120%"><b><u>User Access Statistics</u></b></div>
 				<div id="desc_details" style="clear:both;display:none;width:500px;">Displays general user access statistics for all specimens within collection.

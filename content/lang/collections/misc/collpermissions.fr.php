@@ -5,7 +5,7 @@ Language: Français (French)
 ------------------
 */
 
-$LANG['COL_PERMISSIONS'] = 'Autorisations de Collecte';
+$LANG['COL_PERMISSIONS'] = 'Autorisations de Collecte pour';
 $LANG['PLS_SEL_USER'] = 'Veuillez sélectionner utilisateur dans liste';
 $LANG['SEL_PERMISSIONS'] = 'Veuillez sélectionner les autorisations que vous souhaitez attribuer à cet utilisateur';
 $LANG['SEL_OBS'] = "Veuillez sélectionner un Projet de Gestion d'Observation Personnelle";

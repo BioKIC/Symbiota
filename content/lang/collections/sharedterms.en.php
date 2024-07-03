@@ -29,4 +29,5 @@ $LANG['SEARCH'] = 'Search';
 $LANG['DISPLAY_FORMAT'] = 'Results Display Format';
 $LANG['LIST'] = 'List';
 $LANG['TABLE'] = 'Table';
+$LANG['COLLECTION_LIST'] = 'Collections List';
 ?>

@@ -3,7 +3,6 @@ include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceSupport.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/datasets/occurharvester.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/datasets/occurharvester.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT . '/content/lang/collections/datasets/occurharvester.en.php');
-
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:'';
@@ -137,7 +136,7 @@ if($isEditor){
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Add Occurrences to Dataset</h1>
+		<h1 class="page-heading"><?php echo $LANG['ADD_OCCUR_TO_DATASET']; ?></h1>
 		<div style="margin:15px">
 		    <?php echo $LANG['BARCODE_INPUT_INSTRUCTIONS']; ?>
 		</div>

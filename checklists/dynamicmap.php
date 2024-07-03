@@ -258,7 +258,7 @@ if(!$zoomInt){
 		}
 		?>
 		<div class="flex-form" id='innertext'>
-         <h1 class="page-heading">Dynamic Map</h1>
+         <h1 class="page-heading"><?php echo $LANG['DYNAMIC_MAP']; ?></h1>
 			<div style="margin-left: 2rem; margin-bottom: 1rem;">
 				<?php echo $LANG['CAPTURE_COORDS']; ?>
 				<span id="moredetails" style="cursor:pointer;color:blue;font-size:80%;" onclick="this.style.display='none';document.getElementById('moreinfo').style.display='inline';document.getElementById('lessdetails').style.display='inline';">

@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/GamesManager.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/games/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/games/index.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $pid = array_key_exists("pid",$_REQUEST)?$_REQUEST["pid"]:0;
@@ -45,7 +47,7 @@ $clArr = $gameManager->getChecklistArr($pid);
 
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading">Games</h1>
+		<h1 class="page-heading"><?php echo $LANG['GAMES']; ?></h1>
 
 		<div style='margin:10px;'>
 			Games are designed to provide a fun interface for exploring the species found

@@ -4,7 +4,9 @@
 Language: Français
 ------------------
 */
+include_once($SERVER_ROOT . '/content/lang/collections/customsearchtype.fr.php');
 
+$LANG['GEOLOCATE_COGE_EXPORT_MANAGER'] = 'Géolocaliser le gestionnaire d\'exportation CoGe';
 $LANG['OCC_EXP_MAN'] = 'Gestionnaire d\'Exportation d\'Occurrences';
 $LANG['GEO_COM_TOOL'] = 'Boîte à Outils Communautaire GeoLocate';
 $LANG['GEO_COM_TOOL_EXPLAIN'] = "Ce module est utilisé pour filtrer et regrouper les jeux d'enregistrements d'occurrences et les importer directement dans le projet GeoLocate Community.

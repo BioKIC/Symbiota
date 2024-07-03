@@ -6,7 +6,7 @@ Language: English
 */
 
 include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.en.php');
-
+$LANG['CONTACTS_RESOURCE_TAB'] = 'Contacts and Resources Tab';
 $LANG['LINK_RESOURCE'] = 'Link Resource Listing';
 $LANG['ENGLISH'] = 'English';
 $LANG['SPANISH'] = 'Spanish';

@@ -27,7 +27,7 @@ $projArr = $csManager->getProjectDetails();
 ?>
 <!-- inner text -->
 <div role="main" id="innertext" style="background-color:white;">
-	<h1 class="page-heading screen-reader-only">Crowdsourcing Administration</h1>
+	<h1 class="page-heading screen-reader-only"><?php echo $LANG['CROWDSOURCING_ADMIN']; ?></h1>
 	<?php
 	if($statusStr){
 		?>

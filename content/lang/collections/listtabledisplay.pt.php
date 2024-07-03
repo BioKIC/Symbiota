@@ -30,4 +30,5 @@ $LANG['HAS_IMAGE'] = 'Tem Imagem';
 $LANG['CLICK_SYMB'] = 'Clique no identificador Symbiota na primeira coluna para ver Detalhes Completos do Registro';
 $LANG['NONE_FOUND'] = 'Nenhum registro encontrado correspondente à consulta';
 $LANG['SORT'] = 'Classificar';
+$LANG['SEARCH_RESULTS_TABLE'] = 'Resultados de la búsqueda (tabla)';
 ?>

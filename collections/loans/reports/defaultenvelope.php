@@ -1,6 +1,8 @@
 <?php
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceLoans.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/loans/reports/defaultenvelope.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/loans/reports/defaultenvelope.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/loans/reports/defaultenvelope.en.php');
 require_once $SERVER_ROOT.'/vendor/phpoffice/phpword/bootstrap.php';
 
 $collId = $_REQUEST['collid'];
@@ -85,7 +87,7 @@ else{
 			</style>
 		</head>
 		<body style="background-color:#ffffff;">
-			<h1 class="page-heading screen-reader-only">Addressed Envelope</h1>
+			<h1 class="page-heading screen-reader-only"><?php echo $LANG['ADDRESSED_ENVELOPE']; ?></h1>
 			<div>
 				<table>
 					<tr style="height:1in;">

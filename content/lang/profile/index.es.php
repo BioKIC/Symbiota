@@ -4,7 +4,7 @@
 Language: Español (Spanish)
 ------------------
 */
-
+$LANG['LOGIN'] = 'Iniciar Sesión';
 $LANG['INVALID_LOGIN'] = 'Inicio de sesi&oacute;n inv&aacute;lido';
 $LANG['INVALID_EMAIL'] = 'Correo electr&oacute;nico inv&aacute;lido';
 $LANG['INCORRECT'] = 'Su nombre de usuario o contrase&ntilde;a es incorrecto. Intente de nuevo por favor.<br/> Si no puede recordar sus credenciales de inicio de sesi&oacute;n, utilice los controles siguientes para recuperar su inicio de sesi&oacute;n o restablecer su contrase&ntilde;a.';

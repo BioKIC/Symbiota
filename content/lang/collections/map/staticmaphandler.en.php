@@ -6,6 +6,7 @@ Language: English
 */
 include_once('mapshared.en.php');
 
+$LANG['STATIC_DIST_MAP_GENERATOR'] = 'Static distribution map generator';
 $LANG['BUILD_MAPS'] = 'Build Map(s)';
 $LANG['BOUNDS'] = 'Bounds';
 $LANG['LOWER_BOUND'] = 'Lower Bound';

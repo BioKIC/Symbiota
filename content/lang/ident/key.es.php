@@ -1,7 +1,7 @@
 <?php
 /*
 ------------------
-Language: Espa�ol
+Language: Español (Spanish)
 ------------------
 */
 
@@ -36,4 +36,5 @@ $LANG['DISPRESSPEC'] = 'Cargar Lista';
 $LANG['DISPLAY'] = 'Mostrar';
 $LANG['SCINAME'] = 'Nombre Científico';
 $LANG['COMMON'] = 'Nombre Común';
+$LANG['KEY'] = 'Clave';
 ?>

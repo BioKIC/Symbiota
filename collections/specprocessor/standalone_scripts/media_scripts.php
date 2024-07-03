@@ -8,6 +8,9 @@ error_reporting(E_ALL);
 ini_set('display_errors', '1');
 include_once('../../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/MediaResolutionTools.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/standalone_scripts/media_scripts.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/standalone_scripts/media_scripts.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/standalone_scripts/media_scripts.en.php');
+
 
 $collid = (array_key_exists('collid', $_POST)?$_POST['collid']:'');
 $imgIdStart = (array_key_exists('imgidstart', $_POST)?$_POST['imgidstart']:0);
@@ -85,7 +88,7 @@ if($IS_ADMIN) $isEditor = true;
 	if($isEditor){
 		?>
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Media Tools</h1>
+			<h1 class="page-heading"><?php echo $LANG['MEDIA_TOOLS']; ?></h1>
 			<div id="actionDiv">
 				<?php
 				$imgidEnd = 0;

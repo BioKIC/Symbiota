@@ -1,10 +1,11 @@
+
 <?php
 /*
 ------------------
-Language: Portuguese 
+Language: French 
 ------------------
 */
-$LANG['NO_EXTERNAL_PORTALS_SEARCH_COMPATIBLE'] =  'Nenhum portal externo é compatível com pesquisa';
-$LANG['ENABLE_CROSS_PORTAL_SEARCH'] = 'Ativar pesquisa entre portais';
+$LANG['NO_EXTERNAL_PORTALS_SEARCH_COMPATIBLE'] =  'Aucun portail externe n\'est compatible avec la recherche';
+$LANG['ENABLE_CROSS_PORTAL_SEARCH'] = 'Activer la recherche multi-portail';
 
 ?>

@@ -4,7 +4,7 @@
 Language: Español (Spanish)
 ------------------
 */
-
+$LANG['DUPLICATE_MANAGER'] = 'Administrador de Duplicados';
 $LANG['DUP_CLUSTERING'] = 'Agrupación duplicada';
 $LANG['TITLE_VALUE'] = 'El campo de título debe tener un valor';
 $LANG['PERS_MANAGE_MENU'] = 'Menú de gestión personal';

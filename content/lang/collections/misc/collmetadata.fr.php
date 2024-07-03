@@ -6,7 +6,8 @@ Language: Français (French)
 */
 
 include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.fr.php');
-
+$LANG['EDIT_METADATA'] = 'Modifier les Métadonnées et les Contacts de la Collection';
+$LANG['COLLECTION_METADATA_EDITOR'] = 'Onglet Éditeur de Métadonnées de Collection';
 $LANG['ADD_SUCCESS'] = 'Nouvelle collection ajoutée avec succès';
 $LANG['ADD_STUFF'] = 'Ajoutez des contacts, des liens vers des ressources ou l\'adresse de l\'institution ci-dessous';
 $LANG['COL_PROFS'] = 'Profils de Collecte';

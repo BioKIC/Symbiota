@@ -6,6 +6,8 @@ Language: English
 */
 
 include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.en.php');
+$LANG['EDIT_METADATA'] = 'Edit Collection Metadata & Contacts';
+$LANG['COLLECTION_METADATA_EDITOR'] = 'Collection Metadata Editor Tab';
 
 $LANG['ADD_SUCCESS'] = 'New collection added successfully';
 $LANG['ADD_STUFF'] = 'Add contacts, resource links, or institution address below';

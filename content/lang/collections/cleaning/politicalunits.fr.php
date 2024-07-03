@@ -4,7 +4,7 @@
 Language: Français (French)
 ------------------
 */
-
+$LANG['GEO_CLEANING_TOOLS'] = 'Outils de Nettoyage Géographique';
 $LANG['POL_UNITS_STANDARD'] = 'Normalisation des unités politiques';
 $LANG['SEL_COUNTRY'] = 'Sélectionnez une valeur de pays';
 $LANG['SEL_STATE'] = 'Sélectionnez une valeur d\'état';

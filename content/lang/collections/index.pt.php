@@ -14,5 +14,6 @@ $LANG['TAB_2'] = 'Amostras';
 $LANG['TAB_3'] = 'Observações';
 $LANG['TAB_4'] = 'Unidades Federais';
 $LANG['MORE_INFO'] = 'mais info...';
+$LANG['COLLECTION_LIST'] = 'Lista de Coleções';
 
 ?>

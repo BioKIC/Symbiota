@@ -96,7 +96,7 @@ $projArr = $csManager->getProjectDetails();
 		</div>
 	</div>
 	<div style="margin:10px;">
-		<h1 class="page-heading">Review Crowdsourced Records</h1>
+		<h1 class="page-heading"><?php echo $LANG['REVIEW_CROWDSOURCING_RECORDS']; ?></h1>
 		<?php
 		if($statusStr){
 			?>

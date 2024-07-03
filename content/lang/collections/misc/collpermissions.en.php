@@ -5,7 +5,7 @@ Language: English
 ------------------
 */
 
-$LANG['COL_PERMISSIONS'] = 'Collection Permissions';
+$LANG['COL_PERMISSIONS'] = 'Collection Permissions for';
 $LANG['PLS_SEL_USER'] = 'Please select a user from list';
 $LANG['SEL_PERMISSIONS'] = 'Please select the permissions you wish to assign this user';
 $LANG['SEL_OBS'] = 'Please select a Personal Observation Management project';

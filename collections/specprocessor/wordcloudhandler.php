@@ -1,6 +1,9 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/WordCloud.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/specprocessor/specprocessor_tools.en.php');
+
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collidStr = array_key_exists('collidstr',$_REQUEST)?$_REQUEST['collidstr']:false;
@@ -25,7 +28,7 @@ $csMode = array_key_exists('csmode',$_REQUEST)?$_REQUEST['csmode']:false;
 	<body>
 		<!-- This is inner text! -->
 		<div role="main" id="innertext">
-			<h1 class="page-heading">Word Cloud Handler</h1>
+			<h1 class="page-heading"><?php echo $LANG['WORD_CLOUD_HANDLER']; ?></h1>
 			<?php
 			$cloudHandler = new WordCloud();
 			$cloudHandler->setWidth(800);
