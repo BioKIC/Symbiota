@@ -29,11 +29,6 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					<?php
 				} else {
 					?>
-					<span class="button button-tertiary">
-						<a onclick="window.location.href='#'">
-							<?= $LANG['CONTACT_US'] ?>
-						</a>
-					</span>
 					<span class="button button-secondary">
 						<a href="<?= $CLIENT_ROOT . "/profile/index.php?refurl=" . htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES); ?>">
 							<?= (isset($LANG['H_LOGIN'])?$LANG['H_LOGIN']:'Login') ?>
