@@ -29,7 +29,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 	<div class="navpath"></div>
 	<main id="innertext">
 		<div style="float:right;width:500px;margin-left:20px">
-			<div id="quicksearchdiv" style="width:400px">
+			<div id="quicksearchdiv" style="width:375px">
 				<!-- -------------------------QUICK SEARCH SETTINGS--------------------------------------- -->
 				<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
 						<div id="quicksearchtext" ><?php echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Search Taxon'); ?></div>
