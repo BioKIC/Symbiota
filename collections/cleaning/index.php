@@ -194,7 +194,7 @@ if($collMap['colltype'] == 'General Observations'){
 					<?php echo (isset($LANG['TAXONOMY_DESCR']) ? $LANG['TAXONOMY_DESCR'] : 'These tools are meant to aid in locating and fixing taxonomic errors and inconsistencies.') ?>
 				</div>
 				<section class="fieldset-like max-width-fit-65 ">
-					<h1> <span> <?php echo (isset($LANG['STAT_ACT_PANEL']) ? $LANG['STAT_ACT_PANEL'] : 'Statistics and Action Panel') ?> </span> </h1>
+					<h2> <span> <?php echo (isset($LANG['STAT_ACT_PANEL']) ? $LANG['STAT_ACT_PANEL'] : 'Statistics and Action Panel') ?> </span> </h2>
 					<ul>
 						<li><a href="taxonomycleaner.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"> <?php echo (isset($LANG['ANALYZE_NAMES']) ? $LANG['ANALYZE_NAMES'] : 'Analyze taxonomic names...') ?> </a></li>
 						<li><a href="../misc/collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&stat=taxonomy#taxonomystats"> <?php echo (isset($LANG['TAXON_DISTR']) ? $LANG['TAXON_DISTR'] : 'Taxonomic Distributions...') ?> </a></li>

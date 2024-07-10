@@ -98,7 +98,6 @@ function listGeoUnits($arr) {
       <style>
       fieldset{ margin: 10px; padding: 15px; width: 600px }
       legend{ font-weight: bold; }
-      .fieldset-like span{ font-weight: bold; }
       #innertext{ min-height: 500px; }
       label{ text-decoration: underline; }
       #edit-legend{ display: none }

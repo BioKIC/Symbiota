@@ -22,16 +22,14 @@ $idStr = $collCnt . '-' . $catId;
     <?php
     }
     ?>
-    <div>
         <?php
         $catSelected = false;
         if(!$catSelArr && !$collSelArr) $catSelected = true;
         elseif(in_array($catid, $catSelArr)) $catSelected = true;
         $ariaLabel = $name . '(' . $collTypeLabel . ')' . '-' . $uniqGrouping;
-        echo '<input data-ccode="' . $catid . '" aria-label="' . $ariaLabel . '"   data-role="none" id="cat-' . $idStr . '-' . $collTypeLabel . '-' . $uniqGrouping . '-Input" name="cat[]" value="' . $catid.'" type="checkbox" onclick="selectAllCat(this,\'cat-' . $idStr . '\')" ' . ($catSelected?'checked':'') . ' />';
-        echo $name . " (" . $collTypeLabel . ")";
+        echo '<input style="margin:0" data-ccode="' . $catid . '" aria-label="' . $ariaLabel . '"   data-role="none" id="cat-' . $idStr . '-' . $collTypeLabel . '-' . $uniqGrouping . '-Input" name="cat[]" value="' . $catid.'" type="checkbox" onclick="selectAllCat(this,\'cat-' . $idStr . '\')" ' . ($catSelected?'checked':'') . ' />';
+        echo '<label for="'. 'cat-' . $idStr . '-' . $collTypeLabel . '-' . $uniqGrouping . '-Input">' . $name . " (" . $collTypeLabel . ")".'</label>';
         ?>
-    </div>
     <div>
         <a href="#" class="condense-expand-flex" onclick="toggleCat('<?php echo htmlspecialchars($idStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>');return false;">
         <div class="condense-expand-button-set">

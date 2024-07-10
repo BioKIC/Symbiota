@@ -133,6 +133,25 @@ if ($SYMB_UID) {
 		.bigger-left-margin-rel {
 			margin-left: 3rem;
 		}
+
+		@media (min-width: 1880px) {
+			#quicksearch-box {
+				margin: 0 -26rem 0 0;
+				width: 25rem;
+				top: 1rem;
+				float: right;
+				position:sticky;
+			}
+		}
+		@media (max-width: 1880px) {
+			#quicksearch-box {
+				width:100%;
+				margin: 1rem 0;
+			}
+			#quicksearch-btn-container {
+				justify-content: right
+			}
+		}
 	</style>
 	<link href="<?php echo $CLIENT_ROOT ?>/collections/search/css/searchStyles.css?ver=1" type="text/css" rel="stylesheet" />
 	<link href="<?php echo $CLIENT_ROOT ?>/collections/search/css/searchStylesInner.css" type="text/css" rel="stylesheet" />
@@ -150,17 +169,18 @@ if ($SYMB_UID) {
 	<div role="main" id="innertext" style="padding-top:0">
 		<?php if ($collid && !$collid == 0){
 		?>
-			<section id="quicksearch-box" class="fieldset-like float-rt-no-overlap" style="margin:0">
-				<h1><span><?php echo (isset($LANG['QUICK_SEARCH']) ? $LANG['QUICK_SEARCH'] : 'Quick Search'); ?></span></h1>
+			<section id="quicksearch-box" class="fieldset-like" >
+				<h3><span><?php echo (isset($LANG['QUICK_SEARCH']) ? $LANG['QUICK_SEARCH'] : 'Quick Search'); ?></span></h3>
 				<div id="dialogContainer" style="position: relative;">
-					<form name="quicksearch" action="javascript:void(0);" onsubmit="directSubmitAction(event)">
+					<form name="quicksearch" style="display: flex; align-items:center; gap:0.5rem; flex-wrap: wrap" action="javascript:void(0);" onsubmit="directSubmitAction(event)">
+						<div>
 						<label for="catalog-number"><?php echo (isset($LANG['OCCURENCE_IDENTIFIER']) ? $LANG['OCCURENCE_IDENTIFIER'] : 'Catalog Number'); ?></label>
 						<span class="screen-reader-only">
 							<?php
 								echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Search by Catalog Number, Occurrence ID, or Record ID.') . ' ';
 							?>
 						</span>
-						<input name="catalog-number" id="catalog-number" type="text" />
+						<input style="margin-bottom: 0" name="catalog-number" id="catalog-number" type="text" />
 						<a href="#" id="q_catalognumberinfo" style="text-decoration:none;">
 							<img src="../../images/info.png" style="width:1.3em;" alt="<?php echo $LANG['MORE_INFO_ALT']; ?>" title="<?php echo $LANG['MORE_INFO']; ?>" aria-label="<?php echo $LANG['MORE_INFO']; ?>"/>
 						</a>
@@ -170,25 +190,27 @@ if ($SYMB_UID) {
 							?>
 							<button id="closeDialog">Close</button>
 						</dialog>
-						<br>
+						</div>
 						<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 						<input name="occindex" type="hidden" value="0" />
+						<div>
 						<label for="taxon-search"><?php echo (isset($LANG['TAXON']) ? $LANG['TAXON'] : 'Taxon'); ?></label>
-						<input name="taxon-search" id="taxon-search" type="text" />
-						<br>
-						<?php
-							if($editCode == 1 || $editCode == 2 || $editCode == 3){
-						?>
-							<button type="submit" id="search-by-catalog-number-admin-btn" value="edit"> 
-								<?php echo (isset($LANG['OCCURRENCE_EDITOR']) ? $LANG['OCCURRENCE_EDITOR'] : 'Edit'); ?>
+						<input style="margin-bottom: 0" name="taxon-search" id="taxon-search" type="text" />
+						</div>
+						<div id="quicksearch-btn-container" style="display:flex; gap: 0.5rem; flex-grow:1">
+							<?php
+								if($editCode == 1 || $editCode == 2 || $editCode == 3){
+							?>
+								<button type="submit" id="search-by-catalog-number-admin-btn" value="edit"> 
+									<?php echo (isset($LANG['OCCURRENCE_EDITOR']) ? $LANG['OCCURRENCE_EDITOR'] : 'Edit'); ?>
+								</button>
+							<?php
+								}
+							?>
+							<button type="submit" value='search' id="search-by-catalog-number-btn" title="<?php echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Occurrence ID and Record ID also accepted.'); ?>">
+								<?php echo (isset($LANG['SEARCH']) ? $LANG['SEARCH'] : 'Search'); ?>
 							</button>
-						<?php
-							}
-						?>
-
-						<button class="top-breathing-room-rel" type="submit" value='search' id="search-by-catalog-number-btn" title="<?php echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Occurrence ID and Record ID also accepted.'); ?>">
-							<?php echo (isset($LANG['SEARCH']) ? $LANG['SEARCH'] : 'Search'); ?>
-						</button>
+						</div>
 					</form>
 				</div>
 			</section>
@@ -204,13 +226,7 @@ if ($SYMB_UID) {
 				echo '<hr/>';
 			}
 		}
-		if ($editCode && $collid) {
-			?>
-			<div style="float:right;margin:3px;cursor:pointer;" onclick="toggleById('controlpanel');" title="<?php echo (isset($LANG['TOGGLE_MAN']) ? $LANG['TOGGLE_MAN'] : 'Toggle Manager\'s Control Panel'); ?>">
-				<img style='width:1.7em;border:0px;' src='../../images/tochild.png' alt="edit icon" />
-			</div>
-			<?php
-		}
+
 		if ($collid && isset($collData[$collid])) {
 			$collData = $collData[$collid];
 			$codeStr = ' (' . $collData['institutioncode'];
@@ -236,11 +252,15 @@ if ($SYMB_UID) {
 				}
 				echo '</div>';
 			}
+
 			if ($editCode) {
 				?>
-				<div id="controlpanel" style="margin-top: 4rem; display:<?php echo ($eMode ? 'block' : 'none'); ?>;">
+				<button style="margin-bottom: 0.5rem" type="button" onclick="toggleById('controlpanel');" >
+					<?= $LANG['TOGGLE_MAN'] ?>
+				</button>
+				<div id="controlpanel" style="display:<?php echo ($eMode ? 'block' : 'none'); ?>;">
 					<section class="fieldset-like no-left-margin">
-						<h1><span><?php echo (isset($LANG['DAT_EDIT']) ? $LANG['DAT_EDIT'] : 'Data Editor Control Panel'); ?></span></h1>
+						<h2><span><?php echo (isset($LANG['DAT_EDIT']) ? $LANG['DAT_EDIT'] : 'Data Editor Control Panel'); ?></span></h2>
 						<ul>
 							<?php
 							if (stripos($collData['colltype'], 'observation') !== false) {
@@ -337,7 +357,7 @@ if ($SYMB_UID) {
 					if ($editCode > 1) {
 						?>
 						<section class="fieldset-like no-left-margin">
-							<h1><span><?php echo (isset($LANG['ADMIN_CONTROL']) ? $LANG['ADMIN_CONTROL'] : 'Administration Control Panel'); ?></span></h1>
+							<h2><span><?php echo (isset($LANG['ADMIN_CONTROL']) ? $LANG['ADMIN_CONTROL'] : 'Administration Control Panel'); ?></span></h2>
 							<ul>
 								<li>
 									<a href="commentlist.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
@@ -563,7 +583,7 @@ if ($SYMB_UID) {
 				if ($addrArr = $collManager->getAddress()) {
 					?>
 					<section class="fieldset-like no-left-margin">
-						<h1><span><?php echo (isset($LANG['ADDRESS']) ? $LANG['ADDRESS'] : 'Address'); ?>:</span></h1>
+						<h2><span><?php echo (isset($LANG['ADDRESS']) ? $LANG['ADDRESS'] : 'Address'); ?>:</span></h2>
 						<div class="bigger-left-margin-rel">
 							<?php
 							echo "<div>" . $addrArr["institutionname"];
@@ -593,7 +613,7 @@ if ($SYMB_UID) {
 				}
 				?>
 				<section class="fieldset-like no-left-margin">
-					<h1><span><?php echo (isset($LANG['COLL_STATISTICS']) ? $LANG['COLL_STATISTICS'] : 'Collection Statistics'); ?></span></h1>
+					<h2><span><?php echo (isset($LANG['COLL_STATISTICS']) ? $LANG['COLL_STATISTICS'] : 'Collection Statistics'); ?></span></h2>
 					<div style="clear:both;margin-top:5px;">
 						<ul style="margin-top:5px;">
 							<li><?php echo number_format($statsArr["recordcnt"]) . ' ' . (isset($LANG['SPECIMEN_RECORDS']) ? $LANG['SPECIMEN_RECORDS'] : 'specimen records'); ?></li>
@@ -648,7 +668,7 @@ if ($SYMB_UID) {
 					</div>
 				</section>
 			<section class="fieldset-like no-left-margin">
-				<h1><span><?php echo (isset($LANG['EXTRA_STATS']) ? $LANG['EXTRA_STATS'] : 'Extra Statistics'); ?></span></h1>
+				<h2><span><?php echo (isset($LANG['EXTRA_STATS']) ? $LANG['EXTRA_STATS'] : 'Extra Statistics'); ?></span></h2>
 				<div style="margin:3px;">
 					<a href="collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>&stat=geography#geographystats"><?php echo htmlspecialchars((isset($LANG['SHOW_GEOG_DIST']) ? $LANG['SHOW_GEOG_DIST'] : 'Show Geographic Distribution'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 				</div>

@@ -128,7 +128,6 @@
   margin: 0 auto;
   padding-top: 14px;
   width: 100%;
-  max-width: 600px;
 }
 
 .input-text-container label {
@@ -274,7 +273,6 @@
   --fz: 100px;
   margin: 14px auto;
   width: 100%;
-  max-width: 600px;
 }
 
 .text-area-container label {
@@ -397,7 +395,6 @@
   border: solid 1px var(--alertgreenborder);
   background-color: var(--alertgreen);
   color: var(--black, black);
-  font-size: 14px;
   -webkit-transform: translateY(300px);
   transform: translateY(300px);
   pointer-events: all;

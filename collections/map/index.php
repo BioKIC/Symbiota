@@ -156,7 +156,7 @@ if(isset($_REQUEST['llpoint'])) {
 		<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 		<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 		<style type="text/css">
-		.panel-content a{ outline-color: transparent; font-size: 12px; font-weight: normal; }
+		.panel-content a{ outline-color: transparent; font-size: .9rem; font-weight: normal; }
 		.ui-front { z-index: 9999999 !important; }
 		</style>
 		<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
@@ -192,7 +192,7 @@ if(isset($_REQUEST['llpoint'])) {
 			resize: horizontal;
 			border-left: 2px, solid, black;
 			height: 100%;
-			width: 390px;
+			width: 29rem;
 			position: fixed;
 			z-index: 20;
 			top: 0;
@@ -271,10 +271,6 @@ if(isset($_REQUEST['llpoint'])) {
 			grid-column: 1;
 		}
 
-		#mapSearchRecordsTable {
-		font-size:12px;
-		}
-
 		#mapSearchRecordsTable th {
 		top: 0;
 		position: sticky;
@@ -308,6 +304,7 @@ if(isset($_REQUEST['llpoint'])) {
 		let collArr = [];
 		let searchVar = "";
 		let default_color = "E69E67";
+		let cluster_radius;
 
 		//Map Globals
 		let shape;
@@ -368,21 +365,25 @@ if(isset($_REQUEST['llpoint'])) {
 		function legendRow(id, color, innerHTML) {
 
 			return (
-				`<div style="display:table-row;">
-<div style="display:table-cell;vertical-align:middle;padding-bottom:5px;" >
-<input
-data-role="none"
-id="${id}"
-class="color"
-onchange="onColorChange(this)"
-style="cursor:pointer;border:1px black solid;height:12px;width:12px;margin-bottom:-2px;font-size:0px;"
-value="${color}"
-/>
-</div>
-<div style="display:table-cell;vertical-align:middle;padding-left:8px;"> = </div>
-<div style="display:table-cell;width:250px;vertical-align:middle;padding-left:8px;">${innerHTML}</div>
-</div>
-<div style="display:table-row;height:8px;"></div>`
+			`<div style="display:table-row;height: 2rem">
+				<div style="display:table-cell;vertical-align:middle;" >
+					<div style="display:flex; align-items:center">
+						<input
+						data-role="none"
+						id="${id}"
+						class="color"
+						onchange="onColorChange(this)"
+						style="cursor:pointer;border:1px black solid;height:1rem;width:1rem;margin-bottom:-2px;font-size:0px;"
+						value="${color}"
+						/>
+					</div>
+				</div>
+				<div style="display:table-cell;vertical-align:middle;padding-left:8px;"> = </div>
+				<div style="display:table-cell;vertical-align:middle;padding-left:8px;">
+					${innerHTML}
+				</div>
+			</div>
+			<div style="display:table-row;height:8px;"></div>`
 			)
 		}
 
@@ -412,7 +413,7 @@ value="${color}"
 				if(prev_family !== taxa.family) {
 					if(taxaHtml) taxaHtml += "</div>";
 
-					taxaHtml += `<div style="margin-left:5px;"><h3>${taxa.family}</h3></div>`;
+					taxaHtml += `<h2 style="margin-bottom:0.5rem">${taxa.family}</h2>`;
 					taxaHtml += "<div style='display:table;'>";
 					prev_family = taxa.family;
 				}
@@ -607,13 +608,8 @@ value="${color}"
 			L.DivIcon.CustomColor = L.DivIcon.extend({
 				createIcon: function(oldIcon) {
 					var icon = L.DivIcon.prototype.createIcon.call(this, oldIcon);
-					icon.style.backgroundColor = this.options.color;
-
 					icon.style.textShadow="0 0 8px white, 0 0 8px white, 0 0 8px white";
-					icon.style.width="42px";
-					icon.style.height="42px";
-
-					icon.style.border=`1px solid ${this.options.mainColor}`;
+					icon.style.margin ="0 0 0 0";
 					return icon;
 				}
 			})
@@ -730,6 +726,48 @@ value="${color}"
 					}
 				}
 
+				genClusters() {
+					for(let id in this.group_map) {
+						const cluster_rendered = this.group_map[id].cluster && map.mapLayer.hasLayer(this.group_map[id].cluster);
+						if(cluster_rendered) {
+							map.mapLayer.removeLayer(this.group_map[id].cluster);
+						}
+						const value = this.group_map[id];
+						const colorCluster = (cluster) => {
+							let childCount = cluster.getChildCount();
+							cluster.bindTooltip(`<div style="font-size:1rem"><?=$LANG['CLICK_TO_EXPAND']?></div>`);
+							cluster.on("click", e => e.target.spiderfy() )
+							return new L.DivIcon.CustomColor({
+								html: `<div class="symbiota-cluster" style="background-color: #${value.color};"><span>` + childCount + '</span></div>',
+								className: `symbiota-cluster-div`,
+								iconSize: new L.Point(20, 20),
+								color: `#${value.color}77`,
+								mainColor: `#${value.color}`,
+							});
+						}
+
+						let cluster = L.markerClusterGroup({
+							iconCreateFunction: colorCluster,
+							//cluster_radius is a global
+							maxClusterRadius: cluster_radius,
+							zoomToBoundsOnClick: false,
+							chunkedLoading: true
+						});
+
+						if(!this.layer_groups[id]) {
+							this.genLayer(id, cluster);
+						} else {
+							this.group_map[id].cluster = cluster;
+							this.group_map[id].cluster.addLayer(this.layer_groups[id]);
+						}
+
+						//Only Redraws if cluster of id was on map before regen
+						if(!clusteroff && cluster_rendered) {
+							this.group_map[id].cluster.addTo(map.mapLayer);
+						}
+					}
+				}
+
 				updateColor(id, color) {
 					this.group_map[id].color = color;
 
@@ -767,7 +805,7 @@ value="${color}"
 							})
 						}))
 					.on('click', function() { openRecord(record) })
-					.bindTooltip(`<div style="font-size:1.5rem">${record.id}</div>`)
+					.bindTooltip(`<div style="font-size:1rem">${record.id}</div>`)
 
 					markers.push(marker);
 
@@ -777,40 +815,6 @@ value="${color}"
 				}
 
 				return {taxonMapGroup: taxon, collectionMapGroup: collections, portalMapGroup: portal};
-			}
-
-			function genClusters(legendMap, type) {
-
-				for(let value of Object.values(legendMap)) {
-					const colorCluster = (cluster) => {
-						let childCount = cluster.getChildCount();
-cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?></div>`);
-						return new L.DivIcon.CustomColor({
-							html: `<div style="background-color: #${value.color};"><span>` + childCount + '</span></div>',
-							className: `marker-cluster`,
-							iconSize: new L.Point(40, 40),
-							color: `#${value.color}77`,
-							mainColor: `#${value.color}`,
-						});
-					}
-
-					let cluster = L.markerClusterGroup({
-						iconCreateFunction: colorCluster,
-						disableClusteringAtZoom: recordArr.length >= 10000? 12 : 10,
-						spiderfyOnMaxZoom: false,
-					    chunkedLoading: true
-					});
-
-					value.id_map.forEach(g => {
-						if(type === "taxa") {
-							mapGroups[g.index].taxonMapGroup.genLayer(g.tid, cluster);
-						} else if(type === "coll") {
-							mapGroups[g.index].collectionMapGroup.genLayer(g.collid, cluster);
-						} else if(type === "portal") {
-							mapGroups[g.index].portalMapGroup.genLayer(g.portalid, cluster);
-						}
-					});
-				}
 			}
 
 			function drawPoints() {
@@ -942,9 +946,11 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 				//Need to generate colors for each group
 				buildPanels(formData.get('cross_portal_switch'));
 
-				genClusters(taxaLegendMap, "taxa");
-				genClusters(collLegendMap, "coll");
-				genClusters(portalLegendMap, "portal");
+				mapGroups.forEach(group => {
+					group.taxonMapGroup.genClusters();
+					group.collectionMapGroup.genClusters();
+					group.portalMapGroup.genClusters();
+				})
 
 				autoColorTaxa();
 
@@ -1033,7 +1039,7 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 						parseFloat(e.detail.lng)
 					]);
 					if(e.detail.title) {
-						marker.bindTooltip(`<div style="font-size: 1.5rem">${e.detail.title}</div>`)
+						marker.bindTooltip(`<div style="font-size: 1rem">${e.detail.title}</div>`)
 					}
 					marker.addTo(map.drawLayer);
 				} catch(e) {
@@ -1048,6 +1054,15 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					else if(cluster_type === "coll") mapGroups.forEach(group => group.collectionMapGroup.toggleClustering())
 					else if(cluster_type === "portal") mapGroups.forEach(group => group.portalMapGroup.toggleClustering())
 				}
+			});
+			document.getElementById("cluster-radius").addEventListener('change', e => {
+				const radius = parseInt(e.target.value);
+				cluster_radius = radius
+				mapGroups.forEach(group => {
+					group.taxonMapGroup.genClusters();
+					group.collectionMapGroup.genClusters();
+					group.portalMapGroup.genClusters();
+				})
 			});
 
 			document.getElementById('heatmap_on').addEventListener('change', e => {
@@ -1081,11 +1096,13 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					if(res) loadOccurenceRecords(res);
 					buildPanels(formData.get('cross_portal_switch'));
 
-					genClusters(taxaLegendMap, "taxa");
-					genClusters(collLegendMap, "coll");
-					genClusters(portalLegendMap, "portal");
+					mapGroups.forEach(group => {
+						group.taxonMapGroup.genClusters();
+						group.collectionMapGroup.genClusters();
+						group.portalMapGroup.genClusters();
+					})
 
-               autoColorTaxa();
+					autoColorTaxa();
 
 					drawPoints();
 
@@ -1140,7 +1157,11 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					}
 				}
 
-				genLayer(id, cluster) {
+				genLayer(id, cluster, oms) {
+					for(let m of this.markers[id]) {
+						oms.addMarker(m);
+					}
+					this.group_map[id].oms = oms;
 					cluster.addMarkers(this.markers[id]);
 					this.group_map[id].cluster = cluster;
 				}
@@ -1166,7 +1187,8 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 				removeLayer(id) {
 					if(clusteroff) {
 						for(let marker of Object.values(this.markers[id])) {
-							marker.setMap(null)
+							//marker.setMap(null)
+							this.group_map[id].oms.removeMarker(marker)
 						}
 					} else {
 						this.group_map[id].cluster.clearMarkers();
@@ -1178,7 +1200,8 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					if(!heatmapon) {
 						if(clusteroff) {
 							for(let marker of Object.values(this.markers[id])) {
-								marker.setMap(map.mapLayer)
+								//marker.setMap(map.mapLayer)
+								this.group_map[id].oms.addMarker(marker)
 							}
 						} else {
 							this.group_map[id].cluster.addMarkers(this.markers[id])
@@ -1200,6 +1223,13 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					for (let marker of this.markers[id]) {
 						marker.color = `#${color}`
 						marker.icon.fillColor = `#${color}`
+					}
+				}
+				updateGridSize(new_grid_size) {
+					for(let id in this.group_map) {
+						this.group_map[id].cluster.setMap(null);
+						this.group_map[id].cluster.gridSize_ = new_grid_size
+						this.group_map[id].cluster.setMap(map.mapLayer);
 					}
 				}
 			}
@@ -1249,7 +1279,7 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 						infoWin.close();
 					})
 
-					google.maps.event.addListener(marker, 'click', function() {
+					google.maps.event.addListener(marker, 'spider_click', function(e) {
 						openRecord(record);
 					})
 
@@ -1286,18 +1316,24 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 						styles: [{
 							color: val.color,
 						}],
-						maxZoom: 14,
+						maxZoom: 20,
 						gridSize: 60,
 						minimumClusterSize: 2
 					})
 
+					var oms = new OverlappingMarkerSpiderfier(map.mapLayer, {
+						markersWontMove: true,
+						markersWontHide: true,
+						basicFormatEvents: true
+					});
+
 					val.id_map.forEach(g=> {
 						if(type === "taxa") {
-							mapGroups[g.index].taxonMapGroup.genLayer(g.tid, cluster);
+							mapGroups[g.index].taxonMapGroup.genLayer(g.tid, cluster, oms);
 						} else if(type === "coll") {
-							mapGroups[g.index].collectionMapGroup.genLayer(g.collid, cluster);
+							mapGroups[g.index].collectionMapGroup.genLayer(g.collid, cluster, oms);
 						} else if(type === "portal") {
-							mapGroups[g.index].portalMapGroup.genLayer(g.portalid, cluster);
+							mapGroups[g.index].portalMapGroup.genLayer(g.portalid, cluster, oms);
 						}
 					});
 				}
@@ -1558,6 +1594,16 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 				}
 			});
 
+			document.getElementById("cluster-radius").addEventListener('change', e => {
+				const radius = parseInt(e.target.value);
+				cluster_radius = radius;
+				mapGroups.forEach(group => {
+					group.taxonMapGroup.updateGridSize(radius);
+					group.collectionMapGroup.updateGridSize(radius);
+					group.portalMapGroup.updateGridSize(radius);
+				})
+			});
+
 			document.getElementById('heatmap_on').addEventListener('change', e => {
 				heatmapon = e.target.checked;
 
@@ -1802,6 +1848,11 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 					shapeType = "polygon"
 				}
 
+				const cluster_radius_input = document.getElementById("cluster-radius")
+				if(cluster_radius_input) {
+					cluster_radius = parseInt(cluster_radius_input.value);
+				}
+
 				if(shapeType) {
 					shape = loadMapShape(shapeType, {
 						polygonLoader: () => document.getElementById("polycoords").value.trim(),
@@ -1869,20 +1920,27 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 		>
 		</div>
 		<div>
-			<button onclick="document.getElementById('defaultpanel').style.width='380px';  " style="position:absolute;top:<?php echo $topVal ?>;left:0;margin:0px;z-index:10;font-size: 14px;border-style: solid; border-color: var(--medium-color);">&#9776; <b>Open Search Panel</b></button>
+			<button onclick="document.getElementById('defaultpanel').style.width='29rem';  " style="position:absolute;top:0;left:0;margin:0px;z-index:10; gap: 0.2rem">
+				<span style="padding-bottom:0.2rem">
+					&#9776; 
+				</span>
+				<b>Open Search Panel</b>
+			</button>
 		</div>
 		<div id='map' style='width:100vw;height:100vh;z-index:1'></div>
-		<div id="defaultpanel" class="sidepanel" style="width: <?= $menuClosed? '0': '390px'?>">
-			<div class="panel-content">
-				<span style="position:absolute; top:0.7rem; right:0.7rem; z-index:1">
-					<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">
-						<?php echo $LANG['H_HOME']; ?>
-					</a>
-					<button onclick="document.getElementById('defaultpanel').style.width='0px'" style="margin-left:1rem">&times</button>
+		<div id="defaultpanel" class="sidepanel"  <?= $menuClosed? 'style="width: 0"': ''?>>
+			<div class="menu" style="display:flex; align-items: center; background-color: var(--darkest-color); height: 2rem">
+				<a style="text-decoration: none; margin-left: 0.5rem;" href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/index.php">
+					<?php echo (isset($LANG['H_HOME'])?$LANG['H_HOME']:'Home'); ?>
+				</a>
+				<span style="display: flex; flex-grow: 1; margin-right:1rem; justify-content: right">
+					<a onclick="document.getElementById('defaultpanel').style.width='0px'">Hide Panel</a>
 				</span>
+			</div>
+			<div class="panel-content">
 				<div id="mapinterface">
 					<div id="accordion">
-						<h3 style="padding-left:30px;"><?php echo $LANG['SEARCH_CRITERIA']; ?></h3>
+						<h3 style="margin-top:0"><?php echo (isset($LANG['SEARCH_CRITERIA'])?$LANG['SEARCH_CRITERIA']:'Search Criteria and Options'); ?></h3>
 						<div id="tabs1" style="padding:0px;height:100%">
 							<form name="mapsearchform" id="mapsearchform" data-ajax="false">
 								<ul>
@@ -1890,8 +1948,8 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 									<li><a href="#searchcriteria"><span><?php echo htmlspecialchars($LANG['CRITERIA'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></span></a></li>
 									<li><a href="#mapoptions"><span><?php echo htmlspecialchars((isset($LANG['MAP_OPTIONS'])?$LANG['MAP_OPTIONS']:'Map Options'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></span></a></li>
 								</ul>
-								<div id="searchcollections" style="">
-									<div class="mapinterface">
+								<div id="searchcollections">
+									<div >
 										<?php
 										$collList = $mapManager->getFullCollectionList($catId);
 										$specArr = (isset($collList['spec']) ? $collList['spec'] : null);
@@ -1919,13 +1977,13 @@ cluster.bindTooltip(`<div style="font-size:1.5rem"><?=$LANG['CLICK_TO_EXPAND']?>
 										?>
 									</div>
 								</div>
-								<div id="searchcriteria" style="">
-									<div style="height:25px;">
-										<!-- <div style="float:left;<?php echo (isset($SOLR_MODE) && $SOLR_MODE ? 'display:none;' : ''); ?>">
+								<div id="searchcriteria" style="padding-top: 0.5rem">
+									<div>
+										<!-- <div style="float:left;<?php echo (isset($SOLR_MODE) && $SOLR_MODE?'display:none;':''); ?>">
 Record Limit:
 <input data-role="none" type="text" id="recordlimit" style="width:75px;" name="recordlimit" value="<?php echo ($recLimit?$recLimit:""); ?>" title="Maximum record amount returned from search." onchange="return checkRecordLimit(this.form);" />
 										</div> -->
-										<div style="float:right;">
+										<div style="display:flex; gap: 1rem; justify-content: right; height: 2rem">
 											<input type="hidden" id="selectedpoints" value="" />
 											<input type="hidden" id="deselectedpoints" value="" />
 											<input type="hidden" id="selecteddspoints" value="" />
@@ -1948,7 +2006,11 @@ Record Limit:
 									</div>
 									<div style="margin:5 0 5 0;"><hr /></div>
 									<div>
-										<span style=""><input data-role="none" type="checkbox" name="usethes" value="1" <?php if($mapManager->getSearchTerm('usethes') || !$submitForm) echo "CHECKED"; ?> ><?php echo (isset($LANG['INCLUDE_SYNONYMS'])?$LANG['INCLUDE_SYNONYMS']:'Include Synonyms'); ?></span>
+										<span style="">
+											<input data-role="none" id="usethes" type="checkbox" name="usethes" value="1" <?php if($mapManager->getSearchTerm('usethes') || !$submitForm) echo "CHECKED"; ?> >
+										<label for="usethes">
+											<?php echo (isset($LANG['INCLUDE_SYNONYMS'])?$LANG['INCLUDE_SYNONYMS']:'Include Synonyms'); ?>
+										</label>
 									</div>
 									<div>
 										<div style="margin-top:5px;">
@@ -2095,6 +2157,11 @@ Record Limit:
 									<legend><?php echo $LANG['CLUSTERING']; ?></legend>
 									<label><?php echo (isset($LANG['TURN_OFF_CLUSTERING'])?$LANG['TURN_OFF_CLUSTERING']:'Turn Off Clustering'); ?>:</label>
 									<input data-role="none" type="checkbox" id="clusteroff" name="clusteroff" value='1' <?php echo ($clusterOff=="y"?'checked':'') ?>/>
+
+									<span style="display: flex; align-items:center">
+										<label for="cluster-radius"><?php echo (isset($LANG['CLUSTER_RADIUS'])? $LANG['CLUSTER_RADIUS']:'Radius') ?>: 1 </label>
+										<input style="margin: 0 1rem;"type="range" value="1" id="cluster-radius" name="cluster-radius" min="1" max="100">100
+									</span>
 								</fieldset>
 								<br/>
 								<fieldset>
@@ -2245,7 +2312,7 @@ Record Limit:
 									</div>
 								</div>
 							</div>
-							<div id="symbology" style="">
+							<div id="symbology">
 								<div style="height:40px;margin-bottom:15px;">
 								<div style="float:left;">
 										<div>
@@ -2281,7 +2348,7 @@ Record Limit:
 									</div>
 								</div>
 							</div>
-							<div id="maptaxalist" >
+							<div id="maptaxalist">
 								<div style="height:40px;margin-bottom:15px;">
 									<?php
 									?>

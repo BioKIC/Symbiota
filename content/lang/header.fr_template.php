@@ -46,7 +46,7 @@ $LANG['H_LOGIN'] = 'Se connecter';
 $LANG['H_NEW_ACCOUNT'] = 'Nouveau Compte';
 $LANG['TOGGLE_508_OFF'] = "Utiliser la Mise en Page de Formulaire Condensé";
 $LANG['TOGGLE_508_ON'] = "Basculer la Disposition Verticale du Formulaire";
-$LANG['SELECT_LANGUAGE'] = 'Sélectionnez une langue';
+$LANG['SELECT_LANGUAGE'] = 'Sélectionnez langue';
 
 $LANG['CONTACT_US'] = 'Contactez-Nous';
 $LANG['LOGIN'] = 'Se Connecter';

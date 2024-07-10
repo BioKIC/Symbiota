@@ -77,11 +77,11 @@ else{
 }
 //if(!isset($_REQUEST['q_catalognumber'])) $displayQuery = true;
 ?>
-<div id="querydiv" style="clear:both;width:900px;display:<?php echo ($displayQuery?'block':'none'); ?>;">
+<div id="querydiv" style="clear:both;width:fit-content; min-width: 900px; display:<?php echo ($displayQuery?'block':'none'); ?>;">
 	<form name="queryform" action="<?php echo $_SERVER['SCRIPT_NAME']; ?>" method="post" onsubmit="return verifyQueryForm(this)">
-		<fieldset style="padding:5px; position: relative">
+		<fieldset style="padding:0.5rem; position: relative">
 			<legend><?php echo $LANG['RECORD_SEARCH_FORM']; ?></legend>
-			<button style="position: absolute; right: 3vw;" type="button" class="icon-button" onclick="copyQueryLink(event)" title="<?php echo $LANG['COPY_SEARCH']; ?>" aria-label="<?php echo $LANG['COPY_LINK']; ?>">
+			<button style="position: absolute; margin:0; right:0.5rem; top:0;" type="button" class="icon-button" onclick="copyQueryLink(event)" title="<?php echo $LANG['COPY_SEARCH']; ?>" aria-label="<?php echo $LANG['COPY_LINK']; ?>">
 				<span style="display:flex; align-content: center;">
 						<svg alt="Copies the search terms as a link." style="width:1.2em;margin-right:5px;" xmlns="http://www.w3.org/2000/svg" fill="var(--light-color)" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
 						<span style="align-content: center;">
@@ -135,19 +135,19 @@ else{
 			<?php
 			if(!$crowdSourceMode){
 				?>
-				<div class="fieldGroupDiv">
-					<div class="fieldDiv" style="display: flex; align-items: center; <?php echo ($isGenObs?'display:none':''); ?>">
+				<div class="fieldGroupDiv" <?php echo ($isGenObs?'style="display:none"':''); ?>>
+					<div class="fieldDiv">
 						<label for="q_recordenteredby"><?php echo $LANG['ENTERED_BY']; ?>:</label>
-						<input class="left-breathing-room-rel" type="text" name="q_recordenteredby" id="q_recordenteredby" value="<?php echo $qRecordEnteredBy; ?>" style="max-width:70px;" onchange="setOrderBy(this)" />
-						<div>
-							<button class="left-breathing-room-rel" type="button" onclick="enteredByCurrentUser()" style="font-size:70%" title="<?php echo $LANG['LIMIT_TO_CURRENT']; ?>"><?php echo $LANG['CU']; ?></button>
-						</div>
-							<label title="<?php echo $LANG['ENTER_RANGES']; ?>" class="left-breathing-room-rel" for="q_dateentered"><?php echo $LANG['DATE_ENTERED']; ?>:</label>
-							<input class="left-breathing-room-rel" type="text" name="q_dateentered" id="q_dateentered" value="<?php echo $qDateEntered; ?>" style="width:160px" onchange="setOrderBy(this)" />
-							<div title="<?php echo $LANG['ENTER_RANGES']; ?>">
-								<label class="left-breathing-room-rel" for="q_datelastmodified"><?php echo $LANG['DATE_MODIFIED']; ?>:</label>
-								<input class="left-breathing-room-rel" type="text" name="q_datelastmodified" id="q_datelastmodified" value="<?php echo $qDateLastModified; ?>" style="width:160px" onchange="setOrderBy(this)" />
-							</div>
+						<input type="text" name="q_recordenteredby" id="q_recordenteredby" value="<?php echo $qRecordEnteredBy; ?>" style="max-width:70px;" onchange="setOrderBy(this)" />
+					</div>
+					<button type="button" onclick="enteredByCurrentUser()" style="font-size:70%" title="<?php echo $LANG['LIMIT_TO_CURRENT']; ?>"><?php echo $LANG['CU']; ?></button>
+					<div class="fieldDiv">
+							<label title="<?php echo $LANG['ENTER_RANGES']; ?>" for="q_dateentered"><?php echo $LANG['DATE_ENTERED']; ?>:</label>
+							<input type="text" name="q_dateentered" id="q_dateentered" value="<?php echo $qDateEntered; ?>" style="width:160px" onchange="setOrderBy(this)" />
+					</div>
+					<div class="fieldDiv" title="<?php echo $LANG['ENTER_RANGES']; ?>">
+						<label for="q_datelastmodified"><?php echo $LANG['DATE_MODIFIED']; ?>:</label>
+						<input type="text" name="q_datelastmodified" id="q_datelastmodified" value="<?php echo $qDateLastModified; ?>" style="width:160px" onchange="setOrderBy(this)" />
 					</div>
 				</div>
 				<div class="fieldGroupDiv">
@@ -210,9 +210,9 @@ else{
 				if(isset($customArr[$x]['value'])) $cValue = $customArr[$x]['value'];
 
 				$divDisplay = 'none';
-				if($x == 1 || $cValue != '' || $cTerm == 'IS_NULL' || $cTerm == 'NOT_NULL') $divDisplay = 'block';
+				if($x == 1 || $cValue != '' || $cTerm == 'IS_NULL' || $cTerm == 'NOT_NULL') $divDisplay = '';
 				?>
-				<div id="customdiv<?php echo $x; ?>" class="fieldGroupDiv" style="display:<?php echo $divDisplay; ?>;">
+				<div id="customdiv<?php echo $x; ?>" class="fieldGroupDiv" <?php echo 'style="display:' . $divDisplay . '"' ?>>
 					<?php echo $LANG['CUSTOM_FIELD'].' '.$x; ?>:
 					<?php
 					if($x > 1){
@@ -275,7 +275,7 @@ else{
 					<?php
 				}
 				?>
-			<div class="fieldGroupDiv">
+			<div>
 				<div>
 
 					<?php
@@ -307,7 +307,7 @@ else{
 				<input type="hidden" name="occindex" value="<?php echo $occManager->getOccIndex(); ?>" />
 				<input type="hidden" name="occidlist" value="<?php echo $occManager->getOccidIndexStr(); ?>" />
 				<input type="hidden" name="direction" value="" />
-				<section class="flex-form bottom-breathing-room-rel">
+				<section class="fieldGroupDiv">
 					<div style="margin-left: 0;">
 						<button name="submitaction" type="submit" onclick="submitQueryEditor(this.form)" ><?php echo $LANG['DISPLAY_EDITOR']; ?></button>
 					</div>
@@ -318,8 +318,8 @@ else{
 						<button type="button" name="reset" value="Reset Form" onclick="resetQueryForm(this.form)">Reset Form</button>
 					</div>
 				</section>
-				<section class="flex-form">
-					<div class="fieldGroupDiv" style="margin-left: 0;">
+				<section class="fieldGroupDiv">
+					<div class="" style="margin-left: 0;">
 						<label for="orderby"><?php echo $LANG['SORT_BY']; ?>:</label>
 						<select name="orderby" id="orderby">
 							<option value=""></option>
@@ -352,14 +352,14 @@ else{
 							<option value="DESC" <?php echo ($qOrderByDir=='DESC'?'SELECTED':''); ?>><?php echo $LANG['DESCENDING']; ?></option>
 						</select>
 					</div>
-					<div style="display: flex; align-items: center; margin-bottom: 1rem;">
+					<div >
 						<label for="reclimit">
 							<?php
 							if(!isset($recLimit) || !$recLimit) $recLimit = 1000;
 							echo $LANG['OUTPUT'] . ':';
 							?>
 						</label>
-						<select name="reclimit" id="reclimit" class="left-breathing-room-rel">
+						<select name="reclimit" id="reclimit" >
 							<option <?php echo ($recLimit==500?'selected':''); ?>>500</option>
 							<option <?php echo ($recLimit==1000?'selected':''); ?>>1000</option>
 							<option <?php echo ($recLimit==2000?'selected':''); ?>>2000</option>
@@ -367,9 +367,9 @@ else{
 						</select> <?php //echo $LANG['RECORDS']; ?>
 					</div>
 				</section>
-				<div style="display: flex; align-content: center;">
+				<div class="fieldGroupDiv">
 					<input name="dynamictable" id="dynamictable-1" type="checkbox" value="1" <?php if(isset($dynamicTable) && $dynamicTable) echo 'checked'; ?> />
-					<label class="left-breathing-room-rel"for="dynamictable-1"><?php echo $LANG['DYNAMIC_TABLE']; ?></label>
+					<label for="dynamictable-1"><?php echo $LANG['DYNAMIC_TABLE']; ?></label>
 				</div>
  			</div>
 		</fieldset>

@@ -17,7 +17,6 @@ span[class="link"]:hover {
 /*  navpath styles */
 .navpath {
   color: #000000;
-  font-size: 12px;
 }
 
 .navpath a {
@@ -39,11 +38,6 @@ span[class="link"]:hover {
 .categorytitle a {
   font-weight: bold;
   font-size: 110%;
-}
-
-.collectiontitle {
-  font-size: 12px;
-  margin-top: 8px;
 }
 
 .collectiontitle a {
@@ -100,12 +94,7 @@ span[class="link"]:hover {
 }
 
 #cloptiondiv {
-  margin: 5px;
-  width: 250px;
-  text-align: left;
-  float: right;
-  max-width: 20% !important;
-  min-height: 325px;
+	width: fit-content;
 }
 
 #taxonfilterdiv {
@@ -298,48 +287,57 @@ ol.mp_list li.mp_highlighted {
   float: right;
 }
 .fieldset-like {
-  /* borrowed from: https://www.geeksforgeeks.org/how-to-achieve-fieldset-like-effect-without-using-fieldset-tag/ */
-  border: 0.2em solid;
+  position: relative;
+  border: 0.2rem solid;
   border-top: none;
   margin: 2rem 0 1rem 1rem;
   padding: 0.8rem;
+  padding-top: 1.5rem;
 }
 
 .fieldset-like h1,
 .fieldset-like h2,
 .fieldset-like h3 {
-  font: 1.5rem normal;
-  margin: -1.6rem -0.8rem 0rem;
+  margin: 0;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
 }
 
 .fieldset-like h1 span,
 .fieldset-like h2 span,
 .fieldset-like h3 span {
-  float: left;
+  margin: 0 0.3rem;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2:not(.subheader) span,
+.fieldset-like h3:not(.subheader) span {
+  transform: translateY(-50%);
 }
 
 .fieldset-like h1:before,
 .fieldset-like h2:before,
 .fieldset-like h3:before {
-  border-top: 0.15em solid;
+  border-top: 0.2rem solid;
   content: " ";
-  float: left;
-  margin: 0.8rem 0.1rem 0 -0.2rem;
   width: 1.2rem;
 }
 
 .fieldset-like h1:after,
 .fieldset-like h2:after,
 .fieldset-like h3:after {
-  border-top: 0.15em solid;
+  border-top: 0.2rem solid;
   content: " ";
-  display: block;
-  height: 2.4rem;
-  left: 0.3rem;
-  margin: 0 0.1rem 0 0;
-  overflow: hidden;
-  position: relative;
-  top: 0.8rem;
+  flex-grow: 1;
+}
+
+h2.subheader,
+h3.subheader {
+	position: relative;
+	align-items: center;
 }
 
 /* The section below addresses CSS reset recommended by USDA 508 compliance:  https://github.com/BioKIC/Symbiota/pull/881 https://www.usda.gov/digital-strategy/development/plays#development3*/
@@ -355,7 +353,7 @@ ul {
 
 h1 {
   display: block;
-  font-size: 1.5em;
+  font-size: 2em;
   margin-block-start: 0.83em;
   margin-block-end: 0.83em;
   margin-inline-start: 0px;
@@ -473,7 +471,7 @@ b {
 }
 
 .page-heading {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 /* Base Button Button CSS
@@ -523,6 +521,9 @@ button.icon-button:hover {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button > a {

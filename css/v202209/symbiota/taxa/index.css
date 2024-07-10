@@ -112,7 +112,6 @@ fieldset legend{
 
 #family{ 
 	margin-left:25px; 
-	font-size: 14px;
 }
 
 #redirectedfrom{
@@ -167,6 +166,7 @@ fieldset legend{
 	height: 100%;
 	margin-left: auto;
 	margin-right: auto;
+	font-size: var(--body-font-size);
 }
 
 #nodesc{

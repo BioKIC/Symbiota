@@ -28,35 +28,29 @@ if(!$recLimit || $recCnt < $recLimit){
 	$occArr = $mapManager->getOccurrenceArr($pageNumber,$cntPerPage);
 }
 ?>
-<div id="queryrecordsdiv" style="">
-	<div style="height:25px;margin-top:-5px;">
-		<div>
-			<div style="float:left;">
-            <form name="downloadForm" action="<?= $host ? $host . '/collections/download/index.php': '../download/index.php'?>" method="post" onsubmit="targetPopup(this)" style="float:left">
-					<button class="ui-button ui-widget ui-corner-all" style="margin:5px;padding:5px;cursor: pointer; background-color: var(--darkest-color);" title="<?php echo $LANG['DOWNLOAD_SPECIMEN_DATA']; ?>">
-						<svg style="width:1.3em" alt="<?php echo $LANG['IMG_DWNL_DATA']; ?>" fill="var(--light-color)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-					</button>
-					<input name="reclimit" type="hidden" value="<?php echo $recLimit; ?>" />
-					<input name="sourcepage" type="hidden" value="map" />
-					<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
-					<input name="dltype" type="hidden" value="specimen" />
-				</form>
-				<form name="fullquerykmlform" action="<?= $host ? $host . '/collections/map/kmlhandler.php': 'kmlhandler.php' ?>" method="post" target="_blank" style="float:left;">
-					<input name="reclimit" type="hidden" value="<?php echo $recLimit; ?>" />
-					<input name="sourcepage" type="hidden" value="map" />
-					<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
-					<button name="submitaction" type="submit" class="ui-button ui-widget ui-corner-all icon-button" style="margin:5px;padding:5px;cursor: pointer; background-color: var(--darkest-color);" title="Download KML file">
-						<div style="display: flex; align-items: center;">
-							<svg style="width:1.3em" alt="<?php echo $LANG['IMG_DWNL_DATA']; ?>" fill="var(--light-color)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
-							<span style="color: var(--light-color);">KML</span>
-						</div>
-					</button>
-				</form>
-            <button class="ui-button ui-widget ui-corner-all" style="margin:5px;padding:5px;cursor: pointer; background-color: var(--darkest-color);" onclick="copyUrl('<?= htmlspecialchars($host)?>')" title="<?php echo (isset($LANG['COPY_TO_CLIPBOARD'])?$LANG['COPY_TO_CLIPBOARD']:'Copy URL to Clipboard'); ?>">
-					<svg alt="Copy as a link." style="width:1.2em;margin-right:5px;" xmlns="http://www.w3.org/2000/svg" fill="var(--light-color)" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
-				</button>
-			</div>
-		</div>
+<div id="queryrecordsdiv" style="font-size: 1rem">
+	<div style="display: flex; gap: 1rem; margin-bottom: 0.5rem;">
+	<form name="downloadForm" action="<?= $host ? $host . '/collections/download/index.php': '../download/index.php'?>" method="post" onsubmit="targetPopup(this)" style="float:left">
+			<button class="button" title="<?php echo $LANG['DOWNLOAD_SPECIMEN_DATA']; ?>">
+				<svg style="width:1.3em" alt="<?php echo $LANG['IMG_DWNL_DATA']; ?>" fill="var(--light-color)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+			</button>
+			<input name="reclimit" type="hidden" value="<?php echo $recLimit; ?>" />
+			<input name="sourcepage" type="hidden" value="map" />
+			<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
+			<input name="dltype" type="hidden" value="specimen" />
+		</form>
+		<form name="fullquerykmlform" action="<?= $host ? $host . '/collections/map/kmlhandler.php': 'kmlhandler.php' ?>" method="post" target="_blank" style="float:left;">
+			<input name="reclimit" type="hidden" value="<?php echo $recLimit; ?>" />
+			<input name="sourcepage" type="hidden" value="map" />
+			<input name="searchvar" type="hidden" value="<?php echo $searchVar; ?>" />
+			<button name="submitaction" type="submit" class="button" title="Download KML file">
+					<svg style="width:1.3em" alt="<?php echo $LANG['IMG_DWNL_DATA']; ?>" fill="var(--light-color)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M480-320 280-520l56-58 104 104v-326h80v326l104-104 56 58-200 200ZM240-160q-33 0-56.5-23.5T160-240v-120h80v120h480v-120h80v120q0 33-23.5 56.5T720-160H240Z"/></svg>
+					<span style="color: var(--light-color);">KML</span>
+			</button>
+		</form>
+	<button class="button" onclick="copyUrl('<?= htmlspecialchars($host)?>')" title="<?php echo (isset($LANG['COPY_TO_CLIPBOARD'])?$LANG['COPY_TO_CLIPBOARD']:'Copy URL to Clipboard'); ?>">
+			<svg alt="Copy as a link." style="width:1.2em;" xmlns="http://www.w3.org/2000/svg" fill="var(--light-color)" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+		</button>
 	</div>
 	<div>
 		<?php
@@ -94,7 +88,7 @@ if(!$recLimit || $recCnt < $recLimit){
 		if($occArr){
 			?>
 			<form name="selectform" id="selectform" action="" method="post" onsubmit="" target="_blank">
-				<table class="styledtable" style="font-size:12px;margin-left:-15px;">
+				<table class="styledtable" style="font-size:.9rem;">
 					<tr>
 						<!--
 						<th style="width:10px;" title="Select/Deselect all Records">

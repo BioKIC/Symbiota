@@ -140,18 +140,17 @@ $smManager = new SiteMapManager();
 				</li>
 			</ul>
 
-			<section id="admin" class="fieldset-like">
+			<section id="admin" class="fieldset-like" style="padding: 1.6rem 0 0 0">
 				<h1>
 					<span>
 						<?php echo $LANG['MANAGTOOL'];?>
 					</span>
 				</h1>
-			</br>
 				<?php
 				if($SYMB_UID){
 					if($IS_ADMIN){
 						?>
-						<h2>
+						<h2 class="subheader">
 							<span>
 								<?php echo $LANG['ADMIN'];?>
 							</span>
@@ -211,7 +210,7 @@ $smManager = new SiteMapManager();
 						<?php
 					}
 					if($KEY_MOD_IS_ACTIVE || array_key_exists("KeyAdmin",$USER_RIGHTS)){
-						echo '</br><h2><span>' . $LANG['IDKEYS'] . '<span></h2>';
+						echo '<h2 class="subheader"><span>' . $LANG['IDKEYS'] . '<span></h2>';
 						if(!$KEY_MOD_IS_ACTIVE && array_key_exists("KeyAdmin",$USER_RIGHTS)){
 							?>
 							<div id="keymodule">
@@ -255,8 +254,7 @@ $smManager = new SiteMapManager();
 						<?php
 					}
 					?>
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['IMAGES'];?>
 						</span>
@@ -290,8 +288,7 @@ $smManager = new SiteMapManager();
 						}
 						?>
 					</ul>
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['BIOTIC_INVENTORIES'];?>
 						</span>
@@ -315,9 +312,7 @@ $smManager = new SiteMapManager();
 						}
 						?>
 					</ul>
-
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['DATASETS'] ;?>
 						</span>
@@ -325,8 +320,7 @@ $smManager = new SiteMapManager();
 					<ul>
 						<li><a href="collections/datasets/index.php"><?php echo htmlspecialchars($LANG['DATMANPAG'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ;?></a> - <?php echo htmlspecialchars($LANG['DATA_AUTHORIZED_TO_EDIT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) ?></li>
 					</ul>
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['TAXONPROF'];?>
 						</span>
@@ -354,8 +348,7 @@ $smManager = new SiteMapManager();
 						<?php
 					}
 					?>
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['TAXONOMY'];?>
 						</span>
@@ -379,9 +372,7 @@ $smManager = new SiteMapManager();
 						}
 						?>
 					</ul>
-
-					</br>
-					<h2>
+					<h2 class="subheader" >
 						<span>
 							<?php echo $LANG['CHECKLISTS'];?>
 						</span>
@@ -401,12 +392,10 @@ $smManager = new SiteMapManager();
 						}
 						?>
 					</ul>
-
 					<?php
 					if(isset($ACTIVATE_EXSICCATI) && $ACTIVATE_EXSICCATI){
 						?>
-						</br>
-						<h2>
+						<h2 class="subheader">
 							<span>
 								<?php echo $LANG['EXSICCATII'];?>
 							</span>
@@ -420,9 +409,7 @@ $smManager = new SiteMapManager();
 						<?php
 					}
 					?>
-
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['COLLECTIONS'];?>
 						</span>
@@ -430,8 +417,7 @@ $smManager = new SiteMapManager();
 					<p class="description">
 						<?php echo $LANG['PARA1'];?>
 					</p>
-					</br>
-					<h3>
+					<h3 class="subheader">
 						<span>
 							<?php echo $LANG['COLLLIST'];?>
 						</span>
@@ -456,8 +442,7 @@ $smManager = new SiteMapManager();
 						</ul>
 					</div>
 
-					</br>
-					<h2>
+					<h2 class="subheader">
 						<span>
 							<?php echo $LANG['OBSERV'];?>
 						</span>
@@ -466,8 +451,7 @@ $smManager = new SiteMapManager();
 						<?php echo $LANG['PARA2'];?>
 						<a href="https://biokic.github.io/symbiota-docs/col_obs/" target="_blank"><?php echo htmlspecialchars($LANG['SYMBDOCU'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?></a> <?php echo htmlspecialchars($LANG['FORMOREINFO'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>.
 					<p class="description">
-					</br>
-					<h3>
+					<h3 class="subheader">
 						<span>
 							<?php echo $LANG['OIVS'];?>
 						</span>
@@ -509,8 +493,7 @@ $smManager = new SiteMapManager();
 						<?php
 						if($genObsList){
 							?>
-							</br>
-							<h3><span>
+							<h3 class="subheader"><span>
 									<?php echo $LANG['PERSONAL'];?>
 								</span>
 							</h3>
@@ -531,8 +514,7 @@ $smManager = new SiteMapManager();
 						}
 						if($obsManagementStr){
 							?>
-							</br>
-							<h3>
+							<h3 class="subheader">
 								<span>
 									<?php echo $LANG['OPM'];?>
 								</span>
@@ -547,13 +529,13 @@ $smManager = new SiteMapManager();
 					<?php
 				}
 				else{
-					echo '' . $LANG['PLEASE'] . ' <a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/profile/index.php?refurl=../sitemap.php">' . htmlspecialchars($LANG['LOGIN'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>' . htmlspecialchars($LANG['TOACCESS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '<br/>' . htmlspecialchars($LANG['CONTACTPORTAL'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.';
+					echo '' . $LANG['PLEASE'] . ' <a href="' . htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/profile/index.php?refurl=../sitemap.php">' . htmlspecialchars($LANG['LOGIN'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> ' . htmlspecialchars($LANG['TOACCESS'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '<br/>' . htmlspecialchars($LANG['CONTACTPORTAL'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '.';
 				}
 			?>
 			</section>
 			<div id="symbiotaschema">
-				<img src="https://img.shields.io/badge/Symbiota-v<?php echo $CODE_VERSION; ?>-blue.svg" alt="a blue badge depicting Symbiota software version" />
-				<img src="https://img.shields.io/badge/Schema-<?php echo 'v'.$smManager->getSchemaVersion(); ?>-blue.svg" alt="a blue badge depicting Symbiota database schema version" />
+				<img style="height:1.85rem" src="https://img.shields.io/badge/Symbiota-v<?php echo $CODE_VERSION; ?>-blue.svg" alt="a blue badge depicting Symbiota software version" />
+				<img style="height:1.85rem" src="https://img.shields.io/badge/Schema-<?php echo 'v'.$smManager->getSchemaVersion(); ?>-blue.svg" alt="a blue badge depicting Symbiota database schema version" />
 			</div>
 		</div>
 	</div>

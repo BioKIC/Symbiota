@@ -25,8 +25,17 @@ $clManager->setProj($pid);
 	?>
 	<style>
 		.btn-medium-font {
-			font-size: 0.6em;
+			font-size: 1rem;
 			text-decoration: none;
+		}
+		.checklist-header {
+			display: flex;
+			margin-bottom: 0;
+			align-items: center;
+			gap: 0.5rem;
+		}
+		.checklist-ul {
+			margin-top: 0;
 		}
 	</style>
 </head>
@@ -47,17 +56,17 @@ $clManager->setProj($pid);
 			if($researchArr){
 				foreach($researchArr as $pid => $projArr){
 					?>
-					<h2>
+					<h2 class="checklist-header">
 						<?php
 						$projName = $projArr['name'];
 						if($projName == 'Miscellaneous Inventories') $projName = $LANG['MISC_INVENTORIES'];
 						echo $projName;
 						?>
-						<a class="button button-tertiary btn-medium-font" href="<?php echo "clgmap.php?pid=" . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" title='<?php echo htmlspecialchars($LANG['SHOW_MAP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
+						<a class="button button-tertiary btn-medium-font" style="gap:0.5rem" href="<?php echo "clgmap.php?pid=" . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" title='<?php echo htmlspecialchars($LANG['SHOW_MAP'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
 							<?php echo $LANG['MAP']; ?> <img src='../images/world.png' style='width:1em;border:0' alt='<?php echo $LANG['IMG_OF_GLOBE']; ?>' />
 						</a>
 					</h2>
-					<ul>
+					<ul class="checklist-ul">
 						<?php
 						foreach($projArr['clid'] as $clid => $clName){
 							echo '<li><a href="checklist.php?clid=' . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&pid=' . htmlspecialchars($pid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . htmlspecialchars($clName, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></li>';

@@ -52,7 +52,7 @@ class OmCollections extends Manager{
 			if(!$this->isCollUnique($reqArr['collectionCode'], $reqArr['institutionCode'])) {
 				return false;
 			}
-			return false;
+
 			//Update core fields
 			$sql = 'UPDATE omcollections '.
 				'SET institutionCode = ?, collectionCode = ?, collectionName = ?, collectionID = ?, fullDescription = ?, latitudeDecimal = ?, longitudeDecimal = ?, publishToGbif = ?, '.

@@ -12,8 +12,7 @@ class Media extends Model{
 
 	protected $fillable = [ 'url', 'thumbnailUrl', 'originalUrl', 'archiveUrl', 'tid', 'photographer', 'photographerUid', 'imageType', 'format', 'caption', 'owner', 'sourceUrl', 'referenceUrl',
 		'copyright', 'rights', 'accessRights', 'locality', 'occid', 'notes', 'anatomy', 'username', 'sourceIdentifier', 'hashFunction', 'hashValue', 'mediaMD5', 'dynamicProperties',
-		'defaultDisplay', 'sortSequence', 'sortOccurrence'
-	];
+		'defaultDisplay', 'sortSequence', 'sortOccurrence', 'recordID' ];
 	protected $guarded = [];
 	protected $hidden = ['dynamicProperties', 'username', 'defaultDisplay'];
 	private $serverDomain;

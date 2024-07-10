@@ -116,7 +116,7 @@ if(isset($clArray['dynamicProperties']) && $clArray['dynamicProperties']){
 
 	function openMappingPolyAid() {
 		var latDec = document.getElementById("decimallatitude").value;
-		var lngDec = document.getElementById("decimallongtitude").value;
+		var lngDec = document.getElementById("decimallongitude").value;
 		mapWindow=open("<?php echo $CLIENT_ROOT; ?>/checklists/tools/mappolyaid.php?clid=<?php echo $clid; ?>&formname=editclmatadata&latname=latcentroid&longname=longcentroid&latdef="+latDec+"&lngdef="+lngDec,"mapaid","resizable=0,width=1000,height=800,left=20,top=20");
 	    if(mapWindow.opener == null) mapWindow.opener = self;
 	}
@@ -189,7 +189,7 @@ if(!$clid){
 				}
 				?>
 			</div>
-			<div>
+			<div class="top-breathing-room-rel">
 				<b><?php echo $LANG['EXTSERVICE']; ?></b><br/>
 				<select name="externalservice" id="externalservice" onchange="enableDisableExtServiceFields()">
 					<option value=""></option>
@@ -197,7 +197,7 @@ if(!$clid){
 					<option value="inaturalist" <?php echo ((isset($dynamPropsArr['externalservice']) && $dynamPropsArr['externalservice']=='inaturalist')?'selected':''); ?>><?php echo $LANG['INATURALIST']; ?></option>
 				</select>
 			</div>
-			<div style="width:100%;margin-top:5px">
+			<div style="width:100%" class="top-breathing-room-rel">
 				<div style="float:left;width:25%">
 				<b><?php echo $LANG['EXTSERVICEID']; ?></b><br/>
 				<input type="text" name="externalserviceid" id="externalserviceid" style="width:100%" value="<?php echo ($dynamPropsArr?$dynamPropsArr['externalserviceid']:''); ?>" />
@@ -206,7 +206,7 @@ if(!$clid){
 				<input type="text" name="externalserviceiconictaxon" id="externalserviceiconictaxon" style="width:100%" value="<?php echo ($dynamPropsArr?$dynamPropsArr['externalserviceiconictaxon']:''); ?>" />
 				</div>
 			</div>
-			<div id="locDiv" style="clear:both;margin-top:5px;">
+			<div id="locDiv" style="clear:both" class="top-breathing-room-rel">
 				<b><?php echo $LANG['LOC']; ?></b><br/>
 				<input type="text" name="locality" style="width:95%" value="<?php echo ($clArray?$clArray["locality"]:''); ?>" />
 			</div>
@@ -235,7 +235,7 @@ if(!$clid){
 					?>
 				</select>
 			</div>
-			<div id="geoDiv" style="width:100%;margin-top:5px">
+			<div id="geoDiv" style="width:100%" class="top-breathing-room-rel">
 				<div style="float:left;">
 					<b><?php echo $LANG['LATCENT']; ?></b><br/>
 					<input id="decimallatitude" type="text" name="latcentroid" style="width:110px;" value="<?php echo ($clArray?$clArray["latcentroid"]:''); ?>" />
@@ -252,7 +252,7 @@ if(!$clid){
 					<input id="coordinateuncertaintyinmeters" type="number" name="pointradiusmeters" style="width:110px;" value="<?php echo ($clArray?$clArray["pointradiusmeters"]:''); ?>" />
 				</div>
 			</div>
-			<div style="clear:both;margin-top:5px;">
+			<div style="clear:both" class="top-breathing-room-rel">
 				<fieldset style="width:350px;padding:10px">
 					<legend><b><?php echo $LANG['POLYFOOT']; ?></b></legend>
 					<span id="polyDefDiv" style="display:<?php echo ($clArray && $clArray["hasfootprintwkt"]?'inline':'none'); ?>;">
@@ -265,7 +265,7 @@ if(!$clid){
 					<input type="hidden" id="footprintwkt" name="footprintwkt" value="<?= $clArray['footprintwkt']?>" />
 				</fieldset>
 			</div>
-			<div style="clear:both;margin-top:5px;">
+			<div style="clear:both;" class="top-breathing-room-rel">
 				<fieldset style="width:600px;">
 					<legend><b><?php echo $LANG['DEFAULTDISPLAY']; ?></b></legend>
 					<div>
@@ -386,7 +386,7 @@ if(!$clid){
 			?>
 			<div style="margin:10px;">
 				<div><?php echo $LANG['NO_CHECKLISTS']; ?></div>
-				<div style="margin-top:5px">
+				<div class="top-breathing-room-rel">
 					<a href="#" onclick="toggle('checklistDiv')"><?php echo htmlspecialchars($LANG['CLICK_TO_CREATE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?></a>
 				</div>
 			</div>

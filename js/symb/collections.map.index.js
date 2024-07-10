@@ -86,14 +86,31 @@ function checkRecordLimit(f) {
   }
 }
 
+//Generate Random Color with luminance greater than 40 for good contrast on black text
 function generateRandColor() {
-  var hexColor = "";
-  var x = Math.round(0xffffff * Math.random()).toString(16);
-  var y = 6 - x.length;
-  var z = "000000";
-  var z1 = z.substring(0, y);
-  hexColor = z1 + x;
-  return hexColor;
+	// How Bright we want the color
+	// If this number needs to change extra work would need to be done to ensure variable luminance would work.
+	const luminance = 40;
+
+	const redLuminanceCoef = 0.299;
+	const greenLuminanceCoef = 0.587;
+	const blueLuminanceCoef = 0.114;
+
+	// max red 76.245
+	// min red is 0
+	let r = Math.round(255 * Math.random());
+	let redLuminance = redLuminanceCoef * r;
+
+	//max is 29.07
+	//min blue is 0
+	let b = Math.round(255 * Math.random());
+	let blueLuminance = blueLuminanceCoef * b;
+
+	//max g is 149.685  min green 
+	let minGreen = ((luminance * 3) - redLuminance - blueLuminance) / greenLuminanceCoef;
+	let g = Math.round((255 - minGreen) * Math.random()) + minGreen;
+
+	return (r < 16? "0": "") + parseInt(r).toString(16) + (g < 16? "0": "") + parseInt(g).toString(16) + (b < 16? "0": "") + parseInt(b).toString(16);
 }
 
 function toggleLatLongDivs() {

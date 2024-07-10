@@ -16,14 +16,8 @@
 	 
 }
 
-.collectiontitle {
-    font-size: 12px;
-    margin-top: 8px;
-}
-
 .collectiontitle a {
     font-size: 80%;
-    margin-left: 3px;
 }
 
 .collectiontitle a:hover {
