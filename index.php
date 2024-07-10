@@ -28,7 +28,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 	?>
 	<div class="navpath"></div>
 	<main id="innertext">
-		<div style="float:right;width:500px;margin-left:20px">
+		<div style="float:right;width:600px;margin-left:20px">
 			<div id="quicksearchdiv">
 				<!-- -------------------------QUICK SEARCH SETTINGS--------------------------------------- -->
 				<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
