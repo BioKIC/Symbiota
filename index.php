@@ -31,7 +31,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 		<div style="float:right;width:500px;margin-left:20px">
 			<div id="quicksearchdiv">
 				<!-- -------------------------QUICK SEARCH SETTINGS--------------------------------------- -->
-				<form style="width:600px" name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
+				<form style="width:700px" name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
 						<div id="quicksearchtext" ><?php echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Search Taxon'); ?></div>
 						<input id="taxa" type="text" name="taxon" />
 						<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms" style="margin-bottom:10px;margin-top:10px"><?php echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?></button>
