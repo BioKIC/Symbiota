@@ -142,12 +142,25 @@ else{
 	<script src="../../js/symb/collections.editor.table.js?ver=2" type="text/javascript" ></script>
 	<script src="../../js/symb/collections.editor.query.js?ver=6" type="text/javascript" ></script>
 	<style>
-		#titleDiv { font-weight: bold; font-size: 1.5rem; width:790px; margin-bottom: 5px; }
+		#titleDiv{margin-bottom: 1rem}
 		table.styledtable td { white-space: nowrap; }
 		fieldset{ padding:15px }
 		fieldset > legend{ font-weight:bold }
-		.fieldGroupDiv{ clear:both; margin-bottom: 1rem; overflow: auto}
-		.fieldDiv{ float:left; margin-right: 1rem;}
+		.fieldGroupDiv { 
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			margin-bottom: 1rem;
+			input {
+				margin: 0
+			}
+			a {
+				display: flex;
+			}
+		}
+		.fieldDiv{ 
+			display: inline;
+		}
 		#innertext{ background-color: white; margin: 0px 10px; }
 
 		#record-viewer-innertext { 
@@ -156,9 +169,6 @@ else{
 			background-color: white; 
 		}
 		.editimg{ width: 15px; }
-		.accessible-font {
-			font-size: 1.4em;
-		}
 		.table-scroll {
 			display: block;
 			white-space: nowrap;
@@ -195,7 +205,7 @@ else{
 			?>
 
 			<div style="width:850px;clear:both;">
-				<div class='navpath' style="float:left; padding-left: 5px">
+				<div class='navpath'>
 					<a href="../../index.php"><?php echo htmlspecialchars((isset($LANG['HOME'])?$LANG['HOME']:'Home'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
 					<?php
 					if($crowdSourceMode){
@@ -221,9 +231,9 @@ else{
 			</div>
 			<div id="titleDiv">
 				<?php
-				if($collMap) echo '<h2>' . $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').')</h2>';
+				if($collMap) echo '<h1>' . $collMap['collectionname'].' ('.$collMap['institutioncode'].($collMap['collectioncode']?':'.$collMap['collectioncode']:'').')</h1>';
 				?>
-				<div>
+				<div style="display: flex; flex-wrap: wrap; gap: 0.5rem">
 				   <button id="query-btn" type="button" class="button-toggle active" onclick="toggleSearch(); toggleButtonVisuals(this, 'querydiv', ['batch-update-btn'])">
 					  <?= $LANG['SEARCH_FILTER'] ?>
 				   </button>
@@ -355,7 +365,7 @@ else{
 						$tableClass = 'stripe hover order-column compact nowrap cell-border';
 					}
 					?>
-					<table id="<?php echo $tableId; ?>" class="<?php echo $tableClass; ?> accessible-font table-scroll" title="<?php echo htmlspecialchars((isset($LANG['TABLE_VIEW']) ? $LANG['TABLE_VIEW'] : 'Occurrence Table View'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" aria-describedby="table-desc">
+					<table id="<?php echo $tableId; ?>" class="<?php echo $tableClass; ?> table-scroll" title="<?php echo htmlspecialchars((isset($LANG['TABLE_VIEW']) ? $LANG['TABLE_VIEW'] : 'Occurrence Table View'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" aria-describedby="table-desc">
 						<thead>
 							<tr>
 								<th><?php echo (isset($LANG['SYMB_ID'])?$LANG['SYMB_ID']:'Symbiota ID'); ?></th>

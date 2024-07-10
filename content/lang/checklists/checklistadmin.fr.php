@@ -34,6 +34,8 @@ $LANG['PERMREMOVECHECK'] = 'Supprimer Liste de Mani&egrave;re Permanente';
 $LANG['REMOVEUSERCHECK'] = 'Avant que la liste puisse &ecirc;tre supprim&acute;e, tous les &eacute;diteurs (sauf vous-m&ecirc;me) et les affectations de projet d\'inventaire doivent &ecirc;tre supprim&eacute;es.
                 Les attributions de projets d\'inventaire ne peuvent &ecirc;tre supprim&eacute;es que par des gestionnaires actifs du projet ou d\'un administrateur syst&egrave;me.';
 $LANG['WARNINGNOUN'] = 'ATTENTION: Action ne peut pas &ecirc;tre annul&eacute;e.';
+$LANG['EDITOR_DELETE'] = 'Êtes-vous sûr de vouloir supprimer cet éditeur:';
+$LANG['PROJECT_DELETE'] = 'Êtes-vous sûr de vouloir dissocier cette liste de contrôle de';
 $LANG['CONFIRMDELETE'] = '&Ecirc;tes-vous s&ucirc;r de vouloir supprimer d&eacute;finitivement la liste de contr&ocirc;le? Cette action ne peut pas &ecirc;tre annul&eacute;e!';
 $LANG['CREATECHECKDET'] = 'Cr&eacute;er Nouvelle Liste';
 $LANG['EDITCHECKDET'] = 'Modifier D&eacute;tails de Liste';

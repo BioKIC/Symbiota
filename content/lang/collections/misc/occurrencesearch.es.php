@@ -22,7 +22,7 @@ $LANG['SELECT_COLLECTION'] = 'Seleccionar Colección';
 
 $LANG['CATALOG_NO'] = 'Catálogo #';
 $LANG['OTHER_CATALOG_NO'] = 'Otro Catálogo #';
-$LANG['COLLECTOR_LAST_NAME'] = 'Apellido del Coleccionista';
+$LANG['COLLECTOR_LAST_NAME'] = 'Apellido del Colector';
 $LANG['COLLECTOR_NUMBER'] = 'Número de Coleccionista';
 
 $LANG['SELECT_OCCUR_RECORD'] = 'Seleccionar registro de Ocurrencia';

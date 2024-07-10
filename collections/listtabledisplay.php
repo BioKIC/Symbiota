@@ -89,9 +89,9 @@ $searchVar = $collManager->getQueryTermStr();
 			</div>
 			<div style="padding:5px;width:650px;">
 				<section class="fieldset-like">
-				<h1>
+				<h2>
 					<span><?php echo (isset($LANG['SORT']) ? $LANG['SORT'] : 'Sort Results'); ?></span>
-				</h1>
+				</h2>
 					<form name="sortform" action="listtabledisplay.php" method="post">
 						<div>
 							<label for="sortfield1"><?php echo (isset($LANG['SORT_BY']) ? $LANG['SORT_BY'] : 'Sort By'); ?>:</label>

@@ -1,12 +1,45 @@
- /* This increases the font size of the layer toggle */
+/* This increases the font size of the layer toggle */
 .leaflet-control-layers-expanded .leaflet-control-layers-list {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .leaflet-control-scale-line {
-    font-size: 1.5rem;
+    font-size: 1rem;
 }
 
 .leaflet-control-attribution {
-	font-size: 1.5rem;
+	font-size: 1rem;
+}
+
+.symbiota-cluster-div {
+	height: fit-content;
+	width: fit-content;
+}
+
+.symbiota-cluster {
+  display: inline-block;
+  border-radius: 50%;
+  min-width: 1rem;
+  min-height: 1rem;
+  padding: 3px;
+  text-align: center;
+  line-height: 1;
+  box-sizing: content-box;
+  white-space: nowrap;
+  border: solid 2px black;
+  transform: translate(-50%, -50%);
+}
+
+.symbiota-cluster:before {
+  content: "";
+  display: inline-block;
+  vertical-align: middle;
+  padding-top: 100%;
+  height: 0;
+}
+
+.symbiota-cluster span {
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 1rem;
 }

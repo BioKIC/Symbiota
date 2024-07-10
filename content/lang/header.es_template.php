@@ -46,9 +46,9 @@ $LANG['H_LOGIN'] = 'Iniciar Sesi&oacute;n';
 $LANG['H_NEW_ACCOUNT'] = 'Nueva Cuenta';
 $LANG['TOGGLE_508_OFF'] = "Alternar el Diseño de Formulario Condensado";
 $LANG['TOGGLE_508_ON'] = "Alternar Diseño de Formulario Vertical";
-$LANG['SELECT_LANGUAGE'] = 'Seleccionar un Idioma';
+$LANG['SELECT_LANGUAGE'] = 'Seleccionar Idioma';
 
-$LANG['CONTACT_US'] = 'Contacta con Nosotros';
+$LANG['CONTACT_US'] = 'Contáctenos';
 $LANG['LOGIN'] = 'Acceso';
 $LANG['SEARCH_COLLECTIONS'] = 'Buscar Colecciones';
 $LANG['CHECKLISTS'] = 'Listas de Control';
@@ -58,7 +58,7 @@ $LANG['SPECIMENS'] = 'Especímenes';
 $LANG['IMG_CONTR'] = 'Contribuidores de imágenes';
 $LANG['OBS'] = 'Observaciones';
 
-$LANG['NAV_HOME'] = 'Hogar';
+$LANG['NAV_HOME'] = 'Inicio';
 $LANG['NAV_IMG_LIB'] = 'Biblioteca de Imágenes';
 $LANG['NAV_IMG_CONTR'] = 'Colaboradores de Imágenes';
 $LANG['NAV_IMG_SEARCH'] = 'Búsqueda de Imágenes';

@@ -75,7 +75,6 @@ span[class="link"]:hover {
 /*  navpath styles */
 .navpath {
   color: #000000;
-  font-size: 12px;
 }
 
 .navpath a {
@@ -102,11 +101,6 @@ span[class="link"]:hover {
 .categorytitle a {
   font-weight: bold;
   font-size: 110%;
-}
-
-.collectiontitle {
-  font-size: 12px;
-  margin-top: 8px;
 }
 
 .collectiontitle a {
@@ -172,12 +166,7 @@ span[class="link"]:hover {
 }
 
 #cloptiondiv {
-  margin: 5px;
-  width: 250px;
-  text-align: left;
-  float: right;
-  max-width: 20% !important;
-  min-height: 325px;
+	width: fit-content
 }
 
 #taxonfilterdiv {
@@ -374,7 +363,7 @@ ol.mp_list li.mp_highlighted {
 }
 
 .page-heading {
-  font-size: 3rem;
+  font-size: 2.5rem;
 }
 
 /* Base Button CSS
@@ -426,6 +415,9 @@ div.button:hover {
   cursor: pointer;
   transition: all 0.2s ease-in-out;
   width: fit-content;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .button > a {

@@ -1,18 +1,15 @@
 body{
 	font-family: Arial, Helvetica, sans-serif;
-	font-size: 12px;
 	width: 820px;
 }
 
 #innertext{
 	padding:	10px;
-	font-size:	12px;
 	background-color: #ffffff;;
 }
 
 #titleDiv{
 	font-weight: bold;
-	font-size: 16px;
 	width: 820px;
 }
 
@@ -35,7 +32,6 @@ body{
 
 #occedittabs{
 	font-family: Arial,Helvetica,sans-serif;
-	font-size: 12px;
 }
 
 #dupesDiv{
@@ -839,7 +835,6 @@ img.editimg {
 
 table { 
 	font-family: 	Arial, Helvetica, sans-serif; 
-	font-size: 		12px;
 }
 
 .divTable{ display: table; }

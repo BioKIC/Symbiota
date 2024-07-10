@@ -14,8 +14,9 @@
   /* border: none; */
 }
 
-.inner-search input {
+.inner-search .input-text-container input {
   padding: 0;
+  margin-bottom: 0;
 }
 
 .inner-search h3 {
@@ -76,7 +77,7 @@
 /* INPUTS */
 .inner-search .assistive-text {
   color: var(--body-text-color);
-  font-size: 1em;
+  font-size: 0.9rem;
 }
 
 .inner-search .invalid {
@@ -96,7 +97,7 @@
    @mixin ============================= */
 /* Search Form Layout ********************/
 .inner-search body {
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 .inner-search input:invalid {
@@ -169,7 +170,7 @@
   display: grid;
   -ms-grid-columns: 2fr 1fr;
   grid-template-columns: 2fr 1fr;
-  grid-gap: 10px;
+  grid-gap: 1rem;
   -webkit-box-align: self-start;
   -ms-flex-align: self-start;
   align-items: self-start;
@@ -240,7 +241,7 @@
   border-radius: 4px;
   background-color: rgba(230, 20, 20, 0.8);
   color: var(--body-bg-color);
-  font-size: 14px;
+  font-size: 1rem;
   -webkit-transform: translateY(300px);
   transform: translateY(300px);
   pointer-events: all;
@@ -307,10 +308,10 @@
 .inner-search .chip {
   display: inline-block;
   background: #e0e0e0;
-  padding: 0 12px;
-  margin: 5px 0;
+  padding: 0 0.9rem;
+  margin: 0.5rem 0.3rem;
   border-radius: 10px;
-  font-size: 13px;
+  font-size: 1rem;
 }
 
 .inner-search .chip:hover {
@@ -371,7 +372,7 @@
   height: 35px;
   line-height: 35px;
   padding: 0 1.5rem;
-  font-size: 16px;
+  font-size: 1rem;
   font-weight: 600;
   letter-spacing: 0.8px;
   text-align: center;
@@ -418,7 +419,7 @@
 }
 
 .inner-search .accordions label.accordion-header {
-  font-size: 16px;
+  font-size: 1.3rem;
   text-transform: uppercase;
   font-weight: 600;
   text-align: center;
@@ -441,7 +442,7 @@
 
 .inner-search .accordions label.accordion-header::after {
   font-family: "Material Icons";
-  font-size: 24px;
+  font-size: 2rem;
   content: "\e313";
   position: absolute;
   right: 20px;
@@ -486,8 +487,8 @@
   --fz: 16px;
   margin: 0 auto;
   padding-top: 14px;
+  margin-bottom: 1rem;
   width: 100%;
-  max-width: 600px;
 }
 
 .inner-search .input-text-container label {
@@ -507,7 +508,6 @@
 .inner-search .text-area-container textarea ~ span::before,
 .input-text-container label input:valid ~ span::before,
 .input-text-container label input:invalid ~ span::before {
-  font-size: 1.45rem;
   color: var(--body-text-color);
 }
 
@@ -610,13 +610,11 @@
   position: absolute;
   top: 0;
   left: 1rem;
-  font-size: 1.45rem;
   line-height: 1;
 }
 
 /* Select control ***********************************/
 .inner-search .select-container label {
-  font-size: 0.8em;
   position: relative;
   top: 22px;
   background-color: white;

@@ -54,7 +54,7 @@ $router->group(['prefix' => 'v2'], function () use ($router) {
 
 	$router->get('media',  ['uses' => 'MediaController@showAllMedia']);
 	$router->get('media/{id}', ['uses' => 'MediaController@showOneMedia']);
-	$router->post('media', ['uses' => 'MediaController@insertMedia']);
+	$router->post('media', ['uses' => 'MediaController@insert']);
 	$router->patch('media/{id}', ['uses' => 'MediaController@update']);
 	$router->delete('media/{id}', ['uses' => 'MediaController@delete']);
 

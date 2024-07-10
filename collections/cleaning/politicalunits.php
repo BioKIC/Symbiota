@@ -161,7 +161,7 @@ if($action && $isEditor){
 		if($isEditor){
 			?>
 			<section class="fieldset-like">
-				<h1> <span> <?php echo (isset($LANG['GEO_REPORT']) ? $LANG['GEO_REPORT'] : 'Geographic Report'); ?> </span> </h1>
+				<h2> <span> <?php echo (isset($LANG['GEO_REPORT']) ? $LANG['GEO_REPORT'] : 'Geographic Report'); ?> </span> </h2>
 				<?php
 				if($target == 'geolocal'){
 					if($mode) echo '<div style="position:absolute;top:5px;right:0px;padding:10px;border:1px solid grey"><a href="politicalunits.php?collid=' . htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '&mode=0">' . htmlspecialchars($LANG['MAIN_MENU'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';

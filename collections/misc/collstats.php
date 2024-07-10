@@ -492,7 +492,7 @@ if($action != "Update Statistics"){
 													?>
 													<section class="gridlike-form-row">
 														<div>
-															<input id="cat-<?php echo $idStr; ?>-Input" name="cat[]" value="<?php echo $catid; ?>" type="checkbox" onclick="selectAllCat(this,'cat-<?php echo $idStr; ?>')" <?php echo ($collIdArr&&($collIdArr==array_keys($catArr))?'checked':''); ?> />
+															<input style="margin:0" id="cat-<?php echo $idStr; ?>-Input" name="cat[]" value="<?php echo $catid; ?>" type="checkbox" onclick="selectAllCat(this,'cat-<?php echo $idStr; ?>')" <?php echo ($collIdArr&&($collIdArr==array_keys($catArr))?'checked':''); ?> />
 															<label for="cat-<?php echo $idStr; ?>-Input">
 																<?php echo $name; ?> (<?php echo isset($LANG['SPECIMEN']) ? $LANG['SPECIMEN'] : "Specimen" ?>) <?php echo $LANG['SELECT_DESELECT'] ?>
 															</label>
@@ -524,7 +524,7 @@ if($action != "Update Statistics"){
 																	foreach($catArr as $collid => $collName2){
 																		?>
 																		<div class="gridlike-form-row bottom-breathing-room-rel">
-																				<input id="db-<?php echo $collid?>" name="db[]" value="<?php echo $collid; ?>" type="checkbox" class="cat-<?php echo $idStr; ?>" onclick="unselectCat('cat-<?php echo $idStr; ?>-Input')" <?php echo ($collIdArr&&in_array($collid,$collIdArr)?'checked':''); ?> />
+																				<input style="margin:0" id="db-<?php echo $collid?>" name="db[]" value="<?php echo $collid; ?>" type="checkbox" class="cat-<?php echo $idStr; ?>" onclick="unselectCat('cat-<?php echo $idStr; ?>-Input')" <?php echo ($collIdArr&&in_array($collid,$collIdArr)?'checked':''); ?> />
 																				<label for="db-<?php echo $collid?>">
 																					<a href='collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
 																						<?php
@@ -643,7 +643,7 @@ if($action != "Update Statistics"){
 														</div>
 													</div>
 													<div>
-														<div class="gridlike-form-row bottom-breathing-room-rel" id="cat-<?php echo $idStr; ?>" style="<?php echo (($DEFAULTCATID && $DEFAULTCATID != $catid)?'display:none;':'') ?> margin-left:2rem;">
+														<div class="gridlike-form-row bottom-breathing-room-rel" id="cat-<?php echo $idStr; ?>" style="<?php echo (($DEFAULTCATID && $DEFAULTCATID != $catid)?'display:none;':'') ?>">
 															<section class="gridlike-form">
 																<fieldset class="fieldset-observation-padding-rem">
 																	<legend>
@@ -656,7 +656,7 @@ if($action != "Update Statistics"){
 																					<div>
 																						<input class="input-margin cat-<?php echo $idStr; ?>" id="db-<?php echo $collid ?>" name="db[]" value="<?php echo $collid; ?>" type="checkbox" onclick="unselectCat('cat-<?php echo $idStr; ?>-Input')" <?php echo ($collIdArr&&in_array($collid,$collIdArr)?'checked':''); ?> />
 																						<label for="db-<?php echo $collid ?>">
-																							<a class="rel-fontsize" href = 'collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
+																							<a href = 'collprofiles.php?collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'>
 																								<?php
 																								$codeStr = ' ('.$collName2['instcode'];
 																								if($collName2['collcode']) $codeStr .= '-'.$collName2['collcode'];

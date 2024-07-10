@@ -1364,7 +1364,7 @@ $traitArr = $indManager->getTraitArr();
 								if($editArr){
 									?>
 									<section class="fieldset-like">
-										<h1><span><?php echo $LANG['INTERNAL_EDITS']; ?></span></h1>
+										<h2><span><?php echo $LANG['INTERNAL_EDITS']; ?></span></h2>
 										<?php
 										foreach($editArr as $ts => $tsArr){
 											?>

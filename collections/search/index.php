@@ -129,7 +129,6 @@ $obsArr = (isset($collList['obs'])?$collList['obs']:null);
 								<option id="taxontype-common" value="5" data-chip="<?php echo $LANG['TAXON'] . ': ' . $LANG['COMMON_NAME'] ?>"><?php echo $LANG['COMMON_NAME'] ?></option>
 							</select>
 							<span class="inset-input-label"><?php echo $LANG['TAXON_TYPE'] ?></span>
-							<span class="assistive-text"><?php echo $LANG['TAXON_TYPE'] ?></span>
 						</div>
 							</div>
 						<div>

@@ -40,11 +40,11 @@ foreach($collArr as $id => $collectionArr){
 			$cName = $secArr['collectionname'] . ' (' . $secArr['institutioncode'] . ($secArr['collectioncode']?'-' . $secArr['collectioncode']:'') . ')';
 			?>
 			<section class="fieldset-like">
-				<h1>
+				<h2>
 					<span>
 						<?php echo $cName; ?>
 					</span>
-				</h1>
+				</h2>
 				<div style="margin-left:10px">
 					<?php
 					echo $LANG['TOTAL_RECORDS'] . ': ' . $specHandler->getPersonalOccurrenceCount($collId);
@@ -122,11 +122,11 @@ foreach($collArr as $id => $collectionArr){
 		if($cArr){
 			?>
 			<section class="fieldset-like">
-				<h1>
+				<h2>
 					<span>
 						<?php echo $LANG['COL_MANAGE']; ?>
 					</span>
-				</h1>
+				</h2>
 				<ul>
 					<?php
 					foreach($cArr as $collId => $secArr){
@@ -141,7 +141,7 @@ foreach($collArr as $id => $collectionArr){
 		if($oArr){
 			?>
 			<section class="fieldset-like">
-				<h1><span><?php echo $LANG['OBS_MANAGEMENT'] ?></span></h1>
+				<h2><span><?php echo $LANG['OBS_MANAGEMENT'] ?></span></h2>
 				<ul>
 					<?php
 					foreach($oArr as $collId => $secArr){
@@ -159,7 +159,7 @@ foreach($collArr as $id => $collectionArr){
 			if($genAdminArr){
 				?>
 				<section class="fieldset-like">
-					<h1><span><?php echo $LANG['GEN_OBS_ADMIN'] ?></span></h1>
+					<h2><span><?php echo $LANG['GEN_OBS_ADMIN'] ?></span></h2>
 					<ul>
 						<?php
 						foreach($genAdminArr as $id => $secArr){
@@ -174,7 +174,7 @@ foreach($collArr as $id => $collectionArr){
 		}
 		?>
 		<section class="fieldset-like">
-			<h1><span><?php echo $LANG['MISC_TOOLS'] ?></span></h1>
+			<h2><span><?php echo $LANG['MISC_TOOLS'] ?></span></h2>
 			<ul>
 				<li><a href="../collections/datasets/index.php"><?php echo htmlspecialchars($LANG['DATASET_MANAGEMENT'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a></li>
 				<?php

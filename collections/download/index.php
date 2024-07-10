@@ -202,7 +202,7 @@ $dwcManager = new DwcArchiverCore();
 						<input name="publicsearch" type="hidden" value="1" />
 						<input name="taxonFilterCode" type="hidden" value="<?= $taxonFilterCode; ?>" />
 						<input name="sourcepage" type="hidden" value="<?= htmlspecialchars($sourcePage); ?>" />
-						<input name="searchvar" type="hidden" value="<?= htmlspecialchars($searchVar); ?>" />
+						<input name="searchvar" type="hidden" value="<?= $searchVar ?>" />
 						<button type="submit" name="submitaction"> <?= $LANG['DOWNLOAD_DATA'] ?></button>
 						<img id="workingcircle" src="../../images/ajax-loader_sm.gif" style="margin-bottom:-4px;width:20px;display:none;" />
 					</div>
