@@ -98,7 +98,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 			//Setup Map Canvas
 			map = new LeafletMap('map_canvas', {
 				center: [latCenter, lngCenter], 
-				zoom: 7,
+				zoom: 15,
 				lang: "<?php echo $LANG_TAG; ?>"
 			});
 
