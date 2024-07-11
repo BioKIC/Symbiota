@@ -56,7 +56,7 @@ $searchVar = $collManager->getQueryTermStr();
 	<script src="../js/symb/collections.list.js?ver=9" type="text/javascript"></script>
 </head>
 <body style="margin-left: 0px; margin-right: 0px;background-color:white;">
-	<h1 class="page-heading left-breathing-room-rel">Search Results (Table)</h1>
+	<h1 class="page-heading left-breathing-room-rel"><?php echo $LANG['SEARCH_RES_TABLE'] ?></h1>
 	<div>
 		<div style="width:65rem;margin-bottom:5px;">
 			<div style="float:right;">
@@ -97,7 +97,7 @@ $searchVar = $collManager->getQueryTermStr();
 							<label for="sortfield1"><?php echo (isset($LANG['SORT_BY']) ? $LANG['SORT_BY'] : 'Sort By'); ?>:</label>
 							<select name="sortfield1" id="sortfield1">
 								<?php
-								$sortFields = array('c.collectionname' => (isset($LANG['COLLECTION']) ? $LANG['COLLECTION'] : 'Collection'), 'o.catalogNumber' => (isset($LANG['CATALOGNUMBER']) ? $LANG['CATALOGNUMBER'] : 'Catalog Number'), 'o.family' => (isset($LANG['FAMILY']) ? $LANG['FAMILY'] : 'Family'), 'o.sciname' => (isset($LANG['SCINAME']) ? $LANG['SCINAME'] : 'Scientific Name'), 'o.recordedBy' => (isset($LANG['COLLECTOR']) ? $LANG['COLLECTOR'] : 'Collector'),
+								$sortFields = array('c.collectionname' => (isset($LANG['COLLECTION']) ? $LANG['COLLECTION'] : 'Collection'), 'o.catalogNumber' => (isset($LANG['CATALOG_NUMBER']) ? $LANG['CATALOG_NUMBER'] : 'Catalog Number'), 'o.family' => (isset($LANG['FAMILY']) ? $LANG['FAMILY'] : 'Family'), 'o.sciname' => (isset($LANG['SCINAME']) ? $LANG['SCINAME'] : 'Scientific Name'), 'o.recordedBy' => (isset($LANG['COLLECTOR']) ? $LANG['COLLECTOR'] : 'Collector'),
 									'o.recordNumber' => (isset($LANG['NUMBER']) ? $LANG['NUMBER'] : 'Number'), 'o.eventDate' => (isset($LANG['EVENTDATE']) ? $LANG['EVENTDATE'] : 'Date'), 'o.country' => (isset($LANG['COUNTRY']) ? $LANG['COUNTRY'] : 'Country'), 'o.StateProvince' => (isset($LANG['STATE_PROVINCE']) ? $LANG['STATE_PROVINCE'] : 'State/Province'), 'o.county' => (isset($LANG['COUNTY']) ? $LANG['COUNTY'] : 'County'), 'o.minimumElevationInMeters' => (isset($LANG['ELEVATION']) ? $LANG['ELEVATION'] : 'Elevation'));
 								foreach($sortFields as $k => $v){
 									echo '<option value="'.$k.'" '.($k==$sortField1?'SELECTED':'').'>'.$v.'</option>';

@@ -10,7 +10,9 @@ Date Translated: 2024-02-16
 include_once($SERVER_ROOT.'/content/lang/collections/list.pt.php');
 
 $LANG['COL_RESULTS'] = 'Tabela de Resultados de Pesquisa';
+$LANG['SEARCH_RES_TABLE'] = 'Resultados da Pesquisa (tabela)';
 $LANG['SORT'] = 'Classificar Resultados';
+$LANG['SORT_BY'] = 'Classificar por';
 $LANG['COLLECTION'] = 'Coleção';
 $LANG['SCINAME'] = 'Nome Científico';
 $LANG['COUNTRY'] = 'País';

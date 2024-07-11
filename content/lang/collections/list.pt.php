@@ -10,6 +10,7 @@ Date Translated: 2024-02-16
 include_once('sharedterms.pt.php');
 
 $LANG['PAGE_TITLE'] = 'Resultados da Pesquisa';
+$LANG['SEARCH_RES_LIST'] = 'Resultados da Pesquisa (Lista)';
 $LANG['NAV_SPECIMEN_LIST'] = 'Registros de Amostras';
 $LANG['TABLE_DISPLAY'] = 'Exibição da Tabela';
 $LANG['LIST_DISPLAY'] = 'Exibição da Lista';
@@ -62,8 +63,10 @@ $LANG['IMG_EDIT_OCC'] = 'Editar Ocorrência';
 $LANG['IMG_OCC'] = 'Imagem Associada à Ocorrência';
 $LANG['CATALOG_NUMBER'] = 'Número de Catálogo';
 $LANG['COLLECTOR'] = 'Colecionador';
-$LANG['DATE'] = 'Data';
+$LANG['NUMBER'] = 'Número do Colecionador';
+$LANG['EVENTDATE'] = 'Data';
 $LANG['SCIENTIFIC_NAME'] = 'Nome Científico';
+$LANG['ELEVATION'] = 'Elevação';
 $LANG['MAP_LINK'] = 'Link do Mapa';
 $LANG['SEE_MAP_POINT'] = 'Ver ponto do mapa';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'A contagem de registros excede o limite';

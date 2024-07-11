@@ -8,6 +8,7 @@ Language: English
 include_once('sharedterms.en.php');
 
 $LANG['PAGE_TITLE'] = 'Collections Search Results';
+$LANG['SEARCH_RES_LIST'] = 'Search Results (List)';
 $LANG['NAV_SPECIMEN_LIST'] = 'Specimen Records';
 $LANG['TABLE_DISPLAY'] = 'Table Display';
 $LANG['LIST_DISPLAY'] = 'List Display';
@@ -56,10 +57,13 @@ $LANG['IMG_EDIT_OCC'] = 'Edit Occurrence';
 $LANG['IMG_OCC'] = 'Image Associated With the Occurence';
 $LANG['CATALOG_NUMBER'] = 'Catalog Number';
 $LANG['COLLECTOR'] = 'Collector';
-$LANG['DATE'] = 'Date';
+$LANG['NUMBER'] = 'Collector Number';
+$LANG['EVENTDATE'] = 'Date';
 $LANG['SCIENTIFIC_NAME'] = 'Scientific Name';
+$LANG['ELEVATION'] = 'Elevation';
 $LANG['MAP_LINK'] = 'Map Link';
 $LANG['SEE_MAP_POINT'] = 'See map point';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'Record count exceeds limit';
 $LANG['NO_RECORDS'] = 'No records found matching the query';
+
 ?>
