@@ -163,12 +163,7 @@ div.button:hover {
 }
 
 #cloptiondiv {
-  margin: 5px;
-  width: 250px;
-  text-align: left;
-  float: right;
-  max-width: 20% !important;
-  min-height: 325px;
+  width: fit-content;
 }
 
 #taxonfilterdiv {

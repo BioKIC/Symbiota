@@ -1,4 +1,5 @@
 #quicksearchdiv{
+	float: right;
 	width: 335px;
 	margin-top: 8px;
 	margin-bottom: 8px;
@@ -14,16 +15,13 @@
 }
 
 #quicksearch input{
-	width: 250px;
+	width: 225px;
 	float: left;
 	margin-bottom:0px;
+	margin-right: 10px;
 	padding-bottom:0px;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
 #quicksearchbutton{
-	margin-left:10px;
-	margin-top:0px;
-	margin-bottom:0px;
-	padding-bottom:0px;
 }

@@ -3,6 +3,10 @@ body{
 	font-size: 12px;
 }
 
+fieldset{
+	padding: 15px;
+}
+
 #innertext{
 	padding:	10px;
 	font-size:	12px;
