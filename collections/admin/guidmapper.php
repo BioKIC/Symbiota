@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/UuidFactory.php');
-include_once($SERVER_ROOT.'/content/lang/collections/admin/guidmapper.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/admin/guidmapper.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/admin/guidmapper.'.$LANG_TAG.'.php');
+else include_once($SERVER_ROOT.'/content/lang/collections/admin/guidmapper.en.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 ini_set('max_execution_time', 3600);
 
@@ -21,7 +22,7 @@ $uuidManager = new UuidFactory();
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>">
-	<title><?php echo (isset($LANG['UID_MAP'])?$LANG['UID_MAP']:'GUID (UUID) Mapper'); ?></title>
+	<title><?= $LANG['UID_MAP'] ?></title>
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
 	?>
@@ -81,12 +82,12 @@ include($SERVER_ROOT.'/includes/header.php');
 	</div>
 	<?php
 	if($isEditor){
-		if($action == 'Populate Collection GUIDs'){
+		if($action == 'populateCollectionGUIDs'){
 			echo '<ul>';
 			$uuidManager->populateGuids($collId);
 			echo '</ul>';
 		}
-		elseif($action == 'Populate GUIDs'){
+		elseif($action == 'populateGUIDs'){
 			echo '<ul>';
 			$uuidManager->populateGuids();
 			echo '</ul>';
@@ -98,21 +99,21 @@ include($SERVER_ROOT.'/includes/header.php');
 		$imgCnt = $uuidManager->getImageCount($collId);
 		?>
 		<?php if($collId) echo '<h3>'.$uuidManager->getCollectionName($collId).'</h3>'; ?>
-		<div style="font-weight:bold;"><?php echo (isset($LANG['REC_WO_GUIDS'])?$LANG['REC_WO_GUIDS']:'Records without GUIDs (UUIDs)'); ?></div>
+		<div style="font-weight:bold;"><?= $LANG['REC_WO_GUIDS']; ?></div>
 		<div style="margin:10px;">
-			<div><?php echo '<b>'.(isset($LANG['OCCS'])?$LANG['OCCS']:'Occurrences').': </b>'.$occCnt; ?></div>
-			<div><?php echo '<b>'.(isset($LANG['DETS'])?$LANG['DETS']:'Determinations').': </b>'.$detCnt; ?></div>
-			<div><?php echo '<b>'.(isset($LANG['IMGS'])?$LANG['IMGS']:'Images').': </b>'.$imgCnt; ?></div>
+			<div><?php echo '<b>' . $LANG['OCCS'] . ': </b>' . $occCnt; ?></div>
+			<div><?php echo '<b>' . $LANG['DETS'] . ': </b>' . $detCnt; ?></div>
+			<div><?php echo '<b>' . $LANG['IMGS'] . ': </b>' . $imgCnt; ?></div>
 		</div>
 		<?php
 		if($collId){
 			?>
 			<form name="guidform" action="guidmapper.php" method="post" onsubmit="return verifyGuidForm(this)">
 				<fieldset style="padding:15px;">
-					<legend><b><?php echo (isset($LANG['UID_MAP'])?$LANG['UID_MAP']:'GUID (UUID) Mapper'); ?></b></legend>
+					<legend><b><?php echo $LANG['UID_MAP']; ?></b></legend>
 					<div style="clear:both;">
 						<input type="hidden" name="collid" value="<?php echo $collId; ?>" />
-						<input type="submit" name="formsubmit" value="<?php echo (isset($LANG['POP_COLL_GUID'])?$LANG['POP_COLL_GUID']:'Populate Collection GUIDs'); ?>" />
+						<button type="submit" name="formsubmit" value="populateCollectionGUIDs" ><?php echo $LANG['POP_COLL_GUID']; ?></button>
 					</div>
 				</fieldset>
 			</form>
@@ -123,10 +124,10 @@ include($SERVER_ROOT.'/includes/header.php');
 			<div id="guidadmindiv">
 				<form name="dwcaguidform" action="guidmapper.php" method="post" onsubmit="return verifyGuidAdminForm(this)">
 					<fieldset style="padding:15px;">
-						<legend><b><?php echo (isset($LANG['UID_MAP'])?$LANG['UID_MAP']:'GUID (UUID) Mapper'); ?></b></legend>
+						<legend><b><?php echo $LANG['UID_MAP']; ?></b></legend>
 						<div style="clear:both;margin:10px;">
 							<input type="hidden" name="collid" value="<?php echo $collId; ?>" />
-							<input type="submit" name="formsubmit" value="<?php echo (isset($LANG['POP_GUID'])?$LANG['POP_GUID']:'Populate GUIDs'); ?>" />
+							<button type="submit" name="formsubmit" value="populateGUIDs" ><?php echo $LANG['POP_GUID']; ?></button>
 						</div>
 					</fieldset>
 				</form>
@@ -135,7 +136,7 @@ include($SERVER_ROOT.'/includes/header.php');
 		}
 	}
 	else{
-		echo '<h2>'.(isset($LANG['NOT_AUTH'])?$LANG['NOT_AUTH']:'You are not authorized to access this page').'</h2>';
+		echo '<h2>' . $LANG['NOT_AUTH'] . '</h2>';
 	}
 	?>
 </div>
