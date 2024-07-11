@@ -14,6 +14,7 @@ $LANG['MORE_INFO'] = 'Plus d\'Information';
 $LANG['COLLECTION_SEARCH'] = 'Page de Recherche de Collections';
 $LANG['UPDATE_STATISTICS'] = 'Nous mettons à jour les statistiques relatives à cette collecte...';
 $LANG['TOGGLE_MAN'] = 'Basculer Panneau de Configuration du Gestionnaire';
+$LANG['COLL_PROF_FOR'] = 'Profil de Collecte pour';
 $LANG['DAT_EDIT'] = "Panneau de Configuration de l'Éditeur de Données";
 $LANG['SUBMIT_IMAGE_V'] = "Soumettre un Échantillon d'Image (observation appuyée par une photo)";
 $LANG['ADD_NEW_OCCUR'] = "Ajouter Nouvel Échantillon d'Occurrence";

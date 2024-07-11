@@ -8,6 +8,7 @@ Language: Français (French)
 include_once($SERVER_ROOT.'/content/lang/collections/list.fr.php');
 
 $LANG['COL_RESULTS'] = 'Tableau des Résultats de Recherche de Collections';
+$LANG['SEARCH_RES_TABLE'] = 'Résultats de Recherche (Tableau)';
 $LANG['SORT'] = 'Trier les Résultats';
 $LANG['SORT BY'] = 'Trier par';
 $LANG['COLLECTION'] = 'Collection';

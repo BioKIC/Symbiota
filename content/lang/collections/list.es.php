@@ -8,6 +8,7 @@ Language: Español (Spanish)
 include_once('sharedterms.es.php');
 
 $LANG['PAGE_TITLE'] = 'Resultados de Búsqueda de Colecciones';
+$LANG['SEARCH_RES_LIST'] = 'Resultados de Búsqueda (Lista)';
 $LANG['NAV_SPECIMEN_LIST'] = 'Registros de Ejemplares';
 $LANG['TABLE_DISPLAY'] = 'Mostrar Tabla';
 $LANG['LIST_DISPLAY'] = 'Mostrar Lista';
@@ -55,26 +56,15 @@ $LANG['IMG_ADD_VOUCHER'] = 'Agregar voucher';
 $LANG['IMG_EDIT_OCC'] = 'Editar ocurrencia';
 $LANG['IMG_OCC'] = 'Imagen asociada con el suceso';
 
-$LANG['CATALOG_NUMBER'] = 'Numero de Catalogo';
-$LANG['COLLECTOR'] = 'Coleccionista';
-$LANG['DATE'] = 'Fecha';
+$LANG['CATALOG_NUMBER'] = 'Número de Catálogo';
+$LANG['COLLECTOR'] = 'Colector';
+$LANG['NUMBER'] = 'Número de Colecta';
+$LANG['EVENTDATE'] = 'Fecha';
 $LANG['SCIENTIFIC_NAME'] = 'Nombre Científico';
+$LANG['ELEVATION'] = 'Elevación';
 $LANG['MAP_LINK'] = 'Enlace al Mapa';
 $LANG['SEE_MAP_POINT'] = 'Ver punto del mapa';
-//pt
-$LANG['CATALOG_NUMBER'] = 'Número de Catálogo';
-$LANG['COLLECTOR'] = 'Colecionador';
-$LANG['DATE'] = 'Data';
-$LANG['SCIENTIFIC_NAME'] = 'Nome Científico';
-$LANG['MAP_LINK'] = 'Link do Mapa';
-$LANG['SEE_MAP_POINT'] = 'Ver ponto do mapa';
-//fr
-$LANG['CATALOG_NUMBER'] = 'Numéro de Catalogue';
-$LANG['COLLECTOR'] = 'Collectionneur';
-$LANG['DATE'] = 'Date';
-$LANG['SCIENTIFIC_NAME'] = 'Nom Scientifique';
-$LANG['MAP_LINK'] = 'Lien vers la Carte';
-$LANG['SEE_MAP_POINT'] = 'Voir le point sur la carte';
 $LANG['RECORD_COUNT_EXCEEDS_LIMIT'] = 'El recuento de registros supera el límite';
 $LANG['NO_RECORDS'] = 'No se encontraron registros que coincidan con la consulta';
+
 ?>

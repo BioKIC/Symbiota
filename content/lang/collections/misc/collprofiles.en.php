@@ -14,6 +14,7 @@ $LANG['MORE_INFO'] = 'More Information';
 $LANG['COLLECTION_SEARCH'] = 'Collection Search Page';
 $LANG['UPDATE_STATISTICS'] = 'Updating statistics related to this collection...';
 $LANG['TOGGLE_MAN'] = "Toggle Manager's Control Panel";
+$LANG['COLL_PROF_FOR'] = 'Collection Profile for';
 $LANG['DAT_EDIT'] = 'Data Editor Control Panel';
 $LANG['SUBMIT_IMAGE_V'] = 'Submit an Image Voucher (observation supported by a photo)';
 $LANG['ADD_NEW_OCCUR'] = 'Add New Occurrence Record';
