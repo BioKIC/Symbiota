@@ -436,17 +436,15 @@ div.button:hover {
 
 .button-primary:hover,
 .button-secondary:hover,
-.button-danger:hover 
-{
+.button-danger:hover {
   background-color: var(--medium-color);
 }
 
 .button-primary:disabled,
 .button-secondary:disabled,
-.button-danger:disabled
-{
-	opacity: 50%;
-	pointer-events: none;
+.button-danger:disabled {
+  opacity: 50%;
+  pointer-events: none;
 }
 
 .button-primary:hover > a,
@@ -470,4 +468,8 @@ div.button:hover {
   background-color: none;
   border: 1px solid var(--bright-color);
   padding: 0.5rem 0.9rem;
+}
+
+.overlap {
+  z-index: 99999;
 }

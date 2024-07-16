@@ -184,7 +184,7 @@ if ($SYMB_UID) {
 						<a href="#" id="q_catalognumberinfo" style="text-decoration:none;">
 							<img src="../../images/info.png" style="width:1.3em;" alt="<?php echo $LANG['MORE_INFO_ALT']; ?>" title="<?php echo $LANG['MORE_INFO']; ?>" aria-label="<?php echo $LANG['MORE_INFO']; ?>"/>
 						</a>
-						<dialog id="dialogEl" aria-live="polite" aria-label="Catalog number search dialog">
+						<dialog id="dialogEl" class="overlap" aria-live="polite" aria-label="Catalog number search dialog">
 							<?php
 								echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Search by Catalog Number, Occurrence ID, or Record ID.') . ' ';
 							?>
