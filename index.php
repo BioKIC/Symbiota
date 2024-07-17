@@ -35,7 +35,7 @@ header('Content-Type: text/html; charset=' . $CHARSET);
 					<form name="quicksearch" id="quicksearch" action="<?php echo $CLIENT_ROOT; ?>/taxa/index.php" method="get" onsubmit="return verifyQuickSearch(this);">
 							<div id="quicksearchtext" ><?php echo (isset($LANG['QSEARCH_SEARCH'])?$LANG['QSEARCH_SEARCH']:'Search Taxon'); ?></div>
 							<input id="taxa" type="text" name="taxon" />
-							<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms" style="margin-bottom:10px;margin-top:10px"><?php echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?></button>
+							<button name="formsubmit"  id="quicksearchbutton" type="submit" value="Search Terms" ><?php echo (isset($LANG['QSEARCH_SEARCH_BUTTON'])?$LANG['QSEARCH_SEARCH_BUTTON']:'Search'); ?></button>
 					</form>
 				</div>
 				<div>

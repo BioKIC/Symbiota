@@ -1,27 +1,39 @@
 #quicksearchdiv{
-	float: right;
 	width: 335px;
 	margin-top: 8px;
 	margin-bottom: 8px;
-	margin-left: auto;
 	margin-right: auto;
 	padding: 5px 5px 0px 5px;
 	-moz-border-radius: 5px;
 	-webkit-border-radius: 5px;
-	border: 1px solid black;	
+	border: 1px solid black;
+	
+}
+
+form#quicksearch{
+	display: block;
+	margin-top: 0em;
+	margin-block-end: 1em;
+	unicode-bidi: isolate;
 }
 
 #quicksearchtext{
+	display: block;
+	unicode-bidi: isolate;
 }
 
 #quicksearch input{
-	width: 225px;
+	width: 250px;
 	float: left;
 	margin-bottom:0px;
-	margin-right: 10px;
 	padding-bottom:0px;
 	font-family: Arial, Helvetica, sans-serif;
 }
 
 #quicksearchbutton{
+	display: inline-block;
+	margin-left:10px;
+	margin-top:0px;
+	margin-bottom:0px;
+	padding-bottom:0px;
 }
