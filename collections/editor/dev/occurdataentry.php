@@ -460,13 +460,13 @@ if($SYMB_UID){
 									<?php echo (defined('REPRODUCTIVECONDITIONLABEL')?REPRODUCTIVECONDITIONLABEL:'Phenology'); ?>
 									<a href="#" onclick="return dwcDoc('reproductiveCondition')"><img class="docimg" src="../../images/qmark.png" /></a><br/>
 									<?php
-									if(isset($reproductiveConditionTerms)){
-										if($reproductiveConditionTerms){
+									if(isset($REPRODUCTIVE_CONDITION_TERMS)){
+										if($REPRODUCTIVE_CONDITION_TERMS){
 											?>
 											<select name="reproductivecondition" tabindex="99" >
 												<option value="">-----------------</option>
 												<?php
-												foreach($reproductiveConditionTerms as $term){
+												foreach($REPRODUCTIVE_CONDITION_TERMS as $term){
 													echo '<option value="'.$term.'" '.(isset($occArr['reproductivecondition']) && $term==$occArr['reproductivecondition']?'SELECTED':'').'>'.$term.'</option>';
 												}
 												?>

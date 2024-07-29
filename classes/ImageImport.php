@@ -142,12 +142,12 @@ class ImageImport{
 	}
 
 	private function setUploadTargetPath(){
-		$tPath = $GLOBALS["tempDirRoot"];
+		$tPath = $GLOBALS['TEMP_DIR_ROOT'];
 		if(!$tPath){
 			$tPath = ini_get('upload_tmp_dir');
 		}
 		if(!$tPath){
-			$tPath = $GLOBALS["serverRoot"]."/temp/downloads";
+			$tPath = $GLOBALS['SERVER_ROOT']."/temp/downloads";
 		}
 		if(substr($tPath,-1) != '/') $tPath .= "/";
 		$this->uploadTargetPath = $tPath;

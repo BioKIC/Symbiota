@@ -149,7 +149,7 @@ if($isEditor){
 			<div id="tabs" style="margin:10px;">
 				<ul>
 					<?php
-					if($floraModIsActive){
+					if($FLORA_MOD_IS_ACTIVE){
 						?>
 						<li><a href="../checklists/checklistadminmeta.php?userid=<?php echo $userId; ?>"><?php echo (isset($LANG['SPEC_CHECKLIST'])?$LANG['SPEC_CHECKLIST']:'Species Checklists'); ?></a></li>
 						<?php

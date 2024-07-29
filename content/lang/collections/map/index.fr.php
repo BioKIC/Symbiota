@@ -1,7 +1,7 @@
 <?php
 /*
 ------------------
-Language: French 
+Language: French
 ------------------
 */
 include_once($SERVER_ROOT.'/content/lang/collections/harvestparams.fr.php');
@@ -35,6 +35,8 @@ $LANG['MAX_DENSITY'] = 'Densité Maximale';
 
 $LANG['RECORDS_TAXA'] = 'Registres et Taxons';
 $LANG['RECORDS'] = 'Registres';
+$LANG['EXTERNAL_RECORDS'] = 'Registres Externes';
+$LANG['PORTAL_LIST'] = 'Liste des portails';
 $LANG['COLLECTIONS'] = 'Collections';
 $LANG['TAXA_LIST'] = 'Liste des taxons';
 $LANG['COLLECTION'] = 'Collection';

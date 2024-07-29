@@ -721,13 +721,14 @@ class OccurrenceExsiccatae {
 	}
 
 	public function getTargetCollArr(){
+		global $USER_RIGHTS;
 		$retArr = array();
 		$collArr = array();
-		if(isset($GLOBALS['CollAdmin'])){
-			$collArr = $GLOBALS['CollAdmin'];
+		if(isset($USER_RIGHTS['CollAdmin'])){
+			$collArr = $USER_RIGHTS['CollAdmin'];
 		}
-		if(isset($GLOBALS['CollEditor'])){
-			$collArr = array_merge($collArr,$GLOBALS['CollEditor']);
+		if(isset($USER_RIGHTS['CollEditor'])){
+			$collArr = array_merge($collArr, $USER_RIGHTS['CollEditor']);
 		}
 		if($collArr){
 			$sql ='SELECT DISTINCT c.collid, c.collectionname, c.institutioncode, c.collectioncode '.

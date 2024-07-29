@@ -80,10 +80,10 @@ if ($isEditor) {
 			white-space: nowrap;
 		}
 		.font-control {
-			font-size: 14px;
+			font-size: var(--body-font-size);
 		}
 		.accessible-font {
-			font-size: 1.4em;
+			font-size: 1em;
 		}
 		.margin-rt-rel {
 			margin-right: 1rem;

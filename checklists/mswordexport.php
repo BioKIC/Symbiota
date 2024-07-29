@@ -165,7 +165,7 @@ if($showImages){
 		$imgSrc = ($tu?$tu:$u);
 		if($imageCnt%4 == 1) $table->addRow();
 		if($imgSrc){
-			$imgSrc = (array_key_exists('imageDomain',$GLOBALS)&&substr($imgSrc,0,4)!='http'?$GLOBALS['imageDomain']:'').$imgSrc;
+			$imgSrc = (array_key_exists('IMAGE_DOMAIN', $GLOBALS) && substr($imgSrc, 0, 4) != 'http' ? $GLOBALS['IMAGE_DOMAIN'] : '') . $imgSrc;
 			$cell = $table->addCell(null,$imageCellStyle);
 			$textrun = $cell->addTextRun('imagePara');
 			$textrun->addImage($imgSrc,array('width'=>160,'height'=>160));

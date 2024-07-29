@@ -8,7 +8,7 @@ $clid = array_key_exists('clid', $_REQUEST) ? $_REQUEST['clid'] : 0;
 $dynClid = array_key_exists('dynclid', $_REQUEST) ? $_REQUEST['dynclid'] : 0;
 $taxonFilter = array_key_exists('taxonfilter', $_REQUEST) ? htmlspecialchars($_REQUEST['taxonfilter'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : '';
 $showCommon = array_key_exists('showcommon', $_REQUEST) ? $_REQUEST['showcommon'] : 0;
-$lang = array_key_exists('lang', $_REQUEST) ? htmlspecialchars($_REQUEST['lang'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : $defaultLang;
+$lang = array_key_exists('lang', $_REQUEST) ? htmlspecialchars($_REQUEST['lang'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : $DEFAULT_LANG;
 
 //Sanitation
 if(!is_numeric($clid)) $clid = 0;
@@ -216,10 +216,10 @@ $sciArr = array();
 							</div>
 							<div style='margin-top:3px;'>
 								<?php
-									//Display Common Names: 0 = false, 1 = true
-									if($displayCommonNames){
-										echo '<input id="showcommon" name="showcommon" type="checkbox" value="1" '.($showCommon?"checked":"").' /> <label for="showcommon">Display Common Names</label>'."\n";
-									}
+								//Display Common Names: 0 = false, 1 = true
+								if($DISPLAY_COMMON_NAMES){
+									echo '<input id="showcommon" name="showcommon" type="checkbox" value="1" '.($showCommon?"checked":"").' /> <label for="showcommon">Display Common Names</label>'."\n";
+								}
 								?>
 							</div>
 							<button type="submit" onclick="document.getElementById('taxonfilterform').submit();">Show Image</button>

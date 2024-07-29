@@ -33,7 +33,7 @@ $langValue = 'English';
 
 $dataManager = new KeyDataManager();
 
-//if(!$langValue) $langValue = $defaultLang;
+//if(!$langValue) $langValue = $DEFAULT_LANG;
 if($sortBy) $dataManager->setSortBy($sortBy);
 if($displayCommon) $dataManager->setDisplayCommon(1);
 if($displayImages) $dataManager->setDisplayImages(true);
@@ -214,7 +214,7 @@ echo '</div>';
 					if(count($languages) > 1){
 						echo '<div id="langlist" style="margin:0.5em;">' . $LANG['LANGUAGES'] . ': <select name="lang" onchange="setLang(this);">';
 						foreach($languages as $l){
-							echo '<option value="' . $l . '" ' . ($defaultLang == $l?'SELECTED':'') . '>' . $l . '</option>';
+						    echo '<option value="' . $l . '" ' . ($DEFAULT_LANG == $l?'SELECTED':'') . '>' . $l . '</option>';
 						}
 						echo '</select></div>';
 					}

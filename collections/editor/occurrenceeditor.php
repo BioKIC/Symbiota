@@ -521,7 +521,7 @@ else{
 		select{ height: 20px; margin-bottom: 2px; }
 		#identifierDiv img{ width:10px; margin-left: 5px; }
 		#innertext{ background-color: white; margin: 0px 10px; }
-		.fieldGroupDiv { 
+		.fieldGroupDiv {
 			display: flex;
 			align-items: center;
 			gap: 0.75rem;
@@ -533,7 +533,7 @@ else{
 				display: flex;
 			}
 		}
-		.fieldDiv{ 
+		.fieldDiv{
 			display: inline;
 		}
 
@@ -1284,7 +1284,7 @@ else{
 											<input type="text" name="substrate" maxlength="500" value="<?php echo array_key_exists('substrate',$occArr)?$occArr['substrate']:''; ?>" onchange="fieldChanged('substrate');" />
 										</div>
 										<?php
-										if(isset($QuickHostEntryIsActive) && $QuickHostEntryIsActive) { // Quick host field
+										if(!empty($QUICK_HOST_ENTRY_IS_ACTIVE)) { // Quick host field
 											$quickHostArr = $occManager->getQuickHost();
 											?>
 											<div id="hostDiv" class="field-div">
@@ -1356,12 +1356,12 @@ else{
 												<?php echo $LANG['REPRODUCTIVE_CONDITION']; ?>
 												<a href="#" onclick="return dwcDoc('reproductiveCondition')" tabindex="-1"><img class="docimg" src="../../images/qmark.png" /></a><br/>
 												<?php
-												if(isset($reproductiveConditionTerms) && $reproductiveConditionTerms){
+												if(!empty($REPRODUCTIVE_CONDITION_TERMS)){
 													?>
 													<select name="reproductivecondition" onchange="fieldChanged('reproductivecondition');">
 														<option value="">-----------------</option>
 														<?php
-														foreach($reproductiveConditionTerms as $term){
+														foreach($REPRODUCTIVE_CONDITION_TERMS as $term){
 															echo '<option value="'.$term.'" '.(isset($occArr['reproductivecondition']) && $term==$occArr['reproductivecondition']?'SELECTED':'').'>'.$term.'</option>';
 														}
 														?>

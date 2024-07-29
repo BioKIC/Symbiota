@@ -92,12 +92,12 @@ $LANG['IMG_SOURCE_PATH'] = 'Chemin source de l\'image';
 $LANG['IMG_TARGET_PATH'] = 'Chemin cible de l\'image';
 $LANG['TARGET_PATH_EXPLAIN'] = "Chemin du serveur Web où seront déposés les dérivés d'images.
 			Le serveur Web (par exemple l'utilisateur Apache) doit avoir un accès en lecture/écriture à ce répertoire.
-			Si ce champ reste vide, l'image cible par défaut du portail (imageRootPath) sera utilisée.";
+			Si ce champ reste vide, l'image cible par défaut du portail (\$IMAGE_ROOT_PATH) sera utilisée.";
 $LANG['IMG_URL_BASE'] = 'Base d\'URL des images';
 $LANG['IMG_URL_EXPLAIN'] = "Préfixe de l'URL de l'image qui accédera au dossier cible depuis le navigateur.
 			Ceci sera utilisé pour créer les URL des images qui seront stockées dans la base de données.
 			Si l'URL absolue est fournie sans le nom de domaine, le domaine du portail sera pris en compte.
-			Si ce champ reste vide, l'URL de l'image par défaut du portail sera utilisée (\$imageRootUrl).";
+			Si ce champ reste vide, l'URL de l'image par défaut du portail sera utilisée (\$IMAGE_ROOT_URL).";
 $LANG['WEB_IMG_WIDTH'] = 'Largeur de l\'image au format Web';
 $LANG['WEB_IMG_EXPLAIN'] = 'Largeur de l\'image web standard en pixels. Si l\'image source est plus petite que cette largeur, le fichier sera simplement copié sans redimensionnement.';
 $LANG['TN_IMG_WIDTH'] = 'Largeur de l\'image miniature';

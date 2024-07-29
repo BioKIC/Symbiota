@@ -20,7 +20,7 @@ class WordCloud{
 		$this->conn = MySQLiConnectionFactory::getCon('readonly');
 
 		$this->displayedWordCount = 150;
-		if($GLOBALS['charset'] == 'ISO-8859-1') $this->supportUtf8 = false;
+		if($GLOBALS['CHARSET'] == 'ISO-8859-1') $this->supportUtf8 = false;
 		//$this->tagUrl = "https://www.google.com/search?hl=en&q=";
 		$this->tagUrl = $GLOBALS['CLIENT_ROOT'].'/collections/editor/occurrencetabledisplay.php?occindex=0&reset=1&q_processingstatus=unprocessed';
 		$this->backgroundColor = "#000";

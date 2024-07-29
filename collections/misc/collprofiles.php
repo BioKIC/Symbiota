@@ -134,22 +134,86 @@ if ($SYMB_UID) {
 			margin-left: 3rem;
 		}
 
-		@media (min-width: 1880px) {
-			#quicksearch-box {
-				margin: 0 -26rem 0 0;
-				width: 25rem;
-				top: 1rem;
-				float: right;
-				position:sticky;
-			}
+		#quicksearch-box input {
+			width: 100%;
 		}
-		@media (max-width: 1880px) {
+		.quicksearch-input-container {
+			display: flex;
+			flex-wrap: wrap;
+			width:100%;
+		}
+		.quicksearch-container {
+			top: 1rem;
+			right: 1rem;
+			position:sticky;
+			width: 100vw;
+			margin-left: calc(50% - 50vw);
+		}
+
+		@media (max-width: 1424px) {
 			#quicksearch-box {
 				width:100%;
 				margin: 1rem 0;
 			}
 			#quicksearch-btn-container {
 				justify-content: right
+			}
+			.quicksearch-container {
+				width: 100%;
+				position: static;
+				margin: 0 0;
+			}
+			.quicksearch-input-container {
+				display: flex;
+				flex-wrap: wrap;
+				min-width: 10rem;
+				max-width: 30%;
+			}
+			.quicksearch-btn-container {
+				max-width: 30%;
+			}
+		}
+		@media (max-width: 560px) {
+			.quicksearch-input-container {
+				display: flex;
+				flex-wrap: wrap;
+				min-width: 10rem;
+				max-width: 100%;
+			}
+		}
+		@media (min-width: 1425px) {
+			#quicksearch-box {
+				width: 12vw;
+				right: 1rem;
+				float: right;
+			}
+		}
+		@media (min-width: 1500px) {
+			#quicksearch-box {
+				width: 14vw;
+				right: 1rem;
+				float: right;
+			}
+		}
+		@media (min-width: 1550px) {
+			#quicksearch-box {
+				width: 15vw;
+				right: 1rem;
+				float: right;
+			}
+		}
+		@media (min-width: 1700px) {
+			#quicksearch-box {
+				width: 18vw;
+				right: 1rem;
+				float: right;
+			}
+		}
+		@media (min-width: 1880px) {
+			#quicksearch-box {
+				width: 21vw;
+				right: 1rem;
+				float: right;
 			}
 		}
 	</style>
@@ -169,21 +233,23 @@ if ($SYMB_UID) {
 	<div role="main" id="innertext" style="padding-top:0">
 		<?php if ($collid && !$collid == 0){
 		?>
+			<div class="quicksearch-container">
 			<section id="quicksearch-box" class="fieldset-like" >
 				<h3><span><?php echo (isset($LANG['QUICK_SEARCH']) ? $LANG['QUICK_SEARCH'] : 'Quick Search'); ?></span></h3>
 				<div id="dialogContainer" style="position: relative;">
 					<form name="quicksearch" style="display: flex; align-items:center; gap:0.5rem; flex-wrap: wrap" action="javascript:void(0);" onsubmit="directSubmitAction(event)">
-						<div>
-						<label for="catalog-number"><?php echo (isset($LANG['OCCURENCE_IDENTIFIER']) ? $LANG['OCCURENCE_IDENTIFIER'] : 'Catalog Number'); ?></label>
+						<div class="quicksearch-input-container">
+								<label style="display:flex; align-items: center; position: relative; margin-right: 1.5rem" for="catalog-number"><?php echo (isset($LANG['OCCURENCE_IDENTIFIER']) ? $LANG['OCCURENCE_IDENTIFIER'] : 'Catalog Number'); ?>
+						<a href="#" id="q_catalognumberinfo" style="text-decoration:none; position: absolute; right: -1.5rem">
+							<img src="../../images/info.png" style="width:1.3em;" alt="<?php echo $LANG['MORE_INFO_ALT']; ?>" title="<?php echo $LANG['MORE_INFO']; ?>" aria-label="<?php echo $LANG['MORE_INFO']; ?>"/>
+						</a>
+								</label>
 						<span class="screen-reader-only">
 							<?php
 								echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Search by Catalog Number, Occurrence ID, or Record ID.') . ' ';
 							?>
 						</span>
 						<input style="margin-bottom: 0" name="catalog-number" id="catalog-number" type="text" />
-						<a href="#" id="q_catalognumberinfo" style="text-decoration:none;">
-							<img src="../../images/info.png" style="width:1.3em;" alt="<?php echo $LANG['MORE_INFO_ALT']; ?>" title="<?php echo $LANG['MORE_INFO']; ?>" aria-label="<?php echo $LANG['MORE_INFO']; ?>"/>
-						</a>
 						<dialog id="dialogEl" aria-live="polite" aria-label="Catalog number search dialog">
 							<?php
 								echo (isset($LANG['IDENTIFIER_PLACEHOLDER_LIST']) ? $LANG['IDENTIFIER_PLACEHOLDER_LIST'] : 'Search by Catalog Number, Occurrence ID, or Record ID.') . ' ';
@@ -193,7 +259,7 @@ if ($SYMB_UID) {
 						</div>
 						<input name="collid" type="hidden" value="<?php echo $collid; ?>" />
 						<input name="occindex" type="hidden" value="0" />
-						<div>
+						<div class="quicksearch-input-container">
 						<label for="taxon-search"><?php echo (isset($LANG['TAXON']) ? $LANG['TAXON'] : 'Taxon'); ?></label>
 						<input style="margin-bottom: 0" name="taxon-search" id="taxon-search" type="text" />
 						</div>
@@ -214,6 +280,7 @@ if ($SYMB_UID) {
 					</form>
 				</div>
 			</section>
+			</div>
 		<?php	
 		} 
 		?>

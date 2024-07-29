@@ -210,6 +210,16 @@ if(!$researchList && !$editMode){
 			max-width: 100%;
 			width: 65rem;
 		}
+		.genericpopup {
+			position: absolute;
+			display: none;
+			width: 300px;
+			background-color: #efefef;
+			padding: 10px;
+			-moz-border-radius: 5px;
+			-webkit-border-radius: 5px;
+			border: black solid 3px;
+		}
 	</style>
 </head>
 <body>
@@ -298,7 +308,7 @@ if(!$researchList && !$editMode){
 										<label for="managers" class="gridlike-form-row-label" > <?php echo (isset($LANG['MANAG']) ? $LANG['MANAG'] : 'Managers'); ?>: </label>
 										<input id="managers" class="gridlike-form-row-input max-width-fit-65" type="text" name="managers" value="<?php if($projArr) echo htmlspecialchars($projArr["managers"]??''); ?>"/>
 									</div>
-									
+
 									<div class="bottom-breathing-room gridlike-form-row">
 										<label for="fulldescription" class="gridlike-form-row-label"> <?php echo (isset($LANG['DESCRIP']) ? $LANG['DESCRIP'] : 'Description'); ?>: </label>
 										<textarea class="gridlike-form-row-input max-width-fit-65" rows="8" cols="45" id="fulldescription"  name="fulldescription" maxlength="5000"><?php if($projArr) echo htmlspecialchars($projArr["fulldescription"]?? '');?></textarea>
@@ -391,7 +401,7 @@ if(!$researchList && !$editMode){
 						if($KEY_MOD_IS_ACTIVE){
 							?>
 							<div style="margin-left:15px;font-size:90%">
-								<?php echo $LANG['THE'];?> 
+								<?php echo $LANG['THE'];?>
 								<img src="../images/key.png" style="width: 1.3em;" alt="<?php echo $LANG['KEY_SYMBOL'] ?>" />
 								<?php echo $LANG['SYMBOLOPEN'];?>.
 							</div>

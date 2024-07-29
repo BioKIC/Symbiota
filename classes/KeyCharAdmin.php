@@ -281,7 +281,7 @@ class KeyCharAdmin{
 		global $PARAMS_ARR;
 		$statusStr = '';
 		if(is_numeric($formArr['cid']) && is_numeric($formArr['cs'])){
-	 		$imageRootPath = $GLOBALS["imageRootPath"];
+			$imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
 			if(substr($imageRootPath,-1) != "/") $imageRootPath .= "/";
 			if(file_exists($imageRootPath)){
 				$imageRootPath .= 'ident/';
@@ -297,7 +297,7 @@ class KeyCharAdmin{
 					}
 				}
 				//Create url prefix
-				$imageRootUrl = $GLOBALS["imageRootUrl"];
+				$imageRootUrl = $GLOBALS['IMAGE_ROOT_URL'];
 				if(substr($imageRootUrl,-1) != "/") $imageRootUrl .= "/";
 				$imageRootUrl .= 'ident/csimgs/';
 
@@ -381,7 +381,7 @@ class KeyCharAdmin{
 	public function deleteCsImage($csImgId){
 		$statusStr = 'SUCCESS: image uploaded successful';
 		//Remove image from file system
-	 	$imageRootPath = $GLOBALS["imageRootPath"];
+	 	$imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
 		if(substr($imageRootPath,-1) != "/") $imageRootPath .= "/";
 		$imageRootPath .= 'ident/csimgs/';
 		$sql = 'SELECT url FROM kmcsimages WHERE csimgid = '.$csImgId;
@@ -534,7 +534,7 @@ class KeyCharAdmin{
 
 	public function setLangId($lang=''){
 		if(!$lang){
-			if($GLOBALS['defaultLang']) $lang = $GLOBALS['defaultLang'];
+			if($GLOBALS['DEFAULT_LANG']) $lang = $GLOBALS['DEFAULT_LANG'];
 			else $lang = 'English';
 		}
 		if(is_numeric($lang)) $this->langId = $lang;

@@ -1083,7 +1083,7 @@ class ProfileManager extends Manager{
 		$dynPropArr = $this->getDynamicProperties($uid);
 		
 		if($dynPropArr && isset($dynPropArr['accessibilityPref'])){
-			$returnVal = ($dynPropArr['accessibilityPref'] === '1') ? true : false;
+			$returnVal = ($dynPropArr['accessibilityPref'] === true) ? true : false;
 		}
 		return $returnVal;
 	}
