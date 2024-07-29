@@ -999,12 +999,16 @@ $traitArr = $indManager->getTraitArr();
 								<?php
 								foreach($iArr as $imgArr){
 									$thumbUrl = $imgArr['tnurl'];
-									if(!$thumbUrl || substr($thumbUrl,0,7)=='process'){
-										if($image = exif_thumbnail($imgArr['lgurl'])){
-											$thumbUrl = 'data:image/jpeg;base64,'.base64_encode($image);
+									if(!$thumbUrl || substr($thumbUrl, 0, 7) == 'process'){
+										if($imgArr['lgurl']){
+											if($image = exif_thumbnail($imgArr['lgurl'])){
+												$thumbUrl = 'data:image/jpeg;base64,' . base64_encode($image);
+											}
 										}
-										elseif($imgArr['url'] && substr($imgArr['url'],0,7)!='process') $thumbUrl = $imgArr['url'];
-										else $thumbUrl = $imgArr['lgurl'];
+										if(!$thumbUrl){
+											if($imgArr['url'] && substr($imgArr['url'], 0, 7) != 'process') $thumbUrl = $imgArr['url'];
+											else $thumbUrl = $imgArr['lgurl'];
+										}
 									}
 									?>
 									<div id="thumbnail-div" class="thumbnail-div">

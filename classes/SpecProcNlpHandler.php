@@ -22,7 +22,7 @@ class SpecProcNlpHandler {
 
 	function __construct() {
 		$this->conn = MySQLiConnectionFactory::getCon("write");
-		$this->outFilePath = $GLOBALS['serverRoot'].(substr($GLOBALS['serverRoot'],-1)=='/'?'':'/')."content/logs/LbccParser_".date('Y-m-d_his');
+		$this->outFilePath = $GLOBALS['SERVER_ROOT'].(substr($GLOBALS['SERVER_ROOT'],-1)=='/'?'':'/')."content/logs/LbccParser_".date('Y-m-d_his');
 		set_time_limit(7200);
 	}
 

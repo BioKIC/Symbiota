@@ -142,7 +142,8 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 
 			function createMarker(lat, lng)  {
 				drawnItems.clearLayers();
-				errRadius = parseFloat(document.getElementById("errRadius").value);
+				const errorRadInput = document.getElementById("errRadius");
+				errRadius = errorRadInput? parseFloat(errorRadInput.value): 0;
 
 				latlng = [lat,lng];
 

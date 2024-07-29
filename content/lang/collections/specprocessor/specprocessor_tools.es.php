@@ -92,12 +92,12 @@ $LANG['IMG_SOURCE_PATH'] = 'Ruta de origen de la imagen';
 $LANG['IMG_TARGET_PATH'] = 'Ruta de destino de la imagen';
 $LANG['TARGET_PATH_EXPLAIN'] = "Ruta del servidor web donde se depositarán los derivados de la imagen.
 			El servidor web (por ejemplo, el usuario de Apache) debe tener acceso de lectura/escritura a este directorio.
-			Si este campo se deja en blanco, se utilizará la imagen de destino predeterminada del portal (imageRootPath).";
+			Si este campo se deja en blanco, se utilizará la imagen de destino predeterminada del portal (\$IMAGE_ROOT_PATH).";
 $LANG['IMG_URL_BASE'] = 'Base de URL de imagen';
 $LANG['IMG_URL_EXPLAIN'] = "Prefijo de URL de imagen que accederá a la carpeta de destino desde el navegador.
 			Esto se utilizará para crear las URL de las imágenes que se almacenarán en la base de datos.
 			Si se proporciona la URL absoluta sin el nombre de dominio, se asumirá el dominio del portal.
-			Si este campo se deja en blanco, se utilizará la URL de la imagen predeterminada del portal (\$imageRootUrl).";
+			Si este campo se deja en blanco, se utilizará la URL de la imagen predeterminada del portal (\$IMAGE_ROOT_URL).";
 $LANG['WEB_IMG_WIDTH'] = 'Ancho de imagen de tamaño web';
 $LANG['WEB_IMG_EXPLAIN'] = 'Ancho de la imagen web estándar en píxeles. Si la imagen de origen es menor que este ancho, el archivo simplemente se copiará sin cambiar el tamaño.';
 $LANG['TN_IMG_WIDTH'] = 'Ancho de la imagen en miniatura';

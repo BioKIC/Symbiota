@@ -117,7 +117,7 @@ class OccurrenceCollectionProfile extends OmCollections{
 		$outStr = '<div class="accordions" style="margin-bottom: 1.5rem;">';
 			$outStr .= '<section>';
 				$outStr .= '<input type="checkbox" id="more-details" class="accordion-selector" />';
-				$outStr .= '<label for="more-details" class="accordion-header">More Information</label>';
+				$outStr .= '<label for="more-details" class="accordion-header">' . $LANG["MORE_INFO"] . '</label>';
 				$outStr .= '<div id="collection-type" class="content">';
 
 					//Collection Type
@@ -739,6 +739,10 @@ class OccurrenceCollectionProfile extends OmCollections{
 					$pTID = $r->TID;
 				}
 				$rs->free();
+				if (!$pTID){
+					echo "<script>alert('Error: Parent Taxon not found!');</script>";
+        			return $returnArr;
+				}
 				$sqlWhere .= 'AND ((o.sciname = "'.$this->cleanInStr($taxon).'") OR (o.tidinterpreted IN(SELECT DISTINCT tid FROM taxaenumtree WHERE taxauthid = 1 AND parenttid IN('.$pTID.')))) ';
 			}
 			if($country) $sqlWhere .= 'AND o.country = "'.$this->cleanInStr($country).'" ';

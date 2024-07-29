@@ -33,7 +33,7 @@ if(!is_numeric($displayCommon)) $displayCommon = 0;
 
 $dataManager = new KeyDataManager();
 
-//if(!$langValue) $langValue = $defaultLang;
+//if(!$langValue) $langValue = $DEFAULT_LANG;
 if($displayCommon) $dataManager->setDisplayCommon(true);
 $dataManager->setLanguage($langValue);
 if($pid) $dataManager->setProject($pid);
@@ -160,7 +160,7 @@ if($chars){
 					if(count($languages) > 1){
 						echo "<div id='langlist' style='margin:0.5em;'>Languages: <select name='lang' onchange='setLang(this);'>\n";
 						foreach($languages as $l){
-							echo "<option value='".$l."' ".($defaultLang == $l?"SELECTED":"").">$l</option>\n";
+						    echo "<option value='".$l."' ".($DEFAULT_LANG == $l?"SELECTED":"").">$l</option>\n";
 						}
 						echo "</select></div>\n";
 					}

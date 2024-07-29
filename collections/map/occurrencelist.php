@@ -97,7 +97,7 @@ if(!$recLimit || $recCnt < $recLimit){
 						 -->
                   <th><?=$LANG['CATALOG_NUMBER']?></th>
 						<th><?=$LANG['COLLECTOR']?></th>
-						<th><?=$LANG['DATE']?></th>
+						<th><?=$LANG['EVENTDATE']?></th>
 						<th><?=$LANG['SCIENTIFIC_NAME']?></th>
 						<th><?=$LANG['MAP_LINK']?></th>
 					</tr>

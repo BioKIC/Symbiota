@@ -34,7 +34,7 @@ $clones = $geoManager->getGeorefClones($locality, $country, $state, $county, $se
 
 $latCen = 41.0;
 $lngCen = -95.0;
-$coorArr = explode(";",$mappingBoundaries);
+$coorArr = explode(';', $MAPPING_BOUNDARIES);
 if($coorArr && count($coorArr) == 4){
 	$latCen = ($coorArr[0] + $coorArr[2])/2;
 	$lngCen = ($coorArr[1] + $coorArr[3])/2;

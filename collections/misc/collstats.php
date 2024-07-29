@@ -139,83 +139,88 @@ if($collId){
 	}
     elseif($action == "Run Statistics" && ($cPartentTaxon || $cCountry)){
         $resultsTemp = $collManager->runStatisticsQuery($collId,$cPartentTaxon,$cCountry);
-        $familyArr = $resultsTemp['families'];
-        ksort($familyArr, SORT_STRING | SORT_FLAG_CASE);
-        $countryArr = $resultsTemp['countries'];
-        ksort($countryArr, SORT_STRING | SORT_FLAG_CASE);
-        unset($resultsTemp['families']);
-        unset($resultsTemp['countries']);
-        ksort($resultsTemp, SORT_STRING | SORT_FLAG_CASE);
-        $c = 0;
-        foreach($resultsTemp as $k => $collArr){
-            if($c>0) $collStr .= ", ";
-            $collStr .= $collArr['CollectionName'];
-            if(array_key_exists("SpecimenCount",$results)){
-                $results['SpecimenCount'] = $results['SpecimenCount'] + $collArr['recordcnt'];
-            }
-            else{
-                $results['SpecimenCount'] = $collArr['recordcnt'];
-            }
+		if ($resultsTemp){
+			if (array_key_exists('families', $resultsTemp)){
+				$familyArr = $resultsTemp['families'];
+				ksort($familyArr, SORT_STRING | SORT_FLAG_CASE);
+				unset($resultsTemp['families']);
+			}
+			if (array_key_exists('countries', $resultsTemp)){
+				$countryArr = $resultsTemp['countries'];
+				ksort($countryArr, SORT_STRING | SORT_FLAG_CASE);
+				unset($resultsTemp['countries']);
+			}
+			ksort($resultsTemp, SORT_STRING | SORT_FLAG_CASE);
+			$c = 0;
+			foreach($resultsTemp as $k => $collArr){
+				if($c>0) $collStr .= ", ";
+				$collStr .= $collArr['CollectionName'];
+				if(array_key_exists("SpecimenCount",$results)){
+					$results['SpecimenCount'] = $results['SpecimenCount'] + $collArr['recordcnt'];
+				}
+				else{
+					$results['SpecimenCount'] = $collArr['recordcnt'];
+				}
 
-            if(array_key_exists("GeorefCount",$results)){
-                $results['GeorefCount'] = $results['GeorefCount'] + $collArr['georefcnt'];
-            }
-            else{
-                $results['GeorefCount'] = $collArr['georefcnt'];
-            }
+				if(array_key_exists("GeorefCount",$results)){
+					$results['GeorefCount'] = $results['GeorefCount'] + $collArr['georefcnt'];
+				}
+				else{
+					$results['GeorefCount'] = $collArr['georefcnt'];
+				}
 
-            if(array_key_exists("FamilyCount",$results)){
-                $results['FamilyCount'] = $results['FamilyCount'] + $collArr['familycnt'];
-            }
-            else{
-                $results['FamilyCount'] = $collArr['familycnt'];
-            }
+				if(array_key_exists("FamilyCount",$results)){
+					$results['FamilyCount'] = $results['FamilyCount'] + $collArr['familycnt'];
+				}
+				else{
+					$results['FamilyCount'] = $collArr['familycnt'];
+				}
 
-            if(array_key_exists("GeneraCount",$results)){
-                $results['GeneraCount'] = $results['GeneraCount'] + $collArr['genuscnt'];
-            }
-            else{
-                $results['GeneraCount'] = $collArr['genuscnt'];
-            }
+				if(array_key_exists("GeneraCount",$results)){
+					$results['GeneraCount'] = $results['GeneraCount'] + $collArr['genuscnt'];
+				}
+				else{
+					$results['GeneraCount'] = $collArr['genuscnt'];
+				}
 
-            if(array_key_exists("SpeciesCount",$results)){
-                $results['SpeciesCount'] = $results['SpeciesCount'] + $collArr['speciescnt'];
-            }
-            else{
-                $results['SpeciesCount'] = $collArr['speciescnt'];
-            }
+				if(array_key_exists("SpeciesCount",$results)){
+					$results['SpeciesCount'] = $results['SpeciesCount'] + $collArr['speciescnt'];
+				}
+				else{
+					$results['SpeciesCount'] = $collArr['speciescnt'];
+				}
 
-            if(array_key_exists("TotalTaxaCount",$results)){
-                $results['TotalTaxaCount'] = $results['TotalTaxaCount'] + $collArr['TotalTaxaCount'];
-            }
-            else{
-                $results['TotalTaxaCount'] = $collArr['TotalTaxaCount'];
-            }
+				if(array_key_exists("TotalTaxaCount",$results)){
+					$results['TotalTaxaCount'] = $results['TotalTaxaCount'] + $collArr['TotalTaxaCount'];
+				}
+				else{
+					$results['TotalTaxaCount'] = $collArr['TotalTaxaCount'];
+				}
 
-            if(array_key_exists("TotalImageCount",$results)){
-                $results['TotalImageCount'] = $results['TotalImageCount'] + $collArr['OccurrenceImageCount'];
-            }
-            else{
-                $results['TotalImageCount'] = $collArr['OccurrenceImageCount'];
-            }
+				if(array_key_exists("TotalImageCount",$results)){
+					$results['TotalImageCount'] = $results['TotalImageCount'] + $collArr['OccurrenceImageCount'];
+				}
+				else{
+					$results['TotalImageCount'] = $collArr['OccurrenceImageCount'];
+				}
 
-            if(array_key_exists("SpecimensCountID",$results)){
-                $results['SpecimensCountID'] = $results['SpecimensCountID'] + $collArr['speciesID'];
-            }
-            else{
-                $results['SpecimensCountID'] = $collArr['speciesID'];
-            }
+				if(array_key_exists("SpecimensCountID",$results)){
+					$results['SpecimensCountID'] = $results['SpecimensCountID'] + $collArr['speciesID'];
+				}
+				else{
+					$results['SpecimensCountID'] = $collArr['speciesID'];
+				}
 
-            if(array_key_exists("TypeCount",$results)){
-                $results['TypeCount'] = $results['TypeCount'] + $collArr['types'];
-            }
-            else{
-                $results['TypeCount'] = $collArr['types'];
-            }
-
-            $c++;
-        }
-        $results['SpecimensNullLatitude'] = $results['SpecimenCount'] - $results['GeorefCount'];
+				if(array_key_exists("TypeCount",$results)){
+					$results['TypeCount'] = $results['TypeCount'] + $collArr['types'];
+				}
+				else{
+					$results['TypeCount'] = $collArr['types'];
+				}
+				$c++;
+			}
+			$results['SpecimensNullLatitude'] = $results['SpecimenCount'] - $results['GeorefCount'];
+		}
     }
 	if($action == "Update Statistics"){
 		$collManager->batchUpdateStatistics($collId);
@@ -235,10 +240,10 @@ if($action != "Update Statistics"){
 			<?php
 			include_once($SERVER_ROOT.'/includes/head.php');
 			?>
-			<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
-			<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/collections/sharedCollectionStyling.css" type="text/css" rel="stylesheet" />
-            <script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
-			<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+			<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
+			<link href="<?= $CSS_BASE_PATH ?>/symbiota/collections/sharedCollectionStyling.css" type="text/css" rel="stylesheet" />
+            <script src="<?= $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+			<script src="<?= $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 			<script src="../../js/symb/collections.index.js" type="text/javascript"></script>
 			<script type="text/javascript">
 				$(document).ready(function() {
@@ -342,7 +347,7 @@ if($action != "Update Statistics"){
 					if(target != null){
 						var obj = document.getElementById(target);
 						var style = window.getComputedStyle(obj);
-						
+
 						if(style.display=="none" || style.display==""){
 							obj.style.display="block";
 						}
@@ -764,57 +769,59 @@ if($action != "Update Statistics"){
 										<legend><?php echo $LANG['GENERAL_STATISTICS']?></legend>
 										<ul class="stats-display-ul">
 											<?php
-											echo "<li>";
-											echo ($results['SpecimenCount'] ? number_format($results['SpecimenCount']) : 0) . " " . $LANG['OCC_RECORDS'];
-											echo "</li>";
-											echo "<li>";
-											$percGeo = '';
-											if($results['SpecimenCount'] && $results['GeorefCount'] && $results['SpecimenCount'] !== 0){
-												try {
-													$percGeo = (100* ($results['GeorefCount'] / $results['SpecimenCount']));
-												} catch (Exception $e) {
-													error_log('Exception: ' . $e->getMessage());
+												if ($results){
+													echo "<li>";
+													echo ($results['SpecimenCount'] ? number_format($results['SpecimenCount']) : 0) . " " . $LANG['OCC_RECORDS'];
+													echo "</li>";
+													echo "<li>";
+													$percGeo = '';
+													if($results['SpecimenCount'] && $results['GeorefCount'] && $results['SpecimenCount'] !== 0){
+														try {
+															$percGeo = (100* ($results['GeorefCount'] / $results['SpecimenCount']));
+														} catch (Exception $e) {
+															error_log('Exception: ' . $e->getMessage());
+														}
+													}
+													echo ($results['GeorefCount'] ? number_format($results['GeorefCount']) : 0) . ($percGeo ? " (" . ($percGeo>1 ? round($percGeo) : round($percGeo,2)) . "%)" : '') . " " . $LANG['GEOREFERENCED'];
+													echo "</li>";
+													echo "<li>";
+													$percImg = '';
+													if($results['SpecimenCount'] && $results['TotalImageCount'] && $results['SpecimenCount'] !== 0){
+														try {
+															$percImg = (100* ($results['TotalImageCount'] / $results['SpecimenCount']));
+														} catch (Exception $e) {
+															error_log('Exception: ' . $e->getMessage());
+														}
+													}
+													echo ($results['TotalImageCount'] ? number_format($results['TotalImageCount']) : 0) . ($percImg ? " (" . ($percImg>1 ? round($percImg) : round($percImg,2)) . "%)" : '') . " " . $LANG['OCCS_IMAGED'];
+													echo "</li>";
+													echo "<li>";
+													$percId = '';
+													if($results['SpecimenCount'] && $results['SpecimensCountID'] && $results['SpecimenCount'] !== 0){
+														try {
+															$percId = (100* ($results['SpecimensCountID'] / $results['SpecimenCount']));
+														} catch (Exception $e) {
+															error_log('Exception: ' . $e->getMessage());
+														}
+													}
+													echo ($results['SpecimensCountID'] ? number_format($results['SpecimensCountID']) : 0) . ($percId?" (" . ($percId>1 ? round($percId) : round($percId,2)) . "%)" : '') . " " . $LANG['IDED_TO_SP'];
+													echo "</li>";
+													echo "<li>";
+													echo ($results['FamilyCount'] ? number_format($results['FamilyCount']) : 0) . " " . $LANG['FAMILIES'];
+													echo "</li>";
+													echo "<li>";
+													echo ($results['GeneraCount'] ? number_format($results['GeneraCount']) : 0) . " " . $LANG['GENERA'];
+													echo "</li>";
+													echo "<li>";
+													echo ($results['SpeciesCount'] ? number_format($results['SpeciesCount']) : 0) . " " . $LANG['SPECIES'];
+													echo "</li>";
+													echo "<li>";
+													echo ($results['TotalTaxaCount'] ? number_format($results['TotalTaxaCount']) : 0) . " " . $LANG['TOTAL_TAXA'];
+													echo "</li>";
+													/*echo "<li>";
+													echo ($results['TypeCount'] ? number_format($results['TypeCount']) : 0)." type specimens";
+													echo "</li>";*/
 												}
-											}
-											echo ($results['GeorefCount'] ? number_format($results['GeorefCount']) : 0) . ($percGeo ? " (" . ($percGeo>1 ? round($percGeo) : round($percGeo,2)) . "%)" : '') . " " . $LANG['GEOREFERENCED'];
-											echo "</li>";
-											echo "<li>";
-											$percImg = '';
-											if($results['SpecimenCount'] && $results['TotalImageCount'] && $results['SpecimenCount'] !== 0){
-												try {
-													$percImg = (100* ($results['TotalImageCount'] / $results['SpecimenCount']));
-												} catch (Exception $e) {
-													error_log('Exception: ' . $e->getMessage());
-												}
-											}
-											echo ($results['TotalImageCount'] ? number_format($results['TotalImageCount']) : 0) . ($percImg ? " (" . ($percImg>1 ? round($percImg) : round($percImg,2)) . "%)" : '') . " " . $LANG['OCCS_IMAGED'];
-											echo "</li>";
-											echo "<li>";
-											$percId = '';
-											if($results['SpecimenCount'] && $results['SpecimensCountID'] && $results['SpecimenCount'] !== 0){
-												try {
-													$percId = (100* ($results['SpecimensCountID'] / $results['SpecimenCount']));
-												} catch (Exception $e) {
-													error_log('Exception: ' . $e->getMessage());
-												}
-											}
-											echo ($results['SpecimensCountID'] ? number_format($results['SpecimensCountID']) : 0) . ($percId?" (" . ($percId>1 ? round($percId) : round($percId,2)) . "%)" : '') . " " . $LANG['IDED_TO_SP'];
-											echo "</li>";
-											echo "<li>";
-											echo ($results['FamilyCount'] ? number_format($results['FamilyCount']) : 0) . " " . $LANG['FAMILIES'];
-											echo "</li>";
-											echo "<li>";
-											echo ($results['GeneraCount'] ? number_format($results['GeneraCount']) : 0) . " " . $LANG['GENERA'];
-											echo "</li>";
-											echo "<li>";
-											echo ($results['SpeciesCount'] ? number_format($results['SpeciesCount']) : 0) . " " . $LANG['SPECIES'];
-											echo "</li>";
-											echo "<li>";
-											echo ($results['TotalTaxaCount'] ? number_format($results['TotalTaxaCount']) : 0) . " " . $LANG['TOTAL_TAXA'];
-											echo "</li>";
-											/*echo "<li>";
-											echo ($results['TypeCount'] ? number_format($results['TypeCount']) : 0)." type specimens";
-											echo "</li>";*/
 											?>
 										</ul>
 										<form name="statscsv" id="statscsv" action="collstatscsv.php" method="post" onsubmit="">
@@ -998,7 +1005,10 @@ if($action != "Update Statistics"){
 									</section>
 									<div class="top-marg">
 										<b><?php echo $LANG['SPEC_W_FAMILY']; ?>:</b> <?php echo number_format($total); ?><br />
-										<?php echo $LANG['SPEC_WO_FAMILY']; ?>: <?php echo number_format($results['SpecimenCount']-$total); ?><br />
+										<?php
+										if ($results){
+											echo $LANG['SPEC_WO_FAMILY']; ?>: <?php echo number_format($results['SpecimenCount']-$total);
+										}?><br />
 									</div>
 								</fieldset>
 								<fieldset id="geodistbox" class="geodistbox">
@@ -1053,7 +1063,11 @@ if($action != "Update Statistics"){
 									</section>
 									<div class="top-marg">
 										<b><?php echo $LANG['SPEC_W_COUNTRY']; ?>:</b> <?php echo number_format($total); ?><br />
-										<?php echo $LANG['SPEC_WO_COUNTRY']; ?>: <?php echo number_format(($results['SpecimenCount']-$total)+$results['SpecimensNullLatitude']); ?><br />
+										<?php 
+										if ($results){
+											echo $LANG['SPEC_WO_COUNTRY']; ?>: <?php echo number_format(($results['SpecimenCount']-$total)+$results['SpecimensNullLatitude']);
+										}
+										?><br />
 									</div>
 								</fieldset>
 							</div>

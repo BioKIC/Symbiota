@@ -532,7 +532,7 @@ class OCCURRENCE {
    	if ($statement = $this->conn->prepare($sql)) {
    		//If central images are on remote server and new ones stored locally, then we need to use full domain
    		//e.g. this portal is sister portal to central portal
-   		if($GLOBALS['imageDomain']){
+   		if($GLOBALS['IMAGE_DOMAIN']){
    			$urlPrefix = $this->getDomainUrl();
    			if(substr($imgWebUrl,0,1) == '/'){
    				$imgWebUrl = $urlPrefix.$imgWebUrl;
@@ -580,7 +580,7 @@ class OCCURRENCE {
    	if ($statement = $this->conn->prepare($sql)) {
    		//If central images are on remote server and new ones stored locally, then we need to use full domain
    		//e.g. this portal is sister portal to central portal
-   		if($GLOBALS['imageDomain']){
+   		if($GLOBALS['IMAGE_DOMAIN']){
    			$urlPrefix = $this->getDomainUrl();
    			if(substr($imgWebUrl,0,1) == '/'){
    				$imgWebUrl = $urlPrefix.$imgWebUrl;

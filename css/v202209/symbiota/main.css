@@ -1,36 +1,14 @@
-/**
-* * Symbiota Redesign - main.css
-* * Version: September 2022
-* * Author: Laura Rocha Prado
-* * Author URI: http://laura.rochaprado.com
-* * License: GNU General Public License v2 or later
-* * License URI: http://www.gnu.org/licenses/gpl-2.0.html 
-*/
-
-/** 
-* * CONTENTS
-* * - Fonts imports
-* * - Global variables
-* * - Global styles
-* * - Utility classes
-* * - Components
-*/
-
-/* Fonts imports
+/* Style and Font imports
   ========================================================================== */
 @import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-
-/* Global variables and components
-   ========================================================================== */
-@import "base.css";
 @import "variables.css";
-@import "header.css";
-@import "footer.css";
+
 
 /* Global styles
    ========================================================================== */
 html {
   font-size: 16px; /* This is what 1 rem will be base off of */
+  height: 100%;
 }
 
 body {
@@ -41,6 +19,7 @@ body {
   font-size: var(--body-font-size, 1rem);
   font-weight: 400;
   font-family: var(--body-font-family);
+  min-height: 100%;
 }
 
 h1,
@@ -51,6 +30,13 @@ h4 {
   font-weight: 700;
   font-family: var(--heading-font-family);
 }
+
+.fieldset-like h2.subheader,
+.fieldset-like h3.subheader {
+	position: relative;
+	align-items: center;
+}
+
 /*
 h1 {
   font-size: 3rem;
@@ -73,6 +59,37 @@ p {
 }
 */
 
+/* h styles below adjustments address CSS reset recommended by USDA 508 compliance:  https://github.com/BioKIC/Symbiota/pull/881 https://www.usda.gov/digital-strategy/development/plays#development3*/
+h1 {
+  display: block;
+  font-size: 2em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h2 {
+  display: block;
+  font-size: 1.5em;
+  margin-block-start: 0.83em;
+  margin-block-end: 0.83em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
+h3 {
+  display: block;
+  font-size: 1.17em;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+}
+
 a {
   transition: all 0.2s ease-in-out;
   color: var(--link-color);
@@ -82,33 +99,6 @@ a {
 a:hover {
   color: var(--bright-color);
   cursor: pointer;
-}
-
-button {
-  background-color: var(--darkest-color);
-  border: none;
-  border-radius: 5px;
-  padding: 0.5rem 1rem;
-  color: #fff;
-  font-family: var(--heading-font-family);
-  font-weight: 600;
-  letter-spacing: 1px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  white-space: nowrap;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-button:hover {
-  background-color: var(--medium-color);
-  color: var(--light-color);
-}
-
-button:disabled {
-  background-color: var(--light-color);
-  color: var(--medium-color);
 }
 
 hr {
@@ -134,6 +124,86 @@ hr {
   margin: 10px auto;
   width: 100%;
   max-width: var(--max-innertext-width);
+  color: #000000;
+}
+
+.navpath a {
+  color: #000000;
+}
+
+.navpath a:hover {
+  color: #c0c0c0;
+}
+
+/* Spans that use javascript to add clickable link behaviors */
+span[class="link"] {
+  color: #2c405e;
+  text-decoration: none;
+}
+
+span[class="link"]:hover {
+  color: black;
+  text-decoration: underline;
+}
+
+/*
+* OccurrenceSearchSupport
+*/
+.search-button-div {
+  float: right;
+  margin-top: 20px;
+}
+.sticky-buttons {
+  position: sticky;
+  top: 1rem;
+  float: right;
+}
+.fieldset-like {
+  position: relative;
+  border: 0.2rem solid;
+  border-top: none;
+  margin: 2rem 0 1rem 1rem;
+  padding: 0.8rem;
+  padding-top: 1.5rem;
+}
+
+.fieldset-like h1,
+.fieldset-like h2,
+.fieldset-like h3 {
+  margin: 0;
+  display: flex;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2 span,
+.fieldset-like h3 span {
+  margin: 0 0.3rem;
+}
+
+.fieldset-like h1 span,
+.fieldset-like h2:not(.subheader) span,
+.fieldset-like h3:not(.subheader) span {
+  transform: translateY(-50%);
+}
+
+.fieldset-like h1:before,
+.fieldset-like h2:before,
+.fieldset-like h3:before {
+  border-top: 0.2rem solid;
+  content: " ";
+  width: 1.2rem;
+}
+
+.fieldset-like h1:after,
+.fieldset-like h2:after,
+.fieldset-like h3:after {
+  border-top: 0.2rem solid;
+  content: " ";
+  flex-grow: 1;
 }
 
 /**
@@ -177,43 +247,129 @@ hr {
   color: var(--bright-color);
 }
 
-/***********************************************************************/
-
-/* Utility classes
-========================================================================== */
-.text-huge {
-  font-size: 4rem;
-  font-family: var(--title-font-family);
-  margin: 0;
+/* The section below addresses CSS reset recommended by USDA 508 compliance:  https://github.com/BioKIC/Symbiota/pull/881 https://www.usda.gov/digital-strategy/development/plays#development3*/
+ul {
+  display: block;
+  list-style-type: disc;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  padding-inline-start: 40px;
 }
 
-.text-big {
-  font-size: 2rem;
-  font-weight: bold;
+p {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
 }
 
-.text-md {
-  font-size: 1.3rem;
-  font-weight: bold;
+blockquote {
+  display: block;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  margin-inline-start: 40px;
+  margin-inline-end: 40px;
 }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 1rem;
+select {
+  text-rendering: auto;
+  color: fieldtext;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  display: inline-block;
+  text-align: start;
+  appearance: auto;
+  box-sizing: border-box;
   align-items: center;
+  -webkit-rtl-ordering: logical;
+  background-color: field;
+  cursor: default;
+  margin: 0em;
+  white-space: pre;
+  border-width: 1px;
+  border-style: solid;
+  border-color: -internal-light-dark(rgb(118, 118, 118), rgb(133, 133, 133));
+  border-image: initial;
+  border-radius: 0px;
 }
 
-.grid-3 {
-  display: grid;
-  gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-  fit-content: auto;
+fieldset {
+  display: block;
+  margin-inline-start: 2px;
+  margin-inline-end: 2px;
+  padding-block-start: 0.35em;
+  padding-inline-start: 0.75em;
+  padding-inline-end: 0.75em;
+  padding-block-end: 0.625em;
+  min-inline-size: min-content;
+  border-width: 2px;
+  border-style: groove;
+  border-color: rgb(192, 192, 192);
+  border-image: initial;
 }
 
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
+/* Base Button Button CSS
+========================================================================== */
+button {
+  background-color: var(--darkest-color);
+  border: none;
+  border-radius: 5px;
+  border-width: 2px;
+  border-style: outset;
+  border-color: buttonborder;
+  border-image: initial;
+  margin: 0em;
+  padding: 0.5rem 1rem;
+  padding-block: 1px;
+  padding-inline: 6px;
+  color: #fff;
+  font-family: var(--heading-font-family);
+  font-weight: 600;
+  letter-spacing: 1px;
+  word-spacing: normal;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  white-space: nowrap;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  appearance: auto;
+  text-rendering: auto;
+  text-align: center;
+  text-transform: none;
+  text-indent: 0px;
+  text-shadow: none;
+  line-height: normal;
+  box-sizing: border-box;  
+}
+
+button:hover {
+  background-color: var(--medium-color);
+  color: var(--light-color);
+}
+
+button:disabled {
+  background-color: var(--light-color);
+  color: var(--medium-color);
+}
+
+button.icon-button {
+  margin: 2px 5px;
+  padding: 6px;
+  border-width: 1px;
+  border-style: outset;
+  border-color: buttonborder;
+}
+
+button.icon-button:hover {
+  background: var(--medium-color);
 }
 
 .button {
@@ -281,6 +437,134 @@ hr {
   background-color: none;
   border: 1px solid var(--bright-color);
   padding: 0.5rem 0.9rem;
+}
+
+/* image thumbnails */
+#img-container {
+  width: 80%;
+}
+
+.tndiv {
+  float: left;
+  text-align: center;
+  width: 165px;
+  height: 230px;
+  page-break-before: auto;
+  page-break-inside: avoid;
+}
+
+.tnimg {
+  position: relative;
+  overflow: hidden;
+  width: 160px;
+  height: 160px;
+  border: 1px solid gray;
+}
+
+.tnimg img {
+  position: absolute;
+  max-height: 160px;
+  max-width: 160px;
+  width: expression(this.width >=this.height ? 160: true);
+  height: expression(this.height >=this.width ? 160: true);
+  top: -9999px;
+  bottom: -9999px;
+  left: -9999px;
+  right: -9999px;
+  margin: auto;
+}
+
+/* styled table */
+table.styledtable {
+  table-layout: auto;
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table.styledtable th {
+  text-align: left;
+  padding: 4px;
+  border: 1px solid gray;
+  background-color: #dbe5f1;
+  color: black;
+}
+
+table.styledtable td {
+  padding: 3px;
+  border: 1px solid gray;
+  background-color: #efefef;
+}
+
+table.styledtable tr.alt td {
+  color: #000000;
+  /*background-color:	#FCFCFC; */
+  background-color: #dfdfdf;
+}
+
+/***********************************************************************/
+/* Utility classes
+========================================================================== */
+.text-huge {
+  font-size: 4rem;
+  font-family: var(--title-font-family);
+  margin: 0;
+}
+
+.text-big {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.text-md {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  align-items: center;
+}
+
+.grid-3 {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  fit-content: auto;
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.gridlike-form {
+  margin: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.gridlike-form-row {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.screen-reader-only {
+  position: absolute !important;
+  left: -10000px !important;
+}
+
+.welcome-text {
+  display: flex;
+  align-items: center;
+  margin-left: 1rem;
+}
+
+.page-heading {
+  font-size: 2.5rem;
 }
 
 /* Media queries

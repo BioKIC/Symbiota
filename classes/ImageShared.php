@@ -70,21 +70,21 @@ class ImageShared{
 			$this->connShared = true;
 		}
 		else $this->conn = MySQLiConnectionFactory::getCon('write');
-		$this->imageRootPath = $GLOBALS["imageRootPath"];
+		$this->imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
 		if(substr($this->imageRootPath,-1) != "/") $this->imageRootPath .= "/";
-		$this->imageRootUrl = $GLOBALS["imageRootUrl"];
+		$this->imageRootUrl = $GLOBALS['IMAGE_ROOT_URL'];
 		if(substr($this->imageRootUrl,-1) != "/") $this->imageRootUrl .= "/";
-		if(array_key_exists('imgTnWidth',$GLOBALS)){
-			$this->tnPixWidth = $GLOBALS['imgTnWidth'];
+		if(array_key_exists('IMG_TN_WIDTH',$GLOBALS)){
+			$this->tnPixWidth = $GLOBALS['IMG_TN_WIDTH'];
 		}
-		if(array_key_exists('imgWebWidth',$GLOBALS)){
-			$this->webPixWidth = $GLOBALS['imgWebWidth'];
+		if(array_key_exists('IMG_WEB_WIDTH',$GLOBALS)){
+			$this->webPixWidth = $GLOBALS['IMG_WEB_WIDTH'];
 		}
-		if(array_key_exists('imgLgWidth',$GLOBALS)){
-			$this->lgPixWidth = $GLOBALS['imgLgWidth'];
+		if(array_key_exists('IMG_LG_WIDTH',$GLOBALS)){
+			$this->lgPixWidth = $GLOBALS['IMG_LG_WIDTH'];
 		}
-		if(array_key_exists('imgFileSizeLimit',$GLOBALS)){
-			$this->webFileSizeLimit = $GLOBALS['imgFileSizeLimit'];
+		if(array_key_exists('IMG_FILE_SIZE_LIMIT',$GLOBALS)){
+			$this->webFileSizeLimit = $GLOBALS['IMG_FILE_SIZE_LIMIT'];
 		}
 		//Needed to avoid 403 errors
 		ini_set('user_agent','Mozilla/4.0 (compatible; MSIE 6.0)');
@@ -235,8 +235,8 @@ class ImageShared{
 		$url = str_replace(' ','%20',$url);
 		//If image is relative, add proper domain
 		if(substr($url,0,1) == '/'){
-			if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
-				$url = $GLOBALS['imageDomain'].$url;
+			if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+				$url = $GLOBALS['IMAGE_DOMAIN'] . $url;
 			}
 			else{
 				$url = $this->getDomainUrl().$url;
@@ -409,12 +409,12 @@ class ImageShared{
 	}
 
 	public function createNewImage($subExt, $targetWidth, $qualityRating = 0, $targetPathOverride = ''){
-		global $useImageMagick;
+		global $USE_IMAGE_MAGICK;
 		$status = false;
 		if($this->sourcePath){
 			if(!$qualityRating) $qualityRating = $this->jpgCompression;
 
-			if($useImageMagick) {
+			if($USE_IMAGE_MAGICK) {
 				// Use ImageMagick to resize images
 				$status = $this->createNewImageImagick($subExt,$targetWidth,$qualityRating,$targetPathOverride);
 			}
@@ -574,7 +574,7 @@ class ImageShared{
 		$urlBase = $this->urlBase;
 		//If central images are on remote server and new ones stored locally, then we need to use full domain
 		//e.g. this portal is sister portal to central portal
-		if($GLOBALS['imageDomain']) $urlBase = $this->getDomainUrl().$urlBase;
+		if($GLOBALS['IMAGE_DOMAIN']) $urlBase = $this->getDomainUrl().$urlBase;
 		return $urlBase;
 	}
 
@@ -1006,8 +1006,8 @@ class ImageShared{
 				$fileName = str_replace($GLOBALS['IMAGE_ROOT_URL'],$GLOBALS['IMAGE_ROOT_PATH'],$uri);
 				if(file_exists($fileName)) return true;
 			}
-			if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
-				$uri = $GLOBALS['imageDomain'].$uri;
+			if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+				$uri = $GLOBALS['IMAGE_DOMAIN'].$uri;
 			}
 			else{
 				$uri = $urlPrefix.$uri;
@@ -1125,6 +1125,7 @@ class ImageShared{
 						$block_size = hexdec($block_size[1]);
 						while(!feof($handle)) {
 							$i += $block_size;
+							if(!$block_size) return false;
 							$new_block .= fread($handle, $block_size);
 							if(isset($new_block[$i]) && $new_block[$i]=="\xFF") {
 								// New block detected, check for SOF marker

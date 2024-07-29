@@ -59,19 +59,18 @@ if($action == 'batchAssignTag'){
 	include_once($SERVER_ROOT . '/includes/head.php');
 	include_once($SERVER_ROOT . '/includes/googleanalytics.php');
 	?>
-
 	<link href="<?= $CSS_BASE_PATH ?>/jquery-ui.min.css" type="text/css" rel="stylesheet">
 	<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/listdisplay.css" type="text/css" rel="stylesheet" />
 	<link href="<?= $CSS_BASE_PATH; ?>/symbiota/collections/sharedCollectionStyling.css" type="text/css" rel="stylesheet" />
 	<style>
 		fieldset{ padding: 15px }
 		fieldset legend{ font-weight:bold }
-		.load-button {
-			margin-top: 0.75rem;
-		}
+		label{ font-weight:bold }
+		.row-div{ clear: both; margin: 3px; }
+		#action-status-div{ padding: 15px; }
 	</style>
-	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
-	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="../js/symb/collections.index.js?ver=2" type="text/javascript"></script>
 	<script type="text/javascript">
 		var clientRoot = "<?= $CLIENT_ROOT; ?>";
@@ -108,13 +107,6 @@ if($action == 'batchAssignTag'){
 	</script>
 	<script src="../js/symb/api.taxonomy.taxasuggest.js?ver=4" type="text/javascript"></script>
 	<script src="../js/symb/imagelib.search.js?ver=3b" type="text/javascript"></script>
-	<style type="text/css">
-		fieldset{ padding: 15px }
-		fieldset legend{ font-weight:bold }
-		label{ font-weight:bold }
-		.row-div{ clear: both; margin: 3px; }
-		#action-status-div{ padding: 15px; }
-	</style>
 </head>
 <body>
 	<?php

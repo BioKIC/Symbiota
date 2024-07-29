@@ -214,8 +214,8 @@ if($glossId){
 							foreach($termImgArr as $imgId => $imgArr){
 								$imgUrl = $imgArr["url"];
 								if(substr($imgUrl,0,1)=="/"){
-									if(array_key_exists('imageDomain',$GLOBALS) && $GLOBALS['imageDomain']){
-										$imgUrl = $GLOBALS['imageDomain'].$imgUrl;
+									if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+										$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
 									}
 									else{
 										$imgUrl = $glosManager->getDomain() . $imgUrl;

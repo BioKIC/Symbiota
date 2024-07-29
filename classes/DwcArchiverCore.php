@@ -120,7 +120,7 @@ class DwcArchiverCore extends Manager{
 			$this->targetPath = $tp;
 		} else {
 			//Set to temp download path
-			$tPath = $GLOBALS["tempDirRoot"];
+			$tPath = $GLOBALS['TEMP_DIR_ROOT'];
 			if (!$tPath) {
 				$tPath = ini_get('upload_tmp_dir');
 			}

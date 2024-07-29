@@ -197,6 +197,7 @@ if (array_key_exists('last_message', $_SESSION)){
 $displayLeftMenu = (isset($profile_indexMenu)?$profile_indexMenu:'true');
 include($SERVER_ROOT.'/includes/header.php');
 ?>
+<div class="navpath"></div>
 <!-- inner text -->
 <div role="main" id="innertext" style="padding-left:0px;margin-left:0px;">
 	<h1 class="page-heading screen-reader-only">Login</h1>

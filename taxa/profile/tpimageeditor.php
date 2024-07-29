@@ -51,9 +51,9 @@ if($tid){
 										$tnUrl = $imgArr["thumbnailurl"];
 										if($tnUrl && substr($tnUrl,0,10) != 'processing'){
 											$webUrl = $imgArr["url"];
-											if($GLOBALS["imageDomain"]){
-												if(substr($imgArr["url"],0,1)=="/") $webUrl = $GLOBALS["imageDomain"] . $imgArr["url"];
-												if(substr($imgArr["thumbnailurl"],0,1)=="/") $tnUrl = $GLOBALS["imageDomain"] . $imgArr["thumbnailurl"];
+											if($GLOBALS['IMAGE_DOMAIN']){
+												if(substr($imgArr["url"],0,1)=="/") $webUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgArr["url"];
+												if(substr($imgArr["thumbnailurl"],0,1)=="/") $tnUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgArr["thumbnailurl"];
 											}
 											?>
 											<td align='center' valign='bottom'>
@@ -239,9 +239,9 @@ if($tid){
 											<?php
 											$webUrl = $imgArr["url"];
 											$tnUrl = $imgArr["thumbnailurl"];
-											if($GLOBALS['imageDomain']){
-												if(substr($imgArr["url"],0,1) == "/") $webUrl = $GLOBALS["imageDomain"].$imgArr["url"];
-												if(substr($imgArr["thumbnailurl"],0,1) == "/") $tnUrl = $GLOBALS["imageDomain"].$imgArr["thumbnailurl"];
+											if($GLOBALS['IMAGE_DOMAIN']){
+												if(substr($imgArr["url"], 0, 1) == "/") $webUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgArr["url"];
+												if(substr($imgArr["thumbnailurl"], 0, 1) == "/") $tnUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgArr["thumbnailurl"];
 											}
 											if(!$tnUrl) $tnUrl = $webUrl;
 											?>
@@ -250,7 +250,7 @@ if($tid){
 											</a>
 											<?php
 											if($imgArr["originalurl"]){
-												$origUrl = (array_key_exists("imageDomain",$GLOBALS)&&substr($imgArr["originalurl"],0,1)=="/"?$GLOBALS["imageDomain"]:"").$imgArr["originalurl"];
+												$origUrl = (array_key_exists('IMAGE_DOMAIN', $GLOBALS) && substr($imgArr["originalurl"], 0, 1) == '/' ? $GLOBALS['IMAGE_DOMAIN'] : '') . $imgArr["originalurl"];
 												?>
 												<br /><a href="<?php echo htmlspecialchars($origUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>"><?php echo htmlspecialchars($LANG['OPEN_LARGE_IMAGE'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a>
 												<?php

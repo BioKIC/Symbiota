@@ -133,7 +133,7 @@ class GamesManager extends Manager{
 					while(($row = $rs->fetch_object()) && ($cnt < 6)){
 						$file = '';
 						if (substr($row->url, 0, 1) == '/'){
-							if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']) $file = $GLOBALS['imageDomain'].$row->url;
+							if(!empty($GLOBALS['IMAGE_DOMAIN'])) $file = $GLOBALS['IMAGE_DOMAIN'] . $row->url;
 							else $file = $domain.$row->url;
 						}
 						else{

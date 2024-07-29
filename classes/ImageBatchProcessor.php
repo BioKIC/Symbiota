@@ -3,17 +3,17 @@
 // If running as standalone scripts outside of the Symbiota file structure, you must include ImageLocalProcessor class (ImageLocalProcessor.php)
 if(isset($SERVER_ROOT) && $SERVER_ROOT){
 	include_once($SERVER_ROOT.'/classes/ImageLocalProcessor.php');
-	@include_once($serverRoot.'/classes/SpecProcessorGPI.php');
-	@include_once($serverRoot.'/classes/SpecProcessorNEVP.php');
+	@include_once($SERVER_ROOT.'/classes/SpecProcessorGPI.php');
+	@include_once($SERVER_ROOT.'/classes/SpecProcessorNEVP.php');
 }
 elseif(isset($serverRoot) && $serverRoot){
-	if(file_exists($serverRoot.'/config/dbconnection.php')){ 
+	if(file_exists($serverRoot.'/config/dbconnection.php')){
 		include_once($serverRoot.'/config/dbconnection.php');
 	}
 	else{
 		include_once('ImageBatchConnectionFactory.php');
 	}
-	if (file_exists($serverRoot.'/classes/ImageLocalProcessor.php')) { 
+	if (file_exists($serverRoot.'/classes/ImageLocalProcessor.php')) {
 		@require_once($serverRoot.'/classes/ImageLocalProcessor.php');
 	}
 	// Check for the symbiota class files used herein for parsing
@@ -30,13 +30,13 @@ elseif(isset($serverRoot) && $serverRoot){
 }
 else{
 	//Files reside in same folder and script is run from within the folder
-	if(file_exists('ImageLocalProcessor.php')) { 
+	if(file_exists('ImageLocalProcessor.php')) {
 		@require_once('ImageLocalProcessor.php');
 	}
-	if(file_exists('SpecProcessorGPI.php')) { 
+	if(file_exists('SpecProcessorGPI.php')) {
 		@require_once('SpecProcessorGPI.php');
 	}
-	if (file_exists('SpecProcessorNEVP.php')) {  
+	if (file_exists('SpecProcessorNEVP.php')) {
 		@require_once('SpecProcessorNEVP.php');
 	}
 }

@@ -1,74 +1,33 @@
 <?php
 /*
-** Symbiota Redesign
-** The version is determined by the number of the release
-** set in config/symbini.php ($CSS_VERSION_RELEASE).
-** To customize the styles, add your own CSS files to the
-** css folder and include them here.
+** Style sheets are determined by $CSS_BASE_PATH set within config/symbini.php
+** Customization can be made by modifying css files, $CSS_BASE_PATH, adding new css files below
 */
-include_once($SERVER_ROOT.'/classes/ProfileManager.php');
-$pHandler = new ProfileManager();
-$isAccessiblePreferred = $pHandler->getAccessibilityPreference($SYMB_UID);
-// $_SESSION['active_stylesheet'] = null; // use this if you want to troubleshoot the behavior of just the persisted preference
-$localSession = isset($_SESSION['active_stylesheet']) ? $_SESSION['active_stylesheet'] : null;
 ?>
 <!-- Responsive viewport -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Symbiota styles -->
-<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/reset.css" type="text/css" rel="stylesheet">
-<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/normalize.slim.css" type="text/css" rel="stylesheet">
-<link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/main.css" type="text/css" rel="stylesheet">
-<script src="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/js/symb/lang.js" type="text/javascript"></script>
-<script src="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/js/symb/accessibilityUtils.js" type="text/javascript"></script>
-<style>
-    .accessibility-option-button {
-        width: fit-content;
-        padding: 10px;
-        background-color: var(--link-color);
-        color: var(--body-bg-color);
-    }
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/reset.css" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/normalize.slim.css" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/header.css" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/footer.css" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/main.css" type="text/css" rel="stylesheet">
+<link href="<?= $CSS_BASE_PATH ?>/symbiota/accessibility-controls.css" type="text/css" rel="stylesheet">
 
-    .accessibility-option-button:hover {
-        cursor: pointer;
-        background-color: var(--medium-color);
-    }
-    .accessibility-dialog{
-        position: fixed;
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        padding: 20px;
-        border-radius: 5px;
-    }
-    .button__item-container{
-        display: flex;
-        justify-content: center;
-		align-items: center;
-    }
-</style>
-<?php 
-    if($isAccessiblePreferred){
-        if(isset($localSession) && strpos($localSession, "condensed.css")){
-            ?>
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
-            <?php
-        }else{
-            ?>
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
-            <?php
-        }
-    } else{
-        if(isset($localSession) && strpos($localSession, "accessibility-compliant.css")){
-            ?>
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
-            <?php
-        } else{
-            ?>
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
-            <link href="<?php echo htmlspecialchars($CSS_BASE_PATH, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
-            <?php
-        }
-    }
+<?php
+if($ACCESSIBILITY_ACTIVE){
+	?>
+	<link href="<?= $CSS_BASE_PATH ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
+	<link href="<?= $CSS_BASE_PATH ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
+	<?php
+} else{
+	?>
+	<link href="<?= $CSS_BASE_PATH ?>/symbiota/accessibility-compliant.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" disabled >
+	<link href="<?= $CSS_BASE_PATH ?>/symbiota/condensed.css?ver=6.css" type="text/css" rel="stylesheet" data-accessibility-link="accessibility-css-link" >
+	<?php
+}
 ?>
+
+<script src="<?= $CLIENT_ROOT ?>/js/symb/lang.js" type="text/javascript"></script>
+<script src="<?= $CLIENT_ROOT ?>/js/symb/accessibilityUtils.js" type="text/javascript"></script>

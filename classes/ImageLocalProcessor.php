@@ -70,10 +70,10 @@ class ImageLocalProcessor {
 		ini_set('memory_limit','1024M');
 		//Use deaults located within symbini, if they are available
 		//Will be replaced by values within configuration file, if they are set
-		if(isset($GLOBALS['imgWebWidth']) && $GLOBALS['imgWebWidth']) $this->webPixWidth = $GLOBALS['imgWebWidth'];
-		if(isset($GLOBALS['imgTnWidth']) && $GLOBALS['imgTnWidth']) $this->tnPixWidth = $GLOBALS['imgTnWidth'];
-		if(isset($GLOBALS['imgLgWidth']) && $GLOBALS['imgLgWidth']) $this->lgPixWidth = $GLOBALS['imgLgWidth'];
-		if(isset($GLOBALS['imgFileSizeLimit']) && $GLOBALS['imgFileSizeLimit']) $this->webFileSizeLimit = $GLOBALS['imgFileSizeLimit'];
+		if(!empty($GLOBALS['IMG_WEB_WIDTH'])) $this->webPixWidth = $GLOBALS['IMG_WEB_WIDTH'];
+		if(!empty($GLOBALS['IMG_TN_WIDTH'])) $this->tnPixWidth = $GLOBALS['IMG_TN_WIDTH'];
+		if(!empty($GLOBALS['IMG_LG_WIDTH'])) $this->lgPixWidth = $GLOBALS['IMG_LG_WIDTH'];
+		if(!empty($GLOBALS['IMG_FILE_SIZE_LIMIT'])) $this->webFileSizeLimit = $GLOBALS['IMG_FILE_SIZE_LIMIT'];
 	}
 
 	function __destruct(){
@@ -246,7 +246,7 @@ class ImageLocalProcessor {
 		//Set target base path
 		if(!$this->targetPathBase){
 			//Assume that we should use the portal's default image root path
-			$this->targetPathBase = $GLOBALS['imageRootPath'];
+			$this->targetPathBase = $GLOBALS['IMAGE_ROOT_PATH'];
 		}
 		if($this->targetPathBase && substr($this->targetPathBase,-1) != '/' && substr($this->targetPathBase,-1) != "\\"){
 			$this->targetPathBase .= '/';
@@ -255,9 +255,9 @@ class ImageLocalProcessor {
 		//Set image base URL
 		if(!$this->imgUrlBase){
 			//Assume that we should use the portal's default image url prefix
-			$this->imgUrlBase = $GLOBALS['imageRootUrl'];
+			$this->imgUrlBase = $GLOBALS['IMAGE_ROOT_URL'];
 		}
-		if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
+		if(!empty($GLOBALS['IMAGE_DOMAIN'])){
 			//Since imageDomain is set, portal is not central portal thus add portals domain to url base
 			if(substr($this->imgUrlBase,0,7) != 'http://' && substr($this->imgUrlBase,0,8) != 'https://'){
 				$urlPrefix = "http://";
@@ -587,7 +587,7 @@ class ImageLocalProcessor {
 			$fileNameBase = substr($sourceFileName,0,$p);
 		}
 		list($width, $height) = ImageShared::getImgDim($sourcePath.$sourceFileName);
-		
+
 		if($width && $height){
 			$fileSize = 0;
 			if(substr($sourcePath,0,7)=='http://' || substr($sourcePath,0,8)=='https://') {
@@ -601,7 +601,7 @@ class ImageLocalProcessor {
 			//ob_flush();
 			//flush();
 
-			
+
 			//Set large image
 			$lgUrl = '';
 			if($this->lgProcessingCode){
@@ -649,7 +649,7 @@ class ImageLocalProcessor {
 					}
 					$imgHash = md5_file($targetPath.$lgTargetFileName);
 					if($imgHash) $imageArr['mediamd5'] = $imgHash;
-	
+
 				}
 				elseif($this->lgProcessingCode == 2){
 					// 2 = map to source
@@ -2115,11 +2115,11 @@ class ImageLocalProcessor {
 
 		$localUrl = '';
 		if(substr($url,0,1) == '/'){
-			if(isset($GLOBALS['imageDomain']) && $GLOBALS['imageDomain']){
-				$url = $GLOBALS['imageDomain'].$url;
+			if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+				$url = $GLOBALS['IMAGE_DOMAIN'].$url;
 			}
-			elseif($GLOBALS['imageRootUrl'] && strpos($url,$GLOBALS['imageRootUrl']) === 0){
-				$localUrl = str_replace($GLOBALS['imageRootUrl'],$GLOBALS['imageRootPath'],$url);
+			elseif($GLOBALS['IMAGE_ROOT_URL'] && strpos($url,$GLOBALS['IMAGE_ROOT_URL']) === 0){
+				$localUrl = str_replace($GLOBALS['IMAGE_ROOT_URL'],$GLOBALS['IMAGE_ROOT_PATH'],$url);
 			}
 			else{
 				$urlPrefix = "http://";

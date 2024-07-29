@@ -2,22 +2,9 @@
  * Used within pages listing Collection tree
 */
 
-.categorytitle {
-	font-size:	12px;
-}
-
-.categorytitle a {
-    font-weight: bold;
-    font-size: 110%;
-    color: black;
-}
-
-.categorytitle a:visited{ 
-	 
-}
-
 .collectiontitle a {
     font-size: 80%;
+    margin-left: 3px;
 }
 
 .collectiontitle a:hover {
