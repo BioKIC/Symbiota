@@ -1,15 +1,19 @@
 <?php
 include_once('Manager.php');
+include_once($SERVER_ROOT.'/traits/TaxonomyTrait.php');
 
 class TPEditorManager extends Manager {
+	use TaxonomyTrait;
 
 	protected $tid;
 	protected $rankid;
 	private $parentTid;
 	protected $taxAuthId = 1;
-	private $sciname;
+	private $sciName;
 	private $author;
 	protected $family;
+	private $cultivarEpithet;
+	private $tradeName;
 	protected $acceptance = true;
 	private $forwarded = false;
 
@@ -30,27 +34,33 @@ class TPEditorManager extends Manager {
 		$status = false;
 		if(is_numeric($tid)){
 			$this->tid = $tid;
-			$sql = 'SELECT tid, sciname, author, rankid FROM taxa WHERE (tid = '.$this->tid.') ';
+			$sql = 'SELECT tid, sciname, cultivarEpithet, tradeName, author, rankid FROM taxa WHERE (tid = '.$this->tid.') ';
 			//echo $sql;
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->submittedArr['tid'] = $r->tid;
 				$this->submittedArr['sciname'] = $r->sciname;
 				$this->submittedArr['author'] = $r->author;
+				$this->submittedArr['cultivarEpithet'] = $r->cultivarEpithet;
+				$this->submittedArr['tradeName'] = $r->tradeName;
 				$this->submittedArr['rankid'] = $r->rankid;
-				$this->sciname = $r->sciname;
+				$this->sciName = $r->sciname;
+				$this->cultivarEpithet = $r->cultivarEpithet;
+				$this->tradeName = $r->tradeName;
 				$this->author = $r->author;
 				$this->rankid = $r->rankid;
 			}
 			$rs->free();
 
-			$sql2 = 'SELECT ts.family, ts.parenttid, t.tid, t.sciname, t.author, t.rankid, t.securitystatus '.
+			$sql2 = 'SELECT ts.family, ts.parenttid, t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author, t.rankid, t.securitystatus '.
 				'FROM taxstatus ts INNER JOIN taxa t ON ts.tidaccepted = t.tid '.
 				'WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (ts.tid = '.$this->tid.') ';
 			$rs2 = $this->conn->query($sql2);
 			while($r2 = $rs2->fetch_object()){
 				$this->acceptedArr[$r2->tid]['sciname'] = $r2->sciname;
 				$this->acceptedArr[$r2->tid]['author'] = $r2->author;
+				$this->acceptedArr[$r2->tid]['cultivarEpithet'] = $r2->cultivarEpithet;
+				$this->acceptedArr[$r2->tid]['tradeName'] = $r2->tradeName;
 				$this->acceptedArr[$r2->tid]['rankid'] = $r2->rankid;
 				$this->acceptedArr[$r2->tid]['family'] = $r2->family;
 				$this->acceptedArr[$r2->tid]['parenttid'] = $r2->parenttid;
@@ -65,8 +75,10 @@ class TPEditorManager extends Manager {
 				if(count($this->acceptedArr) == 1){
 					$this->forwarded = true;
 					$this->tid = key($this->acceptedArr);
-					$this->sciname = $this->acceptedArr[$this->tid]['sciname'];
+					$this->sciName = $this->acceptedArr[$this->tid]['sciname'];
 					$this->author = $this->acceptedArr[$this->tid]['author'];
+					$this->cultivarEpithet = $this->acceptedArr[$this->tid]['cultivarEpithet'];
+					$this->tradeName = $this->acceptedArr[$this->tid]['tradeName'];
 					$this->rankid = $this->acceptedArr[$this->tid]['rankid'];
 					$this->family = $this->acceptedArr[$this->tid]['family'];
 					$this->parentTid = $this->acceptedArr[$this->tid]['parenttid'];
@@ -84,7 +96,7 @@ class TPEditorManager extends Manager {
 	}
 
 	public function getSciName(){
-		return $this->sciname;
+		return $this->sciName;
 	}
 
 	public function getSubmittedValue($k=0){
@@ -93,12 +105,14 @@ class TPEditorManager extends Manager {
 
 	public function getChildrenTaxa(){
 		$childrenArr = Array();
-		$sql = "SELECT t.Tid, t.SciName, t.Author ".
+		$sql = "SELECT t.Tid, t.SciName, t.cultivarEpithet, t.tradeName, t.Author ".
 			"FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid ".
 			"WHERE ts.taxauthid = '.$this->taxAuthId.' AND (ts.ParentTid = ".$this->tid.") ORDER BY t.SciName";
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$childrenArr[$r->Tid]["sciname"] = $r->SciName;
+			$childrenArr[$r->Tid]["cultivarEpithet"] = $r->cultivarEpithet;
+			$childrenArr[$r->Tid]["tradeName"] = $r->tradeName;
 			$childrenArr[$r->Tid]["author"] = $r->Author;
 		}
 		$rs->free();
@@ -107,7 +121,7 @@ class TPEditorManager extends Manager {
 
 	public function getSynonym(){
 		$synArr = Array();
-		$sql = "SELECT t2.tid, t2.SciName, ts.SortSequence ".
+		$sql = "SELECT t2.tid, t2.SciName, t2.cultivarEpithet, t2.tradeName, ts.SortSequence ".
 			"FROM (taxa t1 INNER JOIN taxstatus ts ON t1.tid = ts.tidaccepted) ".
 			"INNER JOIN taxa t2 ON ts.tid = t2.tid ".
 			"WHERE (ts.taxauthid = '.$this->taxAuthId.') AND (ts.tid <> ts.TidAccepted) AND (t1.tid = ".$this->tid.") ".
@@ -116,6 +130,8 @@ class TPEditorManager extends Manager {
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$synArr[$r->tid]["sciname"] = $r->SciName;
+			$synArr[$r->tid]["cultivarEpithet"] = $r->cultivarEpithet;
+			$synArr[$r->tid]["tradeName"] = $r->tradeName;
 			$synArr[$r->tid]["sortsequence"] = $r->SortSequence;
 		}
 		$rs->free();
@@ -272,7 +288,7 @@ class TPEditorManager extends Manager {
 	//Misc data functions
 	public function getTidFromStr($sciname){
 		$retArr = array();
-		$sql = 'SELECT t.tid, t.sciname, t.author, t.rankid, k.sciname as kingdom, u.rankname, u.kingdomname '.
+		$sql = 'SELECT t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author, t.rankid, k.sciname as kingdom, u.rankname, u.kingdomname '.
 			'FROM taxa t LEFT JOIN taxaenumtree e ON t.tid = e.tid '.
 			'LEFT JOIN taxa k ON e.parenttid = k.tid '.
 			'INNER JOIN taxonunits u ON t.rankid = u.rankid '.
@@ -282,6 +298,8 @@ class TPEditorManager extends Manager {
 			if(!isset($retArr[$r->tid])){
 				$retArr[$r->tid]['sciname'] = $r->sciname;
 				$retArr[$r->tid]['author'] = $r->author;
+				$retArr[$r->tid]['cultivarEpithet'] = $r->cultivarEpithet;
+				$retArr[$r->tid]['tradeName'] = $r->tradeName;
 				$retArr[$r->tid]['rankid'] = $r->rankid;
 				$retArr[$r->tid]['kingdom'] = $r->kingdom;
 			}

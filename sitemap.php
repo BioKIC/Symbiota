@@ -159,13 +159,16 @@ $smManager = new SiteMapManager();
 							<li>
 								<a href="profile/usermanagement.php"><?php echo htmlspecialchars($LANG['USERPERM'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?></a>
 							</li>
-						<?php // TODO: Identification Editor features need to be reviewed and refactored 
-						/*
-							<li>
-								<a href="profile/usertaxonomymanager.php"><?php echo htmlspecialchars($LANG['TAXINTER'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?></a>
-							</li>
-						*/ 
-						?>
+								<? 
+								// TODO: Identification Editor features need to be reviewed and refactored 
+								?>
+									<!-- <li>
+										<a href="profile/usertaxonomymanager.php">
+											<?php 
+												// echo htmlspecialchars($LANG['TAXINTER'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);
+											?>
+										</a>
+									</li> -->
 							<li>
 								<a href="<?php echo htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>/collections/misc/collmetadata.php">
 									<?php echo htmlspecialchars($LANG['CREATENEWCOLL'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>

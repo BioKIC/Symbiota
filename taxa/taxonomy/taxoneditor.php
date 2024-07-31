@@ -128,7 +128,11 @@ if($isEditor){
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
 		<h1 class="page-heading">
-			<?php echo $LANG['TAX_EDITOR'] . ": <i>" . $taxonEditorObj->getSciName() . "</i> " . $taxonEditorObj->getAuthor() . " [" . $taxonEditorObj->getTid() . "]"; ?>
+			<?php 
+			$splitSciname = $taxonEditorObj->splitSciname();
+			$nonItalicizedScinameComponent = trim((!empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '') . (!empty($splitSciname['cultivarEpithet']) ? ("'" . $splitSciname['cultivarEpithet'] . "' ") : '') . (!empty($splitSciname['tradeName']) ? ($splitSciname['tradeName'] . ' ') : ''));
+			echo $LANG['TAX_EDITOR'] . ': <i>' . htmlspecialchars($splitSciname['base'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</i> ' . htmlspecialchars($nonItalicizedScinameComponent . ' [' . $taxonEditorObj->getTid() . ']', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); 
+			?>
 		</h1>
 		<?php
 		if($statusStr){
@@ -174,6 +178,26 @@ if($isEditor){
 					</div>
 					<form id="taxoneditform" name="taxoneditform" action="taxoneditor.php" method="post" onsubmit="return validateTaxonEditForm(this)">
 						<div class="editDiv">
+							<div class="editLabel"><?php echo (isset($LANG['RANK_NAME'])?$LANG['RANK_NAME']:'Rank Name'); ?>: </div>
+							<div class="editfield">
+								<?php echo ($taxonEditorObj->getRankName() ? $taxonEditorObj->getRankName() : $LANG['NON_RANKED_NODE']); ?>
+							</div>
+							<div class="editfield" style="display:none;">
+								<select id="rankid" name="rankid">
+									<option value="0"><?php echo $LANG['NON_RANKED_NODE']; ?></option>
+									<option value="">---------------------------------</option>
+									<?php
+									$rankArr = $taxonEditorObj->getRankArr();
+									foreach($rankArr as $rankId => $nameArr){
+										foreach($nameArr as $rName){
+											echo '<option value="'.$rankId.'" '.($taxonEditorObj->getRankId()==$rankId?'SELECTED':'').'>'.$rName.'</option>';
+										}
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="editDiv">
 							<div class="editLabel"><?php echo $LANG['UNITNAME1']; ?>: </div>
 							<div class="editfield">
 								<?php
@@ -217,6 +241,24 @@ if($isEditor){
 							</div>
 						</div>
 						<div class="editDiv">
+							<div class="editLabel"><?php echo $LANG['UNITNAME4']; ?>: </div>
+							<div class="editfield">
+								<?php echo htmlspecialchars($taxonEditorObj->getCultivarEpithet() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>
+							</div>
+							<div class="editfield" style="display:none;">
+								<input placeholder="e.g., cultivar epithet (no quotes)" aria-placeholder="Cultivar epithet. Do not include quotations." type="text" id="cultivarEpithet" name="cultivarEpithet" style="width:300px;border-style:inset;" value="<?php echo htmlspecialchars($taxonEditorObj->getCultivarEpithet() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" />
+							</div>
+						</div>
+						<div class="editDiv">
+							<div class="editLabel"><?php echo $LANG['UNITNAME5']; ?>: </div>
+							<div class="editfield">
+								<?php echo htmlspecialchars($taxonEditorObj->getTradeName() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>
+							</div>
+							<div class="editfield" style="display:none;">
+								<input placeholder="e.g., TRADENAME" aria-placeholder="Entry will be converted to uppercase letters per trade name convention" type="text" id="tradeName" name="tradeName" style="width:300px;border-style:inset;" value="<?php echo htmlspecialchars($taxonEditorObj->getTradeName() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" />
+							</div>
+						</div>
+						<div class="editDiv">
 							<div class="editLabel"><?php echo $LANG['AUTHOR']; ?>: </div>
 							<div class="editfield">
 								<?php echo $taxonEditorObj->getAuthor();?>
@@ -231,26 +273,6 @@ if($isEditor){
 								<?php
 								echo $taxonEditorObj->getKingdomName();
 								?>
-							</div>
-						</div>
-						<div class="editDiv">
-							<div class="editLabel"><?php echo $LANG['RANK_NAME']; ?>: </div>
-							<div class="editfield">
-								<?php echo ($taxonEditorObj->getRankName()?$taxonEditorObj->getRankName(): $LANG['NON_RANKED_NODE'] ); ?>
-							</div>
-							<div class="editfield" style="display:none;">
-								<select id="rankid" name="rankid">
-									<option value="0"><?php echo $LANG['NON_RANKED_NODE']; ?></option>
-									<option value="">---------------------------------</option>
-									<?php
-									$rankArr = $taxonEditorObj->getRankArr();
-									foreach($rankArr as $rankId => $nameArr){
-										foreach($nameArr as $rName){
-											echo '<option value="' . $rankId . '" ' . ($taxonEditorObj->getRankId()==$rankId?'SELECTED':'') . '>' . $rName . '</option>';
-										}
-									}
-									?>
-								</select>
 							</div>
 						</div>
 						<div class="editDiv">
