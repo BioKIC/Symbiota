@@ -29,6 +29,7 @@ $LANG['LIST_UPLOAD'] = 'List of Upload Profiles';
 $LANG['UP_MODULE'] = 'Data Upload Module';
 $LANG['CAUTION'] = 'Caution';
 $LANG['REC_REPLACE'] = 'Matching records will be replaced with incoming records';
+$LANG['LAST_UPLOAD_DATE'] = 'Last Upload Date';
 $LANG['NOT_REC'] = 'not recorded';
 $LANG['UP_STATUS'] = 'Upload Status';
 $LANG['PENDING_REPORT'] = 'Pending Data Transfer Report';
