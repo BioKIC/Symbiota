@@ -39,7 +39,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		<title><?php echo $DEFAULT_TITLE; ?> - Coordinate Aid</title>
 		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 
-		<?php 
+		<?php
 		if(empty($GOOGLE_MAP_KEY)) {
 			include_once($SERVER_ROOT.'/includes/leafletMap.php');
 		} else {
@@ -136,9 +136,9 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 			});
 		}
 		function initialize() {
-			<?php if(empty($GOOGLE_MAP_KEY)): ?> 
+			<?php if(empty($GOOGLE_MAP_KEY)): ?>
 				leafletInit();
-			<?php else:?> 
+			<?php else:?>
 				googleInit();
 			<?php endif ?>
 		}
@@ -179,7 +179,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 	</head>
 	<body style="display:flex; flex-direction: column; background-color:#ffffff;" onload="initialize()">
 		<?php
-			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
+		if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
 		<h1 class="page-heading screen-reader-only">Map Point Helper</h1>
 		<div style="padding:0.5rem; width: fit-content; height:fit-content" class="minimal-header-margin">

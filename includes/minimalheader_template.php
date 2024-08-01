@@ -1,16 +1,6 @@
 <?php
-// try{
-    // if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/header.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/header.en.php');
-    // else include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
-// } 
-// catch(Exception $error){
-//     // var_dump($error);
-// }
-include_once($SERVER_ROOT . '/includes/head.php');
-
-include_once($SERVER_ROOT . '/classes/ProfileManager.php');
-$pHandler = new ProfileManager();
-$isAccessiblePreferred = $pHandler->getAccessibilityPreference($SYMB_UID);
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/header.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/header.en.php');
 $SHOULD_USE_HARVESTPARAMS = $SHOULD_USE_HARVESTPARAMS ?? false;
 $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '/collections/search/index.php';
 ?>
@@ -25,42 +15,42 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 				<ul class="menu">
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/index.php">
-							<?= (isset($LANG['H_HOME'])?$LANG['H_HOME']:'Home') ?>
+							<?= $LANG['H_HOME'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT . $collectionSearchPage ?>">
-							<?= (isset($LANG['H_SEARCH'])?$LANG['H_SEARCH']:'Search') ?>
+							<?= $LANG['H_SEARCH'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/collections/map/index.php" rel="noopener noreferrer">
-							<?= (isset($LANG['H_MAP_SEARCH'])?$LANG['H_MAP_SEARCH']:'Map Search') ?>
+							<?= $LANG['H_MAP_SEARCH'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/checklists/index.php">
-							<?= (isset($LANG['H_INVENTORIES'])?$LANG['H_INVENTORIES']:'Checklists') ?>
+							<?= $LANG['H_INVENTORIES'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/imagelib/search.php">
-							<?= (isset($LANG['H_IMAGES'])?$LANG['H_IMAGES']:'Images') ?>
+							<?= $LANG['H_IMAGES'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/includes/usagepolicy.php">
-							<?= (isset($LANG['H_DATA_USAGE'])?$LANG['H_DATA_USAGE']:'Data Use') ?>
+							<?= $LANG['H_DATA_USAGE'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="https://symbiota.org/docs" target="_blank" rel="noopener noreferrer">
-							<?= (isset($LANG['H_HELP'])?$LANG['H_HELP']:'Help') ?>
+							<?= $LANG['H_HELP'] ?>
 						</a>
 					</li>
 					<li>
 						<a href='<?= $CLIENT_ROOT ?>/sitemap.php'>
-							<?= (isset($LANG['H_SITEMAP'])?$LANG['H_SITEMAP']:'Sitemap') ?>
+							<?= $LANG['H_SITEMAP'] ?>
 						</a>
 					</li>
 					<li>
@@ -71,20 +61,20 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 							<option value="fr" <?= ($LANG_TAG=='fr'?'SELECTED':'') ?>>Français</option>
 						</select>
 					</li>
-					
+
 						<?php
 						if ($USER_DISPLAY_NAME) {
 							?>
 							<li>
 								<span>
-									<?= (isset($LANG['H_WELCOME'])?$LANG['H_WELCOME']:'Welcome') . ' ' . $USER_DISPLAY_NAME ?>!
+									<?= $LANG['H_WELCOME'] . ' ' . $USER_DISPLAY_NAME ?>!
 								</span>
 							</li>
 							<li>
-									<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= (isset($LANG['H_MY_PROFILE'])?$LANG['H_MY_PROFILE']:'My Profile') ?></a>
+									<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= $LANG['H_MY_PROFILE'] ?></a>
 							</li>
 							<li>
-									<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= (isset($LANG['H_LOGOUT'])?$LANG['H_LOGOUT']:'Sign Out') ?></a>
+									<a style="font-size: 1.1em;" href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= $LANG['H_LOGOUT'] ?></a>
 							</li>
 							<?php
 						} else {
@@ -96,7 +86,7 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 							</li>
 							<li>
 									<a href="<?= $CLIENT_ROOT . "/profile/index.php?refurl=" . htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES); ?>">
-										<?= (isset($LANG['H_LOGIN'])?$LANG['H_LOGIN']:'Login') ?>
+										<?= $LANG['H_LOGIN'] ?>
 									</a>
 							</li>
 							<?php

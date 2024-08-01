@@ -7,6 +7,7 @@ echo "Creating homepage: /index.php"
 cp ../index_template.php ../index.php
 echo "Creating header include: /includes/header.php"
 cp ../includes/header_template.php ../includes/header.php
+cp ../includes/minimalheader_template.php ../includes/minimalheader.php
 echo "Creating Left Menu include: /includes/leftmenu.php"
 cp ../includes/leftmenu_template.php ../includes/leftmenu.php
 echo "Creating footer include: /includes/footer.php"

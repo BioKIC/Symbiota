@@ -193,7 +193,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
                   "Content-Type": "application/json",
                }
             })
-            const records = await response.json(); 
+            const records = await response.json();
             const resultLimit = 10000;
             const totalResults = records.total_results > resultLimit? resultLimit: records.total_results;
             const maxPage = Math.floor(totalResults / 200);
@@ -202,7 +202,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
                page,
                per_page: 200,
                results: [],
-               total_results: 0 
+               total_results: 0
             }
 
             if(page !== maxPage) {
@@ -251,7 +251,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
             margin: 0;
             padding: 0;
          }
-         .screen-reader-only{ 
+         .screen-reader-only{
             position: absolute;
             left: -10000px;
          }
@@ -259,7 +259,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
    </head>
    <body style="background-color:#ffffff;" onload="initialize();">
       <?php
-			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
+			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
       <h1 class="page-heading screen-reader-only"><?= $LANG['MAP_SECTION'] . ' ' . $clName; ?></h1>
       <?php

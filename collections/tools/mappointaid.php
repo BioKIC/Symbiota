@@ -97,7 +97,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		function leafletInit() {
 			//Setup Map Canvas
 			map = new LeafletMap('map_canvas', {
-				center: [latCenter, lngCenter], 
+				center: [latCenter, lngCenter],
 				zoom: 15,
 				lang: "<?php echo $LANG_TAG; ?>"
 			});
@@ -150,13 +150,13 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 				setLatLngForm(lat, lng);
 
 				circ = errRadius && errRadius > 0?
-					L.circle(latlng, errRadius): 
+					L.circle(latlng, errRadius):
 					false;
 				marker = L.marker(latlng);
 
 				function enableEdit() {
 					try {
-						//Very Jank and all the other ways current are also Jank 
+						//Very Jank and all the other ways current are also Jank
 						drawControl._toolbars.edit._modes.edit.button.click()
 					} catch(e) {
 						console.log("Failed to enable edit")
@@ -208,11 +208,11 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 				}
 
 				map.mapLayer
-					.on('draw:deleted', e => { 
+					.on('draw:deleted', e => {
 						errRadius = 0;
 						clearForm();
 					})
-					.on('draw:deletestop', e => { 
+					.on('draw:deletestop', e => {
 						const hasCircle = circ && drawnItems.hasLayer(circ);
 						const hasMarker = drawnItems.hasLayer(marker);
 						//Add Back marker or Circle if change Reverted and were present
@@ -245,10 +245,10 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 							map.mapLayer.fitBounds(circ.getBounds())
 						} else if(radius) {
 							if(!editOn) errRadius = radius;
-							circ = L.circle(latlng, radius); 
+							circ = L.circle(latlng, radius);
 							addCircleEvents(circ);
 							map.mapLayer.fitBounds(circ.getBounds())
-						} 
+						}
 
 					});
 				}
@@ -261,12 +261,12 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 
 				latInput.addEventListener("change", onFormChange);
 				lngInput.addEventListener("change", onFormChange);
-			} 
-			onFormChange = (event) => { 
-				if(!marker) { 
+			}
+			onFormChange = (event) => {
+				if(!marker) {
 					const pos = getLatLng();
 					createMarker();
-				} 
+				}
 			}
 			latInput.addEventListener("change", onFormChange);
 			lngInput.addEventListener("change", onFormChange);
@@ -278,7 +278,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 					const lng = e.layer._latlng.lng;
 					createMarker(lat, lng)
 
-				} 
+				}
 			})
 
 			//Draw marker if one exists
@@ -292,7 +292,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		function googleInit() {
 			//Setup Map Canvas
 			map = new GoogleMap('map_canvas', {
-				center: new google.maps.LatLng(latCenter, lngCenter), 
+				center: new google.maps.LatLng(latCenter, lngCenter),
 				zoom: 7
 			});
 
@@ -357,7 +357,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 			}
 
 
-			onFormChange = (event) => { 
+			onFormChange = (event) => {
 				errRadius = parseFloat(event.target.value);
 				const pos = getLatLng();
 				if(pos) createMarker(pos[0], pos[1]);
@@ -378,7 +378,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 			if(errRadius) {
 					drawError();
 				}
-			}) 
+			})
 		}
 
 		function initialize() {
@@ -401,10 +401,10 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 				} else {
 					alert(`Error: Not Coordinates lat: ${lat}, lng: ${lng}`);
 				}
-			} 
-			<?php if(empty($GOOGLE_MAP_KEY)) { ?> 
+			}
+			<?php if(empty($GOOGLE_MAP_KEY)) { ?>
 			leafletInit();
-			<?php } else { ?> 
+			<?php } else { ?>
 			googleInit();
 			<?php } ?>
 		}
@@ -437,7 +437,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		<style>
          body { padding:0; margin:0 }
 			html, body, #map_canvas { width:100%; height: 100%;}
-         .screen-reader-only{ 
+         .screen-reader-only{
             position: absolute;
             left: -10000px;
          }
@@ -449,13 +449,13 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
       </style>
 	</head>
 	<body style="display:flex; flex-direction: column;background-color:#ffffff;" onload="initialize()">
-		 <?php
-			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
+		<?php
+		if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
 		<h1 class="page-heading screen-reader-only">Point-Radius Aid</h1>
 		<div
-			id="service-container" 
-			class="service-container" 
+			id="service-container"
+			class="service-container"
 			data-lat="<?= htmlspecialchars($latCenter)?>"
 			data-lng="<?= htmlspecialchars($lngCenter)?>"
 			>
@@ -463,7 +463,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		<form class="minimal-header-margin" style="padding:0.5rem" name="coordform" action="" method="post" onsubmit="return false">
 			<div style="float:right;">
 				<button name="addcoords" type="button" onclick="updateParentForm(this.form);">
-					<b><?php echo isset($LANG['SUBMIT'])? $LANG['SUBMIT']: 'Submit' ?></b> 
+					<b><?php echo isset($LANG['SUBMIT'])? $LANG['SUBMIT']: 'Submit' ?></b>
 				</button><br/>
 			</div>
 			<div style="margin:3px 20px 3px 0px;">
@@ -471,9 +471,9 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 			<?php if($errMode) echo isset($LANG['MPR_UNCERTAINTY_INSTRUCTIONS']) ?$LANG['MPR_UNCERTAINTY_INSTRUCTIONS']: 'Enter uncertainty to create an error radius circle around the marker. '?>
 			</div>
 			<div style="margin-right:10px;">
-				<b><?php echo isset($LANG['MPR_LAT'])? $LANG['MPR_LAT']: 'Latitude' ?>:</b> 
+				<b><?php echo isset($LANG['MPR_LAT'])? $LANG['MPR_LAT']: 'Latitude' ?>:</b>
 				<input type="text" id="latbox" name="lat" style="width:100px" />
-				<b><?php echo isset($LANG['MPR_LNG'])? $LANG['MPR_LNG']: 'Longitude' ?>:</b> 
+				<b><?php echo isset($LANG['MPR_LNG'])? $LANG['MPR_LNG']: 'Longitude' ?>:</b>
 				<input type="text" id="lngbox" name="lon" style="width:100px" />
 				<?php if($errMode):?>
 				<b>

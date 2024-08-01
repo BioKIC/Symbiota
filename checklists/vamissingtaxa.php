@@ -6,7 +6,7 @@ else include_once($SERVER_ROOT.'/content/lang/checklists/vamissingtaxa.en.php');
 
 $clid = array_key_exists('clid', $_REQUEST) ? filter_var($_REQUEST['clid'], FILTER_SANITIZE_NUMBER_INT) : 0;
 $pid = array_key_exists('pid', $_REQUEST) ? htmlspecialchars($_REQUEST['pid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) : "";
-$displayMode = array_key_exists('displayMode', $_REQUEST) ? filter_var($_REQUEST['displayMode'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$displayMode = array_key_exists('displaymode', $_REQUEST) ? filter_var($_REQUEST['displaymode'], FILTER_SANITIZE_NUMBER_INT) : 0;
 $startIndex = array_key_exists('start', $_REQUEST) ? filter_var($_REQUEST['start'], FILTER_SANITIZE_NUMBER_INT) : 0;
 
 $vManager = new ChecklistVoucherReport();

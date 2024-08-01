@@ -1,11 +1,6 @@
 <?php
-if($LANG_TAG == 'en' || !file_exists($SERVER_ROOT.'/content/lang/header.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/header.en.php');
-else include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
-include_once($SERVER_ROOT . '/includes/head.php');
-
-include_once($SERVER_ROOT . '/classes/ProfileManager.php');
-$pHandler = new ProfileManager();
-$isAccessiblePreferred = $pHandler->getAccessibilityPreference($SYMB_UID);
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/header.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/header.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/header.en.php');
 $SHOULD_USE_HARVESTPARAMS = $SHOULD_USE_HARVESTPARAMS ?? false;
 $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '/collections/search/index.php';
 ?>
@@ -21,10 +16,10 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 						<?= (isset($LANG['H_WELCOME'])?$LANG['H_WELCOME']:'Welcome') . ' ' . $USER_DISPLAY_NAME ?>!
 					</div>
 					<span style="white-space: nowrap;" class="button button-tertiary bottom-breathing-room-rel">
-						<a href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= (isset($LANG['H_MY_PROFILE'])?$LANG['H_MY_PROFILE']:'My Profile') ?></a>
+						<a href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= $LANG['H_MY_PROFILE'] ?></a>
 					</span>
 					<span style="white-space: nowrap;" class="button button-secondary bottom-breathing-room-rel">
-						<a href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= (isset($LANG['H_LOGOUT'])?$LANG['H_LOGOUT']:'Sign Out') ?></a>
+						<a href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= $LANG['H_LOGOUT'] ?></a>
 					</span>
 					<?php
 				} else {
@@ -36,7 +31,7 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					</span>
 					<span class="button button-secondary">
 						<a href="<?= $CLIENT_ROOT . "/profile/index.php?refurl=" . htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES); ?>">
-							<?= (isset($LANG['H_LOGIN'])?$LANG['H_LOGIN']:'Login') ?>
+							<?= $LANG['H_LOGIN'] ?>
 						</a>
 					</span>
 					<?php
@@ -64,42 +59,42 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 				<ul class="menu">
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/index.php">
-							<?= (isset($LANG['H_HOME'])?$LANG['H_HOME']:'Home') ?>
+							<?= $LANG['H_HOME'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT . $collectionSearchPage ?>">
-							<?= (isset($LANG['H_SEARCH'])?$LANG['H_SEARCH']:'Search') ?>
+							<?= $LANG['H_SEARCH'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/collections/map/index.php" rel="noopener noreferrer">
-							<?= (isset($LANG['H_MAP_SEARCH'])?$LANG['H_MAP_SEARCH']:'Map Search') ?>
+							<?= $LANG['H_MAP_SEARCH'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/checklists/index.php">
-							<?= (isset($LANG['H_INVENTORIES'])?$LANG['H_INVENTORIES']:'Checklists') ?>
+							<?= $LANG['H_INVENTORIES'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/imagelib/search.php">
-							<?= (isset($LANG['H_IMAGES'])?$LANG['H_IMAGES']:'Images') ?>
+							<?= $LANG['H_IMAGES'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="<?= $CLIENT_ROOT ?>/includes/usagepolicy.php">
-							<?= (isset($LANG['H_DATA_USAGE'])?$LANG['H_DATA_USAGE']:'Data Use') ?>
+							<?= $LANG['H_DATA_USAGE'] ?>
 						</a>
 					</li>
 					<li>
 						<a href="https://symbiota.org/docs" target="_blank" rel="noopener noreferrer">
-							<?= (isset($LANG['H_HELP'])?$LANG['H_HELP']:'Help') ?>
+							<?= $LANG['H_HELP'] ?>
 						</a>
 					</li>
 					<li>
 						<a href='<?= $CLIENT_ROOT ?>/sitemap.php'>
-							<?= (isset($LANG['H_SITEMAP'])?$LANG['H_SITEMAP']:'Sitemap') ?>
+							<?= $LANG['H_SITEMAP'] ?>
 						</a>
 					</li>
 					<li>
@@ -118,15 +113,15 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 										<a href="#">Link 3</a>
 									</li>
 								</ul>
-							</li>	
+							</li>
 						</ul>
 					</li>
 					<li id="lang-select-li">
 						<label for="language-selection"><?= $LANG['SELECT_LANGUAGE'] ?>: </label>
 						<select oninput="setLanguage(this)" id="language-selection" name="language-selection">
 							<option value="en">English</option>
-							<option value="es" <?= ($LANG_TAG=='es'?'SELECTED':'') ?>>Espa&ntilde;ol</option>
-							<option value="fr" <?= ($LANG_TAG=='fr'?'SELECTED':'') ?>>Français</option>
+							<option value="es" <?= ($LANG_TAG == 'es' ? 'SELECTED' : '') ?>>Espa&ntilde;ol</option>
+							<option value="fr" <?= ($LANG_TAG == 'fr' ? 'SELECTED' : '') ?>>Français</option>
 						</select>
 					</li>
 				</ul>

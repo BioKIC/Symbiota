@@ -1,6 +1,6 @@
 <?php
 $DEFAULT_LANG = 'en';			//Default language
-$DEFAULT_PROJ_ID = 1;
+$DEFAULT_PROJ_ID = 0;
 $DEFAULTCATID = 0;
 $DEFAULT_TITLE = '';
 $EXTENDED_LANG = 'en';		//Add all languages you want to support separated by commas (e.g. en,es); currently supported languages: en,es
@@ -18,8 +18,7 @@ $TEMP_DIR_ROOT = $SERVER_ROOT . '/temp';				//Must be writable by Apache; will u
 $LOG_PATH = $SERVER_ROOT . '/content/logs';					//Must be writable by Apache; will use <SYMBIOTA_ROOT>/temp/logs if not specified
 
 //Path to CSS files
-$CSS_VERSION_RELEASE = 'v202209';
-$CSS_BASE_PATH = $CLIENT_ROOT . '/css/' . $CSS_VERSION_RELEASE;
+$CSS_BASE_PATH = $CLIENT_ROOT . '/css';
 
 //Path to user uploaded images files.  Used by tinyMCE. This is NOT for collection images. See section immediatly below for collection image location
 $PUBLIC_IMAGE_UPLOAD_ROOT = '/content/imglib';
@@ -87,28 +86,6 @@ $RIGHTS_TERMS = array(
 	'CC BY-NC-SA (Attribution-NonCommercial-ShareAlike)' => 'https://creativecommons.org/licenses/by-nc-sa/4.0/',
 );
 
-/*
- //Default editor properties; properties defined in collection will override these values
- $EDITOR_PROPERTIES = array(
- 'modules-panel' => array(
- 'paleo' => array('status'=>0,'titleOverride'=>'Paleonotology Terms')
- ),
- 'features' => array('catalogDupeCheck'=>1,'otherCatNumDupeCheck'=>0,'dupeSearch'=>1),
- 'labelOverrides' => array(),
- 'cssTerms' => array(
- '#recordNumberDiv'=>array('float'=>'left','margin-right'=>'2px'),
- '#recordNumberDiv input'=>array('width'=>'60px'),
- '#eventDateDiv'=>array('float'=>'left'),
- '#eventDateDiv input'=>array('width'=>'110px')
- ),
- 'customCSS' => array(),
- 'customLookups' => array(
- 'processingStatus' => array('Unprocessed','Stage 1','Stage 2','Pending Review','Expert Required','Reviewed','Closed')
- )
- );
- // json: {"editorProps":{"modules-panel":{"paleo":{"status":1}}}}
- */
-
  // Should public users be able to create accounts?
 $SHOULD_BE_ABLE_TO_CREATE_PUBLIC_USER = true;
 // end Should public users be able to create accounts?
@@ -124,10 +101,10 @@ $SHOULD_USE_MINIMAL_MAP_HEADER = false;
 
 $COOKIE_SECURE = false;
 if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
-	header("strict-transport-security: max-age=600");
+	header('strict-transport-security: max-age=600');
 	$COOKIE_SECURE = true;
 }
 
 //Base code shared by all pages; leave as is
-include_once("symbbase.php");
+include_once('symbbase.php');
 /* --DO NOT ADD ANY EXTRA SPACES BELOW THIS LINE-- */

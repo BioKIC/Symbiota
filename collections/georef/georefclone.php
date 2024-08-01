@@ -190,7 +190,7 @@ alert("<?php echo isset($LANG['LOCALITY_INVALID_ERROR'])? $LANG['LOCALITY_INVALI
 	</head>
 	<body style="background-color:#ffffff;" onload="initialize()">
 		<?php
-			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
+			if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
 		<!-- Data Container for Passing to Js -->
 		<div id="service-container"

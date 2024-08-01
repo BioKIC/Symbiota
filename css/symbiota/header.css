@@ -155,6 +155,10 @@ header a:hover {
   display: none;
 }
 
+.menu {
+  font-size: var(--menu-font-size);
+}
+
 ul.menu,
 ul.menu ul {
   list-style: none;

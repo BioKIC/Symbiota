@@ -24,7 +24,7 @@ $whereManager = new GamesWhereManager();
 		<?php
 		include_once($SERVER_ROOT.'/includes/head.php');
 		?>
-		<link href="css/ol.css" type="text/css" rel="stylesheet" />
+		<link href="ol.css" type="text/css" rel="stylesheet" />
 		<style>
 			body { background-color: rgb(255, 250, 240); }
 			.map { height: 600px; width: 100%; border: 2px solid #000; }

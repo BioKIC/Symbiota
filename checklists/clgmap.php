@@ -22,7 +22,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
    <head>
-      <?php 
+      <?php
         include_once($SERVER_ROOT.'/includes/leafletMap.php');
 	     include_once($SERVER_ROOT.'/includes/googleMap.php');
       ?>
@@ -34,7 +34,7 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
          let checklists;
          let pid;
 
-         function navigateToCheckList(clid, pid) { 
+         function navigateToCheckList(clid, pid) {
             window.location.href = `../ident/key.php?clid=${clid}&pid=${pid}&taxon=All+Species`;
          }
 
@@ -75,24 +75,24 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
                bounds.extend(coord);
 
                let m = new google.maps.Marker({
-                  position: coord, 
-                  map: map.mapLayer, 
-                  title: checklist.name, 
+                  position: coord,
+                  map: map.mapLayer,
+                  title: checklist.name,
                })
                const infoWin = new google.maps.InfoWindow({
                   content: `<div style=\'width:300px;\'>
                      <b>${checklist.name}</b><br/><?php echo (isset($LANG['DOUBLE_CLICK'])?$LANG['DOUBLE_CLICK']:'Double Click to open'); ?>
-                  </div>` 
+                  </div>`
                });
 
                infoWins.push(infoWin);
 
-               google.maps.event.addListener(m, 'click', function(e){ 
-                  closeAllInfoWins(); 
-                  infoWin.open(map.mapLayer, m); 
+               google.maps.event.addListener(m, 'click', function(e){
+                  closeAllInfoWins();
+                  infoWin.open(map.mapLayer, m);
                });
 
-               google.maps.event.addListener(m, "dblclick", function(){ 
+               google.maps.event.addListener(m, "dblclick", function(){
                  closeAllInfoWins();
                  m.setAnimation(google.maps.Animation.BOUNCE);
                  navigateToCheckList(checklistId, pid);
@@ -134,13 +134,13 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 	</head>
 	<body style="background-color:#ffffff;" onload="initialize()">
       <?php
-			// if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimal_header_template.php');
+			// if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
       <h1 class="page-heading screen-reader-only" style="margin-top:30px;">Checklist Map</h1>
 		<div id="map_canvas"></div>
-      <div 
-        id="service-container" 
-        class="service-container" 
+      <div
+        id="service-container"
+        class="service-container"
         data-checklists="<?= htmlspecialchars(json_encode($clManager->getResearchPoints()))?>"
         data-pid="<?= htmlspecialchars($pid)?>"
       >
