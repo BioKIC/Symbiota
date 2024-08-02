@@ -1,0 +1,170 @@
+.smSampleTypeDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smSampleTypeDiv label{
+	display: block;
+}
+
+.smSampleTypeDiv input{
+}
+
+.smCatalogNumberDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smCatalogNumberDiv label{
+	display: block;
+}
+
+.smCatalogNumberDiv input{
+}
+
+.smGuidDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smGuidDiv label{
+	display: block;
+}
+
+.smGuidDiv input{
+}
+
+.smSampleConditionDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smSampleConditionDiv label{
+	display: block;
+}
+
+.smSampleConditionDiv input{
+}
+
+.smDispositionDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smDispositionDiv label{
+	display: block;
+}
+
+.smDispositionDiv input{
+}
+
+.smPreservationTypeDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smPreservationTypeDiv label{
+	display: block;
+}
+
+.smPreservationTypeDiv input{
+}
+
+.smPreparationDateDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smPreparationDateDiv label{
+	display: block;
+}
+
+.smPreparationDateDiv input{
+}
+
+.smPreparedByUidDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smPreparedByUidDiv label{
+	display: block;
+}
+
+.smPreparedByUidDiv input{
+}
+
+.smPreparationDetailsDiv {
+	clear:both;
+	margin: 2px;
+	height: 35px;
+}
+
+.smPreparationDetailsDiv label{
+	display: block;
+}
+
+.smPreparationDetailsDiv input{
+	width: 90%;
+}
+
+.smIndividualCountDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smIndividualCountDiv label{
+	display: block;
+}
+
+.smIndividualCountDiv input{
+}
+
+.smSampleSizeDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smSampleSizeDiv label{
+	display: block;
+}
+
+.smSampleSizeDiv input{
+}
+
+.smStorageLocationDiv {
+	float:left;
+	margin: 2px;
+	height: 35px;
+}
+
+.smStorageLocationDiv label{
+	display: block;
+}
+
+.smStorageLocationDiv input{
+}
+
+.smRemarksDiv {
+	clear:both;
+	margin: 2px;
+	height: 35px;
+}
+
+.smRemarksDiv label{
+	display: block;
+}
+
+.smRemarksDiv input{
+	width: 90%;
+}

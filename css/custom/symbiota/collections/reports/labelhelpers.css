@@ -1,0 +1,985 @@
+/* ----------------------------------------
+* Helper CSS classes for custom label styling
+* Author: Laura Rocha Prado
+* Version: Nov 2020
+* Usage: add this file path to `labeljson.php` 
+* in either `defaultCss` or `customCss` 
+* properties and refer to appropriate class
+* in desired element `className` property.
+*-----------------------------------------*/
+
+
+/* Basic page view formatting */
+
+.body {
+  width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+/* US-letter size */
+
+.letter {
+  width: 8.5in;
+  height: 11in;
+  margin-top: 0;
+}
+
+
+/* Page & Label sizes */
+
+@media print {
+  .controls {
+    display: none;
+  }
+  .body {
+    width: auto;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .row {
+    page-break-before: auto;
+    break-before: auto;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+  /* A4 size */
+  .a4 {
+    width: 21cm;
+    height: 29.7cm;
+    /* margin-top: 10mm;
+    margin-right: 20mm;
+    margin-left: 20mm; */
+  }
+  /* US-letter size */
+  .letter {
+    width: 8.5in;
+    height: 11in;
+    margin-top: 0;
+  }
+}
+
+.label-3-rows {
+  /* letter page: 2 cols x 3 rows */
+  height: 320px;
+}
+
+
+/* Placing and ordering things */
+
+.block {
+  display: block;
+}
+
+.inline-block {
+  display: inline-block;
+}
+
+.inline {
+  display: inline;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.flex-row {
+  flex-direction: row;
+}
+
+.flex-row-reverse {
+  flex-direction: row-reverse;
+}
+
+.flex-col-reverse {
+  flex-direction: column-reverse;
+}
+
+.flex-wrap {
+  flex-wrap: wrap;
+}
+
+.flex-wrap-reverse {
+  flex-wrap: wrap-reverse;
+}
+
+.flex-no-wrap {
+  flex-wrap: nowrap;
+}
+
+.float-right {
+  float: right;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-none {
+  float: none;
+}
+
+.order-1 {
+  order: 1;
+}
+
+.order-2 {
+  order: 2;
+}
+
+.order-3 {
+  order: 3;
+}
+
+.order-4 {
+  order: 4;
+}
+
+.order-5 {
+  order: 5;
+}
+
+.order-6 {
+  order: 6;
+}
+
+.order-7 {
+  order: 7;
+}
+
+.order-8 {
+  order: 8;
+}
+
+.order-9 {
+  order: 9;
+}
+
+
+/* CSS-Grid */
+
+.grid {
+  /* Makes container fixed height and adds css-grid*/
+  /* min-height: 100%; */
+  display: grid;
+}
+
+.grid-cols-2 {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.grid-cols-3 {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+
+/* Fonts */
+
+.font-type-sans {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+.font-type-serif {
+  font-family: Georgia, Cambria, 'Times New Roman', Times, serif;
+}
+
+.font-type-mono {
+  font-family: Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.font-family-arial {
+  font-family: 'Arial', sans-serif;
+}
+
+.font-family-verdana {
+  font-family: 'Verdana', sans-serif;
+}
+
+.font-family-helvetica {
+  font-family: 'Helvetica', sans-serif;
+}
+
+.font-family-tahoma {
+  font-family: 'Tahoma', sans-serif;
+}
+
+.font-family-trebuchet {
+  font-family: 'Trebuchet', sans-serif;
+}
+
+.font-family-times {
+  font-family: 'Times New Roman', serif;
+}
+
+.font-family-georgia {
+  font-family: 'Georgia', serif;
+}
+
+.font-family-garamond {
+  font-family: 'Garamond', serif;
+}
+
+.font-family-courier {
+  font-family: 'Courier New', monospace;
+}
+
+.font-family-brush {
+  font-family: 'Brush Script MT', cursive;
+}
+
+.text-align-center {
+  text-align: center;
+}
+
+.text-align-right {
+  text-align: right;
+}
+
+.text-align-left {
+  text-align: left;
+}
+
+.text-align-justify {
+  text-align: justify;
+}
+
+
+/* Base font size should be defined 
+*  in points or pixels, because these are
+*  meant for printing.
+*/
+
+.text-xs {
+  font-size: 0.75em;
+}
+
+.text-sm {
+  font-size: 0.875em;
+}
+
+.text-base {
+  font-size: 1em;
+}
+
+.text-lg {
+  font-size: 1.125em;
+}
+
+.text-xl {
+  font-size: 1.25em;
+}
+
+.text-2xl {
+  font-size: 1.5em;
+}
+
+.text-3xl {
+  font-size: 1.875em;
+}
+
+.text-4xl {
+  font-size: 2.25em;
+}
+
+.text-5xl {
+  font-size: 3em;
+}
+
+.text-6xl {
+  font-size: 4em;
+}
+
+.font-hairline {
+  font-weight: 100;
+}
+
+.font-thin {
+  font-weight: 200;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-normal {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-semibold {
+  font-weight: 600;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.font-extrabold {
+  font-weight: 800;
+}
+
+.font-black {
+  font-weight: 900;
+}
+
+.italic {
+  font-style: italic;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.normal-case {
+  text-transform: none;
+}
+
+.underline {
+  text-decoration: underline;
+}
+
+
+/* 
+- font-size
+- font-weight
+- text-transformation
+- font-color?
+*/
+
+
+/* Spacing */
+
+.m-0 {
+  margin: 0;
+}
+
+.m-1 {
+  margin: 0.25em;
+}
+
+.m-2 {
+  margin: 0.5em;
+}
+
+.m-3 {
+  margin: 0.75em;
+}
+
+.m-4 {
+  margin: 1em;
+}
+
+.m-5 {
+  margin: 1.25em;
+}
+
+.m-6 {
+  margin: 1.5em;
+}
+
+.m-8 {
+  margin: 2em;
+}
+
+.m-10 {
+  margin: 2.5em;
+}
+
+.m-12 {
+  margin: 3em;
+}
+
+.m-16 {
+  margin: 4em;
+}
+
+.m-20 {
+  margin: 5em;
+}
+
+.m-24 {
+  margin: 6em;
+}
+
+.m-32 {
+  margin: 8em;
+}
+
+.m-40 {
+  margin: 10em;
+}
+
+.m-48 {
+  margin: 12em;
+}
+
+.m-56 {
+  margin: 14em;
+}
+
+.m-64 {
+  margin: 16em;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.m-px {
+  margin: 1px;
+}
+
+.my-0 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.mx-0 {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.my-1 {
+  margin-top: 0.25em;
+  margin-bottom: 0.25em;
+}
+
+.mx-1 {
+  margin-left: 0.25em;
+  margin-right: 0.25em;
+}
+
+.my-2 {
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+
+.mx-2 {
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+}
+
+.my-3 {
+  margin-top: 0.75em;
+  margin-bottom: 0.75em;
+}
+
+.mx-3 {
+  margin-left: 0.75em;
+  margin-right: 0.75em;
+}
+
+.my-4 {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
+.mx-4 {
+  margin-left: 1em;
+  margin-right: 1em;
+}
+
+.my-5 {
+  margin-top: 1.25em;
+  margin-bottom: 1.25em;
+}
+
+.mx-5 {
+  margin-left: 1.25em;
+  margin-right: 1.25em;
+}
+
+.my-6 {
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
+}
+
+.mx-6 {
+  margin-left: 1.5em;
+  margin-right: 1.5em;
+}
+
+.my-8 {
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
+.mx-8 {
+  margin-left: 2em;
+  margin-right: 2em;
+}
+
+.my-10 {
+  margin-top: 2.5em;
+  margin-bottom: 2.5em;
+}
+
+.mx-10 {
+  margin-left: 2.5em;
+  margin-right: 2.5em;
+}
+
+.my-12 {
+  margin-top: 3em;
+  margin-bottom: 3em;
+}
+
+.mx-12 {
+  margin-left: 3em;
+  margin-right: 3em;
+}
+
+.my-16 {
+  margin-top: 4em;
+  margin-bottom: 4em;
+}
+
+.mx-16 {
+  margin-left: 4em;
+  margin-right: 4em;
+}
+
+.my-20 {
+  margin-top: 5em;
+  margin-bottom: 5em;
+}
+
+.mx-20 {
+  margin-left: 5em;
+  margin-right: 5em;
+}
+
+.my-24 {
+  margin-top: 6em;
+  margin-bottom: 6em;
+}
+
+.mx-24 {
+  margin-left: 6em;
+  margin-right: 6em;
+}
+
+.my-32 {
+  margin-top: 8em;
+  margin-bottom: 8em;
+}
+
+.mx-32 {
+  margin-left: 8em;
+  margin-right: 8em;
+}
+
+.my-40 {
+  margin-top: 10em;
+  margin-bottom: 10em;
+}
+
+.mx-40 {
+  margin-left: 10em;
+  margin-right: 10em;
+}
+
+.my-48 {
+  margin-top: 12em;
+  margin-bottom: 12em;
+}
+
+.mx-48 {
+  margin-left: 12em;
+  margin-right: 12em;
+}
+
+.my-56 {
+  margin-top: 14em;
+  margin-bottom: 14em;
+}
+
+.mx-56 {
+  margin-left: 14em;
+  margin-right: 14em;
+}
+
+.my-64 {
+  margin-top: 16em;
+  margin-bottom: 16em;
+}
+
+.mx-64 {
+  margin-left: 16em;
+  margin-right: 16em;
+}
+
+.my-auto {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.mx-auto {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.my-px {
+  margin-top: 1px;
+  margin-bottom: 1px;
+}
+
+.mx-px {
+  margin-left: 1px;
+  margin-right: 1px;
+}
+
+.mt-0 {
+  margin-top: 0;
+}
+
+.mr-0 {
+  margin-right: 0;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.ml-0 {
+  margin-left: 0;
+}
+
+.mt-1 {
+  margin-top: 0.25em;
+}
+
+.mr-1 {
+  margin-right: 0.25em;
+}
+
+.mb-1 {
+  margin-bottom: 0.25em;
+}
+
+.ml-1 {
+  margin-left: 0.25em;
+}
+
+.mt-2 {
+  margin-top: 0.5em;
+}
+
+.mr-2 {
+  margin-right: 0.5em;
+}
+
+.mb-2 {
+  margin-bottom: 0.5em;
+}
+
+.ml-2 {
+  margin-left: 0.5em;
+}
+
+.mt-3 {
+  margin-top: 0.75em;
+}
+
+.mr-3 {
+  margin-right: 0.75em;
+}
+
+.mb-3 {
+  margin-bottom: 0.75em;
+}
+
+.ml-3 {
+  margin-left: 0.75em;
+}
+
+.mt-4 {
+  margin-top: 1em;
+}
+
+.mr-4 {
+  margin-right: 1em;
+}
+
+.mb-4 {
+  margin-bottom: 1em;
+}
+
+.ml-4 {
+  margin-left: 1em;
+}
+
+.mt-5 {
+  margin-top: 1.25em;
+}
+
+.mr-5 {
+  margin-right: 1.25em;
+}
+
+.mb-5 {
+  margin-bottom: 1.25em;
+}
+
+.ml-5 {
+  margin-left: 1.25em;
+}
+
+.mt-6 {
+  margin-top: 1.5em;
+}
+
+.mr-6 {
+  margin-right: 1.5em;
+}
+
+.mb-6 {
+  margin-bottom: 1.5em;
+}
+
+.ml-6 {
+  margin-left: 1.5em;
+}
+
+.mt-8 {
+  margin-top: 2em;
+}
+
+.mr-8 {
+  margin-right: 2em;
+}
+
+.mb-8 {
+  margin-bottom: 2em;
+}
+
+.ml-8 {
+  margin-left: 2em;
+}
+
+.mt-10 {
+  margin-top: 2.5em;
+}
+
+.mr-10 {
+  margin-right: 2.5em;
+}
+
+.mb-10 {
+  margin-bottom: 2.5em;
+}
+
+.ml-10 {
+  margin-left: 2.5em;
+}
+
+.mt-12 {
+  margin-top: 3em;
+}
+
+.mr-12 {
+  margin-right: 3em;
+}
+
+.mb-12 {
+  margin-bottom: 3em;
+}
+
+.ml-12 {
+  margin-left: 3em;
+}
+
+.mt-16 {
+  margin-top: 4em;
+}
+
+.mr-16 {
+  margin-right: 4em;
+}
+
+.mb-16 {
+  margin-bottom: 4em;
+}
+
+.ml-16 {
+  margin-left: 4em;
+}
+
+.mt-20 {
+  margin-top: 5em;
+}
+
+.mr-20 {
+  margin-right: 5em;
+}
+
+.mb-20 {
+  margin-bottom: 5em;
+}
+
+.ml-20 {
+  margin-left: 5em;
+}
+
+.mt-24 {
+  margin-top: 6em;
+}
+
+.mr-24 {
+  margin-right: 6em;
+}
+
+.mb-24 {
+  margin-bottom: 6em;
+}
+
+.ml-24 {
+  margin-left: 6em;
+}
+
+.mt-32 {
+  margin-top: 8em;
+}
+
+.mr-32 {
+  margin-right: 8em;
+}
+
+.mb-32 {
+  margin-bottom: 8em;
+}
+
+.ml-32 {
+  margin-left: 8em;
+}
+
+.mt-40 {
+  margin-top: 10em;
+}
+
+.mr-40 {
+  margin-right: 10em;
+}
+
+.mb-40 {
+  margin-bottom: 10em;
+}
+
+.ml-40 {
+  margin-left: 10em;
+}
+
+.mt-48 {
+  margin-top: 12em;
+}
+
+.mr-48 {
+  margin-right: 12em;
+}
+
+.mb-48 {
+  margin-bottom: 12em;
+}
+
+.ml-48 {
+  margin-left: 12em;
+}
+
+.mt-56 {
+  margin-top: 14em;
+}
+
+.mr-56 {
+  margin-right: 14em;
+}
+
+.mb-56 {
+  margin-bottom: 14em;
+}
+
+.ml-56 {
+  margin-left: 14em;
+}
+
+.mt-64 {
+  margin-top: 16em;
+}
+
+.mr-64 {
+  margin-right: 16em;
+}
+
+.mb-64 {
+  margin-bottom: 16em;
+}
+
+.ml-64 {
+  margin-left: 16em;
+}
+
+.mt-auto {
+  margin-top: auto;
+  width: 90%;
+}
+
+.mr-auto {
+  margin-right: auto;
+}
+
+.mb-auto {
+  margin-bottom: auto;
+}
+
+.ml-auto {
+  margin-left: auto;
+}
+
+
+/* Decorative elements */
+
+.bar::after {
+  border-bottom: 1px solid black;
+  margin-top: 0.24em;
+  content: ' ';
+  display: block;
+  height: 2px;
+  background: black;
+  width: 100%;
+  left: 0;
+  top: calc(50% - 2px);
+}
+
+.bar-top::before {
+  border-bottom: 1px solid black;
+  margin-top: 0.24em;
+  content: ' ';
+  display: block;
+  height: 2px;
+  background: black;
+  width: 100%;
+  left: 0;
+  top: calc(50% - 2px);
+}
+
+
+/* Visibility */
+
+.hidden {
+  display: none;
+}

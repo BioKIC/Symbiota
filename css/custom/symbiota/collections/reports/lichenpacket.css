@@ -1,0 +1,92 @@
+/***  
+* Lichen Packets Custom Styles
+* Author: Laura Rocha Prado
+* Version: September 2021
+*
+***/
+
+.page {
+  width: 8.5in;
+  height: 11in;
+  page-break-after: always;
+}
+
+.label {
+  margin-top: 9mm;
+  margin-left: 2cm;
+  margin-right: 1cm;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 70%;
+}
+
+.label-blocks {
+  padding-right: 4mm;
+}
+
+.label-header {
+  order: 1;
+  line-height: 26pt;
+}
+
+.foldmarks1,
+.foldmarks2 {
+  font-family: Times New Roman;
+  font-size: 27pt;
+  font-weight: 100;
+}
+
+.foldmarks1 {
+  padding-top: 8cm;
+}
+
+.foldmarks2 {
+  padding-top: 9.8cm !important;
+}
+
+.foldMarks1 span {
+  margin-top: 1mm;
+}
+
+.foldmarks1 span:first-child {
+  margin-left: 18mm;
+  margin-right: 25mm;
+}
+
+.foldMarks2 span {
+  margin-top: 6mm;
+}
+
+.foldmarks1 span:first-child {
+  margin-left: 18mm;
+  margin-right: 25mm;
+}
+
+.other-catalog-numbers {
+  display: none;
+}
+
+.cn-barcode {
+  order: 2;
+  text-align: center;
+  margin-right: 5mm;
+  width: 5cm;
+}
+
+.cn-barcode img {
+  width: 100%;
+  height: auto;
+}
+
+.label-blocks {
+  order: 3;
+}
+
+.label-blocks > div {
+  margin-bottom: 0.5rem;
+}
+
+.eventdate {
+  padding-left: 1.5rem;
+}

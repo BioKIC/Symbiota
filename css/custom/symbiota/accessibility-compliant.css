@@ -1,0 +1,19 @@
+div {
+  /* background-color: orange; */
+}
+
+.flex-form {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.flex-form > * {
+  flex-basis: 100%;
+  margin-left: 10px;
+  margin-right: 10px;
+  margin-bottom: 5px;
+}
+
+.override-flex {
+  flex-basis: auto;
+}

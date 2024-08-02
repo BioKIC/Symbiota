@@ -1,0 +1,17 @@
+/* Modify styles within this file to override styles within base.css file 
+ * 
+ **/
+body{
+	width: 100%;
+	min-width:700px;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 12px;
+}
+
+#popup-innertext {
+	width: 85%;
+	min-width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+}
+

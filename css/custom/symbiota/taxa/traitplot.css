@@ -1,0 +1,121 @@
+.PlotButton{
+  border: none;
+  background-color: white;
+  margin: 0px;
+}
+.PlotCaption {
+  font-size: x-small;
+  width: 50%;
+}
+.BarPlotBackground {
+  fill: white;
+}
+.BarPlotXTickLine, .BarPlotYTickLine {
+  fill: none;
+  stroke: white;
+  stroke-width: 1 px;
+  /* stroke-dasharray: 2 2; */
+}
+.BarPlotAxisLine {
+  stroke: grey;
+  stroke-width: 1 px;
+}
+.BarPlotXLabelText, .BarPlotYLabelText  {
+  fill: black;
+  font-family: sans-serif;
+  font-size: x-small;
+  text-anchor: middle;
+}
+.BarPlotYLabelText {
+  text-anchor: end;
+}
+.BarPlotFocal {
+  stroke: none;
+  fill: orange;
+}
+.BarPlotBlurred {
+  stroke: none;
+  fill: gray;
+}
+.PolarPlotXTickLine {
+  stroke: grey;
+  stroke-width: 1 px;
+}
+.PolarPlotYTickLine {
+  stroke: grey;
+  stroke-width: 1 px;
+  stroke-dasharray: 2 2;
+  fill: none;
+}
+.PolarPlotXLabelText {
+  font-family: sans-serif;
+  font-size: x-small;
+  text-anchor: middle;
+}
+.PolarPlotYLabelText {
+  font-family: sans-serif;
+  font-size: xx-small;
+  text-anchor: middle;
+}
+.PolarPlotFocal {
+  fill: none;
+  stroke-width: 3px;
+  stroke: orange;
+}
+.PolarPlotBlurred {
+  fill: none;
+  stroke-width: 3px;
+  stroke: gray;
+}
+.LinePlotBackground {
+  fill: lightgray;
+}
+.LinePlotXTickLine, .LinePlotYTickLine {
+  fill: none;
+  stroke: white;
+  stroke-width: 1 px;
+  /* stroke-dasharray: 2 2; */
+}
+.LinePlotAxisLine {
+  stroke: grey;
+  stroke-width: 1 px;
+}
+.LinePlotXLabelText, .LinePlotYLabelText {
+  fill: black;
+  font-family: sans-serif;
+  font-size: x-small;
+  text-anchor: middle;
+}
+.LinePlotYLabelText {
+  text-anchor: end;
+}
+.LinePlotFocal {
+  fill: none;
+  stroke-width: 3px;
+  stroke: orange;
+}
+.LinePlotBlurred {
+  fill: none;
+  stroke-width: 3px;
+  stroke: gray;
+}
+
+.PlotSwitch{
+  cursor: pointer;
+  display: block;
+  background: #ffffff;
+}
+.PlotSwitch + input{
+  display: none;   /* so user doesn't see checkbox */
+}
+.PlotSwitch + input:checked + div{
+  display:block;
+}
+.PlotSwitch + input + div{
+  display:none;
+}
+.PlotIcon {
+  border: 0px;
+  margin: 0px;
+  height: 30px;
+}

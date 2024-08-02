@@ -1,0 +1,45 @@
+/*
+ * Used within pages listing Collection tree
+*/
+
+.categorytitle {
+	font-size:	12px;
+}
+
+.categorytitle a {
+    font-weight: bold;
+    font-size: 110%;
+    color: black;
+}
+
+.categorytitle a:visited{ 
+	 
+}
+
+.collectiontitle a {
+    font-size: 80%;
+}
+
+.collectiontitle a:hover {
+    font-weight: bold;
+    color: grey;
+}
+
+.collectionname {
+    float: left;
+    font-weight: bold;
+    margin-left: 3px;
+}
+
+.collectioncode {
+    float: left;
+    margin-left: 3px;
+}
+
+#omlisttable {
+    width: 90%;
+}
+
+#omlisttable img {
+    border: medium double #990000;
+}

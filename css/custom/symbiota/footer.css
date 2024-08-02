@@ -1,0 +1,40 @@
+/* Footer
+========================================================================== */
+footer {
+  text-align: center;
+  background-color: var(--footer-bg-color);
+  padding: 2rem 0;
+}
+
+.logo-gallery {
+  display: grid;
+  gap: 1rem 0;
+  /* grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); */
+  /* column-gap: 3rem; */
+  align-items: center;
+  margin: 0 auto;
+  padding: 2rem 0;
+  max-width: var(--max-innertext-width);
+}
+
+.logo-gallery img {
+  max-width: 200px;
+  height: auto;
+  max-height: 80px;
+  object-fit: contain;
+}
+
+/* Media queries
+========================================================================== */
+/* Medium screens and up */
+@media (min-width: 768px) {
+  .logo-gallery {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    column-gap: 3rem;
+    justify-content: center;
+  }
+
+  footer p {
+    margin: 2px;
+  }
+}

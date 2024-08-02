@@ -1,0 +1,43 @@
+/* Alerts */
+.alerts {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  padding: 15px;
+  pointer-events: none;
+}
+
+.alerts .alert {
+  padding: 15px;
+  border-radius: 4px;
+  border: solid 1px #558807;
+  background-color: #eef3e6;
+  color: black;
+  font-size: 14px;
+  -webkit-transform: translateY(300px);
+  transform: translateY(300px);
+  pointer-events: all;
+  margin-bottom: 10px;
+  -webkit-animation: slide-in 1s ease-out forwards;
+  animation: slide-in 1s ease-out forwards;
+}
+
+.alerts .alert>a {
+  color: #002c77;
+}
+
+@-webkit-keyframes slide-in {
+  to {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
+
+@keyframes slide-in {
+  to {
+    -webkit-transform: translateY(0px);
+    transform: translateY(0px);
+  }
+}
