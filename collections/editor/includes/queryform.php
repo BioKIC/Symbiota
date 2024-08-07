@@ -83,7 +83,7 @@ else{
 			<legend><?php echo $LANG['RECORD_SEARCH_FORM']; ?></legend>
 			<button style="position: absolute; margin:0; right:0.5rem; top:0;" type="button" class="icon-button" onclick="copyQueryLink(event)" title="<?php echo $LANG['COPY_SEARCH']; ?>" aria-label="<?php echo $LANG['COPY_LINK']; ?>">
 				<span style="display:flex; align-content: center;">
-						<svg alt="Copies the search terms as a link." style="width:1.2em;margin-right:5px;" xmlns="http://www.w3.org/2000/svg" fill="var(--light-color)" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
+						<svg alt="Copies the search terms as a link." style="width:1.2em;margin-right:5px;" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-280H280q-83 0-141.5-58.5T80-480q0-83 58.5-141.5T280-680h160v80H280q-50 0-85 35t-35 85q0 50 35 85t85 35h160v80ZM320-440v-80h320v80H320Zm200 160v-80h160q50 0 85-35t35-85q0-50-35-85t-85-35H520v-80h160q83 0 141.5 58.5T880-480q0 83-58.5 141.5T680-280H520Z"/></svg>
 						<span style="align-content: center;">
 							<?php echo $LANG['COPY_LINK']; ?>
 						</span>

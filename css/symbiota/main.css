@@ -367,6 +367,10 @@ button.icon-button {
   border-color: buttonborder;
 }
 
+button.icon-button > svg {
+  fill: var(--light-color);
+}
+
 button.icon-button:hover {
   background: var(--medium-color);
 }
