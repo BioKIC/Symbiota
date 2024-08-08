@@ -129,7 +129,9 @@ $taxonFilter = htmlspecialchars($taxonFilter, ENT_COMPAT | ENT_HTML401 | ENT_SUB
 			f.submit();
 		}
 	</script>
-	<script type="text/javascript" src="../js/symb/checklists.checklist.js?ver=4"></script>
+	<?php include($SERVER_ROOT.'/js/symb/checklists.checklist.js'); 
+	// <script type="text/javascript" src="../js/symb/checklists.checklist.js?ver=4"></script>
+	?>
 	<style>
 		<?php
 		if($printMode){

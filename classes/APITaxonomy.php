@@ -23,6 +23,7 @@ class APITaxonomy extends Manager{
 		while($r = $rs->fetch_object()){
 			$retArr[$r->tid]['sciname'] = $r->sciname;
 			$retArr[$r->tid]['author'] = $r->author;
+			$retArr[$r->tid]['tid'] = $r->tid;
 		}
 		$rs->free();
 		if(count($retArr) > 1){
