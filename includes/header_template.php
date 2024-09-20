@@ -31,7 +31,7 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 						</a>
 					</span>
 					<span class="button button-secondary">
-						<a href="<?= $CLIENT_ROOT . "/profile/index.php?refurl=" . htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES); ?>">
+						<a href="<?= $CLIENT_ROOT . "/profile/index.php" ?>">
 							<?= $LANG['H_LOGIN'] ?>
 						</a>
 					</span>
