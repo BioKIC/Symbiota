@@ -162,23 +162,26 @@ class OccurrenceMapManager extends OccurrenceManager {
 			$sql .= $this->sqlWhere;
 			$bottomLimit = ($pageRequest - 1)*$cntPerPage;
 			$sql .= "ORDER BY o.sciname, o.eventdate ";
-			$sql .= "LIMIT ".$bottomLimit.",".$cntPerPage;
-			//echo "<div>Spec sql: ".$sql."</div>";
-			$result = $this->conn->query($sql);
-			while($r = $result->fetch_object()){
-				$occId = $r->occid;
-				$retArr[$occId]['i'] = $this->cleanOutStr($r->institutioncode);
-				$retArr[$occId]['cat'] = $this->cleanOutStr($r->catalognumber);
-				$retArr[$occId]['c'] = $this->cleanOutStr($r->collector);
-				$retArr[$occId]['e'] = $this->cleanOutStr($r->eventdate);
-				$retArr[$occId]['f'] = $this->cleanOutStr($r->family);
-				$retArr[$occId]['s'] = $this->cleanOutStr($r->sciname);
-				$retArr[$occId]['l'] = $this->cleanOutStr($r->locality);
-				$retArr[$occId]['lat'] = $this->cleanOutStr($r->DecimalLatitude);
-				$retArr[$occId]['lon'] = $this->cleanOutStr($r->DecimalLongitude);
-				$retArr[$occId]['l'] = str_replace('.,',',',$r->locality);
+			$sql .= "LIMIT ?,?";
+			$statement = $this->conn->prepare($sql);
+			$statement->bind_param('ii', $bottomLimit, $cntPerPage);
+			$statement->execute();
+			$statement->bind_result($occid, $institutioncode, $catalognumber, $collector, $eventdate, $family, $sciname, $locality, $DecimalLatitude, $DecimalLongitude, $LocalitySecurity, $localitysecurityreason);
+			while($statement->fetch()){
+				$occId = $occid;
+				$retArr[$occId]['i'] = $this->cleanOutStr($institutioncode);
+				$retArr[$occId]['cat'] = $this->cleanOutStr($catalognumber);
+				$retArr[$occId]['c'] = $this->cleanOutStr($collector);
+				$retArr[$occId]['e'] = $this->cleanOutStr($eventdate);
+				$retArr[$occId]['f'] = $this->cleanOutStr($family);
+				$retArr[$occId]['s'] = $this->cleanOutStr($sciname);
+				$retArr[$occId]['l'] = $this->cleanOutStr($locality);
+				$retArr[$occId]['lat'] = $this->cleanOutStr($DecimalLatitude);
+				$retArr[$occId]['lon'] = $this->cleanOutStr($DecimalLongitude);
+				$retArr[$occId]['l'] = str_replace('.,', ',', $locality);
+				// Do we also want to put LocalitySecurity and localitysecurityreason in this array?
 			}
-			$result->free();
+			$statement->close();
 			//Set access statistics
 			if($retArr){
 				$statsManager = new OccurrenceAccessStats();
