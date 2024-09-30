@@ -1,4 +1,5 @@
 <?php
+
 include_once ($SERVER_ROOT . '/classes/Manager.php');
 include_once($SERVER_ROOT. '/utilities/SymbUtil.php');
 
@@ -816,7 +817,23 @@ class GeographicThesaurus extends Manager {
 
 			$geoterms[$i]['label'] = $label;
 		}
+		// Check if parent is valid (exist in geographicthesaurus table)
+		$parentValid = true;
+		$parentCount = 0;
+		if ($parent !== null) {
+			$checkParentSql = 'SELECT COUNT(*) FROM geographicthesaurus WHERE geoterm = ?';
+			$stmt = $this->conn->prepare($checkParentSql);
+			$stmt->bind_param('s', $parent);
+			$stmt->execute();
+			$stmt->bind_result($parentCount);
+			$stmt->fetch();
+			$stmt->close();
 
+			if ($parentCount == 0)
+				$parentValid = false;
+		}
+		if (!$geoterms && !$parentValid)
+			return $this->searchGeothesaurus($geoterm, $geolevel, null, false);
 		return $geoterms;
 	}
 
