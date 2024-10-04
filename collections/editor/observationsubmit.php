@@ -275,11 +275,11 @@ $clArr = $obsManager->getChecklists();
 						<div style="clear:both;" class="flex-form">
 							<div>
 								<label for="decimallatitude"><?php echo $LANG['LATITUDE']; ?>:</label>
-								<input type="text" id="decimallatitude" name="decimallatitude" maxlength="10" style="width:88px;" value="" onchange="verifyLatValue(this.form)" title="Decimal Format (eg 34.5436)" required />
+								<input type="text" id="decimallatitude" name="decimallatitude" maxlength="10" style="width:88px;" value="" onchange="verifyLatValue(this.form, '<?= $CLIENT_ROOT?>')" title="Decimal Format (eg 34.5436)" required />
 							</div>
 							<div>
 								<label for="decimallongitude"><?php echo $LANG['LONGITUDE']; ?>:</label>
-								<input type="text" id="decimallongitude" name="decimallongitude" maxlength="13" style="width:88px;" value="" onchange="verifyLngValue(this.form)" title="Decimal Format (eg -112.5436)" required />
+								<input type="text" id="decimallongitude" name="decimallongitude" maxlength="13" style="width:88px;" value="" onchange="verifyLngValue(this.form, '<?= $CLIENT_ROOT?>')" title="Decimal Format (eg -112.5436)" required />
 							</div>
 							<div style="margin-top:10px; margin-left:3px; margin-bottom:10px" >
 								<a tabindex="0" onclick="openMappingAid('obsform','decimallatitude','decimallongitude');return false;">

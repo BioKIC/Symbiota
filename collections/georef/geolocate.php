@@ -78,7 +78,7 @@ if(isset($PORTAL_GUID) && $PORTAL_GUID){
                     	alert("There are no data points to tranfer");
                     }
                     else{
-	                	opener.geoLocateUpdateCoord(breakdown[0],breakdown[1],breakdown[2],breakdown[3]);
+						opener.geoLocateUpdateCoord(breakdown[0],breakdown[1],breakdown[2],breakdown[3], '<?= $CLIENT_ROOT ?>');
 	                    self.close();
                     }
                 }
