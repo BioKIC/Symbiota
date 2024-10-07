@@ -4,7 +4,6 @@
 @import "normalize.slim.css";
 @import "variables.css";
 
-
 /* Global styles
    ========================================================================== */
 html {
@@ -34,8 +33,8 @@ h4 {
 
 .fieldset-like h2.subheader,
 .fieldset-like h3.subheader {
-	position: relative;
-	align-items: center;
+  position: relative;
+  align-items: center;
 }
 /*
 h1 {
@@ -147,8 +146,8 @@ span[class="link"]:hover {
 }
 
 /* User rights elements associated with occurrences, images, collections, data, etc */
-.rights-span img{
-	width: 100px;
+.rights-span img {
+  width: 100px;
 }
 
 /*
@@ -352,7 +351,7 @@ button {
   text-indent: 0px;
   text-shadow: none;
   line-height: normal;
-  box-sizing: border-box;  
+  box-sizing: border-box;
 }
 
 button:hover {
@@ -382,8 +381,8 @@ button.icon-button:hover {
 }
 
 button.inverse-color {
-    background-color: var(--light-color);
-    color: var(--darkest-color);
+  background-color: var(--light-color);
+  color: var(--darkest-color);
 }
 
 .button {
@@ -417,17 +416,15 @@ button.inverse-color {
 
 .button-primary:hover,
 .button-secondary:hover,
-.button-danger:hover 
-{
+.button-danger:hover {
   background-color: var(--medium-color);
 }
 
 .button-primary:disabled,
 .button-secondary:disabled,
-.button-danger:disabled
-{
-	opacity: 50%;
-	pointer-events: none;
+.button-danger:disabled {
+  opacity: 50%;
+  pointer-events: none;
 }
 
 .button-primary:hover > a,
@@ -680,4 +677,123 @@ table.styledtable tr.alt td {
 .ui-autocomplete {
   /* from https://stackoverflow.com/questions/32517694/jquery-autocomplete-dropdown-is-transparent */
   background-color: inherit;
+}
+
+.importItem {
+  margin-left: 10px;
+  display: none;
+}
+.field-div {
+  margin: 10px 0px;
+  clear: both;
+}
+.label {
+  font-weight: bold;
+}
+.float-rt-no-overlap {
+  /* this should occur after fieldset-like definitions */
+  float: right;
+  clear: both;
+  margin: 2rem 2rem 2rem 2rem;
+}
+.no-left-margin {
+  margin-left: 0;
+}
+.col-profile-img {
+  border: 1px;
+  height: 6.4rem;
+  width: 6.4rem;
+}
+.col-profile-header {
+  margin-left: 0.5em;
+}
+.col-profile-inst-code {
+  min-width: 9rem;
+  max-width: 9rem;
+}
+.bigger-left-margin-rel {
+  margin-left: 3rem;
+}
+
+#quicksearch-box input {
+  width: 100%;
+}
+.quicksearch-input-container {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.quicksearch-container {
+  top: 1rem;
+  right: 1rem;
+  position: sticky;
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+}
+
+@media (max-width: 1424px) {
+  #quicksearch-box {
+    width: 100%;
+    margin: 1rem 0;
+  }
+  #quicksearch-btn-container {
+    justify-content: right;
+  }
+  .quicksearch-container {
+    width: 100%;
+    position: static;
+    margin: 0 0;
+  }
+  .quicksearch-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 10rem;
+    max-width: 30%;
+  }
+  .quicksearch-btn-container {
+    max-width: 30%;
+  }
+}
+@media (max-width: 560px) {
+  .quicksearch-input-container {
+    display: flex;
+    flex-wrap: wrap;
+    min-width: 10rem;
+    max-width: 100%;
+  }
+}
+@media (min-width: 1425px) {
+  #quicksearch-box {
+    width: 12vw;
+    right: 1rem;
+    float: right;
+  }
+}
+@media (min-width: 1500px) {
+  #quicksearch-box {
+    width: 14vw;
+    right: 1rem;
+    float: right;
+  }
+}
+@media (min-width: 1550px) {
+  #quicksearch-box {
+    width: 15vw;
+    right: 1rem;
+    float: right;
+  }
+}
+@media (min-width: 1700px) {
+  #quicksearch-box {
+    width: 18vw;
+    right: 1rem;
+    float: right;
+  }
+}
+@media (min-width: 1880px) {
+  #quicksearch-box {
+    width: 21vw;
+    right: 1rem;
+    float: right;
+  }
 }
