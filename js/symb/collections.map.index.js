@@ -192,6 +192,7 @@ function selectAllCat(cb, target) {
   var boxesChecked = true;
   if (!cb.checked) {
     boxesChecked = false;
+    uncheckAll();
   }
   var inputObjs = document.getElementsByTagName("input");
   for (i = 0; i < inputObjs.length; i++) {

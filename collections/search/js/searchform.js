@@ -450,8 +450,7 @@ function getCollsSelected() {
   let selectedInForm = Array.from(
     document.querySelectorAll(
       '#search-form-colls input[name="db"]:checked, ' +
-        '#search-form-colls input[name="db[]"]:checked, ' +
-        '#search-form-colls input[name="cat[]"]:checked'
+        '#search-form-colls input[name="db[]"]:checked'
     )
   );
   let collsArr = selectedInForm;
