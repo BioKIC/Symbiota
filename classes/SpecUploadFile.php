@@ -115,17 +115,36 @@ class SpecUploadFile extends SpecUploadBase{
 			$this->outputMsg('<li>Beginning to load records...</li>',1);
 			while($recordArr = $this->getRecordArr($fh)){
 				$recMap = Array();
+				$hasCultivarEpithet = false;
+				$hasTradeName = false;
+				$isCultivar = false;
+				$currentOccId = '';
 				foreach($this->occurFieldMap as $symbField => $sMap){
 					$indexArr = array_keys($headerArr,$sMap['field']);
 					$index = array_shift($indexArr);
 					if(array_key_exists($index,$recordArr)){
 						$valueStr = $recordArr[$index];
+						if($sMap['field'] == 'occurrenceid'){
+							$currentOccId = $valueStr;
+						}
+						if(!empty($valueStr) && $sMap['field'] == 'cultivarepithet'){
+							$hasCultivarEpithet = true;
+						}
+						if(!empty($valueStr) && $sMap['field'] == 'tradename'){
+							$hasTradeName = true;
+						}
+						if(strtolower($valueStr) == 'cultivar' && $sMap['field'] == 'taxonrank'){
+							$isCultivar = true;
+						}
 						//If value is enclosed by quotes, remove quotes
 						if(substr($valueStr,0,1) == '"' && substr($valueStr,-1) == '"'){
 							$valueStr = substr($valueStr,1,strlen($valueStr)-2);
 						}
 						$recMap[$symbField] = $valueStr;
 					}
+				}
+				if($isCultivar && !$hasCultivarEpithet && !$hasTradeName){
+					echo '<span style="color: var(--danger-color);">Unable to complete upload because occurrence ' . $currentOccId . ' is marked as cultivated but is missing both trade name and cultivar epithet, which is not permitted</span>'; exit;
 				}
 				if($this->uploadType == $this->SKELETAL && !isset($recMap['catalognumber']) && !isset($recMap['othercatalognumbers'])){
 					//Skip loading record

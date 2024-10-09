@@ -1,340 +1,337 @@
-#innertable{
-	width: 95%;
-	display: table;
-	margin-top: 15px;
-	margin-left: auto;
-	margin-right: auto;
+#innertable {
+  width: 95%;
+  display: table;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#toprow{
-	width: 100%;
-	display: table-row;
-	clear: both;
+#toprow {
+  width: 100%;
+  display: table-row;
+  clear: both;
 }
 
-#middlerow{
-	width: 100%;
-	display: table;
-	clear: both;
+#middlerow {
+  width: 100%;
+  display: table;
+  clear: both;
 }
 
-#leftcolumn{
-	display: table-cell;
+#leftcolumn {
+  display: table-cell;
 }
 
-#rightcolumn{
-	display: table-cell;
-	vertical-align:	top;
-	width: 525px;
+#rightcolumn {
+  display: table-cell;
+  vertical-align: top;
+  width: 525px;
 }
 
-#bottomrow{
-	width: 100%;
-	display: table-row;
-	clear: both;
+#bottomrow {
+  width: 100%;
+  display: table-row;
+  clear: both;
 }
 
-#footerrow{
-	width: 100%;
-	display: block;
-	margin-top: 10px;
-	text-align: center;
-	clear: both;
+#footerrow {
+  width: 100%;
+  display: block;
+  margin-top: 10px;
+  text-align: center;
+  clear: both;
 }
 
-#innerDiv{
-	width: 95%;
-	display: table;
-	margin-top: 15px;
-	margin-left: auto;
-	margin-right: auto;
+#innerDiv {
+  width: 95%;
+  display: table;
+  margin-top: 15px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#leftPanel{
-	width: 30%;
-	float: left;
+#leftPanel {
+  width: 30%;
+  float: left;
 }
 
-#rightPanel{
-	width: 70%;
-	float: left;
+#rightPanel {
+  width: 70%;
+  float: left;
 }
 
 @media screen and (max-width: 800px) {
-	#leftPanel #rightPanel {
-		width: 100%; 
-	}
+  #leftPanel #rightPanel {
+    width: 100%;
+  }
 }
 
-fieldset{
-	margin: 10px;
-	padding: 10px
+fieldset {
+  margin: 10px;
+  padding: 10px;
 }
 
-fieldset legend{
-	font-weight: bold;
+fieldset legend {
+  font-weight: bold;
 }
 
-#scinameDiv{
-	font-size: 1.3em;
-	font-weight: bold; 
-	margin-bottom: 10px;
+#scinameDiv {
+  font-size: 1.3em;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
-#sciname{ 
-	color: #990000; 
-	font-style: italic;
+#sciname {
+  color: #990000;
 }
 
-#taxon{ 
-	color: #990000; 
-	margin-bottom: 10px;
+#taxon {
+  color: #990000;
+  margin-bottom: 10px;
 }
 
-#author{ 
+#author {
 }
 
-#editorDiv{
-	float:right;
-	border:	0px;
+#editorDiv {
+  float: right;
+  border: 0px;
 }
 
-.navIcon{
-	border: 0px;
-	margin: 0px;
-	width: 1.3em;
+.navIcon {
+  border: 0px;
+  margin: 0px;
+  width: 1.3em;
 }
 
-#linkDiv{
-	margin-left:25px;
-	clear:both;
+#linkDiv {
+  margin-left: 25px;
+  clear: both;
 }
 
-#family{ 
-	margin-left:25px; 
+#family {
+  margin-left: 25px;
 }
 
-#redirectedfrom{
-	font-size:		90%;
-	margin-left: 	25px;
+#redirectedfrom {
+  font-size: 90%;
+  margin-left: 25px;
 }
 
-#vernacularDiv{
-	display:		block;
-	margin-left:	10px;
-	margin-top:		0.5em;
+#vernacularDiv {
+  display: block;
+  margin-left: 10px;
+  margin-top: 0.5em;
 }
 
-#vernacularDiv a{
-	font-size:70%;
-} 
-
-#synonymDiv{
-	display:		block;
-	margin-left:	10px;
-	margin-top:		0.5em;
+#vernacularDiv a {
+  font-size: 70%;
 }
 
-#synonymDiv a{
-	font-size:70%;
-} 
-
-#weblinks{
-	margin-left: 	25px;
-	margin-top: 	0;
-	clear: 			both;
+#synonymDiv {
+  display: block;
+  margin-left: 10px;
+  margin-top: 0.5em;
 }
 
-#project{
-	display:		block;
-	margin-top:		3px;
-	margin-left:	20px;
+#synonymDiv a {
+  font-size: 70%;
 }
 
-#nocentralimage{
-	display:		block;
-	width:			260px;
-	height:			260px;
-	border-style:	solid;
-	margin-top:		5px;
-	margin-left:	20px;
-	text-align:		center;
+#weblinks {
+  margin-left: 25px;
+  margin-top: 0;
+  clear: both;
 }
 
-#desctabs{
-	width: 100%;
-	height: 100%;
-	margin-left: auto;
-	margin-right: auto;
-	font-size: var(--body-font-size);
+#project {
+  display: block;
+  margin-top: 3px;
+  margin-left: 20px;
 }
 
-#nodesc{
-	display:		block;
-	margin:			70px 0px 20px 50px;
+#nocentralimage {
+  display: block;
+  width: 260px;
+  height: 260px;
+  border-style: solid;
+  margin-top: 5px;
+  margin-left: 20px;
+  text-align: center;
 }
 
-#img-div{
-	height:			300px;
-	overflow:		hidden;
+#desctabs {
+  width: 100%;
+  height: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: var(--body-font-size);
 }
 
-#img-tab-div{
-	border-top:		2px solid gray;
-	margin-top:		2px;
+#nodesc {
+  display: block;
+  margin: 70px 0px 20px 50px;
 }
 
-#img-tab-expand{
-	background:		#eee;
-	padding:		10px;
-	border:			1px solid #ccc;
-	width:			100px;
-	margin:			auto;
-	text-align:		center;
+#img-div {
+  height: 300px;
+  overflow: hidden;
 }
 
-#imagebox{
-	padding:		10px 2px 10px 2px;
+#img-tab-div {
+  border-top: 2px solid gray;
+  margin-top: 2px;
 }
 
-#spptaxonbox{
-	margin-top:		10px;
+#img-tab-expand {
+  background: #eee;
+  padding: 10px;
+  border: 1px solid #ccc;
+  width: 100px;
+  margin: auto;
+  text-align: center;
 }
 
-#imgphotographer{
-	text-align:		right;
-	position:		relative;
-	top:			-26px;
-	left:			5px;
+#imagebox {
+  padding: 10px 2px 10px 2px;
 }
 
-.parentlink{
-	margin-left:		30px;
+#spptaxonbox {
+  margin-top: 10px;
 }
 
-#links{
-	width:				200px;
-	margin:				auto;
+#imgphotographer {
+  text-align: right;
+  position: relative;
+  top: -26px;
+  left: 5px;
 }
 
-#linksbanner{
-	margin-left:		20px;
+.parentlink {
+  margin-left: 30px;
 }
 
-#linkslist{
-	margin-left:		10px;
+#links {
+  width: 200px;
+  margin: auto;
 }
 
-#notfoundbox{
-	display:		block;
-	margin-top:		45px;
-	margin-left:	20px;
+#linksbanner {
+  margin-left: 20px;
 }
 
-#suggestionbox{
-	margin-left:	15px;
-	font-weight:	bold;
-	font-size:		120%;
+#linkslist {
+  margin-left: 10px;
 }
 
-#suggestionlist{
-	margin-left:	25px;
+#notfoundbox {
+  display: block;
+  margin-top: 45px;
+  margin-left: 20px;
 }
 
-#centralimage{
-	text-align:	center;
-	margin:		15px;
+#suggestionbox {
+  margin-left: 15px;
+  font-weight: bold;
+  font-size: 120%;
 }
 
-#centralimage img{
-	max-width:	450px;
-	max-height:	320px;
-	width: 		expression(this.width >= this.height ? 320: true);
-	height:		expression(this.height >= this.width ? 320: true);
-	border:		1px dotted black;
+#suggestionlist {
+  margin-left: 25px;
 }
 
-#centralimage a{
-
+#centralimage {
+  text-align: center;
+  margin: 15px;
 }
 
-#centralimage a:hover img{
-	border: 1px solid #0000ff;
+#centralimage img {
+  max-width: 450px;
+  max-height: 320px;
+  width: expression(this.width >= this.height ? 320: true);
+  height: expression(this.height >= this.width ? 320: true);
+  border: 1px dotted black;
 }
 
-#centralimage div.photographer{
-	text-align:			right;
-  	margin: 		2px;
-	margin-right:	20px;
-	font-size:		75%;
+#centralimage a {
+}
+
+#centralimage a:hover img {
+  border: 1px solid #0000ff;
+}
+
+#centralimage div.photographer {
+  text-align: right;
+  margin: 2px;
+  margin-right: 20px;
+  font-size: 75%;
 }
 
 /*Text Description*/
 .ui-tabs .ui-tabs-panel {
-	padding-right: 0em;
+  padding-right: 0em;
 }
 
-.sptab{
-	height:		330px;
-	overflow: 	auto;
+.sptab {
+  height: 330px;
+  overflow: auto;
 }
 
-.spptab{
-	height:		330px;
-	overflow: 	auto;
+.spptab {
+  height: 330px;
+  overflow: auto;
 }
 
-#descsource{
-	text-align:	right;
-	width:		100%;
-	float:		right;
-	padding:	10px 20px 10px 10px;
+#descsource {
+  text-align: right;
+  width: 100%;
+  float: right;
+  padding: 10px 20px 10px 10px;
 }
 
-#clinfo{
-	margin:				5px;
-	padding:			5px;
-	text-align:			center;
-	vertical-align:		middle;
-	background-color:	lightgreen;
-	overflow: 			auto;
+#clinfo {
+  margin: 5px;
+  padding: 5px;
+  text-align: center;
+  vertical-align: middle;
+  background-color: lightgreen;
+  overflow: auto;
 }
 
-div.imgthumb{
-  margin: 		5px;
-  height:		220px;
-  float:	 	left;
-  text-align: 	center;
-  position:		relative;
-  overflow:		hidden;
+div.imgthumb {
+  margin: 5px;
+  height: 220px;
+  float: left;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
 }
 
-div.imgthumb img{
-  	display: 	inline;
-	max-height:	200px;
-	width: 		expression(this.width >= this.height ? 200: true);
-	height:		expression(this.height >= this.width ? 200: true);
-  	margin: 	0px;
-	border:		1px dotted grey;
+div.imgthumb img {
+  display: inline;
+  max-height: 200px;
+  width: expression(this.width >= this.height ? 200: true);
+  height: expression(this.height >= this.width ? 200: true);
+  margin: 0px;
+  border: 1px dotted grey;
 }
 
-div.imgthumb a{
-
+div.imgthumb a {
 }
 
 div.imgthumb a:hover img {
-	border: 1px solid #0000ff;
+  border: 1px solid #0000ff;
 }
 
-div.imgthumb div.photographer{
-	font-size:		75%;
-  	text-align: 	right;
-  	width: 			auto;
-  	margin:			2px;
-  	margin-right:	15px;
+div.imgthumb div.photographer {
+  font-size: 75%;
+  text-align: right;
+  width: auto;
+  margin: 2px;
+  margin-right: 15px;
 }
 
-div.mapthumb{
+div.mapthumb {
   margin: 5px;
   border: 0px;
   width: 175px;
@@ -343,87 +340,86 @@ div.mapthumb{
   text-align: center;
 }
 
-div.mapthumb img{
+div.mapthumb img {
   width: 165px;
   margin: 0px;
   border: 1px dotted black;
 }
 
 div.mapthumb a:hover img {
-	border: 1px solid #0000ff;
+  border: 1px solid #0000ff;
 }
 
-div.spptaxon{
-	text-align: center;
-	width: 170px;
-	float: left;
-	border: 1px dotted gray;
-	margin: 3px;
-	max-height: 175px;
-	overflow: hidden;
+div.spptaxon {
+  text-align: center;
+  width: 170px;
+  float: left;
+  border: 1px dotted gray;
+  margin: 3px;
+  max-height: 175px;
+  overflow: hidden;
 }
 
-div.sppimg{
-	margin-left: 	auto;
-	margin-right: 	auto;
-	width:			160px;
-  	height:			150px;
-	overflow:		hidden;
+div.sppimg {
+  margin-left: auto;
+  margin-right: auto;
+  width: 160px;
+  height: 150px;
+  overflow: hidden;
 }
 
-div.sppimg img{
-	margin-left: 	auto;
-	margin-right: 	auto;
-	margin-top: 	5px;
-	margin-bottom: 	5px;
-  	border:			1px dotted gray;
-	max-width:		135px;
-	max-height:		135px;
-	width: 			expression(this.width >= this.height ? 135: true);
-	height:			expression(this.height >= this.width ? 135: true);
+div.sppimg img {
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  border: 1px dotted gray;
+  max-width: 135px;
+  max-height: 135px;
+  width: expression(this.width >= this.height ? 135: true);
+  height: expression(this.height >= this.width ? 135: true);
 }
 
-div.sppmap{
-	margin-left: 	auto;
-	margin-right: 	auto;
-	margin: 	2px;
-	border: 	0px;
-	width: 	160px;
-	height:	160px;
-	text-align: center;
+div.sppmap {
+  margin-left: auto;
+  margin-right: auto;
+  margin: 2px;
+  border: 0px;
+  width: 160px;
+  height: 160px;
+  text-align: center;
 }
 
-div.sppmap img{
-	margin-left: 	auto;
-	margin-right: 	auto;
-	width: 130px;
-	height:	120px;
-	margin: 0px;
-	border: 1px dotted black;
+div.sppmap img {
+  margin-left: auto;
+  margin-right: auto;
+  width: 130px;
+  height: 120px;
+  margin: 0px;
+  border: 1px dotted black;
 }
 
-div.sppmap a{
-	border: 1px solid #0000ff;
+div.sppmap a {
+  border: 1px solid #0000ff;
 }
 
 div.sppmap a:hover {
-
 }
 
-div.spptext{
-	font-weight:		bold;
-	margin-left:		auto;
-	margin-right:		auto;
-	padding-top:		25px;
-	padding-bottom:		50px;
-	border:				1px dotted grey;
-  	width:				125px;
+div.spptext {
+  font-weight: bold;
+  margin-left: auto;
+  margin-right: auto;
+  padding-top: 25px;
+  padding-bottom: 50px;
+  border: 1px dotted grey;
+  width: 125px;
 }
 
-.clear{
-	clear:				both;
+.clear {
+  clear: both;
 }
 
-.taxonimage{
-	z-index:			-1;
+.taxonimage {
+  z-index: -1;
 }

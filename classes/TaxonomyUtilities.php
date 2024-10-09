@@ -1,8 +1,10 @@
 <?php
 include_once($SERVER_ROOT.'/config/dbconnection.php');
+include_once($SERVER_ROOT.'/traits/TaxonomyTrait.php');
 
 class TaxonomyUtilities {
 
+	use TaxonomyTrait;
 	/*
 	 * INPUT: String representing a verbatim scientific name
 	 *        Name may have imbedded authors, cf, aff, hybrid
@@ -177,6 +179,25 @@ class TaxonomyUtilities {
 						if(!isset($retArr['rankid']) || !$retArr['rankid']) $retArr['rankid'] = 220;
 					}
 				}
+				//Check the retArr[author] array for cultivar epithet, tradename, author
+				if (preg_match("/'([^']+)'/", $retArr['author'], $matches)) {
+					$retArr['cultivarepithet'] = $matches[1];
+					$retArr['author'] = str_replace($matches[0], '', $retArr['author']);
+				}
+				if (preg_match('/\b[A-Z0-9](?!\.)([A-Z0-9,\'\.\-\&\(\)]+)\b/', $retArr['author'], $matches)) {
+					$tradeName = $matches[0];
+					if (strlen($tradeName) > 2 && $tradeName[1] !== ' ' && $tradeName[1] !== '.') {
+						$retArr['tradename'] = $tradeName;
+						$retArr['author'] = str_replace($matches[0], '', $retArr['author']);
+					}
+				}
+				if (empty($retArr['author']))
+					$retArr['author'] = " ";
+				if (preg_match_all('/\b[A-Z]\.?\s[A-Z][a-z]+\b/', $retArr['author'], $matches)) {
+					if (is_array($matches[0]) && count($matches[0]) > 0) {
+						$retArr['author'] = end($matches[0]);
+					}
+				}
 			}
 			if($conn !== null && $okToCloseConn) $conn->close();
 			//Set taxon rankid
@@ -184,7 +205,10 @@ class TaxonomyUtilities {
 				$retArr['rankid'] = $rankId;
 			}
 			else{
-				if($retArr['unitname3']){
+				if(!empty($retArr['cultivarepithet'])){
+					$retArr['rankid'] = 300;
+				}
+				elseif($retArr['unitname3']){
 					if($retArr['unitind3'] == 'subsp.' || !$retArr['unitind3']){
 						$retArr['rankid'] = 230;
 					}
@@ -223,6 +247,13 @@ class TaxonomyUtilities {
 			}
 			$sciname .= $retArr['unitname2'].' ';
 			$sciname .= trim($retArr['unitind3'].' '.$retArr['unitname3']);
+			if(!empty($retArr['cultivarepithet'])){
+				$sciname .= ' ' . self::standardizeCultivarEpithet($retArr['cultivarepithet']);
+			}
+			if(!empty($retArr['tradename'])){
+				$sciname .= ' ' . self::standardizeTradeName($retArr['tradename']);
+				
+			}
 			$retArr['sciname'] = trim($sciname);
 		}
 		return $retArr;

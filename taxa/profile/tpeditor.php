@@ -189,7 +189,15 @@ if($isEditor && $action){
 		?>
 	</div>
 	<div role="main" id="innertext">
-		<h1 class="page-heading"><?php echo $LANG['TAX_PROF_EDITOR'] .': ' . $tEditor->getSciName(); ?></h1>
+		<h1 class="page-heading"><?php
+		 $splitSciname = $tEditor->splitSciname();
+		 $author = !empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '';
+		 $cultivarEpithet = !empty($splitSciname['cultivarEpithet']) ? ($tEditor->standardizeCultivarEpithet($splitSciname['cultivarEpithet'])) . ' ' : '';
+		 $tradeName = !empty($splitSciname['tradeName']) ? ($tEditor->standardizeTradeName($splitSciname['tradeName']) . ' ') : '';
+		 $nonItalicizedScinameComponent = $author . $cultivarEpithet . $tradeName;
+
+		 echo $LANG['TAX_PROF_EDITOR'] . ': <i>' . $splitSciname['base'] . '</i> ' . $nonItalicizedScinameComponent; 
+		 ?></h1>
 		<?php
 		if($tEditor->getTid()){
 			if($isEditor){

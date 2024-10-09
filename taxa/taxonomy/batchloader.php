@@ -221,7 +221,7 @@ if($isEditor){
 							$translationMap = array('phylum'=>'division', 'division'=>'phylum', 'subphylum'=>'subdivision', 'subdivision'=>'subphylum', 'sciname'=>'scinameinput',
 								'scientificname'=>'scinameinput', 'scientificnameauthorship'=>'author', 'vernacularname'=>'vernacular',
 								'taxonid'=>'sourceid', 'parenttaxonid'=>'sourceparentid', 'parentscientificname'=>'parentstr',
-								'acceptedtaxonid'=>'sourceacceptedid', 'acceptedscientificname'=>'acceptedstr', 'acceptedname'=>'acceptedstr',
+								'acceptedtaxonid'=>'sourceacceptedid', 'acceptedscientificname'=>'acceptedstr', 'acceptedname'=>'acceptedstr', 'cultivar' => 'cultivarepithet',
 								'genus' => 'unitname1', 'specificepithet' => 'unitname2', 'taxonrank' => 'unitind3', 'infraspecificepithet' => 'unitname3'
 							);
 							$sArr = $loaderManager->getSourceArr();
