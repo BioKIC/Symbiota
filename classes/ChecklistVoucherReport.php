@@ -350,7 +350,7 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 		if(strpos($sqlFrag,'MATCH(f.recordedby)') || strpos($sqlFrag,'MATCH(f.locality)')){
 			$retSql .= 'INNER JOIN omoccurrencesfulltext f ON o.occid = f.occid ';
 		}
-		if(strpos($sqlFrag,'p.point')){
+		if(strpos($sqlFrag,'p.lngLatPoint')){
 			$retSql .= 'INNER JOIN omoccurpoints p ON o.occid = p.occid ';
 		}
 		return $retSql;

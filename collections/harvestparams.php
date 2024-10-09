@@ -22,6 +22,7 @@ $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ??
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
 	<script src="../js/symb/collections.harvestparams.js?ver=3" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT ?>/js/symb/mapAidUtils.js" type="text/javascript"></script>
 	<script src="../js/symb/collections.traitsearch.js?ver=8" type="text/javascript"></script> <!-- Contains search-by-trait modifications -->
 	<script src="../js/symb/wktpolygontools.js?ver=1c" type="text/javascript"></script>
 	<script type="text/javascript">
@@ -148,7 +149,7 @@ $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ??
 						<?php echo $LANG['LL_BOUND_TEXT']; ?>
 					</div>
 					<div class="iconDiv">
-						<a href="#" onclick="openCoordAid('rectangle');return false;"><img src="../images/map.png" title="<?php echo htmlspecialchars((isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" /></a>
+						<a href="#" onclick="openCoordAid({map_mode: MAP_MODES.RECTANGLE, client_root: '<?= $CLIENT_ROOT?>'});return false;"><img src="../images/map.png" title="<?php echo htmlspecialchars((isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" /></a>
 					</div>
 					<div class="elemDiv">
 						<div>
@@ -196,10 +197,10 @@ $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ??
 						</label>
 					</div>
 					<div class="iconDiv">
-						&nbsp;<a href="#" onclick="openCoordAid('polygon');return false;"><img src="../images/map.png" title="<?php echo htmlspecialchars((isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" /></a>
+						&nbsp;<a href="#" onclick="openCoordAid({map_mode: MAP_MODES.POLYGON, polygon_text_type: POLYGON_TEXT_TYPES.GEOJSON, client_root: '<?= $CLIENT_ROOT?>'});return false;"><img src="../images/map.png" title="<?php echo htmlspecialchars((isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" /></a>
 					</div>
 					<div class="elemDiv">
-						<textarea id="footprintwkt" name="footprintwkt" onchange="this.value = validatePolygon(this.value)" style="zIndex:999;width:100%;height:90px"></textarea>
+						<textarea id="footprintwkt" name="footprintGeoJson" onchange="this.value = validatePolygon(this.value)" style="zIndex:999;width:100%;height:90px"></textarea>
 					</div>
 				</div>
 				<div class="coordBoxDiv">
@@ -207,7 +208,7 @@ $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT = $SHOULD_INCLUDE_CULTIVATED_AS_DEFAULT ??
 						<?php echo $LANG['LL_P-RADIUS_TEXT']; ?>
 					</div>
 					<div class="iconDiv">
-						<a href="#" onclick="openCoordAid('circle');return false;"><img src="../images/map.png" title="<?php echo (isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'); ?>" /></a>
+						<a href="#" onclick="openCoordAid({map_mode: MAP_MODES.CIRCLE, client_root: '<?= $CLIENT_ROOT?>'});return false;"><img src="../images/map.png" title="<?php echo (isset($LANG['MAP_AID'])?$LANG['MAP_AID']:'Mapping Aid'); ?>" /></a>
 					</div>
 					<div class="elemDiv">
 						<section class="flex-form">
