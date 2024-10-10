@@ -1,6 +1,8 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ImageDetailManager.php');
+include_once($SERVER_ROOT.'/classes/Media.php');
+
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/imagelib/imgdetails.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/imagelib/imgdetails.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT . '/content/lang/imagelib/imgdetails.en.php');
 
@@ -12,45 +14,44 @@ $eMode = array_key_exists('emode',$_REQUEST)?filter_var($_REQUEST['emode'], FILT
 
 $imgManager = new ImageDetailManager($imgId,($action?'write':'readonly'));
 
-$imgArr = $imgManager->getImageMetadata();
+$imgArr = Media::getMedia($imgId);
+$creatorArray = Media::getCreatorArray();
+
 $isEditor = false;
-if($IS_ADMIN || ($imgArr && ($imgArr['username'] === $USERNAME || ($imgArr['photographeruid'] && $imgArr['photographeruid'] == $SYMB_UID)))){
+if($IS_ADMIN || ($imgArr && ($imgArr['username'] === $USERNAME || ($imgArr['creatoruid'] && $imgArr['creatoruid'] == $SYMB_UID)))){
     $isEditor = true;
 }
 
 $status = '';
+
 if($isEditor){
 	if($action == 'Submit Image Edits'){
-		$status = $imgManager->editImage($_POST);
-		if(is_numeric($status)) header( 'Location: ../taxa/profile/tpeditor.php?tid='.$status.'&tabindex=1' );
+		Media::update($imgId, $_POST, new LocalStorage());
 	}
 	elseif($action == 'Transfer Image'){
-		$imgManager->changeTaxon($_REQUEST['targettid'],$_REQUEST['sourcetid']);
+		Media::update($imgId, ['tid' => $_REQUEST['targettid']]);
 		header( 'Location: ../taxa/profile/tpeditor.php?tid='.$_REQUEST['targettid'].'&tabindex=1' );
 	}
 	elseif($action == 'Delete Image'){
-		$imgDel = $_REQUEST['imgid'];
-		$removeImg = (array_key_exists('removeimg',$_REQUEST)?$_REQUEST['removeimg']:0);
-		$status = $imgManager->deleteImage($imgDel, $removeImg);
-		if(is_numeric($status)){
-			header( 'Location: ../taxa/profile/tpeditor.php?tid='.$status.'&tabindex=1' );
-		}
+		$remove_files = $_REQUEST['removeimg'] ?? false;
+		Media::delete(intval($_REQUEST['imgid']), boolval($remove_files));
 	}
-	$imgArr = $imgManager->getImageMetadata($imgId);
+	$imgArr = Media::getMedia($imgId);
 }
-
+// TODO (Logan) once basic utils for domain image manager can be removed 
 $serverPath = $imgManager->getDomain();
+
 if($imgArr){
 	$imgUrl = $imgArr['url'];
-	$origUrl = $imgArr['originalurl'];
+	$origUrl = $imgArr['originalUrl'];
 	$metaUrl = $imgArr['url'];
-	if(array_key_exists('IMAGE_DOMAIN', $GLOBALS)){
+	if(array_key_exists('MEDIA_DOMAIN', $GLOBALS)){
 		if(substr($imgUrl, 0, 1) == '/'){
-			$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
-			$metaUrl = $GLOBALS['IMAGE_DOMAIN'] . $metaUrl;
+			$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $imgUrl;
+			$metaUrl = $GLOBALS['MEDIA_DOMAIN'] . $metaUrl;
 		}
 		if($origUrl && substr($origUrl,0,1)=='/'){
-			$origUrl = $GLOBALS['IMAGE_DOMAIN'].$origUrl;
+			$origUrl = $GLOBALS['MEDIA_DOMAIN'].$origUrl;
 		}
 	}
 	if(substr($metaUrl,0,1)=='/'){
@@ -224,16 +225,22 @@ if($imgArr){
 								<select name="photographeruid" name="photographeruid">
 									<option value=""><?php echo $LANG['SELECT_PHOTOGRAPHER'] ?></option>
 									<option value="">---------------------------------------</option>
-									<?php $imgManager->echoPhotographerSelect($imgArr["photographeruid"]); ?>
+									<?php
+									foreach($creatorArray as $id => $uname){
+											echo '<option value="'.$id.'" >';
+											echo $uname;
+											echo '</option>';
+										}
+									?>
 								</select>
 								* <?php echo $LANG['USER_REGISTERED_SYSTEM'] ?>
 								<a href="#" onclick="toggle('iepor');return false;" title="<?php echo $LANG['DISPLAY_PHOTOGRAPHER_FIELD'] ?>">
 									<img src="../images/editplus.png" style="border:0px;width:1.5em;" />
 								</a>
 							</div>
-							<div id="iepor" style="margin-top:2px;display:<?php echo ($imgArr["photographer"]?'block':'none'); ?>;">
+							<div id="iepor" style="margin-top:2px;display:<?php echo ($imgArr["creator"]?'block':'none'); ?>;">
 								<b><?php echo $LANG['PHOTOGRAPHER_OVERRIDE'] ?>:</b>
-								<input name="photographer" type="text" value="<?php echo $imgArr["photographer"];?>" style="width:250px;" />
+								<input name="photographer" type="text" value="<?php echo $imgArr["creator"];?>" style="width:250px;" />
 								* <?php echo $LANG['OVERRIDE_SELECTION'] ?>
 							</div>
 							<div style="margin-top:2px;">
@@ -274,7 +281,7 @@ if($imgArr){
 								<b><?php echo $LANG['WEB_IMAGE'] ?>:</b><br/>
 								<input name="url" type="text" value="<?php echo $imgArr["url"];?>" style="width:90%;" />
 								<?php
-								if(stripos($imgArr["url"],$IMAGE_ROOT_URL) === 0){
+								if(stripos($imgArr["url"],$MEDIA_ROOT_URL) === 0){
 									?>
 									<div style="margin-left:70px;">
 										<input type="checkbox" name="renameweburl" value="1" />
@@ -287,30 +294,30 @@ if($imgArr){
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['THUMBNAIL'] ?>:</b><br/>
-								<input name="thumbnailurl" type="text" value="<?php echo $imgArr["thumbnailurl"];?>" style="width:90%;" />
+								<input name="thumbnailurl" type="text" value="<?php echo $imgArr["thumbnailUrl"];?>" style="width:90%;" />
 								<?php
-								if(stripos($imgArr["thumbnailurl"],$IMAGE_ROOT_URL) === 0){
+								if($imgArr["thumbnailUrl"] && stripos($imgArr["thumbnailUrl"],$MEDIA_ROOT_URL) === 0){
 									?>
 									<div style="margin-left:70px;">
 										<input type="checkbox" name="renametnurl" value="1" />
 										<?php echo $LANG['RENAME_THUMBNAIL_IMAGE_FILE'] ?>
 									</div>
-									<input name="oldthumbnailurl" type="hidden" value="<?php echo $imgArr["thumbnailurl"];?>" />
+									<input name="oldthumbnailurl" type="hidden" value="<?php echo $imgArr["thumbnailUrl"];?>" />
 									<?php
 								}
 								?>
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['LARGE_IMAGE'] ?>:</b><br/>
-								<input name="originalurl" type="text" value="<?php echo $imgArr["originalurl"];?>" style="width:90%;" />
+								<input name="originalUrl" type="text" value="<?php echo $imgArr["originalUrl"];?>" style="width:90%;" />
 								<?php
-								if(stripos($imgArr["originalurl"],$IMAGE_ROOT_URL) === 0){
+								if(stripos($imgArr["originalUrl"],$MEDIA_ROOT_URL) === 0){
 									?>
 									<div style="margin-left:80px;">
 										<input type="checkbox" name="renameorigurl" value="1" />
 										<?php echo $LANG['RENAME_LARGE_IMAGE_FILE'] ?>
 									</div>
-									<input name="oldoriginalurl" type="hidden" value="<?php echo $imgArr["originalurl"];?>" />
+									<input name="oldoriginalurl" type="hidden" value="<?php echo $imgArr["originalUrl"];?>" />
 									<?php
 								}
 								?>
@@ -330,8 +337,9 @@ if($imgArr){
 								<input type="hidden" id="tid" name="targettid" value="" />
 								<input type="hidden" name="sourcetid" value="<?php echo $imgArr["tid"];?>" />
 								<input type="hidden" name="imgid" value="<?php echo $imgId; ?>" />
-								<button type="hidden" name="submitaction" value="Transfer Image" ><?php echo $LANG['TRANSFER_IMAGE'] ?></button>
-								<button type="submit" name="submitbutton" value="Transfer Image" ><?php echo $LANG['TRANSFER_IMAGE'] ?></button>
+
+								<input type="hidden" name="submitaction" value="Transfer Image" />
+								<button type="submit" name="submitaction" value="Transfer Image" ><?php echo $LANG['TRANSFER_IMAGE'] ?></button>
 							</div>
 					    </fieldset>
 					</form>
@@ -356,14 +364,22 @@ if($imgArr){
 				<div style="width:350px;padding:10px;float:left;">
 					<?php
 					$imgDisplay = $imgUrl;
+					$media_type = MediaType::tryFrom($imgArr['media_type']);
 					if((!$imgDisplay || $imgDisplay == 'empty') && $origUrl) $imgDisplay = $origUrl;
 					?>
+					<?php if($media_type === MediaType::Image):?>
 					<a href="<?php echo htmlspecialchars($imgDisplay, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>">
 						<img src="<?php echo htmlspecialchars($imgDisplay, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>" style="width:300px;" />
 					</a>
 					<?php
 					if($origUrl) echo '<div><a href="' . htmlspecialchars($origUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . $LANG['CLICK_IMAGE'] . '</a></div>';
 					?>
+					<?php elseif($media_type === MediaType::Audio):?>
+						<audio controls style="margin-top: 5rem">
+							<source src="<?= $origUrl ?>" type="<?=$imgArr['format']?>">
+							Your browser does not support the audio element.
+						</audio>
+					<?php endif ?>
 				</div>
 				<div style="padding:10px;float:left;">
 					<div style="clear:both;margin-top:40px;">
@@ -371,14 +387,14 @@ if($imgArr){
 					</div>
 					<?php
 					if($imgArr['caption']) echo '<div><b>' . $LANG['CAPTION'] . ':</b> '.$imgArr['caption'].'</div>';
-					if($imgArr['photographerdisplay']){
+					if($imgArr['creatorDisplay']){
 						echo '<div><b>' . $LANG['PHOTOGRAPHER'] . ':</b> ';
-						if(!$imgArr['photographer']){
-							$phLink = 'search.php?imagetype=all&phuid='.$imgArr['photographeruid'].'&submitaction=search';
+						if(!$imgArr['creator']){
+							$phLink = 'search.php?imagetype=all&phuid='.$imgArr['creatoruid'].'&submitaction=search';
 							echo '<a href="' . htmlspecialchars($phLink, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">';
 						}
-						echo $imgArr['photographerdisplay'];
-						if(!$imgArr['photographer']) echo '</a>';
+						echo $imgArr['creatorDisplay'];
+						if(!$imgArr['creator']) echo '</a>';
 						echo '</div>';
 					}
 					if($imgArr['owner']) echo '<div><b>' . $LANG['MANAGER'] . ':</b> ' . $imgArr['owner'] . '</div>';

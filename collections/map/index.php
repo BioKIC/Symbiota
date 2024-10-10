@@ -2157,6 +2157,10 @@ Record Limit:
 										<?php echo (isset($LANG['LIMIT_IMAGES'])?$LANG['LIMIT_IMAGES']:'Limit to Specimens with Images Only'); ?>
 									</div>
 									<div style="margin-top:5px;">
+										<input data-role="none" type='checkbox' name='hasaudio' value='1' <?php if($mapManager->getSearchTerm('hasaudio')) echo "CHECKED"; ?> >
+										<?php echo (isset($LANG['LIMIT_AUDIO'])?$LANG['LIMIT_AUDIO']:'Limit to Specimens with Images Only'); ?>
+									</div>
+									<div style="margin-top:5px;">
 										<input data-role="none" type='checkbox' name='hasgenetic' value='1' <?php if($mapManager->getSearchTerm('hasgenetic')) echo "CHECKED"; ?> >
 										<?php echo (isset($LANG['LIMIT_GENETIC'])?$LANG['LIMIT_GENETIC']:'Limit to Specimens with Genetic Data Only'); ?>
 									</div>

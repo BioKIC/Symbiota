@@ -2,6 +2,7 @@
 /*
 ------------------
 Language: Español (Spanish)
+Translated by: Google Translate (2024-09-16)
 ------------------
 */
 
@@ -18,7 +19,7 @@ $LANG['DEACTIVATED_MESSAGE'] = 'Ciertas opciones de administración solo están 
 $LANG['TOGGLE_MAN'] = 'Desplegar Panel de Control';
 $LANG['COLL_PROF_FOR'] = 'Perfil de Colección para';
 $LANG['DAT_EDIT'] = 'Panel de control del editor de datos';
-$LANG['SUBMIT_IMAGE_V'] = 'Someter una imagen voucher (observación con el apoyo de una foto)';
+$LANG['SUBMIT_IMAGE_V'] = 'Presentar un Bono Multimedia (observación respaldada por una foto)';
 $LANG['ADD_NEW_OCCUR'] = 'Agregar nuevo registro de ocurrencias';
 $LANG['CREATE_NEW_REC'] = 'Crear Registros Nuevos Usando Imágen';
 $LANG['SKELETAL'] = 'Agregar registros esqueléticos';
@@ -34,14 +35,13 @@ $LANG['LOAN_MANAGEMENT'] = 'Administración de Préstamos';
 $LANG['ADMIN_CONTROL'] = 'Panel de Control de Administración';
 $LANG['VIEW_COMMENTS'] = 'Ver Comentarios Publicados';
 $LANG['UNREVIEWED_COMMENTS'] = 'comentarios no revisados';
-$LANG['OPEN_META'] = 'Metadatos, Dirección, e Información de Contacto';
 $LANG['EDIT_META'] = 'Editar Metadatos';
-$LANG['EDIT_ADDRESS'] = 'Editar Dirección de Envio';
+$LANG['OPEN_META'] = 'Metadatos, Dirección, e Información de Contacto';
 $LANG['EDIT_COLL_PROPS'] = 'Propiedades Especiales';
 $LANG['MANAGE_PERMISSIONS'] = 'Administrar Permisos';
 $LANG['IMPORT_SPECIMEN'] = 'Importar/Actualizar Registros de Especímenes';
-$LANG['TEXT_FILE_IMPORT'] = 'Carga Rápida de Archivos';
 $LANG['SKELETAL_FILE_IMPORT'] = 'Carga Archivo Estructural';
+$LANG['TEXT_FILE_IMPORT'] = 'Carga Rápida de Archivos';
 $LANG['DWCA_IMPORT'] = 'DwC-Archive Importación';
 $LANG['IPT_IMPORT'] = 'IPT Importación';
 $LANG['EXTENDED_IMPORT'] = 'Datos Extendidos Importación';
@@ -51,9 +51,10 @@ $LANG['CREATE_PROFILE'] = 'Crear un Nuevo Perfil de Importación';
 $LANG['PROCESSING_TOOLBOX'] = 'Caja de Herramientas de Procesamiento';
 $LANG['DARWIN_CORE_PUB'] = 'Publicación de Archivo Darwin Core';
 $LANG['REVIEW_SPEC_EDITS'] = 'Revisar/Verificar Ediciones de Ocurrencias';
-$LANG['DATA_CLEANING'] = 'Herramientas de Limpieza de Datos';
+$LANG['ACCESS_REPORT'] = 'View Access Statistics';
 $LANG['DUP_CLUSTER'] = 'Duplicar Agrupamiento';
 $LANG['MAINTENANCE_TASKS'] = 'Tareas de Mantenimiento';
+$LANG['DATA_CLEANING'] = 'Herramientas de Limpieza de Datos';
 $LANG['BACKUP_DATA_FILE'] = 'Descargar Archivo de Respaldo de Datos';
 $LANG['RESTORE_BACKUP'] = 'Restaurar archivo de respaldo';
 $LANG['GUID_MANAGEMENT'] = 'administración de GUIDs de IGSN';
@@ -75,7 +76,6 @@ $LANG['USAGE_RIGHTS'] = 'Derechos de Uso';
 $LANG['USAGE_POLICY'] = 'Política de uso';
 $LANG['RIGHTS_HOLDER'] = 'Propietario de Derechos';
 $LANG['ACCESS_RIGHTS'] = 'Derechos de Acceso';
-
 $LANG['GBIF_DATASET'] = 'Dato de GBIF';
 $LANG['IDIGBIO_DATASET'] = 'Datos de iDigBio';
 $LANG['ADDRESS'] = 'Dirección';
@@ -83,8 +83,8 @@ $LANG['EDIT_INST'] = 'Revisar la información de la institución';
 $LANG['COLL_STATISTICS'] = 'Estadísticas de Colección';
 $LANG['SPECIMEN_RECORDS'] = 'registros de especímenes';
 $LANG['GEOREFERENCED'] = 'georeferenciado';
-$LANG['WITH_IMAGES'] = 'con imágenes';
-$LANG['TOTAL_IMAGES'] = 'imágenes en total';
+$LANG['WITH_IMAGES'] = 'con multimedia';
+$LANG['TOTAL_IMAGES'] = 'multimedia completa';
 $LANG['GENBANK_REF'] = 'GenBank';
 $LANG['BOLD_REF'] = 'BOLD';
 $LANG['OTHER_GENETIC_REF'] = 'diversas';
@@ -108,7 +108,7 @@ $LANG['CLICK_ON_SPEC_FAM'] = 'Haga clic en los recuentos de registros de especí
 $LANG['GEOG_DIST_COUNTRIES'] = 'Distribución Geográfica - Países';
 $LANG['COLLECTION_PROJECTS'] = 'Colecciones de Historia Natural y Proyectos de Observaciones';
 $LANG['ADVANCED_SEARCH_THIS_COLLECTION'] = 'Búsqueda avanzada en esta colección';
-$LANG['IMAGE_SEARCH_THIS_COLLECTION'] = 'Buscar imagen en esta colección';
+$LANG['IMAGE_SEARCH_THIS_COLLECTION'] = 'Multimedia Buscar en esta colección';
 $LANG['SEARCH'] = 'Buscar';
 $LANG['IDENTIFIER_PLACEHOLDER_LIST'] = 'Buscar por número de catálogo, ID de ocurrencia o ID de registro.';
 $LANG['MORE_INFO_ALT'] = 'Más información sobre el número de catálogo';
@@ -116,4 +116,5 @@ $LANG['SEARCH_BY_TAXON'] = 'Buscar por taxón';
 $LANG['OCCURENCE_IDENTIFIER'] = 'Número de Catálogo';
 $LANG['TAXON'] = 'Taxón';
 $LANG['OCCURRENCE_EDITOR'] = 'Editar';
+
 ?>

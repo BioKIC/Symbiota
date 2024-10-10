@@ -122,8 +122,8 @@ class SpecProcNlpHandler {
 		//Get raw OCR string
 		$sql = 'SELECT r.rawstr, o.collid, o.catalogNumber '.
 			'FROM omoccurrences o '.
-			'INNER JOIN images i ON o.occid = i.occid '.
-			'INNER JOIN specprocessorrawlabels r ON i.imgid = r.imgid '.
+			'INNER JOIN media m ON o.occid = m.occid '.
+			'INNER JOIN specprocessorrawlabels r ON m.media_id = r.imgid '.
 			'WHERE (r.prlid = '.$prlid.')';
 		//echo $sql;
 		$rs = $this->conn->query($sql);
@@ -142,9 +142,9 @@ class SpecProcNlpHandler {
 		$totalCnt = 0;
 		foreach($collArr as $collid){
 			$this->setCollId($collid);
-			$sql = 'SELECT r.prlid, r.rawstr, r.source, o.occid, o.collid, o.catalognumber, IFNULL(i.originalurl,i.url) AS url '.
-				'FROM specprocessorrawlabels r LEFT JOIN images i ON r.imgid = i.imgid '.
-				'INNER JOIN omoccurrences o ON IFNULL(i.occid,r.occid) = o.occid '.
+			$sql = 'SELECT r.prlid, r.rawstr, r.source, o.occid, o.collid, o.catalognumber, IFNULL(m.originalurl,m.url) AS url '.
+				'FROM specprocessorrawlabels r LEFT JOIN media m ON r.imgid = m.media_id '.
+				'INNER JOIN omoccurrences o ON IFNULL(m.occid,r.occid) = o.occid '.
 				'WHERE length(r.rawstr) > 20 AND (o.processingstatus = "unprocessed") ';
 			//if($this->collId) $sql .= 'AND (o.collid = '.$this->collId.') ';
 			if($source) $sql .= 'AND r.source LIKE "%'.$source.'%" ';

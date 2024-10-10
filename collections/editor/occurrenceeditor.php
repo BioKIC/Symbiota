@@ -21,12 +21,10 @@ $occManager = null;
 if(strpos($action,'Determination') || strpos($action,'Verification')){
 	include_once($SERVER_ROOT.'/classes/OccurrenceEditorDeterminations.php');
 	$occManager = new OccurrenceEditorDeterminations();
-}
-elseif(strpos($action,'Image')){
-	include_once($SERVER_ROOT.'/classes/OccurrenceEditorImages.php');
-	$occManager = new OccurrenceEditorImages();
-}
-else{
+} else{
+	if(strpos($action,'Image')) {
+		include_once($SERVER_ROOT . "/classes/Media.php");
+	}
 	include_once($SERVER_ROOT.'/classes/OccurrenceEditorManager.php');
 	$occManager = new OccurrenceEditorManager();
 }
@@ -228,65 +226,104 @@ if($SYMB_UID){
 				}
 			}
 			elseif($action == 'Submit Image Edits'){
-				$occManager->editImage($_POST);
-				if($errArr = $occManager->getErrorArr()){
-					if(isset($errArr['web'])){
-						if(!$errArr['web']) $statusStr .= $LANG['ERROR_UPDATING_IMAGE'].': web image<br />';
-					}
-					if(isset($errArr['tn'])){
-						if(!$errArr['tn']) $statusStr .= $LANG['ERROR_UPDATING_IMAGE'].': thumbnail<br />';
-					}
-					if(isset($errArr['orig'])){
-						if(!$errArr['orig']) $statusStr .= $LANG['ERROR_UPDATING_IMAGE'].': large image<br />';
-					}
-					if(isset($errArr['error'])) $statusStr .= $LANG['ERROR_EDITING_IMAGE'].': '.$errArr['error'];
+				Media::update($_POST['imgid'], $_POST, new LocalStorage());
+
+				if($errors = Media::getErrors()) {
+					$statusStr = 'ERROR: ' . array_pop($errors);
 				}
 				$tabTarget = 2;
 			}
-			elseif($action == 'Submit New Image'){
-				if($occManager->addImage($_POST)){
-					$statusStr = (isset($LANG['IMAGE_ADD_SUCCESS'])?$LANG['IMAGE_ADD_SUCCESS']:'Image added successfully');
+			elseif($action == 'Submit New Image') {
+
+				$collMap = $occManager->getCollMap();
+
+				//Ensures correct order on taxon profile page 
+				if(strpos($collMap['colltype'], 'Observations') !== false) {
+					$_POST['sortsequence'] = 40;
+				} 
+
+				try {
+					$occur_map = $occManager->getOccurMap()[$occId];
+					$path = get_occurrence_upload_path(
+						$occur_map['institutioncode'],
+						$occur_map['collectioncode'],
+						$occur_map['catalognumber']
+					);
+					Media::add(
+						$_POST, 
+						new LocalStorage($path),
+						$_FILES['imgfile'] ?? null
+					);
+					if($errors = Media::getErrors()) {
+						$statusStr = "ERROR: " . array_pop($errors);
+					} else {
+						$statusStr = $LANG['IMAGE_ADD_SUCCESS'];
+					}
+				} catch(Exception $e) {
+					$statusStr = $e->getMessage();
+				} finally {
 					$tabTarget = 2;
-				}
-				if($occManager->getErrorStr()){
-					$statusStr .= $occManager->getErrorStr();
 				}
 			}
 			elseif($action == 'Delete Image'){
-				$removeImg = (array_key_exists('removeimg',$_POST)?$_POST['removeimg']:0);
-				if($occManager->deleteImage($_POST["imgid"], $removeImg)){
-					$statusStr = (isset($LANG['IMAGE_DEL_SUCCESS'])?$LANG['IMAGE_DEL_SUCCESS']:'Image deleted successfully');
+				try {
+					Media::delete($_POST['imgid'], $_POST['removeimg']?? false);
+
+					if($errors = Media::getErrors()) {
+						$statusStr = "ERROR: " . array_pop($errors);
+					} else {
+						$statusStr = $LANG['IMAGE_DEL_SUCCESS'];
+					}
+				} catch(Exception $e) {
+					$statusStr = $e->getMessage();
+				} finally {
 					$tabTarget = 2;
 				}
-				else{
-					$statusStr = $occManager->getErrorStr();
-				}
 			}
-			elseif($action == 'Remap Image'){
-				if($occManager->remapImage($_POST['imgid'], $_POST['targetoccid'])){
-					$statusStr = (isset($LANG['IMAGE_REMAP_SUCCESS'])?$LANG['IMAGE_REMAP_SUCCESS']:'SUCCESS: Image remapped to record').' <a href="occurrenceeditor.php?occid=' . htmlspecialchars($_POST["targetoccid"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($_POST["targetoccid"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
-				}
-				else{
-					$statusStr = (isset($LANG['IMAGE_REMAP_ERROR'])?$LANG['IMAGE_REMAP_ERROR']:'ERROR linking image to new specimen').': '.$occManager->getErrorStr();
-				}
-			}
-			elseif($action == 'remapImageToNewRecord'){
-				$newOccid = $occManager->remapImage($_POST['imgid'], 'new');
-				if($newOccid){
-					$statusStr = (isset($LANG['IMAGE_REMAP_SUCCESS'])?$LANG['IMAGE_REMAP_SUCCESS']:'SUCCESS: Image remapped to record').' <a href="occurrenceeditor.php?occid=' . htmlspecialchars($newOccid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($newOccid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
-				}
-				else{
-					$statusStr = (isset($LANG['NEW_IMAGE_ERROR'])?$LANG['NEW_IMAGE_ERROR']:'ERROR linking image to new blank specimen').': '.$occManager->getErrorStr();
+			elseif($action == 'Remap Image' || $action == 'remapImageToNewRecord'){
+				$target_occid = $action == 'remapImageToNewRecord' ? 
+					$occManager->createOccurrenceFrom(): 
+					intval($_POST['targetoccid']);
+
+				try {
+					$target_occur_manager = new OccurrenceEditorManager();
+					$target_occur_manager->setOccId($target_occid);
+					$target_occur_map = $target_occur_manager->getOccurMap()[$target_occid];
+					$remap_path	= get_occurrence_upload_path(
+						$target_occur_map['institutioncode'],
+						$target_occur_map['collectioncode'],
+						$target_occur_map['catalognumber']
+					);
+
+					$occur_map = $occManager->getOccurMap()[$occId];
+					$current_path = get_occurrence_upload_path(
+						$occur_map['institutioncode'],
+						$occur_map['collectioncode'],
+						$occur_map['catalognumber']
+					);
+					Media::remap(
+						intval($_POST['imgid']), 
+						$target_occid, 
+						new LocalStorage($current_path), 
+						new LocalStorage($remap_path)
+					);
+
+					$statusStr = $LANG['IMAGE_REMAP_SUCCESS'] .' <a href="occurrenceeditor.php?occid=' . htmlspecialchars($target_occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($target_occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
+				} catch(Exception $e) {
+					$statusStr = ($action == 'remapImageToNewRecord'?
+						$LANG['NEW_IMAGE_ERROR']: $LANG['IMAGE_REMAP_ERROR']) .
+						': '. $e->getMessage();
 				}
 			}
 			elseif($action == "Disassociate Image"){
-				if($occManager->remapImage($_POST["imgid"])){
-					$statusStr = (isset($LANG['DISASS_SUCCESS'])?$LANG['DISASS_SUCCESS']:'SUCCESS disassociating image').' <a href="../../imagelib/imgdetails.php?imgid=' . htmlspecialchars($_POST["imgid"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">#' . htmlspecialchars($_POST["imgid"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
-				}
-				else{
-					$statusStr = (isset($LANG['DISASS_ERORR'])?$LANG['DISASS_ERORR']:'ERROR disassociating image').': '.$occManager->getErrorStr();
-				}
+				try {
+					$media_id = intval($_POST["imgid"]);
+					Media::disassociate($media_id);
 
+					$statusStr = $LANG['DISASS_SUCCESS'] . ' <a href="../../imagelib/imgdetails.php?imgid=' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">#' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
+				} catch(Exception $e) {
+					$statusStr = $LANG['DISASS_ERORR'] .': '.$e->getMessage();
+				}
 			}
 			elseif($action == "Apply Determination"){
 				$makeCurrent = 0;
@@ -409,7 +446,7 @@ if($SYMB_UID){
 	//Images and other things needed for OCR
 	$specImgArr = $occManager->getImageMap();
 	if($specImgArr){
-		$imgUrlPrefix = (isset($IMAGE_DOMAIN)?$IMAGE_DOMAIN:'');
+		$imgUrlPrefix = (isset($MEDIA_DOMAIN)?$MEDIA_DOMAIN:'');
 		$imgCnt = 1;
 		foreach($specImgArr as $imgId => $i2){
 			$iUrl = $i2['url'];
@@ -691,7 +728,7 @@ else{
 									if($isEditor == 1 || $isEditor == 2){
 										?>
 										<li id="imgTab">
-											<a href="includes/imagetab.php?<?= $anchorVars ?>" style=""><?= $LANG['IMAGES'] ?></a>
+											<a href="includes/imagetab.php?<?= $anchorVars ?>" style=""><?= $LANG['MEDIA'] ?></a>
 										</li>
 										<?php
 										if(isset($collMap['matSampleActivated'])){

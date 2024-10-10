@@ -21,18 +21,19 @@ $LOG_PATH = $SERVER_ROOT . '/content/logs';					//Must be writable by Apache; wi
 $CSS_BASE_PATH = $CLIENT_ROOT . '/css';
 
 //Path to user uploaded images files.  Used by tinyMCE. This is NOT for collection images. See section immediatly below for collection image location
-$PUBLIC_IMAGE_UPLOAD_ROOT = '/content/imglib';
+$PUBLIC_MEDIA_UPLOAD_ROOT = '/content/imglib';
 
 //the root for the collection image directory
-$IMAGE_DOMAIN = '';				//Domain path to images, if different from portal
-$IMAGE_ROOT_URL = '';				//URL path to images
-$IMAGE_ROOT_PATH = '';			//Writable path to images, especially needed for downloading images
+$MEDIA_DOMAIN = '';				//Domain path to images, if different from portal
+$MEDIA_ROOT_URL = '';				//URL path to images
+$MEDIA_ROOT_PATH = '';			//Writable path to images, especially needed for downloading images
+
 
 //Pixel width of web images
 $IMG_WEB_WIDTH = 1400;
 $IMG_TN_WIDTH = 200;
 $IMG_LG_WIDTH = 3200;
-$IMG_FILE_SIZE_LIMIT = 300000;		//Files above this size limit and still within pixel width limits will still be resaved w/ some compression
+$MEDIA_FILE_SIZE_LIMIT = 300000;		//Files above this size limit and still within pixel width limits will still be resaved w/ some compression
 $IPLANT_IMAGE_IMPORT_PATH = '';		//Path used to map/import images uploaded to the iPlant image server (e.g. /home/shared/project-name/--INSTITUTION_CODE--/, the --INSTITUTION_CODE-- text will be replaced with collection's institution code)
 
 //$USE_IMAGE_MAGICK = 0;		//1 = ImageMagick resize images, given that it's installed (faster, less memory intensive)

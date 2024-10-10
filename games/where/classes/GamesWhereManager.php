@@ -107,24 +107,24 @@ class GamesWhereManager extends Manager {
 		else return "";//No TID was found for this plant, so unable to search for an image.
 
 		if($TID == "") return "";
-		$ImageQuery = "SELECT * FROM images WHERE tid IN ($TID) AND sortsequence = 1 LIMIT 1";
+		$ImageQuery = "SELECT * FROM media WHERE tid IN ($TID) AND sortsequence = 1 LIMIT 1";
 		$ImageResult = $DB[$DBNum]->query($ImageQuery);
 		if($ImageResult->num_rows == 0)
 		{//Look for the best possible image first.
 			if($Sort) return "";
-			$ImageQuery = "SELECT * FROM images WHERE tid IN ($TID) AND sortsequence > 0 ORDER BY sortsequence";
+			$ImageQuery = "SELECT * FROM media WHERE tid IN ($TID) AND sortsequence > 0 ORDER BY sortsequence";
 			$ImageResult = $DB[$DBNum]->query($ImageQuery);
 		}
 
 		if($ImageResult->num_rows == 0)
 		{
 			//die("Error: $SciName, $ImageQuery");
-			$ImageQuery = "SELECT * FROM images WHERE tid IN ($TID) AND url != 'empty' AND sortsequence > 0 ORDER BY sortsequence";
+			$ImageQuery = "SELECT * FROM media WHERE tid IN ($TID) AND url != 'empty' AND sortsequence > 0 ORDER BY sortsequence";
 			$ImageResult = $DB[$DBNum]->query($ImageQuery);
 		}
 		if($ImageResult->num_rows == 0)
 		{ //Last try.  Any image will be accepted.
-			$ImageQuery = "SELECT * FROM images WHERE tid IN ($TID) AND url != 'empty' LIMIT 1";
+			$ImageQuery = "SELECT * FROM media WHERE tid IN ($TID) AND url != 'empty' LIMIT 1";
 			$ImageResult = $DB[$DBNum]->query($ImageQuery);
 		}
 		$OneImageURL = $ImageResult->fetch_assoc();

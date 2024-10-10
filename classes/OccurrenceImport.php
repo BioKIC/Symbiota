@@ -6,6 +6,7 @@ include_once('OmAssociations.php');
 include_once('OmDeterminations.php');
 include_once('OccurrenceMaintenance.php');
 include_once('UuidFactory.php');
+include_once('Media.php');
 
 class OccurrenceImport extends UtilitiesFileImport{
 
@@ -81,37 +82,49 @@ class OccurrenceImport extends UtilitiesFileImport{
 				$this->errorMessage = 'large url (originalUrl) is null (required)';
 				return false;
 			}
+
+			$fields = [
+				 //'tid',
+				'thumbnailurl',
+				'archiveurl',
+				'referenceurl',
+				'photographer',
+				'photographeruid',
+				'caption',
+				'owner',
+				'anatomy',
+				'notes',
+				'format',
+				'sourceidentifier',
+				'hashfunction',
+				'hashvalue',
+				'mediamd5',
+				'copyright',
+				'accessrights',
+				'rights',
+				'sortoccurrence'
+			];
+
 			foreach($occidArr as $occid){
-				$importManager->setOccid($occid);
-				//$importManager->setTid($tid);
-				$importManager->setImgLgUrl($recordArr[$this->fieldMap['originalurl']]);
-				if(isset($this->fieldMap['url']) && $recordArr[$this->fieldMap['url']]) $importManager->setImgWebUrl($recordArr[$this->fieldMap['url']]);
-				if(isset($this->fieldMap['thumbnailurl']) && $recordArr[$this->fieldMap['thumbnailurl']]) $importManager->setImgTnUrl($recordArr[$this->fieldMap['thumbnailurl']]);
-				if(isset($this->fieldMap['archiveurl']) && $recordArr[$this->fieldMap['archiveurl']]) $importManager->setArchiveUrl($recordArr[$this->fieldMap['archiveurl']]);
-				if(isset($this->fieldMap['referenceurl']) && $recordArr[$this->fieldMap['referenceurl']]) $importManager->setReferenceUrl($recordArr[$this->fieldMap['referenceurl']]);
-				if(isset($this->fieldMap['photographer']) && $recordArr[$this->fieldMap['photographer']]) $importManager->setPhotographer($recordArr[$this->fieldMap['photographer']]);
-				if(isset($this->fieldMap['photographeruid']) && $recordArr[$this->fieldMap['photographeruid']]) $importManager->setPhotographerUid($recordArr[$this->fieldMap['photographeruid']]);
-				if(isset($this->fieldMap['caption']) && $recordArr[$this->fieldMap['caption']]) $importManager->setCaption($recordArr[$this->fieldMap['caption']]);
-				if(isset($this->fieldMap['owner']) && $recordArr[$this->fieldMap['owner']]) $importManager->setOwner($recordArr[$this->fieldMap['owner']]);
-				if(isset($this->fieldMap['anatomy']) && $recordArr[$this->fieldMap['anatomy']]) $importManager->setAnatomy($recordArr[$this->fieldMap['anatomy']]);
-				if(isset($this->fieldMap['notes']) && $recordArr[$this->fieldMap['notes']]) $importManager->setNotes($recordArr[$this->fieldMap['notes']]);
-				if(isset($this->fieldMap['format']) && $recordArr[$this->fieldMap['format']]) $importManager->setFormat($recordArr[$this->fieldMap['format']]);
-				if(isset($this->fieldMap['sourceidentifier']) && $recordArr[$this->fieldMap['sourceidentifier']]) $importManager->setSourceIdentifier($recordArr[$this->fieldMap['sourceidentifier']]);
-				if(isset($this->fieldMap['hashfunction']) && $recordArr[$this->fieldMap['hashfunction']]) $importManager->setHashFunction($recordArr[$this->fieldMap['hashfunction']]);
-				if(isset($this->fieldMap['hashvalue']) && $recordArr[$this->fieldMap['hashvalue']]) $importManager->setHashValue($recordArr[$this->fieldMap['hashvalue']]);
-				if(isset($this->fieldMap['mediamd5']) && $recordArr[$this->fieldMap['mediamd5']]) $importManager->setMediaMD5($recordArr[$this->fieldMap['mediamd5']]);
-				if(isset($this->fieldMap['copyright']) && $recordArr[$this->fieldMap['copyright']]) $importManager->setCopyright($recordArr[$this->fieldMap['copyright']]);
-				if(isset($this->fieldMap['accessrights']) && $recordArr[$this->fieldMap['accessrights']]) $importManager->setAccessRights($recordArr[$this->fieldMap['accessrights']]);
-				if(isset($this->fieldMap['rights']) && $recordArr[$this->fieldMap['rights']]) $importManager->setRights($recordArr[$this->fieldMap['rights']]);
-				if(isset($this->fieldMap['sortoccurrence']) && $recordArr[$this->fieldMap['sortoccurrence']]) $importManager->setSortOccurrence($recordArr[$this->fieldMap['sortoccurrence']]);
-				if($importManager->insertImage()){
+				$data = [
+					"occid" => $occid,
+					"originalUrl" => $recordArr[$this->fieldMap['originalurl']],
+				];
+				foreach($fields as $key) {
+					$record_idx = $this->fieldMap[$key] ?? false;
+					if($record_idx && $recordArr[$record_idx]) {
+						$data[$key] = $recordArr[$record_idx];
+					}
+				}
+
+				// Will Not store files on the server unless StorageStrategy is provided
+				Media::add($data);
+				if($errors = Media::getErrors()) {
+					$this->logOrEcho('ERROR: ' . array_pop($errors));
+				} else {
 					$this->logOrEcho($LANG['IMAGE_LOADED'].': <a href="../editor/occurrenceeditor.php?occid='.$occid.'" target="_blank">'.$occid.'</a>', 1);
 					$status = true;
 				}
-				else{
-					$this->logOrEcho('ERROR loading image: '.$importManager->getErrStr(), 1);
-				}
-				$importManager->reset();
 			}
 		}
 		elseif($this->importType == self::IMPORT_DETERMINATIONS){

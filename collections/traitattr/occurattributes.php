@@ -98,7 +98,7 @@ if ($traitID) {
 			var imgArr = [];
 			var imgLgArr = [];
 			<?php
-			$imgDomain = $IMAGE_DOMAIN;
+			$imgDomain = $MEDIA_DOMAIN;
 			if(!$imgDomain) $attrManager->getDomain();
 			foreach($imgArr as $cnt => $iArr){
 				//Regular url

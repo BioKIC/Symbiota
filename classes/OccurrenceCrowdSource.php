@@ -88,7 +88,7 @@ class OccurrenceCrowdSource {
 
 			//Get record count for those available for adding to queue
 			$sql = 'SELECT count(DISTINCT o.occid) as cnt
-				FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid
+				FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid
 				LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid
 				WHERE o.collid = '.$this->collid.' AND (o.processingstatus = "unprocessed") AND q.occid IS NULL ';
 			$toAddCnt = 0;
@@ -209,7 +209,7 @@ class OccurrenceCrowdSource {
 		if(!$this->omcsid) return 'ERROR adding to queue, omcsid is null';
 		if(!$this->collid) return 'ERROR adding to queue, collid is null';
 		$con = MySQLiConnectionFactory::getCon("write");
-		$sqlFrag = 'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
+		$sqlFrag = 'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
 			'LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid '.
 			'WHERE o.collid = '.$this->collid.' AND q.occid IS NULL AND (o.processingstatus = "unprocessed") ';
 		if($family){
@@ -264,7 +264,7 @@ class OccurrenceCrowdSource {
 		$country = array();
 		$state = array();
 		$sql = 'SELECT DISTINCT o.country, o.stateprovince '.
-			'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
+			'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
 			'LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid '.
 			'WHERE o.collid = '.$this->collid.' AND (o.processingstatus = "unprocessed") AND q.occid IS NULL ';
 		$rs = $this->conn->query($sql);
@@ -280,7 +280,7 @@ class OccurrenceCrowdSource {
 		$family = array();
 		$sciname = array();
 		$sql = 'SELECT DISTINCT o.family, o.sciname, t.unitname1 '.
-			'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
+			'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
 			'LEFT JOIN omcrowdsourcequeue q ON o.occid = q.occid '.
 			'LEFT JOIN taxa t ON o.tidinterpreted = t.tid '.
 			'WHERE o.collid = '.$this->collid.' AND (o.processingstatus = "unprocessed") AND q.occid IS NULL ';

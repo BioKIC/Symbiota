@@ -321,12 +321,12 @@ class KeyDataManager extends Manager {
 					$rs->free();
 				}
 				if($this->displayImages){
-					$sql = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
-						'(SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
+					$sql = 'SELECT m2.tid, m.url, m.thumbnailurl FROM media m INNER JOIN '.
+						'(SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(m.sortsequence,6,"0"),m.media_id)),7) AS media_id'.
 						'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
-						'INNER JOIN images i ON ts2.tid = i.tid '.
-						'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.tid IN('.implode(',',array_keys($taxaArr)).')) '.
-						'GROUP BY ts1.tid) i2 ON i.imgid = i2.imgid';
+						'INNER JOIN media m ON ts2.tid = m.tid '.
+						'WHERE m.sortsequence < 500 AND (m.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.tid IN('.implode(',',array_keys($taxaArr)).')) '.
+						'GROUP BY ts1.tid) m2 ON m.media_id = m2.media_id';
 					//echo $sql;
 					$rs = $this->conn->query($sql);
 					$matchedArr = array();
@@ -341,12 +341,12 @@ class KeyDataManager extends Manager {
 					$missingArr = array_diff(array_keys($taxaArr),$matchedArr);
 					if($missingArr){
 						//Get children images
-						$sql2 = 'SELECT i2.tid, i.url, i.thumbnailurl FROM images i INNER JOIN '.
-							'(SELECT ts1.parenttid AS tid, SUBSTR(MIN(CONCAT(LPAD(i.sortsequence,6,"0"),i.imgid)),7) AS imgid '.
+						$sql2 = 'SELECT m2.tid, m.url, m.thumbnailurl FROM media 2 INNER JOIN '.
+							'(SELECT ts1.parenttid AS tid, SUBSTR(MIN(CONCAT(LPAD(m.sortsequence,6,"0"),m.media_id)),7) AS media_id '.
 							'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
-							'INNER JOIN images i ON ts2.tid = i.tid '.
-							'WHERE i.sortsequence < 500 AND (i.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.parenttid IN('.implode(',',$missingArr).')) '.
-							'GROUP BY ts1.tid) i2 ON i.imgid = i2.imgid';
+							'INNER JOIN media m ON ts2.tid = m.tid '.
+							'WHERE m.sortsequence < 500 AND (m.thumbnailurl IS NOT NULL) AND ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.parenttid IN('.implode(',',$missingArr).')) '.
+							'GROUP BY ts1.tid) m2 ON m.media_id = m2.media_id';
 						//echo $sql;
 						$rs2 = $this->conn->query($sql2);
 						while($r2 = $rs2->fetch_object()){

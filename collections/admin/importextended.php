@@ -81,9 +81,10 @@ if($IS_ADMIN || (array_key_exists('CollAdmin', $USER_RIGHTS) && in_array($collid
 				?>
 				let subjectIdentifierIsMapped = false;
 				let objectIdentifierIsMapped = false;
-				const formElements = f.elements;
-				for (const key in formElements) {
-					const value = formElements[key].value;
+
+				const form_data = new FormData(f);
+
+				for (const [key, value] of form_data.entries()) {
 					if(key.substring(0, 3) == "sf["){
 						if(sourceArr.indexOf(value) > -1){
 							alert("<?= $LANG['ERR_DUPLICATE_SOURCE'] ?>" + value + ")");

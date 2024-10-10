@@ -640,7 +640,7 @@ class TaxonomyEditorManager extends Manager{
 			$rs2a->free();
 
 			if($occidArr){
-				$sql2 = 'UPDATE images SET tid = '.$tid.' WHERE tid IS NULL AND occid IN('.implode(',',$occidArr).')';
+				$sql2 = 'UPDATE media SET tid = '.$tid.' WHERE tid IS NULL AND occid IN('.implode(',',$occidArr).')';
 				$this->conn->query($sql2);
 				if(!$this->conn->query($sql2)){
 					echo (isset($this->langArr['WARNING_UPDATE_IMAGES'])?$this->langArr['WARNING_UPDATE_IMAGES']:'WARNING: Taxon loaded into taxa, but occurrence images must be updated with matching name').': '.$this->conn->error;
@@ -696,7 +696,7 @@ class TaxonomyEditorManager extends Manager{
 		$rs->free();
 
 		//Field images
-		$sql ='SELECT COUNT(imgid) AS cnt FROM images WHERE tid = '.$this->tid;
+		$sql ='SELECT COUNT(imgid) AS cnt FROM media WHERE tid = '.$this->tid;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr['img'] = $r->cnt;
@@ -778,7 +778,7 @@ class TaxonomyEditorManager extends Manager{
 			//Set occurrence and determination tids to NULL within delete function function below
 
 			//Field images; specimen images set to null within delete function
-			$sql ='UPDATE IGNORE images SET tid = '.$targetTid.' WHERE occid IS NULL AND tid = '.$this->tid;
+			$sql ='UPDATE IGNORE media SET tid = '.$targetTid.' WHERE occid IS NULL AND tid = '.$this->tid;
 			if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_TRANSFER_IMGS'])?$this->langArr['ERROR_TRANSFER_IMGS']:'ERROR transferring image links').' ('.$this->conn->error.')';
 
 			//Taxon maps
@@ -827,7 +827,7 @@ class TaxonomyEditorManager extends Manager{
 
 	public function deleteTaxon(){
 		//Specimen images
-		$sql ='UPDATE images SET tid = NULL WHERE occid IS NOT NULL AND tid = '.$this->tid;
+		$sql ='UPDATE media SET tid = NULL WHERE occid IS NOT NULL AND tid = '.$this->tid;
 		if(!$this->conn->query($sql)) $this->warningArr[] = (isset($this->langArr['ERROR_SETTING_NULL'])?$this->langArr['ERROR_SETTING_NULL']:'ERROR setting tid to NULL for occurrence images in deleteTaxon method').' ('.$this->conn->error.')';
 
 		/*

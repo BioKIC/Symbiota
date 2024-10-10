@@ -139,7 +139,7 @@ class RpcOccurrenceEditor extends RpcBase{
 	public function getImageCount($occid){
 		$retCnt = 0;
 		if(is_numeric($occid)){
-			$sql = 'SELECT count(*) AS imgcnt FROM images WHERE occid = ?';
+			$sql = 'SELECT count(*) AS imgcnt FROM media WHERE occid = ?';
 			if($stmt = $this->conn->prepare($sql)){
 				if($stmt->bind_param('i', $occid)){
 					$stmt->execute();

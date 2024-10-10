@@ -54,7 +54,7 @@ class OccurrenceExsiccatae {
 			if($imagesOnly){
 				$sql .= 'FROM omexsiccatititles et INNER JOIN omexsiccatinumbers en ON et.ometid = en.ometid '.
 					'INNER JOIN omexsiccatiocclink ol ON en.omenid = ol.omenid '.
-					'INNER JOIN images i ON ol.occid = i.occid ';
+					'INNER JOIN media m ON ol.occid = m.occid ';
 			}
 			else{
 				//Display only exsiccati that have linked specimens
@@ -97,7 +97,7 @@ class OccurrenceExsiccatae {
 				'CONCAT(o.recordedby," (",IFNULL(o.recordnumber,"s.n."),") ",IFNULL(o.eventDate,"date unknown")) as collector '.
 				'FROM omexsiccatinumbers en '.($specimenOnly || $imagesOnly?'INNER':'LEFT').' JOIN omexsiccatiocclink ol ON en.omenid = ol.omenid '.
 				($specimenOnly || $imagesOnly?'INNER':'LEFT').' JOIN omoccurrences o ON ol.occid = o.occid ';
-			if($imagesOnly) $sql .= 'INNER JOIN images i ON o.occid = i.occid ';
+			if($imagesOnly) $sql .= 'INNER JOIN media m ON o.occid = m.occid ';
 			$sql .= 'WHERE en.ometid = '.$ometid.' ';
 			if($collid) $sql .= 'AND o.collid = '.$collid.' ';
 			$sql .= 'ORDER BY en.exsnumber+1,en.exsnumber,ol.ranking';
@@ -156,11 +156,11 @@ class OccurrenceExsiccatae {
 			'o.sciname, o.scientificnameauthorship, o.recordedby, o.recordnumber, DATE_FORMAT(o.eventdate,"%d %M %Y") AS eventdate, '.
 			'trim(o.country) AS country, trim(o.stateprovince) AS stateprovince, trim(o.county) AS county, '.
 			'trim(o.municipality) AS municipality, o.locality, o.decimallatitude, o.decimallongitude, '.
-			'i.imgid, i.thumbnailurl, i.url '.
+			'm.media_id, m.thumbnailurl, m.url '.
 			'FROM omexsiccatiocclink ol INNER JOIN omoccurrences o ON ol.occid = o.occid '.
 			'INNER JOIN omcollections c ON o.collid = c.collid '.
 			'INNER JOIN omexsiccatinumbers en ON ol.omenid = en.omenid '.
-			'LEFT JOIN images i ON o.occid = i.occid ';
+			'LEFT JOIN media m ON o.occid = m.occid ';
 		if($target == 'omenid'){
 			$sql .= 'WHERE ol.omenid = '.$id;
 		}
@@ -193,8 +193,8 @@ class OccurrenceExsiccatae {
 					$retArr[$r->omenid][$r->occid]['lng'] = $r->decimallongitude;
 				}
 				if($r->url){
-					$retArr[$r->omenid][$r->occid]['img'][$r->imgid]['url'] = $r->url;
-					$retArr[$r->omenid][$r->occid]['img'][$r->imgid]['tnurl'] = ($r->thumbnailurl?$r->thumbnailurl:$r->url);
+					$retArr[$r->omenid][$r->occid]['img'][$r->media_id]['url'] = $r->url;
+					$retArr[$r->omenid][$r->occid]['img'][$r->media_id]['tnurl'] = ($r->thumbnailurl?$r->thumbnailurl:$r->url);
 				}
 			}
 			$rs->free();
@@ -216,7 +216,7 @@ class OccurrenceExsiccatae {
 			$fieldArr['exsiccatiNumber'] = 'en.exsnumber';
 			if($collId || $specimenOnly){
 				$sqlInsert .= 'INNER JOIN omexsiccatiocclink ol ON en.omenid = ol.omenid INNER JOIN omoccurrences o ON ol.occid = o.occid ';
-				if($imagesOnly) $sqlInsert .= 'INNER JOIN images i ON o.occid = i.occid ';
+				if($imagesOnly) $sqlInsert .= 'INNER JOIN media m ON o.occid = m.occid ';
 				if($collId) $sqlWhere .= 'AND o.collid = '.$collId.' ';
 				$fieldArr['occid'] = 'o.occid';
 				$fieldArr['catalogNumber'] = 'o.catalognumber';

@@ -167,7 +167,7 @@ class MapSupport extends Manager{
 
          while ($myrow = $result->fetch_assoc()) {
             $cnt++;
-            $image_loc = str_replace($GLOBALS['IMAGE_ROOT_URL'], $GLOBALS['IMAGE_ROOT_PATH'], $myrow['url']);
+            $image_loc = str_replace($GLOBALS['MEDIA_ROOT_URL'], $GLOBALS['MEDIA_ROOT_PATH'], $myrow['url']);
             if(file_exists($image_loc)) {
                unlink($image_loc);
             }
@@ -205,8 +205,8 @@ class MapSupport extends Manager{
 	}
 
 	private function setTargetPaths(){
-		$targetPath = $GLOBALS['IMAGE_ROOT_PATH'];
-		$targetUrl = $GLOBALS['IMAGE_ROOT_URL'];
+		$targetPath = $GLOBALS['MEDIA_ROOT_PATH'];
+		$targetUrl = $GLOBALS['MEDIA_ROOT_URL'];
 		if(!is_writable($targetPath)){
 			$this->errorMessage = 'ABORT: target path does not exist or is not writable';
 			return false;

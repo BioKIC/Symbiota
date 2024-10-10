@@ -16,8 +16,8 @@ $accepted_origins = array('http://localhost', UtilityFunctions::getDomain());
 /*********************************************
  * Change thse lines to set the upload folder *
  *********************************************/
-$imageFolder = $SERVER_ROOT . $PUBLIC_IMAGE_UPLOAD_ROOT;
-$imageURL = $CLIENT_ROOT . $PUBLIC_IMAGE_UPLOAD_ROOT . '/';
+$imageFolder = $SERVER_ROOT . $PUBLIC_MEDIA_UPLOAD_ROOT;
+$imageURL = $CLIENT_ROOT . $PUBLIC_MEDIA_UPLOAD_ROOT . '/';
 
 if (isset($_SERVER['HTTP_ORIGIN'])) {
     // same-origin requests won't set an origin. If the origin is set, it must be valid.

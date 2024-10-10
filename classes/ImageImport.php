@@ -21,7 +21,7 @@ class ImageImport{
 
 		$this->setUploadTargetPath();
 
-		$this->targetArr = array('url','originalUrl','scientificName','tid','photographer','photographerUid','caption',
+		$this->targetArr = array('url','originalUrl','scientificName','tid','creator','creatorUid','caption',
 			'locality','sourceUrl','anatomy','notes','owner','copyright','sortSequence',
 			'institutionCode','collectionCode','catalogNumber','occid');
 	}
@@ -46,7 +46,7 @@ class ImageImport{
 		if($this->fieldMap){
 			//url field is required (symbIndex == 0)
 			if(in_array(0,$this->fieldMap) && $this->fieldMap[0]){
-				$sqlBase = 'INSERT INTO images('.implode(',',array_keys($fieldMap)).') ';
+				$sqlBase = 'INSERT INTO media ('.implode(',',array_keys($fieldMap)).') ';
 				while($recordArr = fgetcsv($fh)){
 
 					if(in_array("sciname",$fieldMap)){

@@ -7,7 +7,7 @@ Language: Français
 
 $LANG['TAXON_EDITOR'] = 'Éditeur de Taxons';
 $LANG['ENTER_SCINAME'] = 'Veuillez entrer un nom scientifique';
-$LANG['IMG_TOO_LARGE'] = 'L\'Image que vous essayez de télécharger est trop grande, veuillez réduire la taille du fichier à moins de 4 Mo'; 
+$LANG['IMG_TOO_LARGE'] = 'Le fichier média que vous essayez de télécharger est trop grande, veuillez réduire la taille du fichier à moins de 4 Mo'; 
 $LANG['HOME'] = 'Accuiel';
 $LANG['TAX_PROF_PUBLIC_DISP'] = 'Affichage Public du Profil de Taxon';
 $LANG['TAX_PROF_EDITOR'] = 'Éditeur de Profil de Taxon';
@@ -16,9 +16,9 @@ $LANG['VIEW_PUBLIC_TAXON'] = 'Afficher Profil du Taxon Public';
 $LANG['GO_TO_PARENT'] = 'Aller à Parent';
 $LANG['FAMILY'] = 'Famille';
 $LANG['SYN_VERNAC'] = 'Synonymes / Vernaculaires';
-$LANG['IMAGES'] = 'Images';
-$LANG['IMAGE_SORT'] = 'Tri d\'Image';
-$LANG['ADD_IMAGE'] = 'Ajouter Image';
+$LANG['IMAGES'] = 'Multimédia';
+$LANG['IMAGE_SORT'] = 'Trier le multimédia';
+$LANG['ADD_IMAGE'] = 'Ajouter du multimédia';
 $LANG['DESCRIPTIONS'] = 'Descriptions';
 $LANG['ADD_NEW_COMMON_NAME'] = 'Ajouter un Nouveau Nom Commun'; 
 $LANG['COMMON_NAMES'] = 'Noms Communs';

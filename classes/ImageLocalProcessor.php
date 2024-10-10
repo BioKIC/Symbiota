@@ -73,7 +73,7 @@ class ImageLocalProcessor {
 		if(!empty($GLOBALS['IMG_WEB_WIDTH'])) $this->webPixWidth = $GLOBALS['IMG_WEB_WIDTH'];
 		if(!empty($GLOBALS['IMG_TN_WIDTH'])) $this->tnPixWidth = $GLOBALS['IMG_TN_WIDTH'];
 		if(!empty($GLOBALS['IMG_LG_WIDTH'])) $this->lgPixWidth = $GLOBALS['IMG_LG_WIDTH'];
-		if(!empty($GLOBALS['IMG_FILE_SIZE_LIMIT'])) $this->webFileSizeLimit = $GLOBALS['IMG_FILE_SIZE_LIMIT'];
+		if(!empty($GLOBALS['MEDIA_FILE_SIZE_LIMIT'])) $this->webFileSizeLimit = $GLOBALS['MEDIA_FILE_SIZE_LIMIT'];
 	}
 
 	function __destruct(){
@@ -246,7 +246,7 @@ class ImageLocalProcessor {
 		//Set target base path
 		if(!$this->targetPathBase){
 			//Assume that we should use the portal's default image root path
-			$this->targetPathBase = $GLOBALS['IMAGE_ROOT_PATH'];
+			$this->targetPathBase = $GLOBALS['MEDIA_ROOT_PATH'];
 		}
 		if($this->targetPathBase && substr($this->targetPathBase,-1) != '/' && substr($this->targetPathBase,-1) != "\\"){
 			$this->targetPathBase .= '/';
@@ -255,9 +255,9 @@ class ImageLocalProcessor {
 		//Set image base URL
 		if(!$this->imgUrlBase){
 			//Assume that we should use the portal's default image url prefix
-			$this->imgUrlBase = $GLOBALS['IMAGE_ROOT_URL'];
+			$this->imgUrlBase = $GLOBALS['MEDIA_ROOT_URL'];
 		}
-		if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+		if(!empty($GLOBALS['MEDIA_DOMAIN'])){
 			//Since imageDomain is set, portal is not central portal thus add portals domain to url base
 			if(substr($this->imgUrlBase,0,7) != 'http://' && substr($this->imgUrlBase,0,8) != 'https://'){
 				$urlPrefix = "http://";
@@ -554,7 +554,7 @@ class ImageLocalProcessor {
 				if($occid){
 					//Check to see if database record already exists, and if so skip import
 					$recExists = 0;
-					$sql = 'SELECT url FROM images WHERE (occid = '.$occid.') ';
+					$sql = 'SELECT url FROM media WHERE (occid = '.$occid.') ';
 					$rs = $this->conn->query($sql);
 					while($r = $rs->fetch_object()){
 						if(stripos($r->url,$fileName) || stripos($r->url,str_replace('%20', '_', $fileName)) || stripos($r->url,str_replace('%20', ' ', $fileName))){
@@ -1038,7 +1038,7 @@ class ImageLocalProcessor {
 			if(isset($imgArr['occid'])) $occid = $imgArr['occid'];
 			if($occid){
 				//Check to see if image url already exists for that occid
-				$sql = 'SELECT imgid, url, thumbnailUrl, originalUrl, sourceIdentifier, mediaMD5 FROM images WHERE (occid = '.$occid.') ';
+				$sql = 'SELECT imgid, url, thumbnailUrl, originalUrl, sourceIdentifier, mediaMD5 FROM media WHERE (occid = '.$occid.') ';
 				$rs = $this->conn->query($sql);
 				while($r = $rs->fetch_object()){
 					$isExactMatch = false;
@@ -1049,7 +1049,7 @@ class ImageLocalProcessor {
 						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE imgid = '.$r->imgid)){
 							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->imgid.' (equal URLs): '.$this->conn->error,1);
 						}
-						if(!$this->conn->query('DELETE FROM images WHERE imgid = '.$r->imgid)){
+						if(!$this->conn->query('DELETE FROM media WHERE imgid = '.$r->imgid)){
 							$this->logOrEcho('ERROR deleting image record #'.$r->imgid.' (equal URLs): '.$this->conn->error,1);
 						}
 					}
@@ -1058,7 +1058,7 @@ class ImageLocalProcessor {
 						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE imgid = '.$r->imgid)){
 							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->imgid.' (equal basename): '.$this->conn->error,1);
 						}
-						if($this->conn->query('DELETE FROM images WHERE imgid = '.$r->imgid)){
+						if($this->conn->query('DELETE FROM media WHERE imgid = '.$r->imgid)){
 							//Remove images
 							$urlPath = parse_url($r->url, PHP_URL_PATH);
 							if($urlPath && strpos($urlPath, $this->imgUrlBase) === 0){
@@ -1102,7 +1102,7 @@ class ImageLocalProcessor {
 				}
 			}
 			if($paramArr){
-				$sql = 'INSERT INTO images('.trim($sql1,', ').') VALUES ('.trim($sql2,', ').')';
+				$sql = 'INSERT INTO ('.trim($sql1,', ').', media_type) VALUES ('.trim($sql2,', ').', "image")';
 				if($stmt = $this->conn->prepare($sql)){
 					$stmt->bind_param($paramType, ...$paramArr);
 					$stmt->execute();
@@ -1735,7 +1735,7 @@ class ImageLocalProcessor {
 	//Misc data functions
 	private function setImageTableMap(){
 		if(!$this->imageTableMap){
-			$sql = 'SHOW COLUMNS FROM images';
+			$sql = 'SHOW COLUMNS FROM media';
 			if($rs = $this->conn->query($sql)){
 				while($r = $rs->fetch_object()){
 					$field = strtolower($r->Field);
@@ -2115,11 +2115,11 @@ class ImageLocalProcessor {
 
 		$localUrl = '';
 		if(substr($url,0,1) == '/'){
-			if(!empty($GLOBALS['IMAGE_DOMAIN'])){
-				$url = $GLOBALS['IMAGE_DOMAIN'].$url;
+			if(!empty($GLOBALS['MEDIA_DOMAIN'])){
+				$url = $GLOBALS['MEDIA_DOMAIN'].$url;
 			}
-			elseif($GLOBALS['IMAGE_ROOT_URL'] && strpos($url,$GLOBALS['IMAGE_ROOT_URL']) === 0){
-				$localUrl = str_replace($GLOBALS['IMAGE_ROOT_URL'],$GLOBALS['IMAGE_ROOT_PATH'],$url);
+			elseif($GLOBALS['MEDIA_ROOT_URL'] && strpos($url,$GLOBALS['MEDIA_ROOT_URL']) === 0){
+				$localUrl = str_replace($GLOBALS['MEDIA_ROOT_URL'],$GLOBALS['MEDIA_ROOT_PATH'],$url);
 			}
 			else{
 				$urlPrefix = "http://";

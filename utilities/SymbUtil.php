@@ -7,7 +7,7 @@ class SymbUtil {
 	 * @param string $sql 
 	 * @param string $params
 	 */
-	static function execute_query(mysqli $conn, string $sql, array $params): mysqli_result | bool {
+	static function execute_query(mysqli $conn, string $sql, array|null $params = null): mysqli_result | bool {
 		//This is supported from 4 to 8
 		$version = phpversion();
 		[$major, $minor, $patch] = explode('.', $version);
@@ -15,19 +15,23 @@ class SymbUtil {
 		if($major >= 8 && $minor >= 2) {
 			return mysqli_execute_query($conn, $sql, $params);
 		} else {
-			$bind_params_str = '';
-			foreach($params as $param) {
-				//Could just bind string instead?
-				if(gettype($param) === 'string') {
-					$bind_params_str .= 's';
-				} else {
-					$bind_params_str .= 'i';
+			if($params) {
+				$bind_params_str = '';
+				foreach($params as $param) {
+					//Could just bind string instead?
+					if(gettype($param) === 'string') {
+						$bind_params_str .= 's';
+					} else {
+						$bind_params_str .= 'i';
+					}
 				}
+				$stmt = $conn->prepare($sql);
+				$stmt->bind_param($bind_params_str,...$params);
+				$stmt->execute();
+				return $stmt->get_result();
+			} else {
+				return mysqli_query($conn, $sql);
 			}
-			$stmt = $conn->prepare($sql);
-			$stmt->bind_param($bind_params_str,...$params);
-			$stmt->execute();
-			return $stmt->get_result();
 		}
 	}
 }

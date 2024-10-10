@@ -1,8 +1,12 @@
 <?php
+
+use PHPUnit\Exception;
+
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/TPEditorManager.php');
 include_once($SERVER_ROOT.'/classes/TPDescEditorManager.php');
 include_once($SERVER_ROOT.'/classes/TPImageEditorManager.php');
+include_once($SERVER_ROOT.'/classes/Media.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/taxa/profile/tpeditor.' . $LANG_TAG . '.php'))
 include_once($SERVER_ROOT.'/content/lang/taxa/profile/tpeditor.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT.'/content/lang/taxa/profile/tpeditor.en.php');
@@ -108,11 +112,16 @@ if($isEditor && $action){
 		$statusStr = $tEditor->editImageSort($imgSortArr);
 	}
 	elseif($action == 'Upload Image'){
-		if($tEditor->loadImage($_POST)){
-			$statusStr = 'Image uploaded successful';
-		}
-		if($tEditor->getErrorMessage()){
-			$statusStr .= '<br/>'.$tEditor->getErrorMessage();
+		$family = $tEditor->getFamily();
+		$path = ($family? $family: '') . '/' . date('Ym') . '/';
+		try {
+			Media::add(
+				$_POST, 
+				new LocalStorage($path), 
+				$_FILES['imgfile'] ?? null
+			);
+		} catch(Exception $e) {
+			$statusStr .= '<br/>' . $e->getMessage();
 		}
 	}
 }

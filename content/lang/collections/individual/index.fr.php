@@ -1,13 +1,13 @@
 <?php
 /*
- ------------------
- Language: Français (French)
- ------------------
- */
+------------------
+Language: Français (French)
+Translated by: Google Translate (2024-09-13)
+------------------
+*/
 
-
-$LANG['FLAGGED_COMMENT'] = "Commentaire signalé comme inapproprié. Le commentaire ne sera pas accessible au public jusqu'à ce qu'il soit examiné par un administrateur";
-$LANG['OCCURRENCE_PROFILE'] = "Profil d'occurrence";
+$LANG['FLAGGED_COMMENT'] = 'Commentaire signalé comme inapproprié. Le commentaire ne sera pas accessible au public jusqu\'à ce qu\'il soit examiné par un administrateur';
+$LANG['OCCURRENCE_PROFILE'] = 'Profil d\'occurrence';
 $LANG['SKIP_NAV'] = 'Sauter la Navigation';
 $LANG['FULL_RECORD_DETAILS'] = 'Détails Complets du Dossier';
 $LANG['DETAILS'] = 'Détails';
@@ -45,7 +45,7 @@ $LANG['VERBATIM_DATE'] = 'Date Textuelle';
 $LANG['ADDITIONAL_COLLECTORS'] = 'Collectionneurs Supplémentaires';
 $LANG['LOCALITY'] = 'Localité';
 $LANG['LOCALITY_PROTECTED'] = 'Détails de la localité protégés';
-$LANG['ACCESS_GRANTED'] = "Accès accordé à l'utilisateur actuel";
+$LANG['ACCESS_GRANTED'] = 'Accès accordé à l\'utilisateur actuel';
 $LANG['PROTECTED_REASON'] = 'protection généralement due à un statut rare ou menacé';
 $LANG['VERBATIM_COORDINATES'] = 'Coordonnées Textuelles';
 $LANG['LOCATION_REMARKS'] = 'Remarques de l\'Emplacement';
@@ -89,26 +89,26 @@ $LANG['CONTEXT_ID'] = 'ID de Context';
 $LANG['EXCICCATI_SERIES'] = 'Série Exsiccati';
 $LANG['MATERIAL_SAMPLES'] = 'Material Samples';
 $LANG['DISPLAY_ALL_MATERIAL_SAMPLES'] = 'Display all Material Sample units';
-$LANG['SPECIMEN_IMAGES'] = 'Images de Spécimen';
+$LANG['SPECIMEN_IMAGES'] = 'Spécimen Multimédia';
 $LANG['AUTHOR'] = 'Auteur';
-$LANG['OPEN_MEDIUM'] = 'Ouvrir Image Moyenne';
-$LANG['OPEN_LARGE'] = 'Ouvrir Image Grande';
-$LANG['OPEN_SOURCE'] = 'Ouvrir Image Originale';
+$LANG['OPEN_MEDIUM'] = 'Ouvrir un fichier moyen';
+$LANG['OPEN_LARGE'] = 'Ouvrir un fichier volumineux';
+$LANG['OPEN_SOURCE'] = 'Fichier open source';
 $LANG['USAGE_RIGHTS'] = 'Droits d\'Utilisation';
 $LANG['RIGHTS_HOLDER'] = 'Titulaire des Droits';
 $LANG['ACCESS_RIGHTS'] = 'Droits d\'Accès';
 $LANG['USAGE_POLICY'] = 'Politique Générale d\'Utilisation des Données';
-$LANG['RECORD_ID'] = "ID d'Enregistrement";
-$LANG['SOURCE_RECORD'] = "Source d\'Enregistrement";
+$LANG['RECORD_ID'] = 'ID d\'Enregistrement';
+$LANG['SOURCE_RECORD'] = 'Source d\'Enregistrement';
 $LANG['DATA_SOURCE'] = 'Source de données';
 $LANG['REFRESH_DATE'] = 'Date de la dernière actualisation';
 $LANG['UPDATE_STATUS'] = 'État de mise à jour';
 $LANG['FIELDS_MODIFIED'] = 'Fields modified';
 $LANG['SOURCE_DATE_LAST_MODIFIED'] = 'Source date last modified';
 $LANG['REFRESH_RECORD'] = 'Refresh Record';
-$LANG['ADDITIONAL_INFO'] = "Pour plus d'informations sur ce spécimen, veuillez contacter";
+$LANG['ADDITIONAL_INFO'] = 'Pour plus d\'informations sur ce spécimen, veuillez contacter';
 $LANG['SPECIMEN_REFERENCED'] = 'Spécimen référencé';
-$LANG['SEE_ERROR'] = "Voyez-vous une erreur? Si tel est le cas, les erreurs peuvent être corrigées à l'aide de la";
+$LANG['SEE_ERROR'] = 'Voyez-vous une erreur? Si tel est le cas, les erreurs peuvent être corrigées à l\'aide de la';
 $LANG['OCCURRENCE_EDITOR'] = 'Éditeur d\'Occurrences';
 $LANG['SEE_AN_ERROR'] = 'Vous voyez une erreur?';
 $LANG['LOGIN'] = 'S\'Identifier';
@@ -120,16 +120,15 @@ $LANG['CURRENT_RECORD'] = 'Enregistrement Actuel';
 $LANG['GUID'] = 'GUID';
 $LANG['LATEST_ID'] = 'Dernière Identification';
 $LANG['IDENTIFIED_BY'] = 'Identifié par';
-$LANG['DUPES'] = "Duplicatas d'Échantillons";
+$LANG['DUPES'] = 'Duplicatas d\'Échantillons';
 $LANG['EXSICCATAE'] = 'Exsiccatae Associés';
 $LANG['SHOW_FULL_DETAILS'] = 'Afficher Tous Détails';
-$LANG['COMMENTS'] = 'Comments';
 $LANG['COMMENT_NOT_PUBLIC'] = 'Commentaire non public en raison d\'un rapport d\'abus en attente (uniquement visible par les administrateurs)';
 $LANG['REPORT'] = 'Signaler comme inapproprié ou abusif';
 $LANG['MAKE_COMMENT_PUBLIC'] = 'Rendre le commentaire public';
 $LANG['CONFIRM_DELETE'] = 'Êtes-vous sûr de vouloir supprimer le commentaire?';
 $LANG['DELETE_COMMENT'] = 'Supprimer Commentaire';
-$LANG['NO_COMMENTS'] = "Aucun commentaire n'a été envoyé";
+$LANG['NO_COMMENTS'] = 'Aucun commentaire n\'a été envoyé';
 $LANG['NEW_COMMENT'] = 'Nouveau Commentaire';
 $LANG['SUBMIT_COMMENT'] = 'Envoyer Commentaire';
 $LANG['MESSAGE_WARNING'] = 'Les messages de plus de 500 mots peuvent être automatiquement tronqués. Tous les commentaires sont modérés.';
@@ -149,23 +148,22 @@ $LANG['NEW_VALUE'] = 'Nouvelle Valeur';
 $LANG['CURRENT'] = 'actuel';
 $LANG['EXTERNAL_EDITS'] = 'External Edits';
 $LANG['SOURCE'] = 'Source';
-$LANG['NOT_EDITED'] = "L'enregistrement n'a pas été modifié depuis sa saisie";
+$LANG['NOT_EDITED'] = 'L\'enregistrement n\'a pas été modifié depuis sa saisie';
 $LANG['EDIT_NOTE'] = 'Remarque : les modifications ne sont visibles que par les administrateurs et les éditeurs de la collection';
 $LANG['YEAR'] = 'year';
-$LANG['ACCESS_TYPE'] = "Type d'Accès";
+$LANG['ACCESS_TYPE'] = 'Type d\'Accès';
 $LANG['COUNT'] = 'Compter';
-$LANG['UNABLE_TO_LOCATE'] = "Impossible de localiser l'enregistrement";
+$LANG['UNABLE_TO_LOCATE'] = 'Impossible de localiser l\'enregistrement';
 $LANG['CHECKING'] = 'Vérification des archives';
 $LANG['RESTORE_RECORD'] = 'Restore Record';
 $LANG['RECORD_DELETED'] = 'Enregistrement supprimé';
 $LANG['VALUE'] = 'Valeur';
 $LANG['LAT_LNG'] = 'Latitude/Longitude';
-
-//Used within OccurrenceIndividual class
 $LANG['INAPPROPRIATE'] = 'Commentaire inapproprié signalé';
 $LANG['REPORTED_AS_INAPPROPRIATE'] = 'Le commentaire suivant a été enregistré comme inapproprié';
-$LANG['EMAIL_NOT_DEFINED'] = "ERREUR : adresse e-mail de l'administrateur du portail non définie dans le fichier de configuration central";
+$LANG['EMAIL_NOT_DEFINED'] = 'ERREUR : adresse e-mail de l\'administrateur du portail non définie dans le fichier de configuration central';
 $LANG['PRIVATE_STATUS'] = 'statut privé';
 $LANG['UNABLE_TO_VERIFY_TARGET'] = 'ERREUR lors de la suppression du bon : impossible de vérifier la liste de contrôle cible pour le bon';
-$LANG['PERMISSION_ERROR'] = "ERREUR lors de la suppression du bon : erreur d'autorisation";
+$LANG['PERMISSION_ERROR'] = 'ERREUR lors de la suppression du bon : erreur d\'autorisation';
+
 ?>

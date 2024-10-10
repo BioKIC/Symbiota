@@ -606,9 +606,9 @@ $dupClusterArr = $dupManager->getClusterArr($occid);
 									$url = $dArr['url'];
 									$tnUrl = $dArr['tnurl'];
 									if(!$tnUrl) $tnUrl = $url;
-									if($IMAGE_DOMAIN){
-										if(substr($url,0,1) == '/') $url = $IMAGE_DOMAIN.$url;
-										if(substr($tnUrl,0,1) == '/') $tnUrl = $IMAGE_DOMAIN.$tnUrl;
+									if($MEDIA_DOMAIN){
+										if(substr($url,0,1) == '/') $url = $MEDIA_DOMAIN.$url;
+										if(substr($tnUrl,0,1) == '/') $tnUrl = $MEDIA_DOMAIN.$tnUrl;
 									}
 									echo '<div style="float:left;margin:10px;">';
 									echo '<a href="'.$url.'" target="_blank">';

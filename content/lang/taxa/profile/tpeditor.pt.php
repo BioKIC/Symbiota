@@ -9,7 +9,7 @@ Date Translated: 2024-04-22
 
 $LANG['TAXON_EDITOR'] = 'Editor de Táxons';
 $LANG['ENTER_SCINAME'] = 'Por favor insira um nome científico';
-$LANG['IMG_TOO_LARGE'] = 'A imagem que você está tentando enviar é muito grande, reduza o tamanho do arquivo para menos de 4MB';
+$LANG['IMG_TOO_LARGE'] = 'O arquivo de mídiaque você está tentando enviar é muito grande, reduza o tamanho do arquivo para menos de 4MB';
 $LANG['HOME'] = 'Home';
 $LANG['TAX_PROF_PUBLIC_DISP'] = 'Exibição pública do perfil do táxon';
 $LANG['TAX_PROF_EDITOR'] = 'Editor de perfil de táxon';
@@ -18,9 +18,9 @@ $LANG['VIEW_PUBLIC_TAXON'] = 'Ver perfil do táxon público';
 $LANG['GO_TO_PARENT'] = 'Ir para Pai';
 $LANG['FAMILY'] = 'Família';
 $LANG['SYN_VERNAC'] = 'Sinônimos / Vernáculos';
-$LANG['IMAGES'] = 'Imagens';
-$LANG['IMAGE_SORT'] = "Classificação de imagem";
-$LANG['ADD_IMAGE'] = "Adicionar Imagem";
+$LANG['IMAGES'] = 'Multimídia';
+$LANG['IMAGE_SORT'] = "Classificar multimídia";
+$LANG['ADD_IMAGE'] = "Adicionar multimídia";
 $LANG['DESCRIPTIONS'] = "Descrições";
 $LANG['ADD_NEW_COMMON_NAME'] = 'Adicionar um novo nome comum';
 $LANG['COMMON_NAMES'] = 'Nomes Comuns';

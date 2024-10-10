@@ -17,7 +17,7 @@ class ImageExplorer{
 	/*
 	 * Input: JSON array
 	 * Input criteria: taxon (INT: tid), country (string), state (string), tag (string),
-	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid),
+	 *     idNeeded (INT: 0,1), collid (INT), creator (INT: creatorUid),
 	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT)
 	 *     e.g. {"state": {"Arizona", "New Mexico"},"taxa":{"Pinus"}}
 	 * Output: Array of images
@@ -34,19 +34,19 @@ class ImageExplorer{
 		$rs = $this->conn->query($sql);
 		if($rs){
 			while($r = $rs->fetch_assoc()){
-				$retArr[$r['imgid']] = $r;
+				$retArr[$r['media_id']] = $r;
 			}
 			$rs->free();
 
 			if($retArr){
 				//Grab sciname and tid assigned to img, whether accepted or not
-				$sql2 = 'SELECT i.imgid, t.tid, t.sciname FROM images i INNER JOIN taxa t ON i.tid = t.tid '.
-					'WHERE i.imgid IN('.implode(',',array_keys($retArr)).')';
+				$sql2 = 'SELECT m.media_id, t.tid, t.sciname FROM media m INNER JOIN taxa t ON m.tid = t.tid '.
+					'WHERE m.media_id IN('.implode(',',array_keys($retArr)).')';
 				$rs2 = $this->conn->query($sql2);
 				if($rs2){
 					while($r2 = $rs2->fetch_object()){
-						$retArr[$r2->imgid]['tid'] = $r2->tid;
-						$retArr[$r2->imgid]['sciname'] = $r2->sciname;
+						$retArr[$r2->media_id]['tid'] = $r2->tid;
+						$retArr[$r2->media_id]['sciname'] = $r2->sciname;
 					}
 					$rs2->free();
 				}
@@ -56,7 +56,7 @@ class ImageExplorer{
 				}
 
 				//Set image count
-				$cntSql = 'SELECT count(DISTINCT i.imgid) AS cnt '.substr($sql,strpos($sql,' FROM '));
+				$cntSql = 'SELECT count(DISTINCT m.media_type) AS cnt '.substr($sql,strpos($sql,' FROM '));
 				$cntSql = substr($cntSql,0,strpos($cntSql,' LIMIT '));
 				//echo '<br/>'.$cntSql.'<br/>';
 				$cntRs = $this->conn->query($cntSql);
@@ -80,13 +80,13 @@ class ImageExplorer{
 	/*
 	 * Input: array of criteria (e.g. array("state" => array("Arizona", "New Mexico"))
 	 * Input criteria: taxa (INT: tid), country (string), state (string), tag (string),
-	 *     idNeeded (INT: 0,1), collid (INT), photographer (INT: photographerUid),
+	 *     idNeeded (INT: 0,1), collid (INT), creator (INT: creatorUid),
 	 *     cntPerCategory (INT: 0-2), start (INT), limit (INT)
 	 *     e.g. {"state": ["Arizona", "New Mexico"],"taxa":["Pinus"}}
 	 * Output: String, SQL to be used to query database
 	 */
 	private function getSql($searchCriteria){
-		$sqlWhere = '';
+		$sqlWhere = 'AND m.media_type = "image"';
 
 		//Set taxa
 		if(isset($searchCriteria['taxa']) && $searchCriteria['taxa']){
@@ -95,12 +95,12 @@ class ImageExplorer{
 				$targetTid = array_shift($accArr);
 				//$sqlFrag = $this->getChildSql($targetTid);
                 $sqlFrag = $this->getChildTids($targetTid);
-				$sqlWhere .= 'AND (i.tid IN('.$sqlFrag.')) ';
+				$sqlWhere .= 'AND (m.tid IN('.$sqlFrag.')) ';
 			}
 			elseif(count($accArr) > 1){
 				$tidArr = array_merge($this->getTaxaChildren($accArr),$accArr);
 				$tidArr = $this->getTaxaSynonyms($tidArr);
-				$sqlWhere .= 'AND (i.tid IN('.implode(',',$this->cleanInArray($tidArr)).')) ';
+				$sqlWhere .= 'AND (m.tid IN('.implode(',',$this->cleanInArray($tidArr)).')) ';
 			}
 		}
 
@@ -136,10 +136,10 @@ class ImageExplorer{
 		}
 		else{
 			/* If no tags, then limit to sort value less than 500,
-			 * this is old system for limiting certain images to specimen details page only,
+			 * this is old system for limiting certain media to specimen details page only,
 			 * will replace with tag system in near future
 			*/
-			$sqlWhere .= 'AND i.sortsequence < 500 ';
+			$sqlWhere .= 'AND m.sortsequence < 500 ';
 		}
 
 		//Set collection
@@ -147,9 +147,9 @@ class ImageExplorer{
 			$sqlWhere .= 'AND o.collid IN('.implode(',',$this->cleanInArray($searchCriteria['collection'])).') ';
 		}
 
-		//Set photographers
-		if(isset($searchCriteria['photographer']) && $searchCriteria['photographer']){
-			$sqlWhere .= 'AND i.photographerUid IN('.implode(',',$this->cleanInArray($searchCriteria['photographer'])).') ';
+		//Set creators
+		if(isset($searchCriteria['creator']) && $searchCriteria['creator']){
+			$sqlWhere .= 'AND m.creatorUid IN('.implode(',',$this->cleanInArray($searchCriteria['creator'])).') ';
 		}
 
 		if (isset($searchCriteria['idToSpecies']) && $searchCriteria['idToSpecies']
@@ -190,20 +190,20 @@ class ImageExplorer{
 		    }
 		}
 
-		$sqlStr = 'SELECT DISTINCT i.imgid, ts.tidaccepted, i.url, i.thumbnailurl, i.originalurl, '.
-			'u.uid, CONCAT_WS(", ",u.lastname,u.firstname) as photographer, i.caption, '.
+		$sqlStr = 'SELECT DISTINCT m.media_id, ts.tidaccepted, m.url, m.thumbnailurl, m.originalurl, '.
+			'u.uid, CONCAT_WS(", ",u.lastname,u.firstname) as creator, m.caption, '.
 			'o.occid, o.stateprovince, o.catalognumber, CONCAT_WS("-",c.institutioncode, c.collectioncode) as instcode, '.
-			'i.initialtimestamp '.
-			'FROM images i LEFT JOIN taxa t ON i.tid = t.tid '.
+			'm.initialtimestamp '.
+			'FROM media m LEFT JOIN taxa t ON m.tid = t.tid '.
 			'LEFT JOIN taxstatus ts ON t.tid = ts.tid '.
-			'LEFT JOIN users u ON i.photographeruid = u.uid '.
-			'LEFT JOIN omoccurrences o ON i.occid = o.occid '.
+			'LEFT JOIN users u ON m.creatorUid = u.uid '.
+			'LEFT JOIN omoccurrences o ON m.occid = o.occid '.
 			'LEFT JOIN omcollections c ON o.collid = c.collid ';
 		if($includeVerification){
 			$sqlStr .= 'LEFT JOIN omoccurverification v ON o.occid = v.occid ';
 		}
 		if(isset($searchCriteria['tags']) && $searchCriteria['tags']){
-			$sqlStr .= 'LEFT JOIN imagetag it ON i.imgid = it.imgid ';
+			$sqlStr .= 'LEFT JOIN imagetag it ON m.media_id = it.imgid';
 		}
 		if(isset($searchCriteria['countPerCategory'])){
 			$countPerCategory = (int)$searchCriteria['countPerCategory'];
@@ -232,7 +232,7 @@ class ImageExplorer{
 			}
 		}
 
-		//$sqlStr .= 'ORDER BY i.sortsequence ';
+		//$sqlStr .= 'ORDER BY m.sortsequence ';
 		//Set start and limit
 		$start = (isset($searchCriteria['start'])?$searchCriteria['start']:0);
 		$limit = (isset($searchCriteria['limit'])?$searchCriteria['limit']:100);
@@ -360,21 +360,11 @@ class ImageExplorer{
 
 	public function getCollections(){
 		$retArr = array();
-        /*
-        $sql = 'SELECT count(i.imgid) as ct, c.collid, c.institutioncode, c.collectioncode ' .
-               ' FROM omcollections c '.
-               '    LEFT JOIN omoccurrences o ON c.collid = o.collid '.
-               '    LEFT JOIN images i ON o.occid = i.occid '.
-               ' WHERE i.imgid is not null  '.
-               '       and i.sortsequence < 500 '.
-               ' GROUP BY c.collid, c.institutioncode, c.collectioncode '.
-               ' HAVING count(i.imgid) > 0 ';
-        */
-        $sql = 'SELECT count(i.imgid) as ct, c.collid, c.institutioncode, c.collectioncode ' .
+        $sql = 'SELECT count(m.media_id) as ct, c.collid, c.institutioncode, c.collectioncode ' .
                ' FROM omcollections c '.
                '    INNER JOIN omoccurrences o ON c.collid = o.collid '.
-               '    INNER JOIN images i ON o.occid = i.occid '.
-               ' WHERE i.sortsequence < 500 '.
+               '    INNER JOIN media m ON o.occid = m.occid '.
+               ' WHERE m.sortsequence < 500 '.
                ' GROUP BY c.collid, c.institutioncode, c.collectioncode ';
         $stmt = $this->conn->prepare($sql);
         if ($stmt) {

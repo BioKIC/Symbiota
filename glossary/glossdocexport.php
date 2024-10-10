@@ -246,8 +246,8 @@ else{
 				foreach($imageArr as $img => $imgArr){
 					$imgSrc = $imgArr["url"];
 					if(substr($imgSrc,0,1)=="/"){
-						if(!empty($GLOBALS['IMAGE_DOMAIN'])){
-							$imgSrc = $GLOBALS['IMAGE_DOMAIN'].$imgSrc;
+						if(!empty($GLOBALS['MEDIA_DOMAIN'])){
+							$imgSrc = $GLOBALS['MEDIA_DOMAIN'].$imgSrc;
 						}
 						else{
 							$imgSrc = 'http://'.$_SERVER['HTTP_HOST'].$imgSrc;

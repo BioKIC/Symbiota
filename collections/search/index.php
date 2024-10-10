@@ -425,8 +425,12 @@ $obsArr = (isset($collList['obs'])?$collList['obs']:null);
 									<label for="typestatus"><?php echo $LANG['TYPE'] ?></label>
 								</div>
 								<div>
-									<input type="checkbox" name="hasimages" id="hasimages" value=1 data-chip="<?php echo $LANG['ONLY_WITH_IMAGES'] ?>" />
+									<input type="checkbox" name="hasimages" id="hasimages" value='1' data-chip="<?php echo $LANG['ONLY_WITH_IMAGES'] ?>" />
 									<label for="hasimages"><?php echo $LANG['LIMIT_TO_SPECIMENS_W_IMAGES'] ?></label>
+								</div>
+								<div>
+									<input type="checkbox" name="hasaudio" id="hasaudio" value='1' data-chip="<?php echo $LANG['ONLY_WITH_AUDIO'] ?>" />
+									<label for="hasaudio"><?php echo $LANG['LIMIT_TO_SPECIMENS_W_AUDIO'] ?></label>
 								</div>
 								<div>
 									<input type="checkbox" name="hasgenetic" id="hasgenetic" value=1 data-chip="<?php echo $LANG['ONLY_WITH_GENETIC'] ?>" />

@@ -2,6 +2,7 @@
 /*
 ------------------
 Language: English
+Translated by: Google Translate (2024-09-16)
 ------------------
 */
 
@@ -15,10 +16,10 @@ $LANG['COLLECTION_SEARCH'] = 'Collection Search Page';
 $LANG['UPDATE_STATISTICS'] = 'Updating statistics related to this collection...';
 $LANG['DEACTIVATED'] = 'Deactivated';
 $LANG['DEACTIVATED_MESSAGE'] = 'Certain management options are only available for Live Managed Datasets. Contact portal administrator if collection needs to be reclassified.';
-$LANG['TOGGLE_MAN'] = "Toggle Manager's Control Panel";
+$LANG['TOGGLE_MAN'] = 'Toggle Manager\'s Control Panel';
 $LANG['COLL_PROF_FOR'] = 'Collection Profile for';
 $LANG['DAT_EDIT'] = 'Data Editor Control Panel';
-$LANG['SUBMIT_IMAGE_V'] = 'Submit an Image Voucher (observation supported by a photo)';
+$LANG['SUBMIT_IMAGE_V'] = 'Submit an Multimedia Voucher (observation supported by a photo)';
 $LANG['ADD_NEW_OCCUR'] = 'Add New Occurrence Record';
 $LANG['CREATE_NEW_REC'] = 'Create New Records Using Image';
 $LANG['SKELETAL'] = 'Add Skeletal Records';
@@ -36,7 +37,6 @@ $LANG['VIEW_COMMENTS'] = 'View Posted Comments';
 $LANG['UNREVIEWED_COMMENTS'] = 'unreviewed comments';
 $LANG['EDIT_META'] = 'Edit Metadata';
 $LANG['OPEN_META'] = 'Edit Metadata';
-$LANG['EDIT_ADDRESS'] = 'Edit Mailing Address';
 $LANG['EDIT_COLL_PROPS'] = 'Special Properties';
 $LANG['MANAGE_PERMISSIONS'] = 'Manage Permissions';
 $LANG['IMPORT_SPECIMEN'] = 'Import/Update Specimen Records';
@@ -83,8 +83,8 @@ $LANG['EDIT_INST'] = 'Edit institution information';
 $LANG['COLL_STATISTICS'] = 'Collection Statistics';
 $LANG['SPECIMEN_RECORDS'] = 'specimen records';
 $LANG['GEOREFERENCED'] = 'georeferenced';
-$LANG['WITH_IMAGES'] = 'with images';
-$LANG['TOTAL_IMAGES'] = 'total images';
+$LANG['WITH_IMAGES'] = 'with multimedia';
+$LANG['TOTAL_IMAGES'] = 'total multimedia';
 $LANG['GENBANK_REF'] = 'GenBank';
 $LANG['BOLD_REF'] = 'BOLD';
 $LANG['OTHER_GENETIC_REF'] = 'misc';
@@ -108,7 +108,7 @@ $LANG['CLICK_ON_SPEC_FAM'] = 'Click on the specimen record counts within the par
 $LANG['GEOG_DIST_COUNTRIES'] = 'Geographic Distribution - Countries';
 $LANG['COLLECTION_PROJECTS'] = 'Natural History Collections and Observation Projects';
 $LANG['ADVANCED_SEARCH_THIS_COLLECTION'] = 'Advanced Search this Collection';
-$LANG['IMAGE_SEARCH_THIS_COLLECTION'] = 'Image Search this Collection';
+$LANG['IMAGE_SEARCH_THIS_COLLECTION'] = 'Multimedia Search this Collection';
 $LANG['SEARCH'] = 'Search';
 $LANG['IDENTIFIER_PLACEHOLDER_LIST'] = 'Search by Catalog Number, Occurrence ID, or Record ID.';
 $LANG['MORE_INFO_ALT'] = 'More information about catalog number';
@@ -116,4 +116,5 @@ $LANG['SEARCH_BY_TAXON'] = 'Search by Taxon';
 $LANG['OCCURENCE_IDENTIFIER'] = 'Catalog Number';
 $LANG['TAXON'] = 'Taxon';
 $LANG['OCCURRENCE_EDITOR'] = 'Edit';
+
 ?>
