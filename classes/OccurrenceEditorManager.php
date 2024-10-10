@@ -591,7 +591,7 @@ class OccurrenceEditorManager {
 				$sqlOrderBy = 'recordnumber+1';
 			}
 			else{
-				$sqlOrderBy = $orderBy;
+				$sqlOrderBy = 'occid';
 			}
 			if($sqlOrderBy) $sql .= 'ORDER BY (o.'.$sqlOrderBy.') '.$this->qryArr['orderbydir'].' ';
 		}
