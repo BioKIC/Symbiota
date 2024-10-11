@@ -281,7 +281,7 @@ class KeyCharAdmin{
 		global $PARAMS_ARR;
 		$statusStr = '';
 		if(is_numeric($formArr['cid']) && is_numeric($formArr['cs'])){
-			$imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
+			$imageRootPath = $GLOBALS['MEDIA_ROOT_PATH'];
 			if(substr($imageRootPath,-1) != "/") $imageRootPath .= "/";
 			if(file_exists($imageRootPath)){
 				$imageRootPath .= 'ident/';
@@ -297,7 +297,7 @@ class KeyCharAdmin{
 					}
 				}
 				//Create url prefix
-				$imageRootUrl = $GLOBALS['IMAGE_ROOT_URL'];
+				$imageRootUrl = $GLOBALS['MEDIA_ROOT_URL'];
 				if(substr($imageRootUrl,-1) != "/") $imageRootUrl .= "/";
 				$imageRootUrl .= 'ident/csimgs/';
 
@@ -381,7 +381,7 @@ class KeyCharAdmin{
 	public function deleteCsImage($csImgId){
 		$statusStr = 'SUCCESS: image uploaded successful';
 		//Remove image from file system
-	 	$imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
+	 	$imageRootPath = $GLOBALS['MEDIA_ROOT_PATH'];
 		if(substr($imageRootPath,-1) != "/") $imageRootPath .= "/";
 		$imageRootPath .= 'ident/csimgs/';
 		$sql = 'SELECT url FROM kmcsimages WHERE csimgid = '.$csImgId;

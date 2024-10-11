@@ -2,6 +2,7 @@
 /*
 ------------------
 Language: English
+Translated by: Google Translate (2024-10-04)
 ------------------
 */
 
@@ -39,7 +40,6 @@ $LANG['LOCATION_ID'] = 'Location ID';
 $LANG['LOCALITY'] = 'Locality';
 $LANG['LOCALITY_SECURITY'] = 'Security';
 $LANG['LOCALITY_SECURITY_REASON'] = 'Reason';
-$LANG['LOCATION_REMARKS'] = '';
 $LANG['DECIMAL_LATITUDE'] = 'Latitude';
 $LANG['DECIMAL_LONGITUDE'] = 'Longitude';
 $LANG['GEODETIC_DATUM'] = 'Datum';

@@ -124,9 +124,9 @@ class EOLManager {
 		$sql = 'SELECT COUNT(t.tid) AS tidcnt '.
 			'FROM taxa t INNER JOIN taxalinks l ON t.tid = l.tid '.
 			'WHERE t.rankid IN(220,230,240,260) AND l.owner = "EOL" '.
-			'AND t.tid NOT IN (SELECT ts1.tidaccepted FROM images ii INNER JOIN taxstatus ts1 ON ii.tid = ts1.tid '.
+			'AND t.tid NOT IN (SELECT ts1.tidaccepted FROM media m INNER JOIN taxstatus ts1 ON m.tid = ts1.tid '.
 			'WHERE ts1.taxauthid = 1)';
-			//'WHERE ts1.taxauthid = 1 AND (ii.imagetype NOT LIKE "%specimen%" OR ii.imagetype IS NULL))';
+			//'WHERE ts1.taxauthid = 1 AND (m.imagetype NOT LIKE "%specimen%" OR m.imagetype IS NULL))';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$tidCnt = $r->tidcnt;
@@ -142,7 +142,7 @@ class EOLManager {
 		if($restart){
 			//Get tid last image mapped as the start index
 			$sql = 'SELECT tid '.
-				'FROM images '.
+				'FROM media '.
 				'WHERE notes LIKE "Harvest via EOL%" AND initialtimestamp > "'.date('Y-m-d',time()-(7 * 24 * 60 * 60)).'" '.
 				'ORDER BY initialtimestamp DESC LIMIT 1';
 			$rs = $this->conn->query($sql);
@@ -157,7 +157,7 @@ class EOLManager {
 		$sql = 'SELECT t.tid, t.sciname, l.sourceidentifier '.
 			'FROM taxa t INNER JOIN taxalinks l ON t.tid = l.tid '.
 			'WHERE t.rankid IN(220,230,240,260) AND l.owner = "EOL" '.
-			'AND t.tid NOT IN (SELECT ts1.tidaccepted FROM images ii INNER JOIN taxstatus ts1 ON ii.tid = ts1.tid '.
+			'AND t.tid NOT IN (SELECT ts1.tidaccepted FROM media ii INNER JOIN taxstatus ts1 ON ii.tid = ts1.tid '.
 			'WHERE ts1.taxauthid = 1) ';
 			//'WHERE ts1.taxauthid = 1 AND (ii.imagetype NOT LIKE "%specimen%" OR ii.imagetype IS NULL)) ';
 		if($startingTid) $sql .= 'AND t.tid >= '.$startingTid.' ';
@@ -218,15 +218,15 @@ class EOLManager {
 							foreach($objArr['agents'] as $agentObj){
 								if($agentObj['full_name']){
 									if($agentCnt < 2) $agentArr[] = $this->cleanInStr($agentObj['full_name']);
-									if($agentObj['role'] == 'photographer'){
-										$resourceArr['photographer'] = $this->cleanInStr($agentObj['full_name']);
+									if($agentObj['role'] == 'creator'){
+										$resourceArr['creator'] = $this->cleanInStr($agentObj['full_name']);
 										unset($agentArr);
 										break;
 									}
 									$agentCnt++;
 								}
 							}
-							if(isset($agentArr) && $agentArr) $resourceArr['photographer'] = implode('; ',array_unique($agentArr));
+							if(isset($agentArr) && $agentArr) $resourceArr['creator'] = implode('; ',array_unique($agentArr));
 						}
 						$noteStr = 'Harvest via EOL on '.date('Y-m-d');
 						if(array_key_exists('description',$objArr)) $noteStr .= '; '.$this->cleanInStr($objArr['description']);
@@ -303,11 +303,11 @@ class EOLManager {
 				if($webFullUrl || $lgFullUrl){
 					if(strlen($resourceArr['notes']) > 350) $resourceArr['notes'] = substr($resourceArr['notes'], 0, 350);
 					if(!$webFullUrl) $webFullUrl = 'empty';
-					$sql = 'INSERT INTO images(tid,url,thumbnailurl,originalurl,photographer,caption,owner,sourceurl,copyright,rights,locality,notes,imagetype,sortsequence) '.
+					$sql = 'INSERT INTO media (tid,url,thumbnailurl,originalurl,creator,caption,owner,sourceurl,copyright,rights,locality,notes,imagetype,sortsequence) '.
 					'VALUES('.$tid.',"'.$webFullUrl.'",'.
 					($imgTnUrl?'"'.$imgTnUrl.'"':'NULL').','.
 					($lgFullUrl?'"'.$lgFullUrl.'"':'NULL').','.
-					(isset($resourceArr['photographer'])?'"'.$resourceArr['photographer'].'"':'NULL').','.
+					(isset($resourceArr['creator'])?'"'.$resourceArr['creator'].'"':'NULL').','.
 					(isset($resourceArr['title'])?'"'.$resourceArr['title'].'"':'NULL').','.
 					(isset($resourceArr['owner'])?'"'.$resourceArr['owner'].'"':'NULL').','.
 					(isset($resourceArr['source'])?'"'.$resourceArr['source'].'"':'NULL').','.

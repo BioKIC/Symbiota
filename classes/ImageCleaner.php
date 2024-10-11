@@ -26,10 +26,10 @@ class ImageCleaner extends Manager{
 	//Thumbnail building tools
 	public function getReportArr(){
 		$retArr = array();
-		$sql = 'SELECT c.collid, CONCAT_WS("-",c.institutioncode,c.collectioncode) as collcode, c.collectionname, count(DISTINCT i.imgid) AS cnt '.
-			'FROM images i LEFT JOIN omoccurrences o ON i.occid = o.occid '.
+		$sql = 'SELECT c.collid, CONCAT_WS("-",c.institutioncode,c.collectioncode) as collcode, c.collectionname, count(DISTINCT m.media_id) AS cnt '.
+			'FROM media m LEFT JOIN omoccurrences o ON m.occid = o.occid '.
 			'LEFT JOIN omcollections c ON o.collid = c.collid ';
-		if($this->tidArr) $sql .= 'INNER JOIN taxaenumtree e ON i.tid = e.tid ';
+		if($this->tidArr) $sql .= 'INNER JOIN taxaenumtree e ON m.tid = e.tid ';
 		$sql .= $this->getSqlWhere().'GROUP BY c.collid ORDER BY c.collectionname';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
@@ -55,10 +55,10 @@ class ImageCleaner extends Manager{
 		$this->imgManager = new ImageShared();
 		$this->imgManager->setTestOrientation($this->testOrientation);
 		//Get image recordset to be processed
-		$sql = 'SELECT DISTINCT i.imgid, i.url, i.originalurl, i.thumbnailurl, i.format ';
-		if($this->collid) $sql .= ', o.catalognumber FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid ';
-		else $sql .= 'FROM images i ';
-		if($this->tidArr) $sql .= 'INNER JOIN taxaenumtree e ON i.tid = e.tid ';
+		$sql = 'SELECT DISTINCT m.media_id, m.url, m.originalurl, m.thumbnailurl, m.format ';
+		if($this->collid) $sql .= ', o.catalognumber FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid ';
+		else $sql .= 'FROM media m ';
+		if($this->tidArr) $sql .= 'INNER JOIN taxaenumtree e ON m.tid = e.tid ';
 		$sql .= $this->getSqlWhere() . 'ORDER BY RAND()';
 		if($limit) $sql .= 'LIMIT ' . $limit;
 		$result = $this->conn->query($sql);
@@ -67,15 +67,15 @@ class ImageCleaner extends Manager{
 		while($row = $result->fetch_object()){
 			$status = true;
 			$cnt++;
-			$imgId = $row->imgid;
-			$this->logOrEcho($cnt.': Building thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>...');
+			$media_id = $row->media_id;
+			$this->logOrEcho($cnt.': Building thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>...');
 			$this->conn->autocommit(false);
 			//Tag for updating; needed to ensure two parallel processes are not processing the same image
-			$testSql = 'SELECT thumbnailurl, url FROM images WHERE (imgid = '.$imgId.') FOR UPDATE ';
+			$testSql = 'SELECT thumbnailurl, url FROM media WHERE (media_id = '. $media_id . ') FOR UPDATE ';
 			$textRS = $this->conn->query($testSql);
 			if($testR = $textRS->fetch_object()){
 				if(!$testR->thumbnailurl || (substr($testR->thumbnailurl,0,10) == 'processing' && $testR->thumbnailurl != 'processing '.date('Y-m-d'))){
-					$tagSql = 'UPDATE images SET thumbnailurl = "processing '.date('Y-m-d').'" WHERE (imgid = '.$imgId.')';
+					$tagSql = 'UPDATE media SET thumbnailurl = "processing '.date('Y-m-d').'" WHERE (media_id= ' . $media_id . ')';
 					$this->conn->query($tagSql);
 				}
 				else{
@@ -94,10 +94,8 @@ class ImageCleaner extends Manager{
 			$setFormat = ($row->format?false:true);
 			$catNum = '';
 			if(isset($row->catalognumber)) $catNum = $row->catalognumber;
-			if(!$this->buildImageDerivatives($imgId, $catNum, $row->url, $row->thumbnailurl, $row->originalurl, $setFormat)){
+			if(!$this->buildImageDerivatives($media_id, $catNum, $row->url, $row->thumbnailurl, $row->originalurl, $setFormat)){
 				$this->logOrEcho($this->errorMessage, 1);
-				//$tagSql = 'UPDATE images SET thumbnailurl = "" WHERE (imgid = '.$imgId.') AND thumbnailurl LIKE "processing %"';
-				//$this->conn->query($tagSql);
 			}
 			if(!$status) $this->logOrEcho($this->errorMessage,1);
 		}
@@ -119,14 +117,14 @@ class ImageCleaner extends Manager{
 	}
 
 	private function getSqlWhere(){
-		$sql = 'WHERE ((i.thumbnailurl IS NULL) OR (i.thumbnailurl LIKE "processing%")) ';
+		$sql = 'WHERE ((m.thumbnailurl IS NULL) OR (m.thumbnailurl LIKE "processing%")) AND m.media_type = "image"';
 		if($this->collid) $sql .= 'AND (o.collid = '.$this->collid.') ';
-		elseif($this->collid === '0') $sql .= 'AND (i.occid IS NULL) ';
-		if($this->tidArr) $sql .= 'AND (e.taxauthid = 1) AND (i.tid IN('.implode(',',$this->tidArr).') OR e.parenttid IN('.implode(',',$this->tidArr).')) ';
+		elseif($this->collid === '0') $sql .= 'AND (m.occid IS NULL) ';
+		if($this->tidArr) $sql .= 'AND (e.taxauthid = 1) AND (m.tid IN('.implode(',',$this->tidArr).') OR e.parenttid IN('.implode(',',$this->tidArr).')) ';
 		return $sql;
 	}
 
-	private function buildImageDerivatives($imgId, $catNum, $recUrlWeb, $recUrlTn, $recUrlOrig, $setFormat = false){
+	private function buildImageDerivatives($media_id, $catNum, $recUrlWeb, $recUrlTn, $recUrlOrig, $setFormat = false){
 		$status = true;
 		if(isset($recUrlWeb) && substr($recUrlWeb,0,10) == 'processing') $recUrlWeb = '';
 		if(isset($recUrlTn) && substr($recUrlTn,0,10) == 'processing') $recUrlTn = '';
@@ -156,7 +154,7 @@ class ImageCleaner extends Manager{
 			if(preg_match('/imageid=(\d+)$/', $recUrlOrig, $m)){
 				$newImgPath = $this->imgManager->getTargetPath().'mo_'.$m[1].'.jpg';
 				if(copy($recUrlOrig, $newImgPath)){
-					$imgUrl = str_replace($GLOBALS['IMAGE_ROOT_PATH'],$GLOBALS['IMAGE_ROOT_URL'],$newImgPath);
+					$imgUrl = str_replace($GLOBALS['MEDIA_ROOT_PATH'],$GLOBALS['MEDIA_ROOT_URL'],$newImgPath);
 					if((!$recUrlWeb || $recUrlWeb == 'empty')){
 						$webIsEmpty = true;
 					}
@@ -181,7 +179,7 @@ class ImageCleaner extends Manager{
 				}
 				else{
 					$this->errorMessage = 'ERROR building thumbnail: '.$this->imgManager->getErrStr();
-					$errSql = 'UPDATE images SET thumbnailurl = "bad url" WHERE thumbnailurl IS NULL AND imgid = '.$imgId;
+					$errSql = 'UPDATE media SET thumbnailurl = "bad url" WHERE thumbnailurl IS NULL AND media_id = '.$media_id;
 					$this->conn->query($errSql);
 					$status = false;
 				}
@@ -221,14 +219,14 @@ class ImageCleaner extends Manager{
 				}
 				if(!$webFullUrl && !$recUrlOrig) $webFullUrl = $recUrlWeb;
 
-				$sql = 'UPDATE images ti SET ti.thumbnailurl = "'.$imgTnUrl.'" ,url = '.($webFullUrl?'"'.$webFullUrl.'"':'NULL').' ';
+				$sql = 'UPDATE media m SET m.thumbnailurl = "'.$imgTnUrl.'" ,url = '.($webFullUrl?'"'.$webFullUrl.'"':'NULL').' ';
 				if($lgFullUrl) $sql .= ',originalurl = "'.$lgFullUrl.'" ';
 				if($setFormat){
 					if($this->imgManager->getFormat()){
 						$sql .= ',format = "'.$this->imgManager->getFormat().'" ';
 					}
 				}
-				$sql .= "WHERE ti.imgid = ".$imgId;
+				$sql .= "WHERE m.media_id = ".$media_id;
 				//echo $sql;
 				if(!$this->conn->query($sql)){
 					$this->errorMessage = 'ERROR: thumbnail created but failed to update database: '.$this->conn->error;
@@ -243,7 +241,7 @@ class ImageCleaner extends Manager{
 			$status = false;
 		}
 		if(preg_match('/\/mo_\d+.jpg/', $imgUrl)){
-			$imgUrl = str_replace($GLOBALS['IMAGE_ROOT_URL'],$GLOBALS['IMAGE_ROOT_PATH'],$imgUrl);
+			$imgUrl = str_replace($GLOBALS['MEDIA_ROOT_URL'],$GLOBALS['MEDIA_ROOT_PATH'],$imgUrl);
 			unlink($imgUrl);
 		}
 		$this->imgManager->reset();
@@ -251,16 +249,16 @@ class ImageCleaner extends Manager{
 	}
 
 	public function resetProcessing(){
-		$sqlTN = 'UPDATE images SET thumbnailurl = NULL WHERE ((thumbnailurl = "") OR (thumbnailurl = "bad url") OR (thumbnailurl LIKE "processing %")) ';
+		$sqlTN = 'UPDATE media SET thumbnailurl = NULL WHERE ((thumbnailurl = "") OR (thumbnailurl = "bad url") OR (thumbnailurl LIKE "processing %")) ';
 		if($this->collid){
-			$sqlTN = 'UPDATE images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
+			$sqlTN = 'UPDATE media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
 				'SET thumbnailurl = NULL '.
 				'WHERE ((thumbnailurl = "") OR (thumbnailurl = "bad url") OR (thumbnailurl LIKE "processing %")) AND collid = '.$this->collid;
 		}
 		$this->conn->query($sqlTN);
-		$sqlWeb = 'UPDATE images SET url = "" WHERE ((url = "") OR (url LIKE "processing %")) ';
+		$sqlWeb = 'UPDATE media SET url = "" WHERE ((url = "") OR (url LIKE "processing %")) ';
 		if($this->collid){
-			$sqlWeb = 'UPDATE images i INNER JOIN omoccurrences o ON i.occid = o.occid SET url = "" WHERE ((url = "") OR (url LIKE "processing %")) AND collid = '.$this->collid;
+			$sqlWeb = 'UPDATE media m INNER JOIN omoccurrences o ON m.occid = o.occid SET url = "" WHERE ((url = "") OR (url LIKE "processing %")) AND collid = '.$this->collid;
 		}
 		$this->conn->query($sqlWeb);
 	}
@@ -335,7 +333,7 @@ class ImageCleaner extends Manager{
 	public function getProcessingCnt($postArr){
 		$retCnt = 0;
 		if($this->collid){
-			$sql = 'SELECT COUNT(i.imgid) AS cnt '.$this->getRemoteImageSql($postArr);
+			$sql = 'SELECT COUNT(m.media_id) AS cnt '.$this->getRemoteImageSql($postArr);
 			//echo $sql;
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
@@ -349,10 +347,10 @@ class ImageCleaner extends Manager{
 	public function getRemoteImageCnt(){
 		$retCnt = 0;
 		$domain = $_SERVER['HTTP_HOST'];
-		$sql = 'SELECT COUNT(i.imgid) AS cnt '.
-			'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-			'WHERE (o.collid = '.$this->collid.') AND (i.thumbnailurl LIKE "%'.$domain.'/%" OR i.thumbnailurl LIKE "/%") '.
-			'AND IFNULL(i.originalurl, i.url) LIKE "http%" AND (IFNULL(i.originalurl, i.url) NOT LIKE "%'.$domain.'/%") ';
+		$sql = 'SELECT COUNT(m.media_id) AS cnt '.
+			'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
+			'WHERE (o.collid = '.$this->collid.') AND (m.thumbnailurl LIKE "%'.$domain.'/%" OR m.thumbnailurl LIKE "/%") '.
+			'AND IFNULL(m.originalurl, m.url) LIKE "http%" AND (IFNULL(m.originalurl, m.url) NOT LIKE "%'.$domain.'/%") ';
 		//echo $sql;
 		$rs = $this->conn->query($sql);
 		if($r = $rs->fetch_object()){
@@ -365,7 +363,7 @@ class ImageCleaner extends Manager{
 	public function refreshThumbnails($postArr){
 		$this->imgManager = new ImageShared();
 		$this->imgManager->setTestOrientation($this->testOrientation);
-		$sql = 'SELECT o.occid, o.catalognumber, i.imgid, i.url, i.thumbnailurl, i.originalurl, i.format '.$this->getRemoteImageSql($postArr);
+		$sql = 'SELECT o.occid, o.catalognumber, m.media_id, m.url, m.thumbnailurl, m.originalurl, m.format '.$this->getRemoteImageSql($postArr);
 		//echo $sql.'<br/>';
 		$rs = $this->conn->query($sql);
 		$cnt = 0;
@@ -374,7 +372,7 @@ class ImageCleaner extends Manager{
 			$url = $r->url;
 			$urlTn = $r->thumbnailurl;
 			$urlOrig = $r->originalurl;
-			$this->logOrEcho($cnt.'. Rebuilding thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> [cat#: ' . htmlspecialchars($r->catalognumber, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ']...',0,'div');
+			$this->logOrEcho($cnt.'. Rebuilding thumbnail: <a href="../imgdetails.php?imgid=' . htmlspecialchars($r->media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> [cat#: ' . htmlspecialchars($r->catalognumber, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . ']...',0,'div');
 			//echo 'evaluate_ts: '.$postArr['evaluate_ts'].'<br/>';
 			$tsSource = 0;
 			if($postArr['evaluate_ts']){
@@ -389,7 +387,7 @@ class ImageCleaner extends Manager{
 			if($this->unlinkImageFile($urlTn, $tsSource)) $urlTn = '';
 			if($urlOrig) if($this->unlinkImageFile($url, $tsSource)) $url = '';
 			$setFormat = ($r->format?false:true);
-			$this->buildImageDerivatives($r->imgid, $r->catalognumber, $url, $urlTn, $urlOrig, $setFormat);
+			$this->buildImageDerivatives($r->media_id, $r->catalognumber, $url, $urlTn, $urlOrig, $setFormat);
 		}
 		$rs->free();
 		if(!$cnt) $this->logOrEcho('<b>There are no images that match set criteria</b>',0,'div');
@@ -397,20 +395,20 @@ class ImageCleaner extends Manager{
 
 	private function unlinkImageFile($url,$origTs){
 		$status = false;
-		if(!$GLOBALS['IMAGE_ROOT_PATH']){
-			$this->logOrEcho('FATAL ERROR: IMAGE_ROOT_PATH not configured within portal configuration file',1);
+		if(!$GLOBALS['MEDIA_ROOT_PATH']){
+			$this->logOrEcho('FATAL ERROR: MEDIA_ROOT_PATH not configured within portal configuration file',1);
 			exit;
 		}
-		if(!$GLOBALS['IMAGE_ROOT_URL']){
-			$this->logOrEcho('FATAL ERROR: IMAGE_ROOT_URL not configured within portal configuration file',1);
+		if(!$GLOBALS['MEDIA_ROOT_URL']){
+			$this->logOrEcho('FATAL ERROR: MEDIA_ROOT_URL not configured within portal configuration file',1);
 			exit;
 		}
 		if(substr($url, 0, 4) == 'http'){
 			//Remove domain name
 			$url = parse_url($url, PHP_URL_PATH);
 		}
-		if(strpos($url, $GLOBALS['IMAGE_ROOT_URL']) === 0){
-			$path = $GLOBALS['IMAGE_ROOT_PATH'].substr($url,strlen($GLOBALS['IMAGE_ROOT_URL']));
+		if(strpos($url, $GLOBALS['MEDIA_ROOT_URL']) === 0){
+			$path = $GLOBALS['MEDIA_ROOT_PATH'].substr($url,strlen($GLOBALS['MEDIA_ROOT_URL']));
 			if($p = strpos($path,'?')) $path = substr($path,0,$p);
 			if(!file_exists($path)) return true;
 			if(is_writable($path)){
@@ -430,9 +428,9 @@ class ImageCleaner extends Manager{
 
 	private function getRemoteImageSql($postArr){
 		$domain = $this->getDomain();
-		$sql = 'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-			'WHERE (o.collid = '.$this->collid.') AND (i.thumbnailurl LIKE "%'.$domain.'/%" OR i.thumbnailurl LIKE "/%") '.
-			'AND IFNULL(i.originalurl,url) LIKE "http%" AND IFNULL(i.originalurl,url) NOT LIKE "%'.$domain.'/%" ';
+		$sql = 'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
+			'WHERE (o.collid = '.$this->collid.') AND m.media_type = "image" AND (m.thumbnailurl LIKE "%'.$domain.'/%" OR m.thumbnailurl LIKE "/%") '.
+			'AND IFNULL(m.originalurl,url) LIKE "http%" AND IFNULL(m.originalurl,url) NOT LIKE "%'.$domain.'/%" ';
 		$catNumLow = '';
 		if(isset($postArr['catNumLow'])) $catNumLow = filter_var($postArr['catNumLow']);
 		$catNumHigh = '';
@@ -486,15 +484,10 @@ class ImageCleaner extends Manager{
 
 	//URL testing
 	public function testByCollid(){
-		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl '.
-			'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-			'WHERE o.collid IN('.$this->collid.')';
+		$sql = 'SELECT m.media_id, m.url, m.thumbnailurl, m.originalurl '.
+			'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
+			'WHERE o.collid IN('.$this->collid.') and m.media_type = "image"';
 		return $this->testUrls($sql);
-	}
-
-	public function testByImgid($imgidStr){
-
-
 	}
 
 	private function testUrls($sql){
@@ -508,9 +501,9 @@ class ImageCleaner extends Manager{
 		$rs = $this->conn->query($sql);
 		if($rs){
 			while($r = $rs->fetch_object()){
-				if(!$this->imgManager->uriExists($r->url)) $badUrlArr[$r->imgid]['url'] = $r->url;
-				if(!$this->imgManager->uriExists($r->thumbnailurl)) $badUrlArr[$r->imgid]['tn'] = $r->thumbnailurl;
-				if(!$this->imgManager->uriExists($r->originalurl)) $badUrlArr[$r->imgid]['lg'] = $r->originalurl;
+				if(!$this->imgManager->uriExists($r->url)) $badUrlArr[$r->media_id]['url'] = $r->url;
+				if(!$this->imgManager->uriExists($r->thumbnailurl)) $badUrlArr[$r->media_id]['tn'] = $r->thumbnailurl;
+				if(!$this->imgManager->uriExists($r->originalurl)) $badUrlArr[$r->media_id]['lg'] = $r->originalurl;
 			}
 			$rs->free();
 		}
@@ -519,8 +512,8 @@ class ImageCleaner extends Manager{
 			return false;
 		}
 		//Output results (needs to be extended)
-		foreach($badUrlArr as $imgid => $badUrls){
-			echo $imgid.', ';
+		foreach($badUrlArr as $media_id => $badUrls){
+			echo $media_id.', ';
 			echo (isset($badUrls['url'])?$badUrls['url']:'').',';
 			echo (isset($badUrls['tn'])?$badUrls['tn']:'').',';
 			echo (isset($badUrls['lg'])?$badUrls['lg']:'').',';
@@ -534,8 +527,8 @@ class ImageCleaner extends Manager{
 		$this->setRecycleBin();
 		if(!$filePath) exit('Image identifier file path IS NULL');
 		if(!file_exists($filePath)) exit('Image identifier file Not Found');
-		if(($imgidHandler = fopen($filePath, 'r')) !== FALSE){
-			while(($data = fgets($imgidHandler)) !== FALSE){
+		if(($media_id_handler = fopen($filePath, 'r')) !== FALSE){
+			while(($data = fgets($media_id_handler)) !== FALSE){
 				$this->recycleImage($data[0]);
 			}
 		}
@@ -547,17 +540,17 @@ class ImageCleaner extends Manager{
 		$inputStr = preg_replace('/\s/',',',$inputStr);
 		$inputStr = str_replace(',,',',',$inputStr);
 		$idArr = explode(',',$inputStr);
-		foreach($idArr as $imgid){
-			if($imgid) $this->recycleImage($imgid);
+		foreach($idArr as $media_id){
+			if($media_id) $this->recycleImage($media_id);
 		}
 	}
 
-	private function recycleImage($imgID){
-		if(!is_numeric($imgID)) return false;
+	private function recycleImage($media_id){
+		if(!is_numeric($media_id)) return false;
 		if($this->imgRecycleBin){
-			$sql = 'SELECT i.url, i.originalurl, i.thumbnailurl '.
-				'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-				'WHERE (o.collid = '.$this->collid.') AND (i.imgid = '.$imgID.')';
+			$sql = 'SELECT m.url, m.originalurl, m.thumbnailurl '.
+				'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
+				'WHERE (o.collid = '.$this->collid.') AND m.media_type = "image" AND(m.media_id = ' . $media_id . ')';
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
 				$imgUrlArr = array();
@@ -575,13 +568,13 @@ class ImageCleaner extends Manager{
 					elseif(substr($imgUrl, 0, 4) == 'http'){
 						$imgUrl = parse_url($imgUrl, PHP_URL_PATH);
 					}
-					if(strpos($imgUrl, $GLOBALS['IMAGE_ROOT_URL']) === 0){
-						$imgUrl = $GLOBALS['IMAGE_ROOT_PATH'].substr($imgUrl,strlen($GLOBALS['IMAGE_ROOT_URL']));
+					if(strpos($imgUrl, $GLOBALS['MEDIA_ROOT_URL']) === 0){
+						$imgUrl = $GLOBALS['MEDIA_ROOT_PATH'].substr($imgUrl,strlen($GLOBALS['MEDIA_ROOT_URL']));
 					}
 					if(is_writable($imgUrl)){
 						$pathParts = pathinfo($imgUrl);
 						$path = $pathParts['dirname'];
-						if(strpos($path, $GLOBALS['IMAGE_ROOT_PATH']) === 0) $path = substr($path,strlen($GLOBALS['IMAGE_ROOT_PATH']));
+						if(strpos($path, $GLOBALS['MEDIA_ROOT_PATH']) === 0) $path = substr($path,strlen($GLOBALS['MEDIA_ROOT_PATH']));
 						$targetPath = $this->imgRecycleBin.$path;
 						if(!file_exists($targetPath)) mkdir($targetPath,0777,true);
 						$targetPath .= '/'.$pathParts['basename'];
@@ -589,7 +582,7 @@ class ImageCleaner extends Manager{
 					}
 				}
 				if($delRec){
-					$this->conn->query('DELETE FROM images WHERE (imgid = '.$imgID.')');
+					$this->conn->query('DELETE FROM media WHERE (media_id = ' . $media_id . ') and media_type = "image"');
 				}
 			}
 			$rs->free();
@@ -609,13 +602,13 @@ class ImageCleaner extends Manager{
 			}
 		}
 		else{
-			if($GLOBALS['IMAGE_ROOT_PATH']){
-				$path = $GLOBALS['IMAGE_ROOT_PATH'];
+			if($GLOBALS['MEDIA_ROOT_PATH']){
+				$path = $GLOBALS['MEDIA_ROOT_PATH'];
 				if(substr($path, -1) != '/') $path .= '/';
 				$path .= 'trash';
 				if(!file_exists($path)){
 					if(!mkdir($path)){
-						$this->errorMessage = 'Failed to create trash folder in IMAGE_ROOT_PATH';
+						$this->errorMessage = 'Failed to create trash folder in MEDIA_ROOT_PATH';
 						return false;
 					}
 				}

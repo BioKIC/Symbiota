@@ -525,7 +525,7 @@ class OccurrenceCollectionProfile extends OmCollections{
 				'COUNT(DISTINCT i.occid) AS OccurrenceImageCount '.
 				'FROM omoccurrences AS o LEFT JOIN taxa AS t ON o.tidinterpreted = t.TID '.
 				'INNER JOIN omcollections AS c ON o.collid = c.CollID '.
-				'LEFT JOIN images AS i ON o.occid = i.occid '.
+				'LEFT JOIN media AS i ON o.occid = i.occid '.
 				'WHERE c.CollID IN('.$collId.') '.
 				'GROUP BY c.CollectionName ';
 			//echo $sql2;
@@ -544,7 +544,7 @@ class OccurrenceCollectionProfile extends OmCollections{
 				'COUNT(DISTINCT CASE WHEN t.RankId >= 220 THEN t.SciName ELSE NULL END) AS TotalTaxaCount, '.
 				'COUNT(DISTINCT CASE WHEN i.occid IS NOT NULL THEN i.occid ELSE NULL END) AS TotalImageCount '.
 				'FROM omoccurrences o LEFT JOIN taxa t ON o.tidinterpreted = t.TID '.
-				'LEFT JOIN images AS i ON o.occid = i.occid '.
+				'LEFT JOIN media AS i ON o.occid = i.occid '.
 				'WHERE o.collid IN('.$collId.') ';
 			//echo $sql3;
 			$rs = $this->conn->query($sql3);
@@ -642,7 +642,7 @@ class OccurrenceCollectionProfile extends OmCollections{
 			$rs->free();
 			$sql5 = 'SELECT c.CollID, c.CollectionName, COUNT(DISTINCT CASE WHEN i.occid IS NOT NULL THEN i.occid ELSE NULL END) AS TotalImageCount ';
 			$sql5 .= $sqlFrom;
-			$sql5 .= 'LEFT JOIN images AS i ON o.occid = i.occid ';
+			$sql5 .= 'LEFT JOIN media AS i ON o.occid = i.occid ';
 			$sql5 .= $sqlWhere;
 			$sql5 .= 'GROUP BY c.CollectionName ';
 			//echo 'sql5: '.$sql5;
@@ -674,7 +674,7 @@ class OccurrenceCollectionProfile extends OmCollections{
 		if(preg_match('/^[0-9,]+$/',$collId) && is_numeric($days)){
 			$sql = 'SELECT CONCAT_WS("-",c.institutioncode,c.collectioncode) as collcode, c.collectionname '.
 				'FROM omoccurrences AS o INNER JOIN omcollections AS c ON o.collid = c.collid '.
-				'LEFT JOIN images AS i ON o.occid = i.occid '.
+				'LEFT JOIN media AS i ON o.occid = i.occid '.
 				'WHERE o.collid IN('.$collId.') AND ((o.dateLastModified IS NOT NULL AND datediff(curdate(), o.dateLastModified) < '.$days.') OR (datediff(curdate(), i.InitialTimeStamp) < '.$days.')) '.
 				'ORDER BY c.collectionname ';
 			//echo $sql;
@@ -713,12 +713,12 @@ class OccurrenceCollectionProfile extends OmCollections{
 				$statArr[$r->collcode]['stats'][$r->dateEntered]['stage3Count'] = $r->stage3Count;
 			}
 
-			$sql2 = 'SELECT CONCAT_WS("-",c.institutioncode,c.collectioncode) as collcode, CONCAT_WS("-",year(i.InitialTimeStamp),month(i.InitialTimeStamp)) as dateEntered, '.
-				'c.collectionname, month(i.InitialTimeStamp) as monthEntered, year(i.InitialTimeStamp) as yearEntered, '.
-				'COUNT(i.imgid) AS imgcnt '.
+			$sql2 = 'SELECT CONCAT_WS("-",c.institutioncode,c.collectioncode) as collcode, CONCAT_WS("-",year(m.InitialTimeStamp),month(m.InitialTimeStamp)) as dateEntered, '.
+				'c.collectionname, month(m.InitialTimeStamp) as monthEntered, year(m.InitialTimeStamp) as yearEntered, '.
+				'COUNT(m.media_id) AS imgcnt '.
 				'FROM omoccurrences AS o INNER JOIN omcollections AS c ON o.collid = c.collid '.
-				'LEFT JOIN images AS i ON o.occid = i.occid '.
-				'WHERE o.collid in('.$collId.') AND datediff(curdate(), i.InitialTimeStamp) < '.$days.' '.
+				'LEFT JOIN media AS i ON o.occid = m.occid '.
+				'WHERE o.collid in('.$collId.') AND datediff(curdate(), m.InitialTimeStamp) < '.$days.' '.
 				'GROUP BY yearEntered,monthEntered,o.collid ORDER BY c.collectionname ';
 			//echo $sql2;
 			$rs = $this->conn->query($sql2);

@@ -1,27 +1,27 @@
 <?php
 /*
 ------------------
-Language: Español
+Language: Español (Spanish)
+Translated by: Google Translate (2024-09-16)
 ------------------
 */
 
-$LANG['IMG_LIBRARY'] = 'Biblioteca de Imágenes';
+$LANG['IMG_LIBRARY'] = 'Biblioteca medios';
 $LANG['HOME'] = 'Inicio';
-$LANG['TAXA_W_IMGS'] = 'Taxones con Imágenes';
-$LANG['TAXA_IMG_EXPLAIN'] = 'Esta pagina tiene una lista completa de todos los taxones con imágenes.
-		Puede usar las herramientas abajo para revisar y buscar imágenes por familia, genero o especie.';
+$LANG['TAXA_W_IMGS'] = 'Taxones con Medios';
+$LANG['TAXA_IMG_EXPLAIN'] = 'Esta página proporciona una lista completa de taxones que tienen medios.                Utilice los controles a continuación para explorar y buscar medios por familia, género o especie.';
 $LANG['BROWSE_FAMILY'] = 'Revisar por Familia';
 $LANG['BROWSE_GENUS'] = ' Revisar por Genero';
 $LANG['BROWSE_SPECIES'] = ' Revisar por Especie';
 $LANG['SCINAME_SEARCH'] = 'Buscar Nombre Científico';
 $LANG['ENTER_TAXON_NAME'] = 'Ingresar familia, genero o nombre científico';
 $LANG['SEARCH'] = 'Buscar';
-$LANG['IMG_CP_POLICY'] = 'Políticas de Propiedad Intelectual del Imagen';
-$LANG['IMG_CONTRIBUTORS'] = 'Contribuidores de Imágenes';
-$LANG['IMG_SEARCH'] = 'Búsqueda d Imágenes';
+$LANG['IMG_CP_POLICY'] = 'Política de derechos de autor medios';
+$LANG['IMG_CONTRIBUTORS'] = 'Colaboradores medios';
+$LANG['IMG_SEARCH'] = 'Búsqueda medios';
 $LANG['SELECT_GENUS'] = 'Seleccionar un genero para ver la lista de especies.';
 $LANG['NO_TAXA_RETURNED'] = ' No hay taxones para estos criterios de búsqueda ';
-$LANG['SELECT_SPECIES'] = 'Seleccionar la especie para ver los imágenes disponibles';
+$LANG['SELECT_SPECIES'] = 'Seleccione una especie para acceder a los medios disponibles';
 $LANG['SELECT_FAMILY'] = 'Seleccionar la familia para ver una lista de especies';
 
 ?>

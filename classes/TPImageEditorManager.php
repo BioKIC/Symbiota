@@ -26,32 +26,32 @@ class TPImageEditorManager extends TPEditorManager{
 			$rs1->free();
 		}
 
-		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl, i.caption, i.photographer, i.photographeruid, CONCAT_WS(" ",u.firstname,u.lastname) AS photographerdisplay,
-			i.owner, i.locality, i.occid, i.notes, i.sortsequence, i.sourceurl, i.copyright, t.tid, t.sciname ';
+		$sql = 'SELECT m.media_id, m.url, m.thumbnailurl, m.originalurl, m.caption, m.creator, m.creatorUid, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorDisplay,
+			m.owner, m.locality, m.occid, m.notes, m.sortsequence, m.sourceurl, m.copyright, t.tid, t.sciname ';
 		if($this->acceptance){
-			$sql .= 'FROM images i INNER JOIN taxstatus ts ON i.tid = ts.tid
-				INNER JOIN taxa t ON i.tid = t.tid
-				LEFT JOIN users u ON i.photographeruid = u.uid
-				WHERE ts.taxauthid = '.$this->taxAuthId.' AND (ts.tidaccepted IN('.implode(",",$tidArr).')) AND i.SortSequence < 500 ';
+			$sql .= 'FROM media m INNER JOIN taxstatus ts ON m.tid = ts.tid
+				INNER JOIN taxa t ON m.tid = t.tid
+				LEFT JOIN users u ON m.creatoruid = u.uid
+				WHERE ts.taxauthid = '.$this->taxAuthId.' AND (ts.tidaccepted IN('.implode(",",$tidArr).')) AND m.SortSequence < 500 ';
 		}
 		else{
-			$sql .= 'FROM images i INNER JOIN taxa t ON i.tid = t.tid
-				LEFT JOIN users u ON i.photographeruid = u.uid
-				WHERE (t.tid IN('.implode(",",$tidArr).')) AND i.SortSequence < 500 ';
+			$sql .= 'FROM media i INNER JOIN taxa t ON m.tid = t.tid
+				LEFT JOIN users u ON m.creatorUid = u.uid
+				WHERE (t.tid IN('.implode(",",$tidArr).')) AND m.SortSequence < 500 ';
 		}
-		$sql .= 'ORDER BY i.sortsequence';
+		$sql .= 'ORDER BY m.sortsequence';
 		//echo $sql; exit;
 		$rs = $this->conn->query($sql);
 		$imgCnt = 0;
 		while($r = $rs->fetch_object()){
-			$imageArr[$imgCnt]['imgid'] = $r->imgid;
+			$imageArr[$imgCnt]['imgid'] = $r->media_id;
 			$imageArr[$imgCnt]['url'] = $r->url;
 			$imageArr[$imgCnt]['thumbnailurl'] = $r->thumbnailurl;
 			$imageArr[$imgCnt]['originalurl'] = $r->originalurl;
-			$imageArr[$imgCnt]['photographer'] = $r->photographer;
-			$imageArr[$imgCnt]['photographeruid'] = $r->photographeruid;
-			if($r->photographerdisplay) $imageArr[$imgCnt]['photographerdisplay'] = $r->photographerdisplay;
-			else $imageArr[$imgCnt]['photographerdisplay'] = $r->photographer;
+			$imageArr[$imgCnt]['creator'] = $r->creator;
+			$imageArr[$imgCnt]['creatorUid'] = $r->creatorUid;
+			if($r->creatorDisplay) $imageArr[$imgCnt]['creatorDisplay'] = $r->creatorDisplay;
+			else $imageArr[$imgCnt]['creatorDisplay'] = $r->creator;
 			$imageArr[$imgCnt]['caption'] = $r->caption;
 			$imageArr[$imgCnt]['owner'] = $r->owner;
 			$imageArr[$imgCnt]['locality'] = $r->locality;
@@ -81,7 +81,7 @@ class TPImageEditorManager extends TPEditorManager{
 		$status = "";
 		foreach($imgSortEdits as $editKey => $editValue){
 			if(is_numeric($editKey) && is_numeric($editValue)){
-				$sql = 'UPDATE images SET sortsequence = '.$editValue.' WHERE imgid = '.$editKey;
+				$sql = 'UPDATE media SET sortsequence = '.$editValue.' WHERE media_id= '.$editKey;
 				//echo $sql;
 				if(!$this->conn->query($sql)){
 					$status .= $this->conn->error."\nSQL: ".$sql."; ";

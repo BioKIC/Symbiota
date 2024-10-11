@@ -655,9 +655,9 @@ if($glossId){
 										<div style="float:left;">
 											<?php
 											$imgUrl = $imgArr["url"];
-											if(array_key_exists('IMAGE_DOMAIN', $GLOBALS)){
+											if(array_key_exists('MEDIA_DOMAIN', $GLOBALS)){
 												if(substr($imgUrl,0,1)=="/"){
-													$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
+													$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $imgUrl;
 												}
 											}
 											$displayUrl = $imgUrl;

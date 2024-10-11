@@ -84,12 +84,12 @@ class PluginsManager extends Manager {
 			$ssIdInfo['imagetype'] = $imageType;
 
 			$files = Array();
-			$sql = 'SELECT i.imgid, i.tid, i.occid, i.url, i.photographer, i.`owner`, t.sciname, o.sciname AS occsciname, '.
-				'CONCAT_WS(" ",u.firstname,u.lastname) AS photographerName, '.
+			$sql = 'SELECT m.media_id, m.tid, m.occid, m.url, m.creator, m.`owner`, t.sciname, o.sciname AS occsciname, '.
+				'CONCAT_WS(" ",u.firstname,u.lastname) AS creatorName, '.
 				'CONCAT_WS("; ",o.sciname, o.catalognumber, CONCAT_WS(" ",o.recordedby,IFNULL(o.recordnumber,o.eventdate))) AS identifier '.
-				'FROM images i LEFT JOIN users u ON i.photographeruid = u.uid '.
-				'LEFT JOIN omoccurrences o ON i.occid = o.occid '.
-				'LEFT JOIN taxa t ON i.tid = t.tid ';
+				'FROM media m LEFT JOIN users u ON m.creatorUid = u.uid '.
+				'LEFT JOIN omoccurrences o ON m.occid = o.occid '.
+				'LEFT JOIN taxa t ON m.tid = t.tid ';
 			if($clid){
 				$sql .= 'INNER JOIN fmchklsttaxalink cl ON i.tid = cl.tid WHERE cl.clid IN('.$clid.') ';
 			}
@@ -115,24 +115,24 @@ class PluginsManager extends Manager {
 				$file = $row->url;
 				if (substr($row->url, 0, 1) == '/'){
 					//If imageDomain variable is set within symbini file, image
-					if(!empty($GLOBALS['IMAGE_DOMAIN'])) $file = $GLOBALS['IMAGE_DOMAIN'] . $row->url;
+					if(!empty($GLOBALS['MEDIA_DOMAIN'])) $file = $GLOBALS['MEDIA_DOMAIN'] . $row->url;
 					else $file = $localDomain.$row->url;
 				}
 
 				if($size = ImageShared::getImgDim(str_replace(' ', '%20', $file))){
 					$width = $size[0];
 					$height = $size[1];
-					$files[$row->imgid]['url'] = $file;
-					$files[$row->imgid]['width'] = $width;
-					$files[$row->imgid]['height'] = $height;
-					$files[$row->imgid]['tid'] = $row->tid;
-					$files[$row->imgid]['occid'] = $row->occid;
-					$files[$row->imgid]['photographer'] = $row->photographer;
-					$files[$row->imgid]['owner'] = $row->owner;
-					$files[$row->imgid]['sciname'] = $row->sciname;
-					$files[$row->imgid]['occsciname'] = $row->occsciname;
-					$files[$row->imgid]['photographerName'] = $row->photographerName;
-					$files[$row->imgid]['identifier'] = $row->identifier;
+					$files[$row->media_id]['url'] = $file;
+					$files[$row->media_id]['width'] = $width;
+					$files[$row->media_id]['height'] = $height;
+					$files[$row->media_id]['tid'] = $row->tid;
+					$files[$row->media_id]['occid'] = $row->occid;
+					$files[$row->media_id]['creator'] = $row->creator;
+					$files[$row->media_id]['owner'] = $row->owner;
+					$files[$row->media_id]['sciname'] = $row->sciname;
+					$files[$row->media_id]['occsciname'] = $row->occsciname;
+					$files[$row->media_id]['creatorName'] = $row->creatorName;
+					$files[$row->media_id]['identifier'] = $row->identifier;
 					$cnt++;
 				}
 			}
@@ -240,8 +240,8 @@ class PluginsManager extends Manager {
 			if($imgIdArr["sciname"] || $imgIdArr["identifier"]){
 				$html .= '<a href="' . htmlspecialchars($linkUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars(($imgIdArr["identifier"]?$imgIdArr["identifier"]:$imgIdArr["sciname"]), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>. ';
 			}
-			if($imgIdArr["photographer"] || $imgIdArr["photographerName"]){
-				$html .= (isset($LANG['IMAGE_BY'])?$LANG['IMAGE_BY']:'Image by').': '.($imgIdArr["photographer"]?$imgIdArr["photographer"]:$imgIdArr["photographerName"]).'. ';
+			if($imgIdArr["creator"] || $imgIdArr["creatorName"]){
+				$html .= (isset($LANG['IMAGE_BY'])?$LANG['IMAGE_BY']:'Image by').': '.($imgIdArr["creator"]?$imgIdArr["creator"]:$imgIdArr["creatorName"]).'. ';
 			}
 			if($imgIdArr["owner"]){
 				$html .= (isset($LANG['COURTESY_OF'])?$LANG['COURTESY_OF']:'Courtesy of').': '.$imgIdArr["owner"].'. ';

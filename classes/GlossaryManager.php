@@ -32,9 +32,9 @@ class GlossaryManager extends Manager {
 
  	public function __construct(){
  		parent::__construct(null, 'write');
-		$this->imageRootPath = $GLOBALS['$IMAGE_ROOT_PATH'];
+		$this->imageRootPath = $GLOBALS['MEDIA_ROOT_PATH'];
 		if(substr($this->imageRootPath,-1) != "/") $this->imageRootPath .= "/";
-		$this->imageRootUrl = $GLOBALS['$IMAGE_ROOT_URL'];
+		$this->imageRootUrl = $GLOBALS['MEDIA_ROOT_URL'];
 		if(substr($this->imageRootUrl,-1) != "/") $this->imageRootUrl .= "/";
 		if(!empty($GLOBALS['IMG_TN_WIDTH'])){
 			$this->tnPixWidth = $GLOBALS['IMG_TN_WIDTH'];
@@ -42,8 +42,8 @@ class GlossaryManager extends Manager {
 		if(!empty($GLOBALS['IMG_WEB_WIDTH'])){
 			$this->webPixWidth = $GLOBALS['IMG_WEB_WIDTH'];
 		}
-		if(!empty($GLOBALS['IMG_FILE_SIZE_LIMIT'])){
-			$this->webFileSizeLimit = $GLOBALS['IMG_FILE_SIZE_LIMIT'];
+		if(!empty($GLOBALS['MEDIA_FILE_SIZE_LIMIT'])){
+			$this->webFileSizeLimit = $GLOBALS['MEDIA_FILE_SIZE_LIMIT'];
 		}
  	}
 
@@ -911,7 +911,7 @@ class GlossaryManager extends Manager {
 		global $SYMB_UID;
 		if(!$imgWebUrl) return 'ERROR: web url is null ';
 		$urlBase = $this->urlBase;
-		if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+		if(!empty($GLOBALS['MEDIA_DOMAIN'])){
 			//Central images are on remote server and new ones stored locally, thus need to use full local domain (this portal is sister portal to central portal)
 			$urlBase = $this->getDomain().$urlBase;
 		}

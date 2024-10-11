@@ -76,19 +76,13 @@ class GamesManager extends Manager{
 				$ootdInfo['lastDate'] = $currentDate;
 
 				$tidArr = Array();
-				$sql = 'SELECT l.TID, COUNT(i.imgid) AS cnt '.
-					'FROM fmchklsttaxalink l INNER JOIN images i ON l.TID = i.tid '.
-					'LEFT JOIN omoccurrences o ON i.occid = o.occid '.
+				$sql = 'SELECT l.TID, COUNT(m.media_id) AS cnt '.
+					'FROM fmchklsttaxalink l INNER JOIN media m ON l.TID = m.tid '.
+					'LEFT JOIN omoccurrences o ON m.occid = o.occid '.
 					'LEFT JOIN omcollections c ON o.collid = c.collid '.
-					'WHERE (l.CLID IN('.$clid.')) AND (i.occid IS NULL OR c.CollType LIKE "%Observations") '.
+					'WHERE (l.CLID IN('.$clid.')) AND (m.occid IS NULL OR c.CollType LIKE "%Observations") '.
 					'GROUP BY l.TID';
-				/*
-				$sql = 'SELECT l.TID, COUNT(i.imgid) AS cnt '.
-					'FROM fmchklsttaxalink l INNER JOIN images i ON l.TID = i.tid '.
-					'WHERE (l.CLID IN('.$clid.')) '.
-					'GROUP BY l.TID';
-				*/
-				//echo '<div>'.$sql.'</div>';
+
 				$rs = $this->conn->query($sql);
 				while($row = $rs->fetch_object()){
 					if(($row->cnt > 2) && (!in_array($row->TID, $previous))){
@@ -124,7 +118,7 @@ class GamesManager extends Manager{
 					if($_SERVER["SERVER_PORT"] && $_SERVER["SERVER_PORT"] != 80 && $_SERVER['SERVER_PORT'] != 443) $domain .= ':'.$_SERVER["SERVER_PORT"];
 
 					$files = Array();
-					$sql3 = 'SELECT url FROM images WHERE (tid = '.$randTaxa.' AND url IS NOT NULL AND url != "empty") ORDER BY sortsequence ';
+					$sql3 = 'SELECT url FROM media WHERE (tid = '.$randTaxa.' AND url IS NOT NULL AND url != "empty") ORDER BY sortsequence ';
 					//echo '<div>'.$sql.'</div>';
 					$cnt = 1;
 					$repcnt = 1;
@@ -133,7 +127,7 @@ class GamesManager extends Manager{
 					while(($row = $rs->fetch_object()) && ($cnt < 6)){
 						$file = '';
 						if (substr($row->url, 0, 1) == '/'){
-							if(!empty($GLOBALS['IMAGE_DOMAIN'])) $file = $GLOBALS['IMAGE_DOMAIN'] . $row->url;
+							if(!empty($GLOBALS['MEDIA_DOMAIN'])) $file = $GLOBALS['MEDIA_DOMAIN'] . $row->url;
 							else $file = $domain.$row->url;
 						}
 						else{
@@ -213,9 +207,9 @@ class GamesManager extends Manager{
 			}
 
 			//Grab images, first pass
-			$sqlImg = 'SELECT DISTINCT i.url, ts.tidaccepted FROM images i INNER JOIN taxstatus ts ON i.tid = ts.tid '.
-				'WHERE ts.tidaccepted IN('.$tidStr.') AND i.occid IS NULL '.
-				'ORDER BY i.sortsequence';
+			$sqlImg = 'SELECT DISTINCT m.url, ts.tidaccepted FROM media m INNER JOIN taxstatus ts ON m.tid = ts.tid '.
+				'WHERE ts.tidaccepted IN('.$tidStr.') AND m.occid IS NULL '.
+				'ORDER BY m.sortsequence';
 			//echo $sql;
 			$rsImg = $this->conn->query($sqlImg);
 			while($rImg = $rsImg->fetch_object()){
@@ -223,8 +217,8 @@ class GamesManager extends Manager{
 				if(array_key_exists('url',$retArr[$rImg->tidaccepted])) $iCnt = count($retArr[$rImg->tidaccepted]['url']);
 				if($iCnt < 5){
 					$url = $rImg->url;
-					if(array_key_exists("IMAGE_DOMAIN",$GLOBALS) && substr($url,0,1)=="/"){
-						$url = $GLOBALS["IMAGE_DOMAIN"].$url;
+					if(array_key_exists("MEDIA_DOMAIN",$GLOBALS) && substr($url,0,1)=="/"){
+						$url = $GLOBALS["MEDIA_DOMAIN"].$url;
 					}
 					$retArr[$rImg->tidaccepted]['url'][] = $url;
 				}
@@ -237,17 +231,17 @@ class GamesManager extends Manager{
 			//For taxa without 5 images, look for images linked to children taxa
 			if(count($tidComplete) < count($retArr)){
 				$newTidStr = implode(',',array_keys(array_diff_key($retArr,$tidComplete)));
-				$sqlImg2 = 'SELECT DISTINCT i.url, ts.parenttid FROM images i INNER JOIN taxstatus ts ON i.tid = ts.tid '.
-					'WHERE ts.parenttid IN('.$newTidStr.') AND i.occid IS NULL '.
-					'ORDER BY i.sortsequence';
+				$sqlImg2 = 'SELECT DISTINCT m.url, ts.parenttid FROM media m INNER JOIN taxstatus ts ON m.tid = ts.tid '.
+					'WHERE ts.parenttid IN('.$newTidStr.') AND m.occid IS NULL '.
+					'ORDER BY m.sortsequence';
 				$rsImg2 = $this->conn->query($sqlImg2);
 				while($rImg2 = $rsImg2->fetch_object()){
 					$iCnt = 0;
 					if(array_key_exists('url',$retArr[$rImg2->parenttid])) $iCnt = count($retArr[$rImg2->parenttid]['url']);
 					if($iCnt < 5){
 						$url = $rImg2->url;
-						if(array_key_exists("IMAGE_DOMAIN",$GLOBALS) && substr($url,0,1)=="/"){
-							$url = $GLOBALS["IMAGE_DOMAIN"].$url;
+						if(array_key_exists("MEDIA_DOMAIN",$GLOBALS) && substr($url,0,1)=="/"){
+							$url = $GLOBALS["MEDIA_DOMAIN"].$url;
 						}
 						$retArr[$rImg2->parenttid]['url'][] = $url;
 					}

@@ -1,10 +1,11 @@
 <?php
 /*
- ------------------
+------------------
 Language: Español (Spanish)
 Translated by: Samanta Orellana (2021-06-23)
- ------------------
- */
+Translated by: Google Translate (2024-09-13)
+------------------
+*/
 
 $LANG['FLAGGED_COMMENT'] = 'Comentario reportado como inapropiado. El comentario no estará disponible para el público hasta que lo revise un administrador.';
 $LANG['OCCURRENCE_PROFILE'] = 'Perfil de ocurrencia';
@@ -89,11 +90,11 @@ $LANG['CONTEXT_ID'] = 'Indentificación del Contexto';
 $LANG['EXCICCATI_SERIES'] = 'Serie de exsiccata';
 $LANG['MATERIAL_SAMPLES'] = 'Material Samples';
 $LANG['DISPLAY_ALL_MATERIAL_SAMPLES'] = 'Display all Material Sample units';
-$LANG['SPECIMEN_IMAGES'] = 'Imágenes del Espécimen';
+$LANG['SPECIMEN_IMAGES'] = 'Muestra medios';
 $LANG['AUTHOR'] = 'Autor';
-$LANG['OPEN_MEDIUM'] = 'Abrir Imagen Mediana';
-$LANG['OPEN_LARGE'] = 'Abrir Imagen Grande';
-$LANG['OPEN_SOURCE'] = 'Abrir Imagen Original';
+$LANG['OPEN_MEDIUM'] = 'Abrir archivo mediano';
+$LANG['OPEN_LARGE'] = 'Abrir archivo grande';
+$LANG['OPEN_SOURCE'] = 'Abrir archivo fuente';
 $LANG['USAGE_RIGHTS'] = 'Derechos de Uso';
 $LANG['RIGHTS_HOLDER'] = 'Titular de los Derechos';
 $LANG['ACCESS_RIGHTS'] = 'Derechos de Acceso';
@@ -108,9 +109,9 @@ $LANG['SOURCE_DATE_LAST_MODIFIED'] = 'Última fecha de modificación de la fuent
 $LANG['REFRESH_RECORD'] = 'Refrescar Registro';
 $LANG['ADDITIONAL_INFO'] = 'Para información adicional acerca de este espécimen, por favor contactar';
 $LANG['SPECIMEN_REFERENCED'] = 'Espécimen en referenciación';
-$LANG['SEE_ERROR'] = '&iquest;Ve un error? Si es así, los errores pueden corregirse usando el';
+$LANG['SEE_ERROR'] = '¿Ve un error? Si es así, los errores pueden corregirse usando el';
 $LANG['OCCURRENCE_EDITOR'] = 'Editor de Ocurrencias';
-$LANG['SEE_AN_ERROR'] = '&iquest;Ve un error?';
+$LANG['SEE_AN_ERROR'] = '¿Ve un error?';
 $LANG['LOGIN'] = 'Iniciar sesión';
 $LANG['TO_EDIT_DATA'] = 'para editar datos';
 $LANG['ASSOCIATED_REFS'] = 'Referencias Asociadas';
@@ -123,7 +124,6 @@ $LANG['IDENTIFIED_BY'] = 'Identificado por';
 $LANG['DUPES'] = 'Duplicados del Espécimen';
 $LANG['EXSICCATAE'] = 'Exsiccatae Asociadas';
 $LANG['SHOW_FULL_DETAILS'] = 'Mostrar Detalles Completos';
-$LANG['COMMENTS'] = 'Comments';
 $LANG['COMMENT_NOT_PUBLIC'] = 'Comentario no es público por reporte de abuso pendiente (visible únicamente para administradores)';
 $LANG['REPORT'] = 'Reportar como inapropiado o abusivo';
 $LANG['MAKE_COMMENT_PUBLIC'] = 'Hacer comentario público';
@@ -160,12 +160,11 @@ $LANG['RESTORE_RECORD'] = 'Restore Record';
 $LANG['RECORD_DELETED'] = 'Registro eliminado';
 $LANG['VALUE'] = 'Valor';
 $LANG['LAT_LNG'] = 'Latitud/Longitud';
-
-//Used within OccurrenceIndividual class
 $LANG['INAPPROPRIATE'] = 'Comentario inapropiado reportado';
 $LANG['REPORTED_AS_INAPPROPRIATE'] = 'El siguiente comentario ha sido eliminado por ser inapropiado.';
 $LANG['EMAIL_NOT_DEFINED'] = 'ERROR: El correo electrónico del administrador del portal no está definido en el archivo de configuración central';
 $LANG['PRIVATE_STATUS'] = 'estado privado';
 $LANG['UNABLE_TO_VERIFY_TARGET'] = 'ERROR al eliminar el cupón: no se puede verificar la lista de verificación objetivo del cupón';
 $LANG['PERMISSION_ERROR'] = 'ERROR al eliminar el comprobante: error de permiso';
+
 ?>

@@ -55,7 +55,7 @@ class OccurrenceMaintenance {
 		//Update NULL image tids with non-NULL occurrence tids
 		$occidArr = array();
 		$this->outputMsg('Updating and indexing occurrence images... ',1);
-		$sql = 'SELECT o.occid FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid WHERE (i.tid IS NULL) AND (o.tidinterpreted IS NOT NULL) ';
+		$sql = 'SELECT o.occid FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid WHERE (m.tid IS NULL) AND (o.tidinterpreted IS NOT NULL) ';
 		if($this->collidStr) $sql .= 'AND o.collid IN('.$this->collidStr.')';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
@@ -261,7 +261,7 @@ class OccurrenceMaintenance {
 	private function batchUpdateImageTid($occidArr){
 		$status = false;
 		if($occidArr){
-			$sql = 'UPDATE omoccurrences o INNER JOIN images i ON o.occid = i.occid SET i.tid = o.tidinterpreted WHERE o.occid IN('.implode(',',$occidArr).')';
+			$sql = 'UPDATE omoccurrences o INNER JOIN media m ON o.occid = m.occid SET m.tid = o.tidinterpreted WHERE o.occid IN('.implode(',',$occidArr).')';
 			if($this->conn->query($sql)){
 				$status = true;
 			}
@@ -498,8 +498,8 @@ class OccurrenceMaintenance {
 					$rs->free();
 
 					$this->outputMsg('Calculating number of specimens imaged... ', 1);
-					$sql = 'SELECT count(DISTINCT o.occid) as imgspeccnt, count(DISTINCT i.imgid) AS imgcnt
-						FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid
+					$sql = 'SELECT count(DISTINCT o.occid) as imgspeccnt, count(DISTINCT m.media_id) AS imgcnt
+						FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid
 						WHERE o.collid = '.$collid;
 					$rs = $this->conn->query($sql);
 					if($r = $rs->fetch_object()){

@@ -14,6 +14,7 @@ let paramNames = [
   "catnum",
   "includeothercatnum",
   "hasimages",
+  "hasaudio",
   "typestatus",
   "hasgenetic",
   "hascoords",

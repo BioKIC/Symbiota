@@ -84,7 +84,7 @@ class OccurrenceIndividual extends Manager{
 		}
 		if(!$this->occid){
 			//Check image recordID
-			$sql = 'SELECT occid FROM images WHERE recordID = ?';
+			$sql = 'SELECT occid FROM media WHERE recordID = ?';
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('s', $guid);
 				$stmt->execute();
@@ -258,37 +258,39 @@ class OccurrenceIndividual extends Manager{
 	}
 
 	private function setImages(){
-	    global $IMAGE_DOMAIN;
-		$sql = 'SELECT i.imgid, i.url, i.thumbnailurl, i.originalurl, i.sourceurl, i.notes, i.caption,
-            CONCAT_WS(" ",u.firstname,u.lastname) as innerPhotographer, i.photographer, i.rights, i.accessRights, i.copyright
-			FROM images i LEFT JOIN users u ON i.photographeruid = u.uid
-			WHERE (i.occid = ?) ORDER BY i.sortoccurrence,i.sortsequence';
+		global $MEDIA_DOMAIN;
+		$sql = 'SELECT m.media_id, m.url, m.thumbnailurl, m.originalurl, m.sourceurl, m.notes, m.caption, m.media_type, m.format,
+			CONCAT_WS(" ",u.firstname,u.lastname) as innerCreator, m.creator, m.rights, m.accessRights, m.copyright
+			FROM media m LEFT JOIN users u ON m.creatorUid = u.uid
+			WHERE (m.occid = ?) ORDER BY m.sortoccurrence,m.sortsequence';
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('i', $this->occid);
 			$stmt->execute();
 			if($rs = $stmt->get_result()){
 				while($row = $rs->fetch_object()){
-					$imgId = $row->imgid;
+					$media_id = $row->media_id;
 					$url = $row->url;
 					$tnUrl = $row->thumbnailurl;
 					$lgUrl = $row->originalurl;
-					if($IMAGE_DOMAIN){
-					    if(substr($url,0,1)=='/') $url = $IMAGE_DOMAIN . $url;
-					    if($lgUrl && substr($lgUrl, 0, 1) == '/') $lgUrl = $IMAGE_DOMAIN . $lgUrl;
-					    if($tnUrl && substr($tnUrl, 0, 1) == '/') $tnUrl = $IMAGE_DOMAIN . $tnUrl;
+					if($MEDIA_DOMAIN){
+					    if(substr($url,0,1)=='/') $url = $MEDIA_DOMAIN . $url;
+					    if($lgUrl && substr($lgUrl, 0, 1) == '/') $lgUrl = $MEDIA_DOMAIN . $lgUrl;
+					    if($tnUrl && substr($tnUrl, 0, 1) == '/') $tnUrl = $MEDIA_DOMAIN . $tnUrl;
 					}
 					if((!$url || $url == 'empty') && $lgUrl) $url = $lgUrl;
 					if(!$tnUrl && $url) $tnUrl = $url;
-					$this->occArr['imgs'][$imgId]['url'] = $url;
-					$this->occArr['imgs'][$imgId]['tnurl'] = $tnUrl;
-					$this->occArr['imgs'][$imgId]['lgurl'] = $lgUrl;
-					$this->occArr['imgs'][$imgId]['sourceurl'] = $row->sourceurl;
-					$this->occArr['imgs'][$imgId]['caption'] = $row->caption;
-					$this->occArr['imgs'][$imgId]['photographer'] = $row->photographer;
-					$this->occArr['imgs'][$imgId]['rights'] = $row->rights;
-					$this->occArr['imgs'][$imgId]['accessrights'] = $row->accessRights;
-					$this->occArr['imgs'][$imgId]['copyright'] = $row->copyright;
-          if($row->innerPhotographer) $this->occArr['imgs'][$imgId]['photographer'] = $row->innerPhotographer;
+					$this->occArr['imgs'][$media_id]['url'] = $url;
+					$this->occArr['imgs'][$media_id]['tnurl'] = $tnUrl;
+					$this->occArr['imgs'][$media_id]['lgurl'] = $lgUrl;
+					$this->occArr['imgs'][$media_id]['sourceurl'] = $row->sourceurl;
+					$this->occArr['imgs'][$media_id]['caption'] = $row->caption;
+					$this->occArr['imgs'][$media_id]['creator'] = $row->creator;
+					$this->occArr['imgs'][$media_id]['rights'] = $row->rights;
+					$this->occArr['imgs'][$media_id]['accessrights'] = $row->accessRights;
+					$this->occArr['imgs'][$media_id]['copyright'] = $row->copyright;
+					$this->occArr['imgs'][$media_id]['media_type'] = $row->media_type;
+					$this->occArr['imgs'][$media_id]['format'] = $row->format;
+					if($row->innerCreator) $this->occArr['imgs'][$media_id]['creator'] = $row->innerCreator;
 				}
 				$rs->free();
 			}
@@ -586,7 +588,7 @@ class OccurrenceIndividual extends Manager{
 			$sql = $sqlBase.'FROM omexsiccatiocclink l INNER JOIN omexsiccatiocclink l2 ON l.omenid = l2.omenid
 				INNER JOIN omoccurrences o ON l2.occid = o.occid
 				INNER JOIN omcollections c ON o.collid = c.collid
-				LEFT JOIN images i ON o.occid = i.occid
+				LEFT JOIN media i ON o.occid = i.occid
 				WHERE (o.occid != l.occid) AND (l.occid = ?)';
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('i', $this->occid);
@@ -604,7 +606,7 @@ class OccurrenceIndividual extends Manager{
 		$sql = $sqlBase.'FROM omoccurduplicatelink d INNER JOIN omoccurduplicatelink d2 ON d.duplicateid = d2.duplicateid
 			INNER JOIN omoccurrences o ON d2.occid = o.occid
 			INNER JOIN omcollections c ON o.collid = c.collid
-			LEFT JOIN images i ON o.occid = i.occid
+			LEFT JOIN media i ON o.occid = i.occid
 			WHERE (d.occid = ?) AND (d.occid != d2.occid) ';
 		if($stmt = $this->conn->prepare($sql)){
 			$stmt->bind_param('i', $this->occid);
@@ -1184,13 +1186,13 @@ class OccurrenceIndividual extends Manager{
 			//Restore images
 			if(isset($recArr['imgs']) && $recArr['imgs']){
 				$imgFieldArr = array();
-				$rsImg = $this->conn->query('SHOW COLUMNS FROM images');
+				$rsImg = $this->conn->query('SHOW COLUMNS FROM media ');
 				while($rImg= $rsImg->fetch_object()){
 					$imgFieldArr[] = strtolower($rImg->Field);
 				}
 				$rsImg->free();
 				foreach($recArr['imgs'] as $pk => $secArr){
-					$sql1 = 'INSERT INTO images(';
+					$sql1 = 'INSERT INTO media (';
 					$sql2 = 'VALUES(';
 					foreach($secArr as $f => $v){
 						if(in_array(strtolower($f),$imgFieldArr)){

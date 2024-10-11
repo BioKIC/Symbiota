@@ -14,9 +14,9 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 
 	public function __construct(){
  		parent::__construct();
- 		$this->imageRootPath = $GLOBALS['IMAGE_ROOT_PATH'];
+ 		$this->imageRootPath = $GLOBALS['MEDIA_ROOT_PATH'];
  		if(substr($this->imageRootPath,-1) != "/") $this->imageRootPath .= "/";
- 		$this->imageRootUrl = $GLOBALS['IMAGE_ROOT_URL'];
+ 		$this->imageRootUrl = $GLOBALS['MEDIA_ROOT_URL'];
  		if(substr($this->imageRootUrl,-1) != "/") $this->imageRootUrl .= "/";
 	}
 
@@ -78,7 +78,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		$status = false;
 		$imgId = $imgArr['imgid'];
 		if(!$imgId) return false;
-		$sql = 'UPDATE images SET ';
+		$sql = 'UPDATE media SET ';
 		$fieldArr = array();
 		$types = '';
 
@@ -93,7 +93,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			else $this->errorArr['web'] = 0;
 		}
 		if($url !== null){
-			if($GLOBALS['IMAGE_DOMAIN'] && substr($url,0,1) == '/') $url = $GLOBALS['IMAGE_DOMAIN'].$url;
+			if($GLOBALS['MEDIA_DOMAIN'] && substr($url,0,1) == '/') $url = $GLOBALS['MEDIA_DOMAIN'].$url;
 			$sql .= 'url=?, ';
 			$fieldArr[] = ($url?$url:NULL);
 			$types .= 's';
@@ -111,7 +111,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			else $this->errorArr['tn'] = 0;
 		}
 		if($tnUrl !== null){
-			if($GLOBALS['IMAGE_DOMAIN'] && substr($tnUrl,0,1) == '/') $tnUrl = $GLOBALS['IMAGE_DOMAIN'].$tnUrl;
+			if($GLOBALS['MEDIA_DOMAIN'] && substr($tnUrl,0,1) == '/') $tnUrl = $GLOBALS['MEDIA_DOMAIN'].$tnUrl;
 			$fieldArr[] = ($tnUrl?$tnUrl:NULL);
 			$sql .= 'thumbnailurl=?, ';
 			$types .= 's';
@@ -129,13 +129,13 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			else $this->errorArr['orig'] = 0;
 		}
 		if($origUrl !== null){
-			if($GLOBALS['IMAGE_DOMAIN'] && substr($origUrl,0,1) == '/') $origUrl = $GLOBALS['IMAGE_DOMAIN'].$origUrl;
+			if($GLOBALS['MEDIA_DOMAIN'] && substr($origUrl,0,1) == '/') $origUrl = $GLOBALS['MEDIA_DOMAIN'].$origUrl;
 			$fieldArr[] = $origUrl?$origUrl:NULL;
 			$sql .= 'originalurl=?, ';
 			$types .= 's';
 		}
 
-		$additionalFields= array('occid' => 'i', 'tidinterpreted' => 'i', 'caption' => 's', 'photographer' => 's', 'photographeruid' => 'i', 'notes' => 's', 'copyright' => 's', 'sortoccurrence' => 'i', 'sourceurl' => 's');
+		$additionalFields= array('occid' => 'i', 'tidinterpreted' => 'i', 'caption' => 's', 'creator' => 's', 'creatoruid' => 'i', 'notes' => 's', 'copyright' => 's', 'sortoccurrence' => 'i', 'sourceurl' => 's');
 		foreach($additionalFields as $fieldName => $t){
 			if(array_key_exists($fieldName, $imgArr)){
 				if($imgArr[$fieldName]) $fieldArr[] = $imgArr[$fieldName];
@@ -147,7 +147,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		if($fieldArr){
 			$fieldArr[] = 'specimen';
 			$fieldArr[] = $imgId;
-			$sql .= 'imagetype=? WHERE (imgid= ?)';
+			$sql .= 'imagetype=? WHERE (media_id= ?)';
 			$types .= 'si';
 			$imgUpdateStatus = false;
 			$stmt = $this->conn->stmt_init();
@@ -156,7 +156,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			if($stmt->execute()){
 				$imgUpdateStatus = true;
 				if(array_key_exists('occid', $imgArr) || array_key_exists('tidinterpreted', $imgArr)){
-					$imgSql = 'UPDATE images i INNER JOIN omoccurrences o ON i.occid = o.occid SET i.tid = o.tidinterpreted WHERE (i.imgid = '.$imgId.')';
+					$imgSql = 'UPDATE media m INNER JOIN omoccurrences o ON m.occid = o.occid SET m.tid = o.tidinterpreted WHERE (m.media_id = '.$imgId.')';
 					$this->conn->query($imgSql);
 				}
 				$status = true;
@@ -300,6 +300,18 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		return $bool;
 	}
 
+	public function createOccurrenceFrom(): int {
+		$sql = 'INSERT INTO omoccurrences(collid, observeruid,processingstatus) SELECT collid, observeruid, "unprocessed" FROM omoccurrences WHERE occid = ?';
+			
+		try {
+			mysqli_execute_query($this->conn, $sql, [$this->occid]);
+			return $this->conn->insert_id;
+		} catch(Exception $e) {
+			$this->errorArr[] = $LANG['UNABLE_RELINK_BLANK'].': '.$this->conn->error;
+			return -1;
+		}
+	}
+
 	public function remapImage($imgId, $targetOccid = 0){
 		global $LANG;
 		$status = true;
@@ -351,7 +363,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			}
 		}
 		else{
-			$sql = 'UPDATE images SET occid = NULL WHERE (imgid = '.$imgId.')';
+			$sql = 'UPDATE media SET occid = NULL WHERE (media_id = '.$imgId.')';
 			if(!$this->conn->query($sql)){
 				$this->errorArr[] = $LANG['UNABLE_DISSOCIATE'].': '.$this->conn->error;
 				return false;

@@ -179,13 +179,13 @@ class OccurrenceAttributes extends Manager {
 		$retArr = array();
 		if($this->collidStr){
 			if(!$this->sqlBody) $this->setSqlBody();
-			$sql = 'SELECT i.occid, IFNULL(o.catalognumber, o.othercatalognumbers) AS catnum '.$this->sqlBody.'ORDER BY RAND() LIMIT 1';
+			$sql = 'SELECT m.occid, IFNULL(o.catalognumber, o.othercatalognumbers) AS catnum '.$this->sqlBody.'ORDER BY RAND() LIMIT 1';
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
 				$retArr[$r->occid]['catnum'] = $r->catnum;
-				$sql2 = 'SELECT i.imgid, i.url, i.originalurl, i.occid '.
-					'FROM images i '.
-					'WHERE (i.occid = '.$r->occid.') ';
+				$sql2 = 'SELECT m.media_id, m.url, m.originalurl, m.occid '.
+					'FROM media m '.
+					'WHERE (m.occid = '.$r->occid.') ';
 				$rs2 = $this->conn->query($sql2);
 				$cnt = 1;
 				while($r2 = $rs2->fetch_object()){
@@ -216,8 +216,8 @@ class OccurrenceAttributes extends Manager {
 	}
 
 	private function setSqlBody(){
-		$this->sqlBody = 'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
-			'LEFT JOIN tmattributes a ON i.occid = a.occid '.
+		$this->sqlBody = 'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
+			'LEFT JOIN tmattributes a ON m.occid = a.occid '.
 			'WHERE (a.occid IS NULL) AND (o.collid = '.$this->collidStr.') ';
 		if(isset($this->filterArr['tidfilter']) && $this->filterArr['tidfilter']){
 			//Get Synonyms
@@ -230,9 +230,9 @@ class OccurrenceAttributes extends Manager {
 				$tidArr[] = $r->tid;
 			}
 			$rs->free();
-			$this->sqlBody = 'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
-				'INNER JOIN taxaenumtree e ON i.tid = e.tid '.
-				'LEFT JOIN tmattributes a ON i.occid = a.occid '.
+			$this->sqlBody = 'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
+				'INNER JOIN taxaenumtree e ON m.tid = e.tid '.
+				'LEFT JOIN tmattributes a ON m.occid = a.occid '.
 				'WHERE (e.parenttid IN('.$this->filterArr['tidfilter'].') OR e.tid IN('.implode(',',$tidArr).')) '.
 				'AND (a.occid IS NULL) AND (o.collid = '.$this->collidStr.') AND (e.taxauthid = 1) ';
 		}
@@ -457,7 +457,7 @@ class OccurrenceAttributes extends Manager {
 			}
 			$rs1->free();
 			//Get images for target occid (isolation query into separate statements returns all images where there are multiples per specimen)
-			$sql = 'SELECT imgid, url, originalurl, occid FROM images WHERE (occid = '.$targetOccid.')';
+			$sql = 'SELECT media_id, url, originalurl, occid FROM media WHERE (occid = '.$targetOccid.')';
 			//echo $sql; exit;
 			$rs = $this->conn->query($sql);
 			$cnt = 1;
@@ -497,8 +497,8 @@ class OccurrenceAttributes extends Manager {
 		}
 		$rs->free();
 		if($stateArr){
-			$this->reviewSqlBase = 'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
-				'INNER JOIN tmattributes a ON i.occid = a.occid '.
+			$this->reviewSqlBase = 'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
+				'INNER JOIN tmattributes a ON m.occid = a.occid '.
 				'WHERE (a.stateid IN('.implode(',',$stateArr).')) AND (o.collid = '.$this->collidStr.') ';
 			if(isset($this->filterArr['reviewuid']) && $this->filterArr['reviewuid']){
 				$this->reviewSqlBase .= 'AND (a.createduid = '.$this->filterArr['reviewuid'].') ';

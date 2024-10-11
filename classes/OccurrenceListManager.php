@@ -111,12 +111,28 @@ class OccurrenceListManager extends OccurrenceManager{
 		return $retArr;
 	}
 
-	private function setImages($occArr,&$retArr){
-		$sql = 'SELECT occid, thumbnailurl FROM images WHERE occid IN('.implode(',',$occArr).') ORDER BY occid, sortOccurrence';
+	private function setImages($occArr,&$retArr): void {
+		$sql = 'SELECT occid, thumbnailurl, media_type FROM media WHERE occid IN('.implode(',',$occArr).') ORDER BY occid, sortOccurrence';
 		$rs = $this->conn->query($sql);
 		$previousOccid = 0;
 		while($r = $rs->fetch_object()){
-			if($r->occid != $previousOccid) $retArr[$r->occid]['img'] = $r->thumbnailurl;
+			if($r->occid != $previousOccid) {
+				$thumbnail = $r->media_type === 'audio'? 
+				$GLOBALS['CLIENT_ROOT'] . '/images/speaker_thumbnail.png':
+				$r->thumbnailurl;
+
+				$retArr[$r->occid]['media'] = [
+					'thumbnail' => $thumbnail, 
+					'media_type' => $r->media_type 
+				]; 
+			}
+
+			if($r->media_type === 'image' && !isset($retArr[$r->occid]['has_image'])) {
+				$retArr[$r->occid]['has_image'] = true;
+			} else if($r->media_type === 'audio' && !isset($retArr[$r->occid]['has_audio'])) {
+				$retArr[$r->occid]['has_audio'] = true;
+			}
+
 			$previousOccid = $r->occid;
 		}
 		$rs->free();

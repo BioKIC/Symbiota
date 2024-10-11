@@ -2,6 +2,7 @@
 /*
 ------------------
 Language: English
+Translated by: Google Translate (2024-09-16)
 ------------------
 */
 
@@ -18,9 +19,9 @@ $LANG['COLLECTIONS_RSS'] = 'RSS Feed for Natural History Collections and Observa
 $LANG['DARWINCORE'] = 'Darwin Core Archives (DwC-A)';
 $LANG['RSS'] = 'DwC-A RSS Feed';
 $LANG['PUBDATA'] = 'published datasets of selected collections';
-$LANG['IMGLIB'] = 'Image Library';
+$LANG['IMGLIB'] = 'Media Library';
 $LANG['IMAGE_SEARCH'] = 'Interactive Search Tool';
-$LANG['CONTRIB'] = 'Image Contributors';
+$LANG['CONTRIB'] = 'Media Contributors';
 $LANG['USAGEPOLICY'] = 'Usage Policy and Copyright Information';
 $LANG['ADDITIONAL_RESOURCES'] = 'Additional Resources';
 $LANG['GLOSSARY'] = 'Glossary';
@@ -36,8 +37,6 @@ $LANG['BUILDDKEY'] = 'dynamically build a key using georeferenced specimen recor
 $LANG['MANAGTOOL'] = 'Data Management Tools';
 $LANG['ADMIN'] = 'Administrative Functions (Super Admins only)';
 $LANG['USERPERM'] = 'User Permissions';
-// TODO: Identification Editor features need to be reviewed and refactored
-//$LANG['TAXINTER'] = 'Taxonomic Interest User Permissions';
 $LANG['TAXONOMIC_CLEANER'] = 'Global Taxonomic Name Cleaner';
 $LANG['CREATENEWCOLL'] = 'Create a New Collection or Observation Profile';
 $LANG['GEOTHESAURUS'] = 'Geographic Thesaurus';
@@ -52,25 +51,19 @@ $LANG['CHARASTATES'] = 'Characters and Character States Editor';
 $LANG['AUTHIDKEY'] = 'You are authorized to edit Identification Keys';
 $LANG['CODINGCHARA'] = 'For coding characters in a table format, open the Matrix Editor for any of the following checklists';
 $LANG['NOTAUTHIDKEY'] = 'You are not authorized to edit Identification Keys';
-$LANG['IMAGES'] = 'Images';
+$LANG['IMAGES'] = 'Media';
 $LANG['SEESYMBDOC'] = 'See the Symbiota documentation on';
-$LANG['IMGSUB'] = 'Image Submission';
-$LANG['FORANOVERVIEW'] = 'for an overview of how images are managed within a Symbiota data portal. Field images without
-						detailed locality information can be uploaded using the Taxon Species Profile page.
-						Specimen images are loaded through the Specimen Editing page or through a batch upload process
-						established by a portal manager. Image Observations (Image Vouchers) with detailed locality information can be
-						uploaded using the link below. Note that you will need the necessary permission assignments to use this
-						feature. ';
-$LANG['BASICFIELD'] = 'Basic Field Image Submission';
-$LANG['IMGOBSER'] = 'Image Observation Submission Module';
+$LANG['IMGSUB'] = 'Media Submission';
+$LANG['FORANOVERVIEW'] = 'for an overview of how media are managed within a Symbiota data portal. Field media without                                                detailed locality information can be uploaded using the Taxon Species Profile page.                                                Specimen media are loaded through the Specimen Editing page or through a batch upload process                                                established by a portal manager. Media Observations (Media Vouchers) with detailed locality information can be                                                uploaded using the link below. Note that you will need the necessary permission assignments to use this                                                feature. ';
+$LANG['BASICFIELD'] = 'Basic Field Media Submission';
+$LANG['IMGOBSER'] = 'Media Observation Submission Module';
 $LANG['ADDNEWPROJ'] = 'Add a New Project';
 $LANG['LISTOFCURR'] = 'List of Current Projects';
 $LANG['CLICKEDIT'] = '(click to edit)';
 $LANG['NOPROJ'] = 'There are no projects in the system';
 $LANG['NOTEDITPROJ'] = 'You are not authorized to edit any of the Projects';
 $LANG['TAXONPROF'] = 'Taxon Profile Page';
-$LANG['THEFOLLOWINGSPEC'] = 'The following Species Profile page editing features are also available to editors via an
-							editing link located in the upper right of each Species Profile page.';
+$LANG['THEFOLLOWINGSPEC'] = 'The following Species Profile page editing features are also available to editors via an							editing link located in the upper right of each Species Profile page.';
 $LANG['NOTAUTHOTAXONPAGE'] = 'You are not yet authorized to edit the Taxon Profile';
 $LANG['TAXONOMY'] = 'Taxonomy';
 $LANG['TAXTREE'] = 'Taxonomic Tree Viewer';
@@ -82,32 +75,18 @@ $LANG['BATCHTAXA'] = 'Batch Upload a Taxonomic Data File';
 $LANG['EOLLINK'] = 'Encyclopedia of Life Linkage Manager';
 $LANG['NOTEDITTAXA'] = 'You are not authorized to edit taxonomy';
 $LANG['CHECKLISTS'] = 'Checklists';
-$LANG['TOOLSFORMANAGE'] = 'Tools for managing Checklists are available from each checklist display page.
-						Editing symbols located in the upper right of the page will display
-						editing options for that checklist.
-						Below is a list of the checklists you are authorized to edit';
+$LANG['TOOLSFORMANAGE'] = 'Tools for managing Checklists are available from each checklist display page.						Editing symbols located in the upper right of the page will display						editing options for that checklist.						Below is a list of the checklists you are authorized to edit';
 $LANG['EXSICCATII'] = 'Exsiccati';
-$LANG['ESCMOD'] = 'The Exsiccati module is activated for this portal.
-					The exsiccati index (listed below) can be browsed or searched by everyone.
-					However, to add or modify exsiccati titles or series,
-					the user must be an administrator for at least one collection';
+$LANG['ESCMOD'] = 'The Exsiccati module is activated for this portal.					The exsiccati index (listed below) can be browsed or searched by everyone.					However, to add or modify exsiccati titles or series,					the user must be an administrator for at least one collection';
 $LANG['NOTEDITCHECK'] = 'You are not authorized to edit any of the Checklists';
-$LANG['PARA1'] = 'Tools for managing data specific to a particular collection are available through the collection&#39;s profile page.
-					Clicking on a collection name in the list below will take you to this page for that given collection.
-					An additional method to reach this page is by clicking on the collection name within the specimen search engine.
-					The editing symbol located in the upper right of Collection Profile page will open
-					the editing pane and display a list of editing options.';
+$LANG['PARA1'] = 'Tools for managing data specific to a particular collection are available through the collection\'s profile page.					Clicking on a collection name in the list below will take you to this page for that given collection.					An additional method to reach this page is by clicking on the collection name within the specimen search engine.					The editing symbol located in the upper right of Collection Profile page will open					the editing pane and display a list of editing options.';
 $LANG['COLLLIST'] = 'List of collections you have permissions to edit';
 $LANG['OBSERV'] = 'Observations';
 $LANG['NOEDITCOLL'] = 'You have no explicit editing permissions for a particular collections';
-$LANG['PARA2'] = 'Data management for observation projects is handled in a similar manner to what is described in the Collections paragraph above.
-					One difference is the General Observation project. This project serves two central purposes:
-					1) Allows registered users to submit a image voucherd field observation.
-					2) Allows collectors to enter their own collection data for label printing and to make the data available
-					to the collections obtaining the physical specimens through donations or exchange. Visit the ';
+$LANG['PARA2'] = 'Data management for observation projects is handled in a similar manner to what is described in the Collections paragraph above.                                        One difference is the General Observation project. This project serves two central purposes:                                        1) Allows registered users to submit a media-voucherd field observation.                                        2) Allows collectors to enter their own collection data for label printing and to make the data available                                        to the collections obtaining the physical specimens through donations or exchange. Visit the ';
 $LANG['SYMBDOCU'] = 'Symbiota Documentation';
 $LANG['FORMOREINFO'] = 'for more information on specimen processing capabilities. Note that observation projects are not activated on all Symbiota data portals';
-$LANG['OIVS'] = 'Observation Image Voucher Submission';
+$LANG['OIVS'] = 'Observation Media Voucher Submission';
 $LANG['NOOBSPROJ'] = 'There are no Observation Projects to which you have permissions';
 $LANG['PERSONAL'] = 'Personal Specimen Management and Label Printing Features';
 $LANG['OPM'] = 'Observation Project Management';
@@ -121,13 +100,14 @@ $LANG['SCHEMA'] = 'Schema Version ';
 $LANG['AUTHO'] = 'You are authorized to access the';
 $LANG['SYN_COM'] = 'Edit Synonyms / Common Names';
 $LANG['TEXTDESC'] = 'Edit Text Descriptions';
-$LANG['PERSONAL'] = 'Personal Specimen Management and Label Printing Features';
-$LANG['EDITIMG'] = 'Edit Images';
-$LANG['IMGSORTORD'] = 'Edit Image Sorting Order';
-$LANG['ADDNEWIMG'] = 'Add a new image';
+$LANG['EDITIMG'] = 'Edit Media';
+$LANG['IMGSORTORD'] = 'Edit Media Sorting Order';
+$LANG['ADDNEWIMG'] = 'Add a new Media';
 $LANG['DATASETS'] = 'Datasets';
 $LANG['ALLPUBDAT'] = 'All Publicly Viewable Datasets';
 $LANG['DATMANPAG'] = 'Dataset Management Page';
 $LANG['DATA_AUTHORIZED_TO_EDIT'] = 'datasets you are authorized to edit';
 $LANG['MANAGE_TAXON_THUMBNAILS'] = 'Manage Taxon Profile Map Thumbnails';
+$LANG['TAXINTER'] = 'Taxonomic Interest User Permissions ';
+
 ?>

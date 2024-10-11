@@ -1,19 +1,29 @@
 <?php
 include_once('../../../config/symbini.php');
-include_once($SERVER_ROOT.'/classes/OccurrenceEditorImages.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imagetab.en.php');
+include_once($SERVER_ROOT . '/classes/Media.php');
 header('Content-Type: text/html; charset=' . $CHARSET);
 
 $occId = filter_var($_GET['occid'], FILTER_SANITIZE_NUMBER_INT);
 $occIndex = filter_var($_GET['occindex'], FILTER_SANITIZE_NUMBER_INT);
 $crowdSourceMode = filter_var($_GET['csmode'], FILTER_SANITIZE_NUMBER_INT);
 
-$occManager = new OccurrenceEditorImages();
+$specImgArr = [];
+try {
+	$specImgArr = Media::fetchOccurrenceMedia($occId);
+	$mediaTags = Media::getMediaTags(array_keys($specImgArr));
 
-$occManager->setOccId($occId);
-$specImgArr = $occManager->getImageMap();
-$photographerArr = $occManager->getPhotographerArr();
+	foreach($specImgArr as $key => $v) {
+		if(array_key_exists($key, $mediaTags)) {
+			$specImgArr[$key]["tags"] = $mediaTags[$key];
+		}
+	} 
+} catch(Exception $e) {
+	error_log($e->getMessage());
+}
+
+$creatorArray = Media::getCreatorArray();
 ?>
 <script type="text/javascript">
 	function verifyImgAddForm(f){
@@ -71,7 +81,7 @@ $photographerArr = $occManager->getPhotographerArr();
 						<!-- following line sets MAX_FILE_SIZE (must precede the file input field)  -->
 						<input type='hidden' name='MAX_FILE_SIZE' value='20000000' />
 						<div>
-							<input name='imgfile' type='file' size='70'/>
+							<input name='imgfile' type='file' accept="<?= implode(",", $ALLOWED_MEDIA_MIME_TYPES) ?>" size='70'/>
 						</div>
 						<div style="float:right;text-decoration:underline;font-weight:bold;">
 							<a href="#" onclick="toggle('targetdiv');return false;"><?php echo $LANG['ENTER_URL']; ?></a>
@@ -83,7 +93,7 @@ $photographerArr = $occManager->getPhotographerArr();
 						</div>
 						<div>
 							<b><?php echo $LANG['IMG_URL']; ?>:</b><br/>
-							<input type='text' name='imgurl' size='70'/>
+							<input type='text' name='originalUrl' size='70'/>
 						</div>
 						<div>
 							<b><?php echo $LANG['MED_VERS'].(isset($IMG_WEB_WIDTH) && $IMG_WEB_WIDTH?', +-'.$IMG_WEB_WIDTH.'px':''); ?>):</b><br/>
@@ -91,7 +101,7 @@ $photographerArr = $occManager->getPhotographerArr();
 						</div>
 						<div>
 							<b><?php echo $LANG['THUMB_VERS'].(isset($IMG_TN_WIDTH) && $IMG_TN_WIDTH?', +-'.$IMG_TN_WIDTH.'px':''); ?>):</b><br/>
-							<input type='text' name='tnurl' size='70'/>
+							<input type='text' name='thumbnailUrl' size='70'/>
 						</div>
 						<div style="float:right;text-decoration:underline;font-weight:bold;">
 							<a href="#" onclick="toggle('targetdiv');return false;">
@@ -111,12 +121,12 @@ $photographerArr = $occManager->getPhotographerArr();
 					<input name="caption" type="text" size="40" value="" />
 				</div>
 				<div style='margin:0px 0px 5px 10px;'>
-					<b><?php echo $LANG['PHOTOGRAPHER']; ?>:</b>
+					<b><?php echo $LANG['CREATOR']; ?>:</b>
 					<select name='photographeruid' name='photographeruid'>
-						<option value=""><?php echo $LANG['SEL_PHOTOG']; ?></option>
+						<option value=""><?php echo $LANG['SELECT_CREATOR']; ?></option>
 						<option value="">---------------------------------------</option>
 						<?php
-						foreach($photographerArr as $id => $uname){
+						foreach($creatorArray as $id => $uname){
 								echo '<option value="'.$id.'" >';
 								echo $uname;
 								echo '</option>';
@@ -152,8 +162,8 @@ $photographerArr = $occManager->getPhotographerArr();
 					<b><?php echo $LANG['DESCRIBE_IMAGE']; ?></b>
 				</div>
 					<?php
-					$imageTagArr = $occManager->getImageTagArr();
-					foreach($imageTagArr as $key => $description) {
+					$imageTagKeys = Media::getMediaTagKeys();
+					foreach($imageTagKeys as $key => $description) {
 						echo '<div style="margin-left:10px;">';
 						echo '<input name="ch_'.$key.'" type="checkbox" value="1" /> '.$description.'</br>';
 						echo '</div>';
@@ -177,24 +187,25 @@ $photographerArr = $occManager->getPhotographerArr();
 			<table>
 				<?php
 				foreach($specImgArr as $imgId => $imgArr){
+					$imgUrl = $imgArr["url"];
+					$origUrl = $imgArr["originalUrl"];
+					$tnUrl = $imgArr["thumbnailUrl"];
 					?>
 					<tr>
+					<?php if($imgArr['media_type'] === 'image'):?>
 						<td style="width:300px;text-align:center;padding:20px;">
 							<?php
-							$imgUrl = $imgArr["url"];
-							$origUrl = $imgArr["origurl"];
-							$tnUrl = $imgArr["tnurl"];
 							if((!$imgUrl || $imgUrl == 'empty') && $origUrl) $imgUrl = $origUrl;
 							if(!$tnUrl && $imgUrl) $tnUrl = $imgUrl;
-							if(array_key_exists('IMAGE_DOMAIN', $GLOBALS)){
+							if(array_key_exists('MEDIA_DOMAIN', $GLOBALS)){
 								if(substr($imgUrl, 0, 1) == '/'){
-									$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
+									$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $imgUrl;
 								}
 								if($origUrl && substr($origUrl, 0, 1) == '/'){
-									$origUrl = $GLOBALS['IMAGE_DOMAIN'] . $origUrl;
+									$origUrl = $GLOBALS['MEDIA_DOMAIN'] . $origUrl;
 								}
 								if($tnUrl && substr($tnUrl, 0, 1) == '/'){
-									$tnUrl = $GLOBALS['IMAGE_DOMAIN'] . $tnUrl;
+									$tnUrl = $GLOBALS['MEDIA_DOMAIN'] . $tnUrl;
 								}
 							}
 							echo '<a href="' . $imgUrl . '" target="_blank">';
@@ -209,6 +220,14 @@ $photographerArr = $occManager->getPhotographerArr();
 							if($origUrl) echo '<div><a href="' . $origUrl . '" target="_blank">' . $LANG['OPEN_LARGE'] . '</a></div>';
 							?>
 						</td>
+						<?php elseif($imgArr['media_type'] === 'audio'):?>
+						<td style="vertical-align: middle">
+							<audio controls>
+								<source src="<?= $origUrl ?>" type="<?=$imgArr['format']?>">
+								Your browser does not support the audio element.
+							</audio> 
+						</td>
+						<?php endif?>
 						<td class="imgInfo" style="text-align:left;padding:10px;">
 							<div style="float:right;cursor:pointer;" onclick="toggle('img<?php echo $imgId; ?>editdiv');" title="<?php echo $LANG['EDIT_METADATA']; ?>">
 								<img style="border:0px;width:1.2em;" src="../../images/edit.png" />
@@ -219,13 +238,13 @@ $photographerArr = $occManager->getPhotographerArr();
 									<?php echo $imgArr["caption"]; ?>
 								</div>
 								<div>
-									<b><?php echo $LANG['PHOTOGRAPHER']; ?>:</b>
+									<b><?php echo $LANG['CREATOR']; ?>:</b>
 									<?php
-									if($imgArr["photographer"]){
-										echo $imgArr["photographer"];
+									if($imgArr["creator"]){
+										echo $imgArr["creator"];
 									}
-									else if($imgArr["photographeruid"]){
-										echo $photographerArr[$imgArr["photographeruid"]];
+									else if($imgArr["creatoruid"]){
+										echo $creatorArray[$imgArr["creatoruid"]];
 									}
 									?>
 								</div>
@@ -265,27 +284,24 @@ $photographerArr = $occManager->getPhotographerArr();
 								</div>
 								<div>
 									<b><?php echo $LANG['LARGE_IMG_URL']; ?>: </b>
-									<a href="<?php echo $imgArr["origurl"]; ?>" title="<?php echo $imgArr["origurl"]; ?>" target="_blank">
+									<a href="<?= $origUrl ?>" title="<?= $origUrl ?>" target="_blank">
 										<?php
-										$origUrlDisplay = $imgArr["origurl"];
-										if(strlen($origUrlDisplay) > 60) $origUrlDisplay = '...'.substr($origUrlDisplay,-60);
-										echo $origUrlDisplay;
+										echo $origUrl && strlen($origUrl) > 60? 
+										'...'.substr($origUrl,-60):
+										$origUrl;
 										?>
 									</a>
 								</div>
 								<div>
 									<b><?php echo $LANG['THUMB_URL']; ?>: </b>
-									<a href="<?php echo $imgArr["tnurl"]; ?>" title="<?php echo $imgArr["tnurl"]; ?>" target="_blank">
-										<?php
-										$tnUrlDisplay = $imgArr["tnurl"];
-										if(strlen($tnUrlDisplay) > 60) $tnUrlDisplay = '...'.substr($tnUrlDisplay,-60);
-										echo $tnUrlDisplay;
-										?>
+									<a href="<?= $tnUrl ?>" title="<?= $tnUrl ?>" target="_blank">
+										<?= $tnUrl && strlen($tnUrl) > 60 ? 
+											'...'.substr($tnUrl,-60) : $tnUrl?>
 									</a>
 								</div>
 								<div>
 									<b><?php echo $LANG['SORT']; ?>:</b>
-									<?php echo $imgArr['sort']; ?>
+									<?= $imgArr['sortOccurrence']; ?>
 								</div>
 							</div>
 						</td>
@@ -301,13 +317,13 @@ $photographerArr = $occManager->getPhotographerArr();
 											<input name="caption" type="text" value="<?php echo $imgArr["caption"]; ?>" style="width:300px;" />
 										</div>
 										<div>
-											<b><?php echo $LANG['PHOTOGRAPHER']; ?>:</b><br/>
+											<b><?php echo $LANG['CREATOR']; ?>:</b><br/>
 											<select name='photographeruid' name='photographeruid'>
-												<option value=""><?php echo $LANG['SEL_PHOTOG']; ?></option>
+												<option value=""><?php echo $LANG['SELECT_CREATOR']; ?></option>
 												<option value="">---------------------------------------</option>
 												<?php
-												foreach($photographerArr as $id => $uname){
-													echo "<option value='".$id."' ".($id == $imgArr["photographeruid"]?"SELECTED":"").">";
+												foreach($creatorArray as $id => $uname){
+													echo "<option value='".$id."' ".($id == $imgArr["creatoruid"]?"SELECTED":"").">";
 													echo $uname;
 													echo "</option>\n";
 												}
@@ -317,9 +333,9 @@ $photographerArr = $occManager->getPhotographerArr();
 												<img src="../../images/editplus.png" style="border:0px;width:1.5em;" />
 											</a>
 										</div>
-										<div id="imgeditoverride<?php echo $imgId; ?>" style="display:<?php echo ($imgArr["photographer"]?'block':'none'); ?>;">
+										<div id="imgeditoverride<?php echo $imgId; ?>" style="display:<?php echo ($imgArr["creator"]?'block':'none'); ?>;">
 											<b><?php echo $LANG['PHOTOG_OVER']; ?>:</b><br/>
-											<input name='photographer' type='text' value="<?php echo $imgArr["photographer"]; ?>" style="width:300px;" maxlength='100'>
+											<input name='photographer' type='text' value="<?php echo $imgArr["creator"]; ?>" style="width:300px;" maxlength='100'>
 											* <?php echo $LANG['WILL_OVERRIDE']; ?>
 										</div>
 										<div>
@@ -337,45 +353,45 @@ $photographerArr = $occManager->getPhotographerArr();
 										<div>
 											<b><?php echo $LANG['WEB_URL']; ?>: </b><br/>
 											<input name="url" type="text" value="<?php echo $imgArr["url"]; ?>" style="width:95%;" />
-											<?php if(stripos($imgArr['url'], $IMAGE_ROOT_URL) === 0){ ?>
+											<?php if(stripos($imgArr['url'], $MEDIA_ROOT_URL) === 0){ ?>
 												<div style="margin-left:10px;">
 													<input type="checkbox" name="renameweburl" value="1" />
 													<?php echo $LANG['RENAME_FILE']; ?>
 												</div>
-												<input name='oldurl' type='hidden' value='<?php echo $imgArr["url"];?>' />
+												<input name='old_url' type='hidden' value='<?php echo $imgArr["url"];?>' />
 											<?php } ?>
 										</div>
 										<div>
 											<b><?php echo $LANG['LARGE_IMG_URL']; ?>: </b><br/>
-											<input name="origurl" type="text" value="<?php echo $imgArr["origurl"]; ?>" style="width:95%;" />
-											<?php if(stripos($imgArr['origurl'], $IMAGE_ROOT_URL) === 0){ ?>
+											<input name="originalUrl" type="text" value="<?php echo $imgArr["originalUrl"]; ?>" style="width:95%;" />
+											<?php if(stripos($imgArr['originalUrl'], $MEDIA_ROOT_URL) === 0){ ?>
 												<div style="margin-left:10px;">
 													<input type="checkbox" name="renameorigurl" value="1" />
 													<?php echo $LANG['RENAME_LARGE']; ?>
 												</div>
-												<input name='oldorigurl' type='hidden' value='<?php echo $imgArr["origurl"];?>' />
+												<input name='old_originalUrl' type='hidden' value='<?php echo $imgArr["originalUrl"];?>' />
 											<?php } ?>
 										</div>
 										<div>
 											<b><?php echo $LANG['THUMB_URL']; ?>: </b><br/>
-											<input name="tnurl" type="text" value="<?php echo $imgArr["tnurl"]; ?>" style="width:95%;" />
-											<?php if(stripos($imgArr['tnurl'], $IMAGE_ROOT_URL) === 0){ ?>
+											<input name="thumbnailUrl" type="text" value="<?php echo $imgArr["thumbnailUrl"]; ?>" style="width:95%;" />
+											<?php if($imgArr['thumbnailUrl'] && stripos($imgArr['thumbnailUrl'], $MEDIA_ROOT_URL) === 0){ ?>
 												<div style="margin-left:10px;">
 													<input type="checkbox" name="renametnurl" value="1" />
 													<?php echo $LANG['RENAME_THUMB']; ?>
 												</div>
-												<input name='oldtnurl' type='hidden' value='<?php echo $imgArr["tnurl"];?>' />
+												<input name='old_thumbnailUrl' type='hidden' value='<?php echo $imgArr["thumbnailUrl"];?>' />
 											<?php } ?>
 										</div>
 										<div>
 											<b><?php echo $LANG['SORT']; ?>:</b><br/>
-											<input name="sortoccurrence" type="text" value="<?php echo $imgArr['sort']; ?>" style="width:10%;" />
+											<input name="sortoccurrence" type="text" value="<?php echo $imgArr['sortOccurrence']; ?>" style="width:10%;" />
 										</div>
 										<div>
 										   <b><?php echo $LANG['TAGS']; ?>:</b>
 										</div>
 											<?php
-											foreach($imageTagArr as $tagKey => $tagDescr){
+											foreach($imageTagKeys as $tagKey => $tagDescr){
 												echo '<div style="margin-left:10px;">';
 												$value = 0;
 												if(isset($imgArr['tags'][$tagKey])) $value = 1;
@@ -410,7 +426,7 @@ $photographerArr = $occManager->getPhotographerArr();
 									</fieldset>
 								</form>
 								<?php
-								if($displayRemapForm = $occManager->isRemappable($imgArr)){
+								if($displayRemapForm = Media::isRemappable($imgArr, $occId)){
 									?>
 									<form name="img<?php echo $imgId; ?>remapform" action="occurrenceeditor.php" method="post" onsubmit="return verifyImgRemapForm(this);">
 										<fieldset style="padding:15px">

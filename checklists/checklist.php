@@ -375,7 +375,7 @@ $taxonFilter = htmlspecialchars($taxonFilter, ENT_COMPAT | ENT_HTML401 | ENT_SUB
 									<?php
 									$spUrl = "../taxa/index.php?taxauthid=1&taxon=$tid&clid=".$clid;
 									if($imgSrc){
-										$imgSrc = (array_key_exists('IMAGE_DOMAIN', $GLOBALS) && substr($imgSrc, 0, 4) != 'http' ? $GLOBALS['IMAGE_DOMAIN'] : "") . $imgSrc;
+										$imgSrc = (array_key_exists('MEDIA_DOMAIN', $GLOBALS) && substr($imgSrc, 0, 4) != 'http' ? $GLOBALS['MEDIA_DOMAIN'] : "") . $imgSrc;
 										echo "<a href='" . $spUrl . "' target='_blank'>";
 										echo "<img src='" . $imgSrc . "' />";
 										echo "</a>";

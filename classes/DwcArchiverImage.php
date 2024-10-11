@@ -4,45 +4,53 @@ class DwcArchiverImage{
 	public static function getImageArr($schemaType){
 		$fieldArr['coreid'] = 'o.occid';
 		$termArr['identifier'] = 'http://purl.org/dc/terms/identifier';
-		$fieldArr['identifier'] = 'IFNULL(i.originalurl,i.url) as identifier';
+		$fieldArr['identifier'] = 'IFNULL(m.originalurl,m.url) as identifier';
 		$termArr['accessURI'] = 'http://rs.tdwg.org/ac/terms/accessURI';
-		$fieldArr['accessURI'] = 'IFNULL(NULLIF(i.originalurl,""),i.url) as accessURI';
+		$fieldArr['accessURI'] = 'IFNULL(NULLIF(m.originalurl,""),m.url) as accessURI';
 		$termArr['thumbnailAccessURI'] = 'http://rs.tdwg.org/ac/terms/thumbnailAccessURI';
-		$fieldArr['thumbnailAccessURI'] = 'i.thumbnailurl as thumbnailAccessURI';
+		$fieldArr['thumbnailAccessURI'] = 'm.thumbnailurl as thumbnailAccessURI';
 		$termArr['goodQualityAccessURI'] = 'http://rs.tdwg.org/ac/terms/goodQualityAccessURI';
-		$fieldArr['goodQualityAccessURI'] = 'i.url as goodQualityAccessURI';
+		$fieldArr['goodQualityAccessURI'] = 'm.url as goodQualityAccessURI';
 		$termArr['rights'] = 'http://purl.org/dc/terms/rights';
 		$fieldArr['rights'] = 'c.rights';
 		$termArr['Owner'] = 'http://ns.adobe.com/xap/1.0/rights/Owner';	//Institution name
 		$fieldArr['Owner'] = 'IFNULL(c.rightsholder,CONCAT(c.collectionname," (",CONCAT_WS("-",c.institutioncode,c.collectioncode),")")) AS owner';
 		$termArr['creator'] = 'http://purl.org/dc/elements/1.1/creator';
-		$fieldArr['creator'] = 'IF(i.photographeruid IS NOT NULL,CONCAT_WS(" ",u.firstname,u.lastname),i.photographer) AS creator';
+		$fieldArr['creator'] = 'IF(m.creatorUid IS NOT NULL,CONCAT_WS(" ",u.firstname,u.lastname),m.creator) AS creator';
 		$termArr['UsageTerms'] = 'http://ns.adobe.com/xap/1.0/rights/UsageTerms';	//Creative Commons BY-SA 4.0 license
-		$fieldArr['UsageTerms'] = 'i.copyright AS usageterms';
+		$fieldArr['UsageTerms'] = 'm.copyright AS usageterms';
 		$termArr['WebStatement'] = 'http://ns.adobe.com/xap/1.0/rights/WebStatement';	//https://creativecommons.org/licenses/by-nc-sa/4.0/us/
 		$fieldArr['WebStatement'] = 'c.accessrights AS webstatement';
 		$termArr['caption'] = 'http://rs.tdwg.org/ac/terms/caption';
-		$fieldArr['caption'] = 'i.caption';
+		$fieldArr['caption'] = 'm.caption';
 		$termArr['comments'] = 'http://rs.tdwg.org/ac/terms/comments';
-		$fieldArr['comments'] = 'i.notes';
+		$fieldArr['comments'] = 'm.notes';
 		$termArr['providerManagedID'] = 'http://rs.tdwg.org/ac/terms/providerManagedID';	//GUID
-		$fieldArr['providerManagedID'] = 'i.recordID AS providermanagedid';
+		$fieldArr['providerManagedID'] = 'm.recordID AS providermanagedid';
 		$termArr['MetadataDate'] = 'http://ns.adobe.com/xap/1.0/MetadataDate';	//timestamp
-		$fieldArr['MetadataDate'] = 'i.initialtimestamp AS metadatadate';
+		$fieldArr['MetadataDate'] = 'm.initialtimestamp AS metadatadate';
 		$termArr['format'] = 'http://purl.org/dc/terms/format';		//jpg
-		$fieldArr['format'] = 'i.format';
+		$fieldArr['format'] = 'm.format';
 		$termArr['associatedSpecimenReference'] = 'http://rs.tdwg.org/ac/terms/associatedSpecimenReference';	//reference url in portal
-		$fieldArr['associatedSpecimenReference'] = '';
-		$termArr['type'] = 'http://purl.org/dc/terms/type';		//StillImage
-		$fieldArr['type'] = '';
-		$termArr['subtype'] = 'http://rs.tdwg.org/ac/terms/subtype';		//Photograph
-		$fieldArr['subtype'] = '';
+
+		//This select statement must be here for the csv columns to be correct 
+		$fieldArr['associatedSpecimenReference'] = 'null as associatedSpecimenReference';
+		$termArr['type'] = 'http://purl.org/dc/terms/type';		//StillImage or Sound
+		$fieldArr['type'] = 'CASE 
+		WHEN m.media_type = "audio" THEN "Sound" 
+		ELSE "StillImage" END as type';
+
+		$termArr['subtype'] = 'http://rs.tdwg.org/ac/terms/subtype';		//Photograph or Recorded Organism
+		$fieldArr['subtype'] = 'CASE 
+		WHEN m.media_type = "audio" THEN "Recorded Organism" 
+		ELSE "Photograph" END as subtype';
+
 		$termArr['metadataLanguage'] = 'http://rs.tdwg.org/ac/terms/metadataLanguage';	//en
 		$fieldArr['metadataLanguage'] = '';
 		$termArr['imgID'] = 'https://symbiota.org/terms/imgID';	//en
-		$fieldArr['imgID'] = 'i.imgID';
+		$fieldArr['imgID'] = 'm.media_id';
 
-		if($schemaType == 'backup') $fieldArr['rights'] = 'i.copyright';
+		if($schemaType == 'backup') $fieldArr['rights'] = 'm.copyright';
 
 		$retArr['terms'] = self::trimBySchemaType($termArr, $schemaType);
 		$retArr['fields'] = self::trimBySchemaType($fieldArr, $schemaType);
@@ -65,9 +73,9 @@ class DwcArchiverImage{
 				if($colName) $sqlFrag .= ', '.$colName;
 			}
 			$sql = 'SELECT '.trim($sqlFrag,', ').
-				' FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
+				' FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
 				'INNER JOIN omcollections c ON o.collid = c.collid '.
-				'LEFT JOIN users u ON i.photographeruid = u.uid ';
+				'LEFT JOIN users u ON m.creatorUid = u.uid ';
 			if(strpos($conditionSql,'ts.taxauthid')){
 				$sql .= 'LEFT JOIN taxstatus ts ON o.tidinterpreted = ts.tid ';
 			}

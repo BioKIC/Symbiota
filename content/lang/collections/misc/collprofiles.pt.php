@@ -1,0 +1,120 @@
+<?php
+/*
+------------------
+Language: Português (Portuguese)
+Translated by: Google Translate (2024-09-16)
+------------------
+*/
+
+include_once($SERVER_ROOT.'/content/lang/collections/misc/sharedterms.pt.php');
+
+$LANG['RSS_FEED'] = 'Feed RSS';
+$LANG['CONTACT'] = 'Contatos';
+$LANG['HOMEPAGE'] = 'Página inicial';
+$LANG['MORE_INFO'] = 'Mais informações';
+$LANG['COLLECTION_SEARCH'] = 'Página de pesquisa de coleção';
+$LANG['UPDATE_STATISTICS'] = 'Atualizando estatísticas relacionadas a esta coleção...';
+$LANG['DEACTIVATED'] = 'Desativado';
+$LANG['DEACTIVATED_MESSAGE'] = 'Certas opções de gerenciamento estão disponíveis apenas para conjuntos de dados gerenciados em tempo real. Entre em contato com o administrador do portal se a coleção precisar ser reclassificada.';
+$LANG['TOGGLE_MAN'] = 'Alternar painel de controle do gerenciador';
+$LANG['COLL_PROF_FOR'] = 'Perfil de coleção para';
+$LANG['DAT_EDIT'] = 'Painel de controle do editor de dados';
+$LANG['SUBMIT_IMAGE_V'] = 'Envie um Voucher Multimédia (observação apoiada por fotografia)';
+$LANG['ADD_NEW_OCCUR'] = 'Adicionar novo registro de ocorrência';
+$LANG['CREATE_NEW_REC'] = 'Crie novos registros usando imagem';
+$LANG['SKELETAL'] = 'Adicionar registros esqueléticos';
+$LANG['EDIT_EXISTING'] = 'Editar registros de ocorrência existentes';
+$LANG['ADD_BATCH_DETER'] = 'Adicionar determinações de lote/ajustes de nomenclatura';
+$LANG['PRINT_LABELS'] = 'Imprimir etiquetas de amostras';
+$LANG['PRINT_ANNOTATIONS'] = 'Imprimir etiquetas de anotações';
+$LANG['TRAIT_CODING_TOOLS'] = 'Ferramentas de codificação de características de ocorrência';
+$LANG['TRAIT_CODING'] = 'Codificação de características de imagens';
+$LANG['TRAIT_MINING'] = 'Mineração de características do texto literal';
+$LANG['BATCH_GEOREF'] = 'Amostras de Georreferenciação em Lote';
+$LANG['LOAN_MANAGEMENT'] = 'Gestão de Empréstimos';
+$LANG['ADMIN_CONTROL'] = 'Painel de controle de administração';
+$LANG['VIEW_COMMENTS'] = 'Ver comentários postados';
+$LANG['UNREVIEWED_COMMENTS'] = 'comentários não revisados';
+$LANG['EDIT_META'] = 'Editar metadados';
+$LANG['OPEN_META'] = 'Editar metadados';
+$LANG['EDIT_COLL_PROPS'] = 'Propriedades Especiais';
+$LANG['MANAGE_PERMISSIONS'] = 'Gerenciar permissões';
+$LANG['IMPORT_SPECIMEN'] = 'Importar/atualizar registros de amostras';
+$LANG['SKELETAL_FILE_IMPORT'] = 'Importação de arquivo de texto esquelético';
+$LANG['TEXT_FILE_IMPORT'] = 'Importação de arquivo de texto completo';
+$LANG['DWCA_IMPORT'] = 'Importação de arquivo DwC';
+$LANG['IPT_IMPORT'] = 'Importação IPT';
+$LANG['EXTENDED_IMPORT'] = 'Importação de dados estendida';
+$LANG['NFN_IMPORT'] = 'Notas da Nature Import';
+$LANG['IMPORT_PROFILES'] = 'Perfis de importação salvos';
+$LANG['CREATE_PROFILE'] = 'Crie um novo perfil de importação';
+$LANG['PROCESSING_TOOLBOX'] = 'Caixa de ferramentas de processamento';
+$LANG['DARWIN_CORE_PUB'] = 'Publicação do Arquivo Darwin Core';
+$LANG['REVIEW_SPEC_EDITS'] = 'Revisar/verificar edições de ocorrência';
+$LANG['ACCESS_REPORT'] = 'Ver estatísticas de acesso';
+$LANG['DUP_CLUSTER'] = 'Clustering duplicado';
+$LANG['MAINTENANCE_TASKS'] = 'Tarefas Gerais de Manutenção';
+$LANG['DATA_CLEANING'] = 'Ferramentas de limpeza de dados';
+$LANG['BACKUP_DATA_FILE'] = 'Baixar arquivo de dados de backup';
+$LANG['RESTORE_BACKUP'] = 'Restaurar arquivo de backup';
+$LANG['GUID_MANAGEMENT'] = 'Gerenciamento de GUID IGSN';
+$LANG['THUMBNAIL_MAINTENANCE'] = 'Manutenção de miniaturas';
+$LANG['UPDATE_STATS'] = 'Atualizar estatísticas';
+$LANG['COLLECTION_TYPE'] = 'Tipo de coleção';
+$LANG['MANAGEMENT'] = 'Gerenciamento';
+$LANG['LIVE_DATA'] = 'Live Data gerenciado diretamente no portal de dados';
+$LANG['DATA_AGGREGATE'] = 'Dados coletados de um agregador de dados';
+$LANG['DATA_SNAPSHOT'] = 'Instantâneo de dados do banco de dados de coleção local';
+$LANG['LAST_UPDATE'] = 'Última atualização';
+$LANG['GLOBAL_UNIQUE_ID'] = 'Identificador Único Global';
+$LANG['DWCA_PUB'] = 'Ponto de acesso DwC-Archive';
+$LANG['LIVE_DOWNLOAD'] = 'Download de dados ao vivo';
+$LANG['FULL_DATA'] = 'Arquivo de arquivo DwC';
+$LANG['IPT_SOURCE'] = 'Fonte IPT/DwC-A';
+$LANG['DIGITAL_METADATA'] = 'Metadados Digitais';
+$LANG['USAGE_RIGHTS'] = 'Direitos de uso';
+$LANG['USAGE_POLICY'] = 'Política de uso';
+$LANG['RIGHTS_HOLDER'] = 'Detentor de direitos';
+$LANG['ACCESS_RIGHTS'] = 'Direitos de acesso';
+$LANG['GBIF_DATASET'] = 'Página do conjunto de dados GBIF';
+$LANG['IDIGBIO_DATASET'] = 'Página do conjunto de dados iDigBio';
+$LANG['ADDRESS'] = 'Endereço';
+$LANG['EDIT_INST'] = 'Editar informações da instituição';
+$LANG['COLL_STATISTICS'] = 'Estatísticas de coleção';
+$LANG['SPECIMEN_RECORDS'] = 'registros de espécimes';
+$LANG['GEOREFERENCED'] = 'georreferenciado';
+$LANG['WITH_IMAGES'] = 'com multimídia';
+$LANG['TOTAL_IMAGES'] = 'multimídia total';
+$LANG['GENBANK_REF'] = 'GenBank';
+$LANG['BOLD_REF'] = 'AUDACIOSO';
+$LANG['OTHER_GENETIC_REF'] = 'diversos';
+$LANG['GENETIC_REF'] = 'referências genéticas';
+$LANG['PUB_REFS'] = 'referências de publicação';
+$LANG['IDED_TO_SPECIES'] = 'identificado para espécie';
+$LANG['FAMILIES'] = 'famílias';
+$LANG['GENERA'] = 'gêneros';
+$LANG['SPECIES'] = 'espécies';
+$LANG['TOTAL_TAXA'] = 'táxons totais (incluindo subsp. e var.)';
+$LANG['TYPE_SPECIMENS'] = 'espécimes de tipo';
+$LANG['EXTRA_STATS'] = 'Estatísticas extras';
+$LANG['SHOW_FAMILY_DIST'] = 'Mostrar distribuição familiar';
+$LANG['HIDE_FAMILY_DIST'] = 'Ocultar distribuição familiar';
+$LANG['SHOW_GEOG_DIST'] = 'Mostrar distribuição geográfica';
+$LANG['HIDE_GEOG_DIST'] = 'Ocultar distribuição geográfica';
+$LANG['GEO_DIST'] = 'Distribuição Geográfica';
+$LANG['CLICK_ON_SPEC_REC'] = 'Clique nas contagens de registros de amostras entre parênteses para retornar os registros desse período';
+$LANG['TAXON_DIST'] = 'Distribuição de táxons';
+$LANG['CLICK_ON_SPEC_FAM'] = 'Clique nas contagens de registros de espécimes entre parênteses para retornar os registros daquela família';
+$LANG['GEOG_DIST_COUNTRIES'] = 'Distribuição Geográfica - Países';
+$LANG['COLLECTION_PROJECTS'] = 'Coleções de História Natural e Projetos de Observação';
+$LANG['ADVANCED_SEARCH_THIS_COLLECTION'] = 'Pesquisa avançada nesta coleção';
+$LANG['IMAGE_SEARCH_THIS_COLLECTION'] = 'Pesquisa multimídia nesta coleção';
+$LANG['SEARCH'] = 'Procurar';
+$LANG['IDENTIFIER_PLACEHOLDER_LIST'] = 'Pesquise por número de catálogo, ID de ocorrência ou ID de registro.';
+$LANG['MORE_INFO_ALT'] = 'Mais informações sobre o número de catálogo';
+$LANG['SEARCH_BY_TAXON'] = 'Pesquisa por táxon';
+$LANG['OCCURENCE_IDENTIFIER'] = 'Número de catálogo';
+$LANG['TAXON'] = 'Táxon';
+$LANG['OCCURRENCE_EDITOR'] = 'Editar';
+
+?>

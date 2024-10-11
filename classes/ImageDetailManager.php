@@ -20,13 +20,13 @@ class ImageDetailManager extends Manager {
 	public function getImageMetadata(){
 		$retArr = Array();
 		if($this->imgId){
-			$sql = "SELECT i.imgid, i.tid, i.url, i.thumbnailurl, i.originalurl, i.photographeruid, i.photographer, ".
-				"IFNULL(i.photographer,CONCAT_WS(' ',u.firstname,u.lastname)) AS photographerdisplay, ".
-				"i.caption, i.owner, i.sourceurl, i.copyright, i.rights, i.locality, i.notes, i.occid, i.sortsequence, i.username, ".
-				"t.sciname, t.author, t.rankid ".
-				"FROM images i LEFT JOIN taxa t ON i.tid = t.tid ".
-				"LEFT JOIN users u ON i.photographeruid = u.uid ".
-				'WHERE (i.imgid = '.$this->imgId.')';
+			$sql = "SELECT m.media_id, m.tid, m.url, m.thumbnailurl, m.originalurl, m.creatorUid, m.creator, ".
+				"IFNULL(m.creator,CONCAT_WS(' ',u.firstname,u.lastname)) AS creatorDisplay, ".
+				"m.caption, m.owner, m.sourceurl, m.copyright, m.rights, m.locality, m.notes, m.occid, m.sortsequence, m.username, ".
+				"t.sciname, t.author, t.rankid, m.format, m.media_type ".
+				"FROM media m LEFT JOIN taxa t ON m.tid = t.tid ".
+				"LEFT JOIN users u ON m.creatorUid = u.uid ".
+				'WHERE (m.media_id = '.$this->imgId.')';
 			//echo "<div>$sql</div>";
 			$rs = $this->conn->query($sql);
 			if($row = $rs->fetch_object()){
@@ -37,9 +37,9 @@ class ImageDetailManager extends Manager {
 				$retArr["url"] = $row->url;
 				$retArr["thumbnailurl"] = $row->thumbnailurl;
 				$retArr["originalurl"] = $row->originalurl;
-				$retArr["photographer"] = $this->cleanOutStr($row->photographer);
-				$retArr["photographerdisplay"] = $row->photographerdisplay;
-				$retArr["photographeruid"] = $row->photographeruid;
+				$retArr["creator"] = $this->cleanOutStr($row->creator);
+				$retArr["creatorDisplay"] = $row->creatorDisplay;
+				$retArr["creatorUid"] = $row->creatorUid;
 				$retArr["caption"] = $this->cleanOutStr($row->caption);
 				$retArr["owner"] = $this->cleanOutStr($row->owner);
 				$retArr["sourceurl"] = $this->cleanOutStr($row->sourceurl);
@@ -50,6 +50,8 @@ class ImageDetailManager extends Manager {
 				$retArr["sortsequence"] = $row->sortsequence;
 				$retArr["occid"] = $row->occid;
 				$retArr["username"] = $row->username;
+				$retArr["media_type"] = $row->media_type;
+				$retArr["format"] = $row->format;
 			}
 			$rs->free();
 		}
@@ -58,9 +60,9 @@ class ImageDetailManager extends Manager {
 
 	public function editImage($postArr){
 		$status = "";
-		$searchStr = $GLOBALS['IMAGE_ROOT_URL'];
+		$searchStr = $GLOBALS['MEDIA_ROOT_URL'];
 		if(substr($searchStr,-1) != "/") $searchStr .= "/";
-		$replaceStr = $GLOBALS['IMAGE_ROOT_PATH'];
+		$replaceStr = $GLOBALS['MEDIA_ROOT_PATH'];
 		if(substr($replaceStr,-1) != "/") $replaceStr .= "/";
 		$url = $postArr["url"];
 		$tnUrl = $postArr["thumbnailurl"];
@@ -126,8 +128,8 @@ class ImageDetailManager extends Manager {
 			}
 		}
 		$caption = $this->cleanInStr($postArr["caption"]);
-		$photographer = $this->cleanInStr($postArr["photographer"]);
-		$photographerUid = $postArr["photographeruid"];
+		$creator = $this->cleanInStr($postArr["creator"]);
+		$creatorUid = $postArr["uid"];
 		$owner = $this->cleanInStr($postArr["owner"]);
 		$locality = $this->cleanInStr($postArr["locality"]);
 		$occId = $postArr["occid"];
@@ -137,14 +139,14 @@ class ImageDetailManager extends Manager {
 		$rights = $this->cleanInStr($postArr["rights"]);
 		$sortSequence = (array_key_exists("sortsequence",$postArr)?$postArr["sortsequence"]:0);
 
-		$sql = 'UPDATE images '.
+		$sql = 'UPDATE media '.
 			'SET caption = '.($caption?'"'.$caption.'"':'NULL').', url = "'.$url.'", thumbnailurl = '.($tnUrl?'"'.$tnUrl.'"':'NULL').','.
-			'originalurl = '.($origUrl?'"'.$origUrl.'"':'NULL').', photographer = '.($photographer?'"'.$photographer.'"':"NULL").','.
-			'photographeruid = '.($photographerUid?$photographerUid:'NULL').', owner = '.($owner?'"'.$owner.'"':'NULL').
+			'originalurl = '.($origUrl?'"'.$origUrl.'"':'NULL').', creator = '.($creator?'"'.$creator.'"':"NULL").','.
+			'creatorUid = '.($creatorUid?$creatorUid:'NULL').', owner = '.($owner?'"'.$owner.'"':'NULL').
 			', sourceurl = '.($sourceUrl?'"'.$sourceUrl.'"':'NULL').',copyright = '.($copyRight?'"'.$copyRight.'"':'NULL').
 			',rights = '.($rights?'"'.$rights.'"':'NULL').', locality = '.($locality?'"'.$locality.'"':'NULL').', occid = '.($occId?$occId:'NULL').', '.
 			'notes = '.($notes?'"'.$notes.'"':'NULL').($sortSequence?', sortsequence = '.$sortSequence:'').
-			' WHERE (imgid = '.$this->imgId.')';
+			' WHERE (media_id = '.$this->imgId.') and media_type = "image"';
 		//echo $sql;
 		if(!$this->conn->query($sql)){
 			$status = "Error:editImage: ".$this->conn->error."\nSQL: ".$sql;
@@ -155,15 +157,15 @@ class ImageDetailManager extends Manager {
 	public function changeTaxon($targetTid,$sourceTid){
 		$status = '';
 		if(is_numeric($targetTid) && is_numeric($sourceTid)){
-			$sql = 'UPDATE images SET tid = '.$targetTid.', sortsequence = 50 WHERE imgid = '.$this->imgId.' AND tid = '.$sourceTid;
+			$sql = 'UPDATE media SET tid = '.$targetTid.', sortsequence = 50 WHERE media_id = '.$this->imgId.' and media_type = "image" AND tid = '.$sourceTid;
 			if(!$this->conn->query($sql)){
-				$sql = 'SELECT i.imgid '.
-					'FROM images i INNER JOIN images i2 ON i.url = i2.url '.
-					'WHERE (i.tid = '.$targetTid.') AND (i2.imgid = '.$this->imgId.')';
+				$sql = 'SELECT m.media_id '.
+					'FROM media m INNER JOIN media m2 ON m.url = m2.url '.
+					'WHERE (m.tid = '.$targetTid.') AND (m2.media_id = '.$this->imgId.')';
 				$rs = $this->conn->query($sql);
 				if($rs->num_rows){
 					//Transfer is not happening because image is already mapped to that taxon
-					$sql2 = 'DELETE FROM images WHERE (imgid = '.$this->imgId.') AND (tid = '.$sourceTid.')';
+					$sql2 = 'DELETE FROM media WHERE (media_id = '.$this->imgId.') AND (tid = '.$sourceTid.')';
 					$this->conn->query($sql2);
 				}
 				$rs->free();

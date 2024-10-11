@@ -2,8 +2,8 @@
 /*
 ------------------
 Language: Español (Spanish)
-Translated by: Samanta Orellana
-Date Translated: 2021-10-29
+Translated by: Samanta Orellana (2021-10-29)
+Translated by: Google Translate (2024-09-13)
 ------------------
 */
 
@@ -14,9 +14,7 @@ $LANG['SELECT_TARGET'] = 'Seleccionar registro de destino';
 $LANG['ADD_IMG'] = 'Añadir una Nueva Imagen';
 $LANG['SELECT_IMG'] = 'Seleccionar un archivo de imagen localizado en su computadora que desee subir';
 $LANG['ENTER_URL'] = 'Introducir URL';
-$LANG['ENTER_URL_EXPLAIN'] = 'Introducir una URL a una imagen ya incluída en un servidor web.
-							Si únicamente hay una versión disponible de la imagen, añadir en el campo superior y dejar los otros campos vacíos.
-							Si íconos y versiones medianas no están disponibles, se crearán derivados locales de la imagen.';
+$LANG['ENTER_URL_EXPLAIN'] = 'Introducir una URL a una imagen ya incluída en un servidor web.							Si únicamente hay una versión disponible de la imagen, añadir en el campo superior y dejar los otros campos vacíos.							Si íconos y versiones medianas no están disponibles, se crearán derivados locales de la imagen.';
 $LANG['IMG_URL'] = 'URL de la imagen (requerido)';
 $LANG['MED_VERS'] = 'Versión Mediana (opcional';
 $LANG['THUMB_VERS'] = 'Versión de Ícono (opcional';
@@ -24,8 +22,8 @@ $LANG['UPLOAD_LOCAL'] = 'Subir Imagen Local';
 $LANG['COPY_TO_SERVER'] = 'Copiar imágenes al servidor (si se deja vacío, se usarán las URL como fuente)';
 $LANG['DO_NOT_MAP_LARGE'] = 'No mapear una versión grande de la imagen (cuando sea aplicable)';
 $LANG['CAPTION'] = 'Descripción';
-$LANG['PHOTOGRAPHER'] = 'Fotógrafo';
-$LANG['SEL_PHOTOG'] = 'Seleccionar Fotógrafo';
+$LANG['CREATOR'] = 'Creador';
+$LANG['SELECT_CREATOR'] = 'Seleccionar Creador';
 $LANG['DISPLAY_PHOTOG_OVER'] = 'Desplegar campo para sobreescribir fotógrafo';
 $LANG['PHOTOG_OVER'] = 'Fotógrafo (sobreescribir)';
 $LANG['WILL_OVERRIDE'] = 'Advertencia: Sobreescribirá la selección';
@@ -36,15 +34,15 @@ $LANG['SORT'] = 'Clasificar Secuencia';
 $LANG['DESCRIBE_IMAGE'] = 'Describir esta imagen';
 $LANG['SUBMIT_NEW'] = 'Enviar Nueva Imagen';
 $LANG['OPEN_MED'] = 'Abrir Imagen Mediana';
-$LANG['OPEN_LARGE'] = 'Abrir Imagen Grande';
+$LANG['OPEN_LARGE'] = 'Abrir archivo original';
 $LANG['EDIT_METADATA'] = 'Editar Metadatos de la Imagen';
 $LANG['TAGS'] = 'Etiquetas';
 $LANG['WEB_URL'] = 'URL de la Web';
-$LANG['LARGE_IMG_URL'] = 'URG de Imagen Grande';
+$LANG['LARGE_IMG_URL'] = 'Archivo original';
 $LANG['THUMB_URL'] = 'URL de Ícono';
 $LANG['EDIT_IMG_DATA'] = 'Editar Datos de la Imagen';
 $LANG['RENAME_FILE'] = 'Renombrar archivo de la imagen web en el servidor para que coincida con la edición anterior';
-$LANG['RENAME_LARGE'] = 'Renombrar archivo de la imagen grande en el servidor para que coincida con la edición anterior';
+$LANG['RENAME_LARGE'] = 'Cambie el nombre del archivo de recursos original en el servidor para que coincida con la edición anterior';
 $LANG['RENAME_THUMB'] = 'Renombrar archivo de la imagen ícono en el servidor para que coincida con la edición anterior';
 $LANG['SUBMIT_IMG_EDITS'] = 'Enviar Ediciones de Imagen';
 $LANG['DEL_IMG'] = 'Eliminar Imagen';

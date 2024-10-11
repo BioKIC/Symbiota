@@ -181,7 +181,7 @@ class SpecProcessorOcr extends Manager{
 	private function getImageUrl($imgid){
 		$retUrl = false;
 		if(is_numeric($imgid)){
-			$sql = 'SELECT url, originalurl FROM images WHERE imgid = ?';
+			$sql = 'SELECT url, originalurl FROM media WHERE imgid = ?';
 			if($stmt = $this->conn->prepare($sql)){
 				$stmt->bind_param('i', $imgid);
 				$stmt->execute();
@@ -221,10 +221,10 @@ class SpecProcessorOcr extends Manager{
 		$status = false;
 		if($imgUrl){
 			if(substr($imgUrl,0,1) == '/'){
-				if(!empty($GLOBALS['IMAGE_DOMAIN'])){
+				if(!empty($GLOBALS['MEDIA_DOMAIN'])){
 					//If there is an image domain name is set in symbini.php and url is relative,
 					//then it's assumed that image is located on another server, thus add domain to url
-					$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
+					$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $imgUrl;
 				}
 				else{
 					$imgUrl = $this->getDomain().$imgUrl;
@@ -260,9 +260,9 @@ class SpecProcessorOcr extends Manager{
 			//Batch OCR
 			foreach($collArr as $collid => $instCode){
 				$this->logOrEcho('Starting batch processing for '.$instCode);
-				$sql = 'SELECT i.imgid, IFNULL(i.originalurl, i.url) AS url, o.sciName, i.occid '.
-					'FROM omoccurrences o INNER JOIN images i ON o.occid = i.occid '.
-					'LEFT JOIN specprocessorrawlabels r ON i.imgid = r.imgid '.
+				$sql = 'SELECT m.media_id, IFNULL(m.originalurl, m.url) AS url, o.sciName, m.occid '.
+					'FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid '.
+					'LEFT JOIN specprocessorrawlabels r ON m.media_id = r.imgid '.
 					'WHERE (o.collid = '.$collid.') AND r.prlid IS NULL ';
 				if($procStatus) $sql .= 'AND o.processingstatus = "unprocessed" ';
 				if($limit) $sql .= 'LIMIT '.$limit;
@@ -271,10 +271,10 @@ class SpecProcessorOcr extends Manager{
 					while($r = $rs->fetch_object()){
 						$rawStr = $this->ocrImageByUrl($r->url,$getBest,$r->sciName);
 						if($rawStr != 'ERROR'){
-							$this->logOrEcho('#'.$recCnt.': image <a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($r->occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->imgid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> processed (' . date("Y-m-d H:i:s") . ')');
+							$this->logOrEcho('#'.$recCnt.': image <a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($r->occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($r->media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a> processed (' . date("Y-m-d H:i:s") . ')');
 							$notes = '';
 							$source = 'Tesseract: '.date('Y-m-d');
-							$this->databaseRawStr($r->imgid,$rawStr,$notes,$source);
+							$this->databaseRawStr($r->media_id,$rawStr,$notes,$source);
 						}
 						ob_flush();
 						flush();
@@ -467,23 +467,23 @@ class SpecProcessorOcr extends Manager{
 			if($catNumber){
 				//Grab image primary key (imgid)
 				$imgArr = array();
-				$sql = 'SELECT i.imgid, IFNULL(i.originalurl,i.url) AS url '.
-					'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
+				$sql = 'SELECT m.media_id, IFNULL(m.originalurl,m.url) AS url '.
+					'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
 					'WHERE (o.collid = '.$this->collid.') AND (o.catalognumber = "'.$this->cleanInStr($catNumber).'")';
 				$rs = $this->conn->query($sql);
 				while($r = $rs->fetch_object()){
-					$imgArr[$r->imgid] = $r->url;
+					$imgArr[$r->media_id] = $r->url;
 				}
 				$rs->free();
 				if(!$imgArr){
 					$fileBaseName = basename($sourcePath.$fileName, ".txt");
 					if(strlen($fileBaseName)>4){
-						$sql = 'SELECT i.imgid, IFNULL(i.originalurl,i.url) AS url '.
-							'FROM images i INNER JOIN omoccurrences o ON i.occid = o.occid '.
-							'WHERE (o.collid = '.$this->collid.') AND ((i.originalurl LIKE "%/'.$this->cleanInStr($fileBaseName).'.jpg") OR (i.url LIKE "%/'.$this->cleanInStr($fileBaseName).'.jpg"))';
+						$sql = 'SELECT m.media_id, IFNULL(m.originalurl,m.url) AS url '.
+							'FROM media m INNER JOIN omoccurrences o ON m.occid = o.occid '.
+							'WHERE (o.collid = '.$this->collid.') AND ((m.originalurl LIKE "%/'.$this->cleanInStr($fileBaseName).'.jpg") OR (m.url LIKE "%/'.$this->cleanInStr($fileBaseName).'.jpg"))';
 						$rs = $this->conn->query($sql);
 						while($r = $rs->fetch_object()){
-							$imgArr[$r->imgid] = $r->url;
+							$imgArr[$r->media_id] = $r->url;
 						}
 						$rs->free();
 					}

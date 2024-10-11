@@ -365,15 +365,15 @@ include($SERVER_ROOT.'/includes/header.php');
 
 										if(array_key_exists("url",$subArr)){
 											$imgUrl = $subArr["url"];
-											if(array_key_exists('IMAGE_DOMAIN', $GLOBALS) && substr($imgUrl, 0, 1) == '/'){
-												$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $imgUrl;
+											if(array_key_exists('MEDIA_DOMAIN', $GLOBALS) && substr($imgUrl, 0, 1) == '/'){
+												$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $imgUrl;
 											}
 											echo "<a href='index.php?tid=" . htmlspecialchars($subArr["tid"], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "&taxauthid=" . htmlspecialchars($taxAuthId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "&clid=" . htmlspecialchars($clid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "'>";
 
 											if($subArr["thumbnailurl"]){
 												$imgUrl = $subArr["thumbnailurl"];
-												if(array_key_exists('IMAGE_DOMAIN',$GLOBALS) && substr($subArr["thumbnailurl"],0,1)=="/"){
-													$imgUrl = $GLOBALS['IMAGE_DOMAIN'] . $subArr["thumbnailurl"];
+												if(array_key_exists('MEDIA_DOMAIN',$GLOBALS) && substr($subArr["thumbnailurl"],0,1)=="/"){
+													$imgUrl = $GLOBALS['MEDIA_DOMAIN'] . $subArr["thumbnailurl"];
 												}
 											}
 											elseif($image = exif_thumbnail($imgUrl)){
@@ -381,7 +381,7 @@ include($SERVER_ROOT.'/includes/header.php');
 											}
 											echo '<img src="' . $imgUrl . '" title="' . $subArr['caption'] . '" alt="' . $LANG['IMAGE_OF'] . ' ' . $sciNameKey . '" style="z-index:-1" />';
 											echo '</a>';
-											echo '<div style="text-align:right;position:relative;top:-26px;left:5px;" title="' . $LANG['PHOTOGRAPHER'] . ': ' . $subArr['photographer'] . '">';
+											echo '<div style="text-align:right;position:relative;top:-26px;left:5px;" title="' . $LANG['CREATOR'] . ': ' . $subArr['photographer'] . '">';
 											echo '</div>';
 										}
 										elseif($isEditor){
