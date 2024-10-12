@@ -188,7 +188,7 @@ function addChip(element) {
           document.getElementById("taxontype-any").selectedIndex;
         document.getElementById("taxontype").selectedIndex = targetIndex;
       }
-      element.dataset.formId ? uncheckAll(element) : "";
+      uncheckAllChip(element);
       removeChip(inputChip);
     };
   }
@@ -422,8 +422,8 @@ function autoToggleSelector(e) {
  * Uses 'data-form-id' property in .php
  * @param {Object} element HTML Node Object
  */
-function uncheckAll(element) {
-  let isAllSel = element.classList.contains("all-selector");
+function uncheckAllChip(element) {
+  let isAllSel = element.classList.contains("specobs");
   if (isAllSel) {
     let selChildren = document.querySelectorAll(
       `#${element.dataset.formId} input[type=checkbox]:checked`
@@ -432,12 +432,8 @@ function uncheckAll(element) {
       item.checked = false;
     });
   } else {
-    let items = document.querySelectorAll(
-      `#${element.id} input[type=checkbox]:checked`
-    );
-    items.forEach((item) => {
-      item.checked = false;
-    });
+    let item = document.querySelector(`input[id^="${element.className}"][name="cat[]"]`);
+    item.checked = false;
   }
 }
 
@@ -450,8 +446,7 @@ function getCollsSelected() {
   let selectedInForm = Array.from(
     document.querySelectorAll(
       '#search-form-colls input[name="db"]:checked, ' +
-        '#search-form-colls input[name="db[]"]:checked, ' +
-        '#search-form-colls input[name="cat[]"]:checked'
+        '#search-form-colls input[name="db[]"]:checked'
     )
   );
   let collsArr = selectedInForm;
