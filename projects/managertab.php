@@ -43,7 +43,7 @@ $projManager->setPid($pid);
 			<input name="pid" type="hidden" value="<?php echo $pid; ?>" />
 			<input name="tabindex" type="hidden" value="1" />
 			<input name="emode" type="hidden" value="1" />
-			<button name="projsubmit" type="submit">
+			<button name="projsubmit" type="submit" value="Add to Manager List">
 				<?= $LANG['ADD_TO_MANAGER_LIST'] ?>
 			</button>
 		</form>
