@@ -380,15 +380,15 @@ function stateProvinceChanged(stateVal) {
 	}
 }
 
-function decimalLatitudeChanged(f) {
+function decimalLatitudeChanged(f, client_root) {
 	verifyDecimalLatitude(f);
-	//verifyCoordinates(f);
+	verifyCoordinates(f, client_root);
 	fieldChanged('decimallatitude');
 }
 
-function decimalLongitudeChanged(f) {
+function decimalLongitudeChanged(f, client_root) {
 	verifyDecimalLongitude(f);
-	//verifyCoordinates(f);
+	verifyCoordinates(f, client_root);
 	fieldChanged('decimallongitude');
 }
 

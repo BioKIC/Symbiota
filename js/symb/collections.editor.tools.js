@@ -117,7 +117,7 @@ function geoLocateLocality(){
 	}
 }
 
-function geoLocateUpdateCoord(latValue,lngValue,coordErrValue, footprintWKT){
+function geoLocateUpdateCoord(latValue,lngValue,coordErrValue, footprintWKT, client_root){
 	document.getElementById("georefExtraDiv").style.display = "block";
 
 	var f = document.fullform;
@@ -140,7 +140,7 @@ function geoLocateUpdateCoord(latValue,lngValue,coordErrValue, footprintWKT){
 	fieldChanged('decimallatitude');
 	verifyDecimalLongitude(f);
 	fieldChanged('decimallongitude');
-	//verifyCoordinates(f);
+	verifyCoordinates(f, client_root);
 	f.coordinateuncertaintyinmeters.onchange();
 	f.georeferencesources.onchange();
 	f.geodeticdatum.onchange();
