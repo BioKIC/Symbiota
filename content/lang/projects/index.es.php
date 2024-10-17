@@ -5,8 +5,10 @@ Language: Espa�ol (Spanish)
 ------------------
 */
 
-$LANG['INVPROJ'] = 'Proyectos de Inventario';
-$LANG['INVPROJLIST'] = 'Lista de proyectos de inventario';
+$LANG['NAV_HOME'] = 'Inicio';
+$LANG['INVPROJ'] = 'Proyecto de Inventario';
+$LANG['INVPROJLIST'] = 'Lista de inventarios';
+$LANG['VIEW_PROJECT'] = 'View Inventory Project';
 $LANG['PROJMANAG'] = 'Administradores de Proyectos:';
 $LANG['METADATA'] = 'Metadatos';
 $LANG['INVMANAG'] = 'Administradores de Inventarios';
@@ -26,7 +28,11 @@ $LANG['DELCONDITION1'] = 'El proyecto de inventario no se puede eliminar hasta q
 $LANG['DELCONDITION2'] = 'El proyecto de inventario no se puede eliminar hasta que se eliminen todas las listas de verificación del proyecto';
 $LANG['PROJNAME'] = 'Nombre del Proyecto';
 $LANG['RESCHECK'] = 'Listados de Comprobación de Investigación';
-$LANG['RESCHECKQUES'] = 'Los Listados de Comprobación de Investigación son pre-compilados por biólogos. Este es un método muy controlado para la construcción de un listado de especies, lo que permite a especímenes específicos vincularse con los nombres de las especies dentro del listado de comprobación y así servir como comprobantes (vouchers). Los especímenes vouchers son la prueba de que las especies ocurren actualmente en una área determinada. Si hubiese alguna duda, alguien puede inspeccionar estos especímenes para Comprobación ó anotar la identificación correcta cuando sea necesario.';
+$LANG['RESCHECKQUES'] = 'Los Listados de Comprobación de Investigación son pre-compilados por biólogos. 
+	Este es un método muy controlado para la construcción de un listado de especies, lo que permite a especímenes específicos 
+	vincularse con los nombres de las especies dentro del listado de comprobación y así servir como comprobantes (vouchers). 
+	Los especímenes vouchers son la prueba de que las especies ocurren actualmente en una área determinada. Si hubiese alguna duda, 
+	alguien puede inspeccionar estos especímenes para Comprobación ó anotar la identificación correcta cuando sea necesario.';
 $LANG['QUESRESSPEC'] = '&iquest;Que es un Listado de Especies de Investigación?';
 $LANG['MAPCHECK'] = 'Mapeo de Listados de Comprobación';
 $LANG['CHECKMANAG'] = 'Administración de Listados de Comprobación';
@@ -48,10 +54,11 @@ $LANG['QUESTION_ALT'] = 'imagen de un signo de interrogación para obtener más 
 $LANG['GLOBE_ALT'] = 'imagen de un globo terráqueo, que indica una versión de la lista de verificación superpuesta en un mapa';
 $LANG['TRIANGLE_ALT'] = 'una imagen de un triángulo. Solo se usa para hacer que la ventana emergente parezca más una burbuja de diálogo';
 $LANG['EDIT'] = 'Editar';
+$LANG['VIEWABLE_TO_EDITORS'] = 'Viewable only to editors';
 $LANG['KEY'] = 'Clave';
 $LANG['KEY_SYMBOL'] = 'Símbolo clave';
 $LANG['ADD_NEW'] = 'Agregar nuevo proyecto';
-$LANG['EDIT'] = 'Editar proyecto';
+$LANG['NOT_DEFINED'] = 'No definido';
 
 //Manager Tab
 $LANG['INVENTORY_PROJECT_MANAGERS'] = 'Gestores de proyectos de inventario';

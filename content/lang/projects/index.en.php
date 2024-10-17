@@ -5,8 +5,10 @@ Language: English
 ------------------
 */
 
-$LANG['INVPROJ'] = 'Inventory Projects';
-$LANG['INVPROJLIST'] = 'Inventory Project List';
+$LANG['NAV_HOME'] = 'Home';
+$LANG['INVPROJ'] = 'Inventory Project';
+$LANG['INVPROJLIST'] = 'Inventory Project Checklist';
+$LANG['VIEW_PROJECT'] = 'View Inventory Project';
 $LANG['PROJMANAG'] = 'Project Managers:';
 $LANG['METADATA'] = 'Metadata';
 $LANG['INVMANAG'] = 'Inventory Managers';
@@ -27,10 +29,10 @@ $LANG['DELCONDITION2'] = 'Inventory project cannot be deleted until all checklis
 $LANG['PROJNAME'] = 'Project Name';
 $LANG['RESCHECK'] = 'Research Checklists';
 $LANG['RESCHECKQUES'] = 'Research checklists are pre-compiled by biologists.
-				         This is a very controlled method for building a species list, which allows for
-				         specific specimens to be linked to the species names within the checklist and thus serve as vouchers.
-				         Specimen vouchers are proof that the species actually occurs in the given area. If there is any doubt, one
-				         can inspect these specimens for verification or annotate the identification when necessary.';
+	This is a very controlled method for building a species list, which allows for
+	specific specimens to be linked to the species names within the checklist and thus serve as vouchers.
+	Specimen vouchers are proof that the species actually occurs in the given area. If there is any doubt, one
+	can inspect these specimens for verification or annotate the identification when necessary.';
 $LANG['QUESRESSPEC'] = 'What is a Research Species List?';
 $LANG['MAPCHECK'] = 'Map Checklists';
 $LANG['CHECKMANAG'] = 'Checklist Management';
@@ -52,10 +54,11 @@ $LANG['QUESTION_ALT'] = 'image of a question mark for more information about res
 $LANG['GLOBE_ALT'] = 'image a globe, indicating a version of the checklist superimposed on a map';
 $LANG['TRIANGLE_ALT'] = 'an image of a triangle. Just used to make the pop up look more like a dialog bubble';
 $LANG['EDIT'] = 'Edit';
+$LANG['VIEWABLE_TO_EDITORS'] = 'Viewable only to editors';
 $LANG['KEY'] = 'Key';
 $LANG['KEY_SYMBOL'] = 'Key Symbol';
-$LANG['ADD_NEW_PRJ'] = 'Add New Project';
-$LANG['EDIT_PRJ'] = 'Edit Project';
+$LANG['ADD_NEW'] = 'Add New Project';
+$LANG['NOT_DEFINED'] = 'Not defined';
 
 //Manager Tab
 $LANG['INVENTORY_PROJECT_MANAGERS'] = 'Inventory Project Managers';
