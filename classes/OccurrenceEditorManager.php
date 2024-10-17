@@ -49,8 +49,8 @@ class OccurrenceEditorManager {
 			'georeferenceremarks' => 's', 'minimumelevationinmeters' => 'n', 'maximumelevationinmeters' => 'n','verbatimelevation' => 's',
 			'minimumdepthinmeters' => 'n', 'maximumdepthinmeters' => 'n', 'verbatimdepth' => 's','disposition' => 's', 'language' => 's', 'duplicatequantity' => 'n',
 			'labelproject' => 's','processingstatus' => 's', 'recordenteredby' => 's', 'observeruid' => 'n', 'dateentered' => 'd');
-		$this->fieldArr['omoccurpaleo'] = array('eon','era','period','epoch','earlyinterval','lateinterval','absoluteage','storageage','stage','localstage','biota',
-			'biostratigraphy','lithogroup','formation','taxonenvironment','member','bed','lithology','stratremarks','element','slideproperties','geologicalcontextid');
+		$this->fieldArr['omoccurpaleo'] = array('earlyInterval','lateInterval','absoluteAge','storageAge','stage','localStage','biota',
+			'biostratigraphy','lithoGroup','formation','taxonEnvironment','member','bed','lithology','stratRemarks','element','slideProperties','geologicalContextID');
 		$this->fieldArr['omoccuridentifiers'] = array('idname','idvalue');
 		$this->fieldArr['omexsiccatiocclink'] = array('ometid','exstitle','exsnumber');
 	}
@@ -666,10 +666,12 @@ class OccurrenceEditorManager {
 		$localIndex = false;
 		$sqlFrag = '';
 		if($this->occid && !$this->direction){
+			$sqlFrag .= 'LEFT JOIN omoccurpaleo p ON p.occid = o.occid';
 			$sqlFrag .= 'WHERE (o.occid = '.$this->occid.')';
 		}
 		elseif($this->sqlWhere){
 			$this->addTableJoins($sqlFrag);
+			$sqlFrag .= 'LEFT JOIN omoccurpaleo p ON p.occid = o.occid ';
 			$sqlFrag .= $this->sqlWhere;
 			if($limit){
 				$this->setSqlOrderBy($sqlFrag);
@@ -688,7 +690,7 @@ class OccurrenceEditorManager {
 			}
 		}
 		if($sqlFrag){
-			$sql = 'SELECT DISTINCT o.occid, o.collid, o.'.implode(',o.',array_keys($this->fieldArr['omoccurrences'])).', datelastmodified FROM omoccurrences o '.$sqlFrag;
+			$sql = 'SELECT DISTINCT o.occid, o.collid, o.'.implode(',o.',array_keys($this->fieldArr['omoccurrences'])) . ',p.' . implode(',p.',($this->fieldArr['omoccurpaleo'])).', datelastmodified FROM omoccurrences o '.$sqlFrag;
 			$previousOccid = 0;
 			$rs = $this->conn->query($sql);
 			$rsCnt = 0;
