@@ -78,7 +78,7 @@ class DwcArchiverImage{
 				//Search criteria came from custom search page
 				$sql .= 'LEFT JOIN fmvouchers v ON o.occid = v.occid LEFT JOIN fmchklsttaxalink ctl ON v.clTaxaID = ctl.clTaxaID ';
 			}
-			if(strpos($conditionSql,'p.point')){
+			if(strpos($conditionSql,'p.lngLatPoint')){
 				//Search criteria came from map search page
 				$sql .= 'LEFT JOIN omoccurpoints p ON o.occid = p.occid ';
 			}
