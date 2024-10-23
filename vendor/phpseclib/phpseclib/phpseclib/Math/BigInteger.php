@@ -29,7 +29,6 @@ namespace phpseclib3\Math;
 
 use phpseclib3\Exception\BadConfigurationException;
 use phpseclib3\Math\BigInteger\Engines\Engine;
-use UnexpectedValueException;
 
 /**
  * Pure-PHP arbitrary precision integer arithmetic library. Supports base-2, base-10, base-16, and base-256
@@ -153,7 +152,7 @@ class BigInteger implements \JsonSerializable
                 }
             }
 
-            throw new UnexpectedValueException('No valid BigInteger found. This is only possible when JIT is enabled on Windows and neither the GMP or BCMath extensions are available so either disable JIT or install GMP / BCMath');
+            throw new \UnexpectedValueException('No valid BigInteger found. This is only possible when JIT is enabled on Windows and neither the GMP or BCMath extensions are available so either disable JIT or install GMP / BCMath');
         }
     }
 
@@ -163,7 +162,7 @@ class BigInteger implements \JsonSerializable
      * If the second parameter - $base - is negative, then it will be assumed that the number's are encoded using
      * two's compliment.  The sole exception to this is -10, which is treated the same as 10 is.
      *
-     * @param string|int|BigInteger\Engines\Engine $x Base-10 number or base-$base number if $base set.
+     * @param string|int|Engine $x Base-10 number or base-$base number if $base set.
      * @param int $base
      */
     public function __construct($x = 0, $base = 10)
@@ -172,7 +171,7 @@ class BigInteger implements \JsonSerializable
 
         if ($x instanceof self::$mainEngine) {
             $this->value = clone $x;
-        } elseif ($x instanceof BigInteger\Engines\Engine) {
+        } elseif ($x instanceof Engine) {
             $this->value = new static("$x");
             $this->value->setPrecision($x->getPrecision());
         } else {

@@ -1,6 +1,12 @@
-clover.xml
-composer.lock
-coverage.clover
+/composer.lock
+/cov
+/coverage.clover.xml
+/docs
 .idea
-phpunit.xml
-vendor
+/.php-cs-fixer.cache
+/.phpdoc/cache
+/.phpunit.result.cache
+/phpunit.xml
+/.phpunit.cache
+/tools
+/vendor

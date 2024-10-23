@@ -4,6 +4,9 @@ namespace PhpOffice\PhpSpreadsheet\Worksheet;
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 
+/**
+ * @implements \Iterator<int, Worksheet>
+ */
 class Iterator implements \Iterator
 {
     /**
@@ -63,8 +66,6 @@ class Iterator implements \Iterator
 
     /**
      * Are there more Worksheet instances available?
-     *
-     * @return bool
      */
     public function valid(): bool
     {

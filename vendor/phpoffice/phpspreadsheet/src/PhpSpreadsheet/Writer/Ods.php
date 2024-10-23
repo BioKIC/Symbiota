@@ -12,7 +12,6 @@ use PhpOffice\PhpSpreadsheet\Writer\Ods\Settings;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Styles;
 use PhpOffice\PhpSpreadsheet\Writer\Ods\Thumbnails;
 use ZipStream\Exception\OverflowException;
-use ZipStream\Option\Archive;
 use ZipStream\ZipStream;
 
 class Ods extends BaseWriter
@@ -113,27 +112,26 @@ class Ods extends BaseWriter
     /**
      * Save PhpSpreadsheet to file.
      *
-     * @param resource|string $pFilename
+     * @param resource|string $filename
      */
-    public function save($pFilename): void
+    public function save($filename, int $flags = 0): void
     {
-        if (!$this->spreadSheet) {
-            throw new WriterException('PhpSpreadsheet object unassigned.');
-        }
+        $this->processFlags($flags);
 
         // garbage collect
         $this->spreadSheet->garbageCollect();
 
-        $this->openFileHandle($pFilename);
+        $this->openFileHandle($filename);
 
         $zip = $this->createZip();
 
         $zip->addFile('META-INF/manifest.xml', $this->getWriterPartMetaInf()->write());
         $zip->addFile('Thumbnails/thumbnail.png', $this->getWriterPartthumbnails()->write());
+        // Settings always need to be written before Content; Styles after Content
+        $zip->addFile('settings.xml', $this->getWriterPartsettings()->write());
         $zip->addFile('content.xml', $this->getWriterPartcontent()->write());
         $zip->addFile('meta.xml', $this->getWriterPartmeta()->write());
         $zip->addFile('mimetype', $this->getWriterPartmimetype()->write());
-        $zip->addFile('settings.xml', $this->getWriterPartsettings()->write());
         $zip->addFile('styles.xml', $this->getWriterPartstyles()->write());
 
         // Close file
@@ -159,11 +157,7 @@ class Ods extends BaseWriter
         }
 
         // Create new ZIP stream
-        $options = new Archive();
-        $options->setEnableZip64(false);
-        $options->setOutputStream($this->fileHandle);
-
-        return new ZipStream(null, $options);
+        return ZipStream0::newZipStream($this->fileHandle);
     }
 
     /**
@@ -173,11 +167,7 @@ class Ods extends BaseWriter
      */
     public function getSpreadsheet()
     {
-        if ($this->spreadSheet !== null) {
-            return $this->spreadSheet;
-        }
-
-        throw new WriterException('No PhpSpreadsheet assigned.');
+        return $this->spreadSheet;
     }
 
     /**

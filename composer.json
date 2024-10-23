@@ -1,7 +1,8 @@
 {
-    "require": {
-        "phpoffice/phpword": "^0.18.2",
-        "phpoffice/phpspreadsheet": "^1.18",
-        "jumbojett/openid-connect-php": "^0.9.10"
-    }
+  "require": {
+    "phpoffice/phpword": "^0.18.2",
+    "phpoffice/phpspreadsheet": "^1.18",
+    "jumbojett/openid-connect-php": "^1.0",
+    "phpseclib/phpseclib": "^3.0.33"
+  }
 }

@@ -2,6 +2,7 @@
 
 namespace PhpOffice\PhpSpreadsheet\Reader\Xml;
 
+use PhpOffice\PhpSpreadsheet\Style\Protection;
 use SimpleXMLElement;
 
 class Style
@@ -15,7 +16,7 @@ class Style
 
     public function parseStyles(SimpleXMLElement $xml, array $namespaces): array
     {
-        if (!isset($xml->Styles)) {
+        if (!isset($xml->Styles) || !is_iterable($xml->Styles[0])) {
             return [];
         }
 
@@ -30,14 +31,17 @@ class Style
             $styleID = (string) $style_ss['ID'];
             $this->styles[$styleID] = $this->styles['Default'] ?? [];
 
-            $alignment = $border = $font = $fill = $numberFormat = [];
+            $alignment = $border = $font = $fill = $numberFormat = $protection = [];
 
             foreach ($style as $styleType => $styleDatax) {
-                $styleData = $styleDatax ?? new SimpleXMLElement('<xml></xml>');
+                $styleData = self::getSxml($styleDatax);
                 $styleAttributes = $styleData->attributes($namespaces['ss']);
+
                 switch ($styleType) {
                     case 'Alignment':
-                        $alignment = $alignmentStyleParser->parseStyle($styleAttributes);
+                        if ($styleAttributes) {
+                            $alignment = $alignmentStyleParser->parseStyle($styleAttributes);
+                        }
 
                         break;
                     case 'Borders':
@@ -45,30 +49,59 @@ class Style
 
                         break;
                     case 'Font':
-                        $font = $fontStyleParser->parseStyle($styleAttributes);
+                        if ($styleAttributes) {
+                            $font = $fontStyleParser->parseStyle($styleAttributes);
+                        }
 
                         break;
                     case 'Interior':
-                        $fill = $fillStyleParser->parseStyle($styleAttributes);
+                        if ($styleAttributes) {
+                            $fill = $fillStyleParser->parseStyle($styleAttributes);
+                        }
 
                         break;
                     case 'NumberFormat':
-                        $numberFormat = $numberFormatStyleParser->parseStyle($styleAttributes);
+                        if ($styleAttributes) {
+                            $numberFormat = $numberFormatStyleParser->parseStyle($styleAttributes);
+                        }
+
+                        break;
+                    case 'Protection':
+                        $locked = $hidden = null;
+                        $styleAttributesP = $styleData->attributes($namespaces['x']);
+                        if (isset($styleAttributes['Protected'])) {
+                            $locked = ((bool) (string) $styleAttributes['Protected']) ? Protection::PROTECTION_PROTECTED : Protection::PROTECTION_UNPROTECTED;
+                        }
+                        if (isset($styleAttributesP['HideFormula'])) {
+                            $hidden = ((bool) (string) $styleAttributesP['HideFormula']) ? Protection::PROTECTION_PROTECTED : Protection::PROTECTION_UNPROTECTED;
+                        }
+                        if ($locked !== null || $hidden !== null) {
+                            $protection['protection'] = [];
+                            if ($locked !== null) {
+                                $protection['protection']['locked'] = $locked;
+                            }
+                            if ($hidden !== null) {
+                                $protection['protection']['hidden'] = $hidden;
+                            }
+                        }
 
                         break;
                 }
             }
 
-            $this->styles[$styleID] = array_merge($alignment, $border, $font, $fill, $numberFormat);
+            $this->styles[$styleID] = array_merge($alignment, $border, $font, $fill, $numberFormat, $protection);
         }
 
         return $this->styles;
     }
 
-    protected static function getAttributes(?SimpleXMLElement $simple, string $node): SimpleXMLElement
+    private static function getAttributes(?SimpleXMLElement $simple, string $node): SimpleXMLElement
     {
-        return ($simple === null)
-            ? new SimpleXMLElement('<xml></xml>')
-            : ($simple->attributes($node) ?? new SimpleXMLElement('<xml></xml>'));
+        return ($simple === null) ? new SimpleXMLElement('<xml></xml>') : ($simple->attributes($node) ?? new SimpleXMLElement('<xml></xml>'));
+    }
+
+    private static function getSxml(?SimpleXMLElement $simple): SimpleXMLElement
+    {
+        return ($simple !== null) ? $simple : new SimpleXMLElement('<xml></xml>');
     }
 }

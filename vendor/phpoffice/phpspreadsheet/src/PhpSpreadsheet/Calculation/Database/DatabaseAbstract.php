@@ -8,6 +8,13 @@ use PhpOffice\PhpSpreadsheet\Calculation\Internal\WildcardMatch;
 
 abstract class DatabaseAbstract
 {
+    /**
+     * @param array $database
+     * @param int|string $field
+     * @param array $criteria
+     *
+     * @return null|float|int|string
+     */
     abstract public static function evaluate($database, $field, $criteria);
 
     /**
@@ -27,14 +34,19 @@ abstract class DatabaseAbstract
      */
     protected static function fieldExtract(array $database, $field): ?int
     {
-        $field = strtoupper(Functions::flattenSingleValue($field));
+        $field = strtoupper(Functions::flattenSingleValue($field) ?? '');
         if ($field === '') {
             return null;
         }
 
         $fieldNames = array_map('strtoupper', array_shift($database));
         if (is_numeric($field)) {
-            return ((int) $field) - 1;
+            $field = (int) $field - 1;
+            if ($field < 0 || $field >= count($fieldNames)) {
+                return null;
+            }
+
+            return $field;
         }
         $key = array_search($field, array_values($fieldNames), true);
 
@@ -95,7 +107,7 @@ abstract class DatabaseAbstract
         foreach ($criteria as $key => $criterion) {
             foreach ($criterion as $field => $value) {
                 $criterionName = $criteriaNames[$field];
-                if ($value !== null && $value !== '') {
+                if ($value !== null) {
                     $condition = self::buildCondition($value, $criterionName);
                     $baseQuery[$key][] = $condition;
                 }
@@ -104,14 +116,17 @@ abstract class DatabaseAbstract
 
         $rowQuery = array_map(
             function ($rowValue) {
-                return (count($rowValue) > 1) ? 'AND(' . implode(',', $rowValue) . ')' : $rowValue[0];
+                return (count($rowValue) > 1) ? 'AND(' . implode(',', $rowValue) . ')' : ($rowValue[0] ?? '');
             },
             $baseQuery
         );
 
-        return (count($rowQuery) > 1) ? 'OR(' . implode(',', $rowQuery) . ')' : $rowQuery[0];
+        return (count($rowQuery) > 1) ? 'OR(' . implode(',', $rowQuery) . ')' : ($rowQuery[0] ?? '');
     }
 
+    /**
+     * @param mixed $criterion
+     */
     private static function buildCondition($criterion, string $criterionName): string
     {
         $ifCondition = Functions::ifCondition($criterion);
@@ -153,6 +168,9 @@ abstract class DatabaseAbstract
         return $database;
     }
 
+    /**
+     * @return mixed
+     */
     private static function processCondition(string $criterion, array $fields, array $dataValues, string $conditions)
     {
         $key = array_search($criterion, $fields, true);

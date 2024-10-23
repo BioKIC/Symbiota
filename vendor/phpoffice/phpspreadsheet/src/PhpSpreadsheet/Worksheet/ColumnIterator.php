@@ -2,12 +2,15 @@
 
 namespace PhpOffice\PhpSpreadsheet\Worksheet;
 
-use Iterator;
+use Iterator as NativeIterator;
 use PhpOffice\PhpSpreadsheet\Cell\Coordinate;
 use PhpOffice\PhpSpreadsheet\Exception;
 use PhpOffice\PhpSpreadsheet\Exception as PhpSpreadsheetException;
 
-class ColumnIterator implements Iterator
+/**
+ * @implements NativeIterator<string, Column>
+ */
+class ColumnIterator implements NativeIterator
 {
     /**
      * Worksheet to iterate.
@@ -131,10 +134,8 @@ class ColumnIterator implements Iterator
 
     /**
      * Return the current column in this worksheet.
-     *
-     * @return Column
      */
-    public function current()
+    public function current(): Column
     {
         return new Column($this->worksheet, Coordinate::stringFromColumnIndex($this->currentColumnIndex));
     }

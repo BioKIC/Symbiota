@@ -2,12 +2,14 @@
 
 namespace PhpOffice\PhpSpreadsheet\Worksheet;
 
+use PhpOffice\PhpSpreadsheet\Helper\Dimension as CssDimension;
+
 class RowDimension extends Dimension
 {
     /**
      * Row index.
      *
-     * @var int
+     * @var ?int
      */
     private $rowIndex;
 
@@ -30,12 +32,12 @@ class RowDimension extends Dimension
     /**
      * Create a new RowDimension.
      *
-     * @param int $pIndex Numeric row index
+     * @param ?int $index Numeric row index
      */
-    public function __construct($pIndex = 0)
+    public function __construct($index = 0)
     {
         // Initialise values
-        $this->rowIndex = $pIndex;
+        $this->rowIndex = $index;
 
         // set dimension as unformatted by default
         parent::__construct(null);
@@ -44,7 +46,7 @@ class RowDimension extends Dimension
     /**
      * Get Row Index.
      */
-    public function getRowIndex(): int
+    public function getRowIndex(): ?int
     {
         return $this->rowIndex;
     }
@@ -63,24 +65,33 @@ class RowDimension extends Dimension
 
     /**
      * Get Row Height.
+     * By default, this will be in points; but this method also accepts an optional unit of measure
+     *    argument, and will convert the value from points to the specified UoM.
+     *    A value of -1 tells Excel to display this column in its default height.
      *
      * @return float
      */
-    public function getRowHeight()
+    public function getRowHeight(?string $unitOfMeasure = null)
     {
-        return $this->height;
+        return ($unitOfMeasure === null || $this->height < 0)
+            ? $this->height
+            : (new CssDimension($this->height . CssDimension::UOM_POINTS))->toUnit($unitOfMeasure);
     }
 
     /**
      * Set Row Height.
      *
-     * @param float $height
+     * @param float $height in points. A value of -1 tells Excel to display this column in its default height.
+     * By default, this will be the passed argument value; but this method also accepts an optional unit of measure
+     *    argument, and will convert the passed argument value to points from the specified UoM
      *
      * @return $this
      */
-    public function setRowHeight($height)
+    public function setRowHeight($height, ?string $unitOfMeasure = null)
     {
-        $this->height = $height;
+        $this->height = ($unitOfMeasure === null || $height < 0)
+            ? $height
+            : (new CssDimension("{$height}{$unitOfMeasure}"))->height();
 
         return $this;
     }
@@ -98,9 +109,9 @@ class RowDimension extends Dimension
      *
      * @return $this
      */
-    public function setZeroHeight(bool $pValue)
+    public function setZeroHeight(bool $zeroHeight)
     {
-        $this->zeroHeight = $pValue;
+        $this->zeroHeight = $zeroHeight;
 
         return $this;
     }
