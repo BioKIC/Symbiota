@@ -413,7 +413,7 @@ class DwcArchiverOccurrence extends Manager{
 				if($r->editor) $dynProp['exsEditor'] = $r->editor;
 				$dynProp['exsNumber'] = $r->exsnumber;
 				if($r->notes) $dynProp['exsNotes'] = $r->notes;
-				$retArr['exsJson'] = json_encode($dynProp);
+				$retArr['exsProps'] = $dynProp;
 			}
 			$rs->free();
 		}

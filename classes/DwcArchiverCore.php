@@ -1752,11 +1752,19 @@ class DwcArchiverCore extends Manager{
 				if ($this->schemaType != 'coge') {
 					if ($exsArr = $dwcOccurManager->getExsiccateArr($r['occid'])) {
 						$exsStr = $exsArr['exsStr'];
-						if (isset($r['occurrenceRemarks']) && $r['occurrenceRemarks']) $exsStr = $r['occurrenceRemarks'] . '; ' . $exsStr;
+						if (isset($r['occurrenceRemarks']) && $r['occurrenceRemarks']) {
+							$exsStr = $r['occurrenceRemarks'] . '; ' . $exsStr;
+						}
 						$r['occurrenceRemarks'] = $exsStr;
-						$dynProp = 'exsiccatae: ' . $exsArr['exsJson'];
-						if (isset($r['dynamicProperties']) && $r['dynamicProperties']) $dynProp = $r['dynamicProperties'] . '; ' . $dynProp;
-						$r['dynamicProperties'] = $dynProp;
+
+						//$dynProp = 'exsiccatae: ' . $exsArr['exsJson'];
+						if (!isset($r['dynamicProperties']) || !is_array($r['dynamicProperties'])) {
+							$r['dynamicProperties'] = [];
+						}
+						$r['dynamicProperties']['exsiccatae'] = $exsArr['exsProps'];
+
+						//$dynProp = $r['dynamicProperties'] . '; ' . $dynProp;
+						//$r['dynamicProperties'] = $dynProp;
 					}
 					if ($assocOccurStr = $dwcOccurManager->getAssociationStr($r['occid'])) $r['t_associatedOccurrences'] = $assocOccurStr;
 					if ($assocSeqStr = $dwcOccurManager->getAssociatedSequencesStr($r['occid'])) $r['t_associatedSequences'] = $assocSeqStr;
@@ -1766,6 +1774,10 @@ class DwcArchiverCore extends Manager{
 				$dwcOccurManager->appendUpperTaxonomy2($r);
 				if ($rankStr = $dwcOccurManager->getTaxonRank($r['rankid'])) $r['t_taxonRank'] = $rankStr;
 				unset($r['rankid']);
+
+				if(isset($r['dynamicProperties'])) {
+					$r['dynamicProperties'] = json_encode($r['dynamicProperties']);
+				}
 				$this->encodeArr($r);
 				$this->addcslashesArr($r);
 				$this->writeOutRecord($fh, $r);
@@ -2071,7 +2083,7 @@ class DwcArchiverCore extends Manager{
 
 	private function writeOutRecord($fh, $outputArr){
 		if ($this->delimiter == ",") {
-			fputcsv($fh, $outputArr);
+			fputcsv($fh, $outputArr, $this->delimiter, "\"", "");
 		} else {
 			foreach ($outputArr as $k => $v) {
 				$outputArr[$k] = str_replace($this->delimiter, '', ($v ?? ''));
