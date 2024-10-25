@@ -547,31 +547,6 @@ class ChecklistManager extends Manager{
 		return $retArr;
 	}
 
-	public function getPolygonCoordinates(){
-		$retArr = array();
-		if($this->clid){
-			if($this->clMetadata['dynamicsql']){
-				$sql = 'SELECT o.decimallatitude, o.decimallongitude FROM omoccurrences o ';
-				if($this->clMetadata['footprintwkt'] && substr($this->clMetadata['footprintwkt'],0,7) == 'POLYGON'){
-					$sql .= 'INNER JOIN omoccurpoints p ON o.occid = p.occid WHERE (ST_Within(p.point,GeomFromText("'.$this->clMetadata['footprintwkt'].'"))) ';
-				}
-				else{
-					$voucherManager = new ChecklistVoucherAdmin();
-					$voucherManager->setClid($this->clid);
-					$voucherManager->setCollectionVariables();
-					$sql .= 'WHERE ('.$voucherManager->getSqlFrag().') ';
-				}
-				$sql .= 'LIMIT 50';
-				$rs = $this->conn->query($sql);
-				while($r = $rs->fetch_object()){
-					$retArr[] = $r->decimallatitude.','.$r->decimallongitude;
-				}
-				$rs->free();
-			}
-		}
-		return $retArr;
-	}
-
 	public function downloadChecklistCsv(){
 		if(!$this->basicSql) $this->setClSql();
 		//Output checklist

@@ -88,7 +88,7 @@ function coordInputSelected(formElem){
 		if(name != "onlycoord") f.onlycoord.checked = false;
 		if(name != "includewkt") f.includewkt.checked = false;
 		if(name == "includewkt"){
-			if(!footprintwktExists) alert('The checklist polygon needs to be defined before you can use this feature. Click the editing pencil to the right of the checkbox and use the tools in the "Polygon Footprint" box to define the polygon for the research area.');
+			if(!footprintExists) alert('The checklist polygon needs to be defined before you can use this feature. Click the editing pencil to the right of the checkbox and use the tools in the "Polygon Footprint" box to define the polygon for the research area.');
 		}
 	}
 }

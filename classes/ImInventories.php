@@ -25,7 +25,7 @@ class ImInventories extends Manager{
 		$retArr = array();
 		if($this->clid){
 			$sql = 'SELECT clid, name, locality, publication, abstract, authors, parentclid, notes, latcentroid, longcentroid, pointradiusmeters,
-				access, defaultsettings, dynamicsql, datelastmodified, dynamicProperties, uid, type, footprintwkt, sortsequence, initialtimestamp
+				access, defaultsettings, dynamicsql, datelastmodified, dynamicProperties, uid, type, footprintwkt, footprintGeoJson, sortsequence, initialtimestamp
 				FROM fmchecklists WHERE (clid = '.$this->clid.')';
 			$result = $this->conn->query($sql);
 			if($row = $result->fetch_object()){
@@ -44,8 +44,7 @@ class ImInventories extends Manager{
 				$retArr['access'] = $row->access;
 				$retArr['defaultsettings'] = $row->defaultsettings;
 				$retArr['dynamicsql'] = $row->dynamicsql;
-				$retArr['hasfootprintwkt'] = ($row->footprintwkt?'1':'0');
-				$retArr['footprintwkt'] = $row->footprintwkt;
+				$retArr['hasfootprintwkt'] = ($row->footprintwkt || $row->footprintGeoJson?'1':'0');
 				$retArr['sortsequence'] = $row->sortsequence;
 				$retArr['datelastmodified'] = $row->datelastmodified;
 				$retArr['dynamicProperties'] = $row->dynamicProperties;

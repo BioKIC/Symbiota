@@ -13,6 +13,8 @@ $clManager->setClid($clid);
 
 $clArray = $clManager->getMetaData($pid);
 $clArray = $clManager->cleanOutArray($clArray);
+$footprint = $clManager->getFootprint();
+
 $defaultArr = array();
 if(isset($clArray['defaultsettings']) && $clArray['defaultsettings']){
 	$defaultArr = json_decode($clArray['defaultsettings'], true);
@@ -23,6 +25,7 @@ if(isset($clArray['dynamicProperties']) && $clArray['dynamicProperties']){
 }
 ?>
 <script type="text/javascript" src="../js/tinymce/tinymce.min.js"></script>
+<script src="<?= $CLIENT_ROOT ?>/js/symb/mapAidUtils.js" type="text/javascript"></script>
 <script type="text/javascript">
 	var f = document.getElementById("checklisteditform");
 
@@ -109,12 +112,11 @@ if(isset($clArray['dynamicProperties']) && $clArray['dynamicProperties']){
 		f.activatekey.checked = false;
 	}
 
-	function openMappingAid() {
-		mapWindow=open("<?php echo $CLIENT_ROOT; ?>/collections/tools/mappointaid.php?clid=<?php echo $clid; ?>&formname=editclmatadata&latname=latcentroid&longname=longcentroid","mapaid","resizable=0,width=1000,height=800,left=20,top=20");
+	function openMappingPointAid() {
+		mapWindow=open("<?php echo $CLIENT_ROOT; ?>/collections/tools/mappointaid.php","mapaid","resizable=0,width=1000,height=800,left=20,top=20");
 	    if(mapWindow.opener == null) mapWindow.opener = self;
 	}
-
-	function openMappingPolyAid() {
+	function openMappingShapeAid(mode, type) {
 		var latDec = document.getElementById("decimallatitude").value;
 		var lngDec = document.getElementById("decimallongitude").value;
 		mapWindow=open("<?php echo $CLIENT_ROOT; ?>/checklists/tools/mappolyaid.php?clid=<?php echo $clid; ?>&formname=editclmatadata&latname=latcentroid&longname=longcentroid&latdef="+latDec+"&lngdef="+lngDec,"mapaid","resizable=0,width=1000,height=800,left=20,top=20");
@@ -245,11 +247,11 @@ if(!$clid){
 					<input id="decimallongitude" type="text" name="longcentroid" style="width:110px;" value="<?php echo ($clArray?$clArray["longcentroid"]:''); ?>" />
 				</div>
 				<div style="float:left;margin:25px 3px;">
-					<a href="#" onclick="openMappingAid();return false;"><img src="../images/world.png" style="width:1em;" /></a>
+					<a href="#" onclick="openMappingPointAid();return false;"><img src="../images/world.png" style="width:1em;" /></a>
 				</div>
 				<div style="float:left;margin-left:15px;">
 					<b><?php echo $LANG['POINTRAD']; ?></b><br/>
-					<input id="coordinateuncertaintyinmeters" type="number" name="pointradiusmeters" style="width:110px;" value="<?php echo ($clArray?$clArray["pointradiusmeters"]:''); ?>" />
+					<input type="number" id="coordinateuncertaintyinmeters" name="pointradiusmeters" style="width:110px;" value="<?php echo ($clArray?$clArray["pointradiusmeters"]:''); ?>" />
 				</div>
 			</div>
 			<div style="clear:both" class="top-breathing-room-rel">
@@ -261,8 +263,8 @@ if(!$clid){
 					<span id="polyNotDefDiv" style="display:<?php echo ($clArray && $clArray["hasfootprintwkt"]?'none':'inline'); ?>;">
 						<?php echo $LANG['POLYGON_NOT_DEFINED']; ?>
 					</span>
-					<span style="margin:10px;"><a href="#" onclick="openMappingPolyAid();return false;" title="<?php echo $LANG['CREATE_EDIT_POLYGON']; ?>"><img src="../images/world.png" style="width:1em;" /></a></span>
-					<input type="hidden" id="footprintwkt" name="footprintwkt" value="<?= $clArray['footprintwkt']?>" />
+					<span style="margin:10px;"><a href="#" onclick="openCoordAid({map_mode:MAP_MODES.POLYGON, client_root: '<?= $CLIENT_ROOT?>', polygon_text_type: POLYGON_TEXT_TYPES.<?=$footprint['type'] === 'geoJson' ? 'GEOJSON': 'WKT'?>});return false;" title="<?php echo $LANG['CREATE_EDIT_POLYGON']; ?>"><img src="../images/world.png" style="width:1em;" /></a></span>
+					<input type="hidden" id="footprintwkt" name="footprint<?=htmlspecialchars($footprint['type'])?>" value="<?=htmlspecialchars($footprint['footprint'])?>" />
 				</fieldset>
 			</div>
 			<div style="clear:both;" class="top-breathing-room-rel">

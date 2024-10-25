@@ -21,7 +21,7 @@ class VoucherLinker {
 
 	private $conn;
 	private $clid = 4905;
-	private $footprintWKT;
+	private $footprintGeoJson;
 	private $numberOfVouchersToLoad = 5;
 	private $linkSpecimens = true;
 	private $linkObservations = true;
@@ -41,11 +41,11 @@ class VoucherLinker {
 		$sql = 'DELETE FROM fmvouchers WHERE clid = '.$this->clid;
 		//if(!$this->conn->query($sql)) echo 'ERROR resetting voucher: '.$this->conn->error."\n";
 
-		//Set footprintWKT
-		$sql = 'SELECT footprintwkt FROM fmchecklists WHERE clid = '.$this->clid;
+		//Set footprintGeoJson
+		$sql = 'SELECT footprintGeoJson FROM fmchecklists WHERE clid = '.$this->clid;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			if($r->footprintwkt) $this->footprintWKT = $r->footprintwkt;
+			if($r->footprintGeoJson) $this->footprintGeoJson  = $r->footprintGeoJson;
 		}
 		$rs->free();
 
@@ -79,9 +79,9 @@ class VoucherLinker {
 		$newest = '';
 		$newestOccid = 0;
 		$sql = 'SELECT DISTINCT o.collid, o.occid, o.recordedby, o.recordnumber, o.eventdate, o.establishmentmeans, o.decimallatitude, c.colltype ';
-		if($this->footprintWKT) $sql .= ',ST_Within(p.point,GeomFromText("'.$this->footprintWKT.'")) as inzone ';
+		if($this->footprintGeoJson) $sql .= ',ST_Within(p.lngLatPoint,ST_GeomFromGeoJson("'.$this->footprintGeoJson.'")) as inzone ';
 		$sql .= 'FROM omoccurrences o INNER JOIN omcollections c ON o.collid = c.collid ';
-		if($this->footprintWKT) $sql .= 'LEFT JOIN omoccurpoints p ON o.occid = p.occid ';
+		if($this->footprintGeoJson) $sql .= 'LEFT JOIN omoccurpoints p ON o.occid = p.occid ';
 		$sql .= 'WHERE (o.stateprovince = "New York") AND (o.county LIKE "Bronx%" OR o.county LIKE "Kings%" OR o.county LIKE "New York%" OR o.county LIKE "Queens%" OR o.county LIKE "Richmond%") '.
 			'AND (o.tidinterpreted IN('.implode(',',$tidArr).')) AND (cultivationStatus IS NULL OR cultivationStatus = 0) AND (c.colltype IN("'.implode('","', $collTypeArr).'"))';
 		//echo $sql.'<br/>'; exit;
@@ -106,7 +106,7 @@ class VoucherLinker {
 			if(strpos($r->recordedby,'Atha') !== false) $ranking++;
 			if($r->decimallatitude){
 				$ranking++;
-				if($this->footprintWKT && $r->inzone == 0) continue;
+				if($this->footprintGeoJson && $r->inzone == 0) continue;
 			}
 			if($r->recordnumber){
 				if(!preg_match('/^s\.{0,1}n\.{0,1}$/', $r->recordnumber)) $ranking++;
