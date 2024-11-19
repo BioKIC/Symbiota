@@ -2,13 +2,14 @@
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/content/lang/collections/misc/collprops.'.$LANG_TAG.'.php');
 include_once($SERVER_ROOT.'/classes/OccurrenceCollectionProperty.php');
-if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php')){
+	include_once($SERVER_ROOT.'/content/lang/collections/misc/collectionproperties.' . $LANG_TAG . '.php');
+}
 else include_once($SERVER_ROOT . '/content/lang/collections/misc/collectionproperties.en.php');
+header('Content-Type: text/html; charset=' . $CHARSET);
 
-header('Content-Type: text/html; charset='.$CHARSET);
-
-$action = array_key_exists('submitaction',$_POST)?$_POST['submitaction']:'';
-$collid = array_key_exists('collid',$_REQUEST)?$_REQUEST['collid']:0;
+$collid = array_key_exists('collid', $_REQUEST) ? filter_var($_REQUEST['collid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+$action = array_key_exists('submitaction' , $_POST) ? $_POST['submitaction'] : '';
 
 $propManager = new OccurrenceCollectionProperty();
 $propManager->setCollid($collid);
@@ -20,6 +21,7 @@ if($SYMB_UID){
 		$isEditor = 1;
 	}
 }
+
 $statusStr = '';
 if($isEditor){
 	if($action == 'convertFormat'){
@@ -63,14 +65,13 @@ if($isEditor){
 	include($SERVER_ROOT.'/includes/header.php');
 	?>
 	<div class='navpath'>
-
-		<a href='../../index.php'><?php echo htmlspecialchars((isset($LANG['HOME'])?$LANG['HOME']:'Home'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
-		<a href='collprofiles.php?emode=1&collid=<?php echo htmlspecialchars($collid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>'><?php echo htmlspecialchars((isset($LANG['SPECIAL_PROPS'])?$LANG['SPECIAL_PROPS']:'Special Properties'), ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?></a> &gt;&gt;
-		<b><?php echo $LANG['COLLEC_MANAGEMENT_PROPERTIES']; ?></b>
+		<a href='../../index.php'><?= $LANG['HOME'] ?></a> &gt;&gt;
+		<a href='collprofiles.php?emode=1&collid=<?= $collid ?>'><?= $LANG['SPECIAL_PROPS'] ?></a> &gt;&gt;
+		<b><?= $LANG['COLLEC_MANAGEMENT_PROPERTIES']; ?></b>
 	</div>
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
-		<h1 class="page-heading"><?php echo $collMeta['collName'] . ': ' . $LANG['MANAGEMENT_PROP']; ?></h1>
+		<h1 class="page-heading"><?= $collMeta['collName'] . ': ' . $LANG['MANAGEMENT_PROP']; ?></h1>
 		<?php
 		if($isEditor){
 			$conversionCode = $propManager->getSystemConvertionCode();
@@ -91,42 +92,42 @@ if($isEditor){
 			$dynamicProps = $propManager->getDynPropArr();
 			?>
 			<fieldset style="margin:15px;padding:15px;">
-				<legend><?php echo (isset($LANG['PUB_PROPS'])?$LANG['PUB_PROPS']:'Publication Properties'); ?></legend>
-				<div style="margin:20px"><?php echo $LANG['OVERRIDE_COLLECTION_TITLE']; ?></div>
+				<legend><?= $LANG['PUB_PROPS'] ?></legend>
+				<div style="margin:20px"><?= $LANG['OVERRIDE_COLLECTION_TITLE'] ?></div>
 				<form name="pubPropForm" action="collectionproperties.php" method="post" onsubmit="return verifyPubPropForm(this)">
 					<div style="margin:25px;clear:both;">
-						<span class="fieldLabel"><?php echo (isset($LANG['TITLE_OVERRIDE'])?$LANG['TITLE_OVERRIDE']:'Title Override'); ?>: </span>
-						<input name="titleOverride" type="text" value="<?php echo (isset($dynamicProps['publicationProps']['titleOverride'])?$dynamicProps['publicationProps']['titleOverride']:''); ?>" style="width:80%" />
+						<span class="fieldLabel"><?= $LANG['TITLE_OVERRIDE'] ?>: </span>
+						<input name="titleOverride" type="text" value="<?= $dynamicProps['publicationProps']['titleOverride'] ?>" style="width:80%" />
 					</div>
 					<div style="margin:25px;">
-						<input type="hidden" name="collid" value="<?php echo $collid; ?>" />
-						<button name="submitaction" type="submit" value="saveTitleOverride"><?php echo $LANG['SAVE_TITLE_OVERRIDE']; ?></button>
+						<input type="hidden" name="collid" value="<?= $collid; ?>" />
+						<button name="submitaction" type="submit" value="saveTitleOverride"><?= $LANG['SAVE_TITLE_OVERRIDE']; ?></button>
 					</div>
 				</form>
 			</fieldset>
 			<fieldset style="margin:15px;padding:15px;">
-				<legend><?php echo (isset($LANG['OCC_EDIT_PROPS'])?$LANG['OCC_EDIT_PROPS']:'Occurrence Editor Properties'); ?></legend>
+				<legend><?= $LANG['OCC_EDIT_PROPS'] ?></legend>
 				<?php
 				$moduleArr = array();
 				if(isset($dynamicProps['editorProperties']['module'])) $moduleArr = $dynamicProps['editorProps']['modules-panel'];
 				?>
 				<div class="fieldRowDiv">
 					<div class="fieldDiv">
-						<span class="fieldLabel"><?php echo (isset($LANG['TITLE_OVERRIDE'])?$LANG['TITLE_OVERRIDE']:'Title Override'); ?>: </span>
-						<input name="paleomodule" type="checkbox" value="1" <?php echo (isset($moduleArr['paleo']['status']) && $moduleArr['paleo']['status']?'checked':''); ?> />
+						<span class="fieldLabel"><?= $LANG['TITLE_OVERRIDE'] ?>: </span>
+						<input name="paleomodule" type="checkbox" value="1" <?= (isset($moduleArr['paleo']['status']) && $moduleArr['paleo']['status']?'checked':''); ?> />
 					</div>
 				</div>
 			</fieldset>
 			<fieldset style="margin:15px;padding:15px;">
-				<legend><?php echo (isset($LANG['OCC_EDIT_PROPS'])?$LANG['OCC_EDIT_PROPS']:'Occurrence Editor Properties'); ?></legend>
+				<legend><?= $LANG['OCC_EDIT_PROPS'] ?></legend>
 				<?php
 				$moduleArr = array();
 				if(isset($dynamicProps['editorProperties']['module'])) $moduleArr = $dynamicProps['editorProps']['modules-panel'];
 				?>
 				<div class="fieldRowDiv">
 					<div class="fieldDiv">
-						<span class="fieldLabel"><?php echo (isset($LANG['TITLE_OVERRIDE'])?$LANG['TITLE_OVERRIDE']:'Title Override'); ?>: </span>
-						<input name="paleomodule" type="checkbox" value="1" <?php echo (isset($moduleArr['paleo']['status']) && $moduleArr['paleo']['status']?'checked':''); ?> />
+						<span class="fieldLabel"><?= $LANG['TITLE_OVERRIDE'] ?>: </span>
+						<input name="paleomodule" type="checkbox" value="1" <?= (isset($moduleArr['paleo']['status']) && $moduleArr['paleo']['status']?'checked':''); ?> />
 					</div>
 				</div>
 			</fieldset>
@@ -136,7 +137,7 @@ if($isEditor){
 
 			<?php
 		}
-		else echo '<div style="font-weight:bold;font-size:120%;">'.(isset($LANG['NOT_AUTH'])?$LANG['NOT_AUTH']:'Unauthorized to edit special collection properties').'</div>';
+		else echo '<h2>' . $LANG['NOT_AUTH'] . '</h2>';
 		?>
 	</div>
 	<?php
