@@ -17,7 +17,6 @@ $LANG['COUNTRY'] = 'Country';
 $LANG['STATE_PROVINCE'] = 'State/Province';
 $LANG['COUNTY'] = 'County';
 $LANG['THEN_BY'] = 'Then Sort By';
-$LANG['SEL_FIELD'] = 'Select Field Name';
 $LANG['ORDER'] = 'Sort Order';
 $LANG['ASCENDING'] = 'Ascending';
 $LANG['DESCENDING'] = 'Descending';

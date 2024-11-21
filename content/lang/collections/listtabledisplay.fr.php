@@ -17,7 +17,6 @@ $LANG['COUNTRY'] = 'Pays';
 $LANG['STATE_PROVINCE'] = 'État/province';
 $LANG['COUNTY'] = 'Comté';
 $LANG['THEN_BY'] = 'Puis Trier Par';
-$LANG['SEL_FIELD'] = 'Sélectionner Nom du Champ';
 $LANG['ORDER'] = 'Ordre du Tri';
 $LANG['ASCENDING'] = 'Ascendant';
 $LANG['DESCENDING'] = 'Descendant';

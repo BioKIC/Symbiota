@@ -2,11 +2,9 @@
 /*
 ------------------
 Language: Português (Portuguese)
-Translated by: Google Translate
-Date Translated: 2024-02-16
+Translated by: Google Translate (2024-02-16)
 ------------------
 */
-
 include_once($SERVER_ROOT.'/content/lang/collections/list.pt.php');
 
 $LANG['COL_RESULTS'] = 'Tabela de Resultados de Pesquisa';
@@ -19,7 +17,6 @@ $LANG['COUNTRY'] = 'País';
 $LANG['STATE_PROVINCE'] = 'Estado/Província';
 $LANG['COUNTY'] = 'Condado';
 $LANG['THEN_BY'] = 'Então Classificar Por';
-$LANG['SEL_FIELD'] = 'Selecionar Nome do Campo';
 $LANG['ORDER'] = 'Ordem de Classificação';
 $LANG['ASCENDING'] = 'Crescente';
 $LANG['DESCENDING'] = 'Descendente';
