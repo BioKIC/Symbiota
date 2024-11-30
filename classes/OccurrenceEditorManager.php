@@ -589,6 +589,9 @@ class OccurrenceEditorManager {
 			}
 			if($sqlOrderBy) $sql .= 'ORDER BY (o.'.$sqlOrderBy.') '.$this->qryArr['orderbydir'].' ';
 		}
+		else{
+			$sql .= 'ORDER BY (o.occid) ';
+		}
 	}
 
 	public function getQueryRecordCount($reset = 0){
