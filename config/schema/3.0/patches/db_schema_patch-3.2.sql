@@ -69,6 +69,7 @@ ALTER TABLE `kmcharacters`
   DROP FOREIGN KEY `FK_kmchar_glossary`;
 
 ALTER TABLE `kmcharacters` 
+  ADD COLUMN `enteredUid` INT UNSIGNED NULL AFTER `enteredBy`,
   CHANGE COLUMN `charname` `charName` VARCHAR(150) NOT NULL ,
   CHANGE COLUMN `chartype` `charType` VARCHAR(2) NOT NULL DEFAULT 'UM' ,
   CHANGE COLUMN `defaultlang` `defaultLang` VARCHAR(45) NOT NULL DEFAULT 'English' ,
@@ -78,10 +79,18 @@ ALTER TABLE `kmcharacters`
   CHANGE COLUMN `helpurl` `helpUrl` VARCHAR(500) NULL DEFAULT NULL ,
   CHANGE COLUMN `sortsequence` `sortSequence` INT(10) UNSIGNED NULL DEFAULT NULL ,
   CHANGE COLUMN `enteredby` `enteredBy` VARCHAR(45) NULL DEFAULT NULL ,
-  CHANGE COLUMN `initialtimestamp` `initialTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ;
+  CHANGE COLUMN `initialtimestamp` `initialTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  DROP INDEX `Index_charname` ,
+  DROP INDEX `Index_sort`;
 
 ALTER TABLE `kmcharacters` 
-  ADD CONSTRAINT `FK_kmchar_glossary`  FOREIGN KEY (`glossID`)  REFERENCES `glossary` (`glossid`)  ON DELETE SET NULL  ON UPDATE CASCADE;
+  ADD INDEX `IX_charname` (`charName` ASC),
+  ADD INDEX `IX_sort` (`sortSequence` ASC),
+  ADD INDEX `FK_kmchar_enteredUid_idx` (`enteredUid` ASC);
+
+ALTER TABLE `kmcharacters` 
+  ADD CONSTRAINT `FK_kmchar_glossary`  FOREIGN KEY (`glossID`)  REFERENCES `glossary` (`glossid`)  ON DELETE SET NULL  ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_kmchar_enteredUid`  FOREIGN KEY (`enteredUid`)  REFERENCES `users` (`uid`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmcharacterlang` 
   DROP FOREIGN KEY `FK_charlang_lang`;
@@ -109,6 +118,12 @@ ALTER TABLE `kmchardependance`
   ADD CONSTRAINT `FK_chardependance_cid`  FOREIGN KEY (`cid`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_chardependance_cs`  FOREIGN KEY (`cidDependance` , `csDependance`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
+ALTER TABLE `kmchardependance` 
+  ADD COLUMN `charDependID` INT NOT NULL AUTO_INCREMENT FIRST,
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (`charDependID`),
+  ADD INDEX `UQ_charDependance_cid_cidDep_cs` (`cid` ASC, `cidDependance` ASC, `csDependance` ASC);
+
 
 ALTER TABLE `kmcharheading` 
   DROP FOREIGN KEY `FK_kmcharheading_lang`;
@@ -119,6 +134,16 @@ ALTER TABLE `kmcharheading`
   CHANGE COLUMN `sortsequence` `sortSequence` INT(11) NULL DEFAULT NULL ,
   CHANGE COLUMN `initialtimestamp` `initialTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ;
 
+ALTER TABLE `kmcharheading` 
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (`hid`),
+  DROP INDEX `unique_kmcharheading`,
+  DROP INDEX `HeadingName`;
+  
+ALTER TABLE `kmcharheading` 
+  ADD INDEX `FK_kmcharheading_lang_idx` (`langID` ASC),
+  ADD INDEX `IX_kmcharheading_name` (`headingName` ASC);
+    
 ALTER TABLE `kmcharheading` 
   ADD CONSTRAINT `FK_kmcharheading_lang`  FOREIGN KEY (`langID`)  REFERENCES `adminlanguages` (`langid`);
 
@@ -146,6 +171,14 @@ ALTER TABLE `kmchartaxalink`
   CHANGE COLUMN `timestamp` `initialTimestamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ;
 
 ALTER TABLE `kmchartaxalink` 
+  ADD COLUMN `charTaxaLinkID` INT NOT NULL AUTO_INCREMENT FIRST,
+  DROP INDEX `FK_CharTaxaLink-TID` ,
+  ADD INDEX `FK_charTaxaLink_tid_idx` (`tid` ASC),
+  DROP PRIMARY KEY,
+  ADD PRIMARY KEY (`charTaxaLinkID`),
+  ADD UNIQUE INDEX `UQ_charTaxaLink_cid_tid` (`cid` ASC, `tid` ASC);
+
+ALTER TABLE `kmchartaxalink` 
   ADD CONSTRAINT `FK_chartaxalink_cid`  FOREIGN KEY (`cid`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_chartaxalink_tid`  FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
@@ -162,9 +195,17 @@ ALTER TABLE `kmcs`
   CHANGE COLUMN `glossid` `glossID` INT(10) UNSIGNED NULL DEFAULT NULL ,
   CHANGE COLUMN `StateID` `stateID` INT(10) UNSIGNED NULL DEFAULT NULL ,
   CHANGE COLUMN `SortSequence` `sortSequence` INT(10) UNSIGNED NULL DEFAULT NULL ,
-  CHANGE COLUMN `InitialTimeStamp` `initialTimeStamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ,
+  CHANGE COLUMN `InitialTimeStamp` `initialTimeStamp` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP() ;
+
+ALTER TABLE `kmcs` 
+  CHANGE COLUMN `stateID` `stateID` INT(10) UNSIGNED NOT NULL AUTO_INCREMENT FIRST,
   DROP PRIMARY KEY,
-  ADD PRIMARY KEY (`cid`, `cs`);
+  ADD PRIMARY KEY (`stateID`),
+  ADD UNIQUE INDEX `UQ_kmcs_cid_cs` (`cid` ASC, `cs` ASC);
+
+ALTER TABLE `kmcs` 
+  DROP INDEX `FK_cs_chars`,
+  ADD INDEX `FK_kmcs_cid_idx` (cid);
 
 ALTER TABLE `kmcs` 
   ADD CONSTRAINT `FK_kmcs_glossid`  FOREIGN KEY (`glossID`)  REFERENCES `glossary` (`glossid`)  ON DELETE SET NULL  ON UPDATE CASCADE;
@@ -207,6 +248,7 @@ ALTER TABLE `kmdescr`
 ALTER TABLE `kmdescr` 
   ADD CONSTRAINT `FK_descr_cs`  FOREIGN KEY (`cid` , `cs`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_descr_tid`  FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE;
+
 
 CREATE TABLE `uploadKeyValueTemp`(
   `key_value_id` int(11) NOT NULL AUTO_INCREMENT,

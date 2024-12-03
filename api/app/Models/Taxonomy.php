@@ -11,6 +11,7 @@ class Taxonomy extends Model{
 	protected $fillable = [  ];
 	protected $maps = [ 'sciName' => 'scientificName' ];
 	protected $appends = [ 'scientificName' ];
+	public static $snakeAttributes = false;
 
 	public function getScientificNameAttribute(){
 		return $this->attributes['sciName'];

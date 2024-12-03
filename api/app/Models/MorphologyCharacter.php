@@ -9,10 +9,11 @@ class MorphologyCharacter extends Model{
 	protected $primaryKey = 'cid';
 	public $timestamps = false;
 
-	protected $fillable = [
-		''
-	];
+	protected $fillable = [];
 
-	protected $hidden = [];
+	protected $hidden = ['difficultyRank', 'activationCode', 'enteredUid'];
 
+	public function states(){
+		return $this->hasMany(MorphologyState::class, 'cid', 'cid');
+	}
 }
