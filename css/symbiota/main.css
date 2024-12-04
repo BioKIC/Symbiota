@@ -173,6 +173,15 @@ span[class="link"]:hover {
   padding-top: 1.5rem;
 }
 
+.fieldset-like-box {
+  position: relative;
+  border: 0.2rem solid;
+  margin: 2rem 0 1rem 1rem;
+  padding: 0.8rem;
+  padding-top: 1.5rem;
+  background-color: var(--light-color);
+}
+
 .fieldset-like h1,
 .fieldset-like h2,
 .fieldset-like h3 {

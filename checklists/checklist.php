@@ -733,7 +733,7 @@ $taxonFilter = htmlspecialchars($taxonFilter, ENT_COMPAT | ENT_HTML401 | ENT_SUB
 						?>
 						<div class="editspp" style="width:250px;display:none;">
 							<form id='addspeciesform' action='checklist.php' method='post' name='addspeciesform' onsubmit="return validateAddSpecies(this);">
-								<fieldset style='margin:5px 0px 5px 5px;background-color:#FFFFCC;'>
+								<fieldset class="fieldset-like-box">
 									<legend><b><?php echo $LANG['NEWSPECIES']; ?></b></legend>
 									<div>
 										<?php echo $LANG['TAXON']; ?>:<br/>

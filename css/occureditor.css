@@ -812,7 +812,7 @@ body{
 #addButtonDiv{
 	width:		450px;
 	border:		1px solid black;
-	background-color:	lightyellow;
+	background-color:	var(--light-color);
 	padding:	10px;
 	margin:		20px;
 }

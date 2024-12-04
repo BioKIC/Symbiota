@@ -325,8 +325,8 @@ body{
 	margin-top: 10px;
 	margin-left: 20px;
 	padding:	15px 10px;
-	background-color: lightyellow;
-	border: 1px solid yellow;
+	background-color: var(--light-color);
+	border: 1px solid var(--medium-color);
 	width:	260px;
 }
 
@@ -335,8 +335,8 @@ body{
 	margin-top: 10px;
 	margin-left: 20px;
 	padding:	15px 10px;
-	background-color:	lightyellow;
-	border:1px solid yellow;
+	background-color: var(--light-color);
+	border:1px solid var(--medium-color);
 	width:150px;
 	margin-bottom:10px;
 }
