@@ -74,5 +74,6 @@ $LANG['INCLUDE_IMAGES'] = 'include Image Records';
 $LANG['INCLUDE_ATTRIBUTES'] = 'include Occurrence Trait Attributes (MeasurementOrFact extension)';
 $LANG['OUTPUT_COMPRESSED'] = 'Output must be a compressed archive';
 $LANG['ACCESS_DENIED'] = 'Access denied';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'include Associated Records';
 
 ?>

@@ -46,5 +46,6 @@ $LANG['COMPRESSION'] = 'Compression';
 $LANG['COMPRESSED_ZIP'] = 'Fichier ZIP compressé';
 $LANG['DOWNLOAD_DATA'] = 'Télécharger les données';
 $LANG['LIMIT_NOTE'] = '* Il existe une limite de 1 000 000 d\'enregistrements pour les téléchargements d\'occurrences';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'inclure les Enregistrements Associés';
 
 ?>
