@@ -980,7 +980,7 @@ if ($SYMB_UID) {
 								</a>
 							</h3>
 							<div style='margin:10px;'>
-								<div class="coll-description bottom-breathing-room-rel"><?= $collArr['fulldescription'] ?></div>
+								<div class="coll-description bottom-breathing-room-rel"><?= (!empty($collData) && array_key_exists('fulldescription', $collData)) ? $collData['fulldescription'] : '' ?></div>
 								<?php
 								if(isset($collArr['resourcejson'])){
 									if($resourceArr = json_decode($collArr['resourcejson'], true)){

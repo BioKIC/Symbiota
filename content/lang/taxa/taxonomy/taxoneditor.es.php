@@ -24,6 +24,9 @@ $LANG['DELETE'] = 'Eliminar';
 $LANG['UNITNAME1'] = 'NombreUnitario1';
 $LANG['UNITNAME2'] = 'Epíteto específico';
 $LANG['UNITNAME3'] = 'Epíteto infraespecífico';
+$LANG['UNITNAME4'] = 'Epíteto del Cultivar';
+$LANG['UNITNAME4_DESCRIPTION'] = 'No incluya comillas simples para el epíteto del cultivar durante la entrada de datos.';
+$LANG['UNITNAME5'] = 'Nombre Comercial';
 $LANG['AUTHOR'] = 'Autor';
 $LANG['KINGDOM'] = 'Reino';
 $LANG['RANK_NAME'] = 'Rango del Nombre';
@@ -71,5 +74,6 @@ $LANG['EMPTY'] = 'Vacío';
 $LANG['TARGET_TAXON_MISSING'] = 'Falta el Taxón objetivo';
 $LANG['NOT_AUTH'] = 'No está autorizado para acceder a esta página';
 $LANG['GENUS_NAME'] = 'Nombre del Género';
+$LANG['QUICK_PARSER_LABEL'] = 'Análisis rápido del nombre científico';
 
 ?>

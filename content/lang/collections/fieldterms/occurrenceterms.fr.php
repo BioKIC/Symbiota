@@ -17,6 +17,7 @@ $LANG['YYYY_MM_DD'] = 'YYYY-MM-DD';
 $LANG['ASSOCIATED_COLLECTORS'] = 'Collecteurs associés' ;
 $LANG['VERBATIM_EVENT_DATE'] = 'Verbatim Date de l&apos;événement' ;
 $LANG['FAMILY'] = 'Famille' ;
+$LANG['TRADE_NAME'] = 'Trade Name';
 $LANG['SCIENTIFIC_NAME'] = 'Nom scientifique';
 $LANG['SCINAME'] = 'Nom scientifique' ;
 $LANG['SCIENTIFIC_NAME_AUTHORSHIP'] = 'Auteur';

@@ -8,6 +8,7 @@ if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/taxa/taxonomy/ta
 
 if(!$SYMB_UID) header('Location: '.$CLIENT_ROOT.'/profile/index.php?refurl=../taxa/taxonomy/taxoneditor.php?'.htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES));
 
+
 $tid = $_REQUEST['tid'] ?? 0;
 $taxAuthId = array_key_exists('taxauthid', $_REQUEST)?$_REQUEST['taxauthid']:1;
 $tabIndex = array_key_exists('tabindex',$_REQUEST)?$_REQUEST['tabindex']:0;
@@ -91,7 +92,8 @@ if($isEditor){
 		var tid = <?php echo $taxonEditorObj->getTid(); ?>;
 		var tabIndex = <?php echo $tabIndex; ?>;
 	</script>
-	<script src="../../js/symb/taxa.taxonomyeditor.js?ver=2"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/symb/taxa.sharedTaxonomyCRUD.js?ver=4"></script>
+	<script src="<?php echo $CLIENT_ROOT; ?>/js/symb/taxa.taxonomyeditor.js?ver=2"></script>
 	<style type="text/css">
 		.editDiv{ clear:both; }
 		.editLabel{ float:left; font-weight:bold; }
@@ -128,7 +130,14 @@ if($isEditor){
 	<!-- This is inner text! -->
 	<div role="main" id="innertext">
 		<h1 class="page-heading">
-			<?php echo $LANG['TAX_EDITOR'] . ": <i>" . $taxonEditorObj->getSciName() . "</i> " . $taxonEditorObj->getAuthor() . " [" . $taxonEditorObj->getTid() . "]"; ?>
+			<?php 
+			$splitSciname = $taxonEditorObj->splitSciname();
+			$author = !empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '';
+			$cultivarEpithet = !empty($splitSciname['cultivarEpithet']) ? ($taxonEditorObj->standardizeCultivarEpithet($splitSciname['cultivarEpithet'])) . ' ' : '';
+			$tradeName = !empty($splitSciname['tradeName']) ? ($taxonEditorObj->standardizeTradeName($splitSciname['tradeName']) . ' ') : '';
+			$nonItalicizedScinameComponent = $author . $cultivarEpithet . $tradeName;
+			echo $LANG['TAX_EDITOR'] . ': <i>' . htmlspecialchars($splitSciname['base'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</i> ' . htmlspecialchars($nonItalicizedScinameComponent . ' [' . $taxonEditorObj->getTid() . ']', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); 
+			?>
 		</h1>
 		<?php
 		if($statusStr){
@@ -173,8 +182,34 @@ if($isEditor){
 						<img style='width:1.3em;border:0px;' src='../../images/edit.png'/>
 					</div>
 					<form id="taxoneditform" name="taxoneditform" action="taxoneditor.php" method="post" onsubmit="return validateTaxonEditForm(this)">
+						<input type="hidden" id="sciname" name="sciname" class="search-bar-long" value="" />
 						<div class="editDiv">
-							<div class="editLabel"><?php echo $LANG['UNITNAME1']; ?>: </div>
+							<div class="editLabel"><?php echo (isset($LANG['RANK_NAME'])?$LANG['RANK_NAME']:'Rank Name'); ?>: </div>
+							<div class="editfield">
+								<?php echo ($taxonEditorObj->getRankName() ? $taxonEditorObj->getRankName() : $LANG['NON_RANKED_NODE']); ?>
+							</div>
+							<div class="editfield" style="display:none;">
+								<select id="rankid" name="rankid" style="margin-bottom: 0.5rem;">
+									<option value="0"><?php echo $LANG['NON_RANKED_NODE']; ?></option>
+									<option value="">---------------------------------</option>
+									<?php
+									$rankArr = $taxonEditorObj->getRankArr();
+									foreach($rankArr as $rankId => $nameArr){
+										foreach($nameArr as $rName){
+											echo '<option value="'.$rankId.'" '.($taxonEditorObj->getRankId()==$rankId?'SELECTED':'').'>'.$rName.'</option>';
+										}
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div class="editDiv" id="genus-div">
+							<div class="editLabel">
+								<!-- <?php echo $LANG['UNITNAME1']; ?>:  -->
+								 <label id="unitind1label" for="unitind1">
+									<?php echo $LANG['GENUS_NAME']; ?>:
+								</label>
+							</div>
 							<div class="editfield">
 								<?php
 								$unitInd1 = $taxonEditorObj->getUnitInd1();
@@ -182,7 +217,7 @@ if($isEditor){
 								?>
 							</div>
 							<div class="editfield" style="display:none;">
-								<select name="unitind1">
+								<select id="unitind1-select" name="unitind1">
 									<option value=""></option>
 									<option value="&#215;" <?php echo ($unitInd1 && (mb_ord($unitInd1)==215 || strtolower($unitInd1) == 'x')?'selected':''); ?>>&#215;</option>
 									<option value="&#8224;" <?php echo ($unitInd1 && mb_ord($unitInd1)==8224?'selected':''); ?>>&#8224;</option>
@@ -190,8 +225,8 @@ if($isEditor){
 								<input type="text" id="unitname1" name="unitname1" style="width:300px;border-style:inset;" value="<?php echo $taxonEditorObj->getUnitName1(); ?>" />
 							</div>
 						</div>
-						<div class="editDiv">
-							<div class="editLabel"><?php echo $LANG['UNITNAME2']; ?>: </div>
+						<div id="div2hide" style="display: <?php echo empty($taxonEditorObj->getUnitName2()) ? 'none' : 'block'; ?>" class="editDiv">
+							<div id="unit-2-name-label" class="editLabel"><?php echo $LANG['UNITNAME2']; ?>: </div>
 							<div class="editfield">
 								<?php
 								$unitInd2 = $taxonEditorObj->getUnitInd2();
@@ -199,14 +234,14 @@ if($isEditor){
 								?>
 							</div>
 							<div class="editfield" style="display:none;">
-								<select name="unitind2">
+								<select name="unitind2" id="unitind2-select">
 									<option value=""></option>
 									<option value="&#215;" <?php echo (ord($unitInd2 ?? '') == 195 || strtolower($unitInd2 ?? '') == 'x'?'selected':''); ?>>&#215;</option>
 								</select>
 								<input type="text" id="unitname2" name="unitname2" style="width:300px;border-style:inset;" value="<?php echo $taxonEditorObj->getUnitName2(); ?>" />
 							</div>
 						</div>
-						<div class="editDiv">
+						<div id="div3hide" style="display: <?php echo empty($taxonEditorObj->getUnitName3()) ? 'none' : 'block'; ?>" class="editDiv">
 							<div class="editLabel"><?php echo $LANG['UNITNAME3']; ?>: </div>
 							<div class="editfield">
 								<?php echo $taxonEditorObj->getUnitInd3()." ".$taxonEditorObj->getUnitName3();?>
@@ -216,7 +251,29 @@ if($isEditor){
 								<input type="text" id="unitname3" name="unitname3" style="width:300px;border-style:inset;" value="<?php echo $taxonEditorObj->getUnitName3(); ?>" />
 							</div>
 						</div>
-						<div class="editDiv">
+						<div id="div4hide" class="editDiv">
+							<div id="unit4Display" style="display: <?php echo (empty($taxonEditorObj->getCultivarEpithet()) && empty($taxonEditorObj->getTradeName()))  ? 'none' : 'block'; ?>">
+								<div class="editLabel"><?php echo $LANG['UNITNAME4']; ?>: </div>
+								<div class="editfield">
+									<?php echo htmlspecialchars($taxonEditorObj->getCultivarEpithet() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>
+								</div>
+								<div class="editfield" style="display:none;">
+									<input placeholder="e.g., cultivar epithet (no quotes)" aria-placeholder="Cultivar epithet. Do not include quotations." type="text" id="cultivarEpithet" name="cultivarEpithet" style="width:300px;border-style:inset;" value="<?php echo htmlspecialchars($taxonEditorObj->getCultivarEpithet() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" />
+								</div>
+							</div>
+						</div>
+						<div id="div5hide" class="editDiv">
+							<div id="unit5Display" style="display: <?php echo (empty($taxonEditorObj->getTradeName()) && empty($taxonEditorObj->getCultivarEpithet())) ? 'none' : 'block'; ?>">
+								<div class="editLabel"><?php echo $LANG['UNITNAME5']; ?>: </div>
+								<div class="editfield">
+									<?php echo htmlspecialchars($taxonEditorObj->getTradeName() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>
+								</div>
+								<div class="editfield" style="display:none;">
+									<input placeholder="e.g., TRADENAME" aria-placeholder="Entry will be converted to uppercase letters per trade name convention" type="text" id="tradeName" name="tradeName" style="width:300px;border-style:inset;" value="<?php echo htmlspecialchars($taxonEditorObj->getTradeName() ?? '', ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" />
+								</div>
+							</div>
+						</div>
+						<div id="author-div" class="editDiv">
 							<div class="editLabel"><?php echo $LANG['AUTHOR']; ?>: </div>
 							<div class="editfield">
 								<?php echo $taxonEditorObj->getAuthor();?>
@@ -231,26 +288,6 @@ if($isEditor){
 								<?php
 								echo $taxonEditorObj->getKingdomName();
 								?>
-							</div>
-						</div>
-						<div class="editDiv">
-							<div class="editLabel"><?php echo $LANG['RANK_NAME']; ?>: </div>
-							<div class="editfield">
-								<?php echo ($taxonEditorObj->getRankName()?$taxonEditorObj->getRankName(): $LANG['NON_RANKED_NODE'] ); ?>
-							</div>
-							<div class="editfield" style="display:none;">
-								<select id="rankid" name="rankid">
-									<option value="0"><?php echo $LANG['NON_RANKED_NODE']; ?></option>
-									<option value="">---------------------------------</option>
-									<?php
-									$rankArr = $taxonEditorObj->getRankArr();
-									foreach($rankArr as $rankId => $nameArr){
-										foreach($nameArr as $rName){
-											echo '<option value="' . $rankId . '" ' . ($taxonEditorObj->getRankId()==$rankId?'SELECTED':'') . '>' . $rName . '</option>';
-										}
-									}
-									?>
-								</select>
 							</div>
 						</div>
 						<div class="editDiv">
@@ -304,10 +341,13 @@ if($isEditor){
 								<input type='hidden' name='securitystatusstart' value='<?php echo $taxonEditorObj->getSecurityStatus(); ?>' />
 							</div>
 						</div>
-						<div class="editfield" style="display:none;clear:both;margin:15px 0px">
+						<div class="editfield" style="display:none;clear:both;margin:15px 0px" class="gridlike-form">
 							<input type="hidden" name="tid" value="<?php echo $taxonEditorObj->getTid(); ?>" />
 							<input type="hidden" name="taxauthid" value="<?php echo $taxAuthId;?>">
-							<button type="submit" id="taxoneditsubmit" name="taxonedits" value="submitEdits" ><?php echo $LANG['SUBMIT_EDITS']; ?></button>
+							<div class="gridlike-form-row">
+								<button type="submit" id="taxoneditsubmit" name="taxonedits" value="submitEdits" ><?php echo $LANG['SUBMIT_EDITS']; ?></button>
+								<span id="error-display" style="color: var(--danger-color)"></span>
+							</div>
 						</div>
 					</form>
 				</div>

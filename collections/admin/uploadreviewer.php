@@ -102,7 +102,7 @@ if($SYMB_UID){
 					'minimumdepthinmeters' => 'minimumDepthInMeters','maximumdepthinmeters' => 'maximumDepthInMeters','verbatimdepth' => 'verbatimDepth',
 					'occurrenceremarks' => 'occurrenceRemarks','associatedsequences' => 'associatedSequences','associatedtaxa' => 'associatedTaxa','verbatimattributes' => 'verbatimAttributes',
 					'lifestage' => 'lifeStage', 'individualcount' => 'individualCount','samplingprotocol' => 'samplingProtocol', 'reproductivecondition' => 'reproductiveCondition',
-					'typestatus' => 'typeStatus','cultivationstatus' => 'cultivationStatus','establishmentmeans' => 'establishmentMeans','duplicatequantity' => 'duplicatequantity',
+					'typestatus' => 'typeStatus','cultivationstatus' => 'cultivationStatus','cultivarepithet' => 'cultivarEpithet', 'tradename' => 'tradeName', 'establishmentmeans' => 'establishmentMeans','duplicatequantity' => 'duplicatequantity',
 					'datelastmodified' => 'dateLastModified','processingstatus' => 'processingStatus','recordenteredby' => 'recordEnteredBy',
 					'basisofrecord' => 'basisOfRecord','occid' => 'occid (Primary Key)','dbpk'=>'dbpk (Source Identifier)');
 				?>

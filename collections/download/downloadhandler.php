@@ -4,6 +4,7 @@ include_once($SERVER_ROOT . '/classes/OccurrenceDownload.php');
 include_once($SERVER_ROOT . '/classes/OccurrenceMapManager.php');
 include_once($SERVER_ROOT . '/classes/DwcArchiverCore.php');
 
+
 $sourcePage = array_key_exists("sourcepage", $_REQUEST) ? $_REQUEST["sourcepage"] : "specimen";
 $schema = array_key_exists("schema", $_REQUEST) ? $_REQUEST["schema"] : "symbiota";
 $cSet = array_key_exists("cset", $_POST) ? $_POST["cset"] : '';

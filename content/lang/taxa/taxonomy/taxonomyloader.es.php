@@ -7,9 +7,9 @@ Language: Español
 
 include_once($SERVER_ROOT.'/content/lang/taxa/taxonomy/taxoneditor.'.$LANG_TAG.'.php');
 
-$LANG['TAXON_LOADER'] = 'Cargador de Taxón';
+$LANG['TAXON_LOADER'] = 'Añadir Nuevo Taxón';
 $LANG['TAXONOMY_LOADER'] = 'Cargador de Taxonomía';
-$LANG['TAXON_NAME'] = 'Nombre de Taxón';
+$LANG['TAXON_NAME'] = 'Analizador Rápido';
 $LANG['TAXON_RANK'] = 'Rango de Taxón';
 $LANG['SEL_TAX_RANK'] = 'Seleccionar Rango de Taxón';
 $LANG['ADD_PARENT'] = 'Añadir Taxón Superior';
@@ -22,5 +22,7 @@ $LANG['GENUS_NAME'] = 'Género o Nombre Base';
 $LANG['EPITHET'] = 'Epíteto';
 $LANG['INFRA_EPITHET_FIELD'] = 'Campo de epíteto infraespecífico';
 $LANG['RANK_FIELD'] = 'Campo de clasificación';
+$LANG['RUN_QUICK_PARSE'] = 'Analizar sintáctico';
+$LANG['REQUIRED'] = "* = Campo Obligatorio";
 
 ?>

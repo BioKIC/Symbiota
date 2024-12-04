@@ -7,9 +7,9 @@ Language: English
 
 include_once($SERVER_ROOT.'/content/lang/taxa/taxonomy/taxoneditor.'.$LANG_TAG.'.php');
 
-$LANG['TAXON_LOADER'] = 'Taxon Loader';
+$LANG['TAXON_LOADER'] = 'Add New Taxon';
 $LANG['TAXONOMY_LOADER'] = 'Taxonomy Loader';
-$LANG['TAXON_NAME'] = 'Taxon Name';
+$LANG['TAXON_NAME'] = 'Paste name here for parsing';
 $LANG['TAXON_RANK'] = 'Taxon Rank';
 $LANG['SEL_TAX_RANK'] = 'Select Taxon Rank';
 $LANG['ADD_PARENT'] = 'Add Parent';
@@ -23,5 +23,7 @@ $LANG['EPITHET'] = 'Epithet';
 $LANG['SPECIF_EPITHET_FIELD'] = 'Specific Epithet Field';
 $LANG['INFRA_EPITHET_FIELD'] = 'Infraspecific Epithet Field';
 $LANG['RANK_FIELD'] = 'Rank Field';
+$LANG['RUN_QUICK_PARSE'] = 'Parse';
+$LANG['REQUIRED'] = "* = Required Field"
 
 ?>

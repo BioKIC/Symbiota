@@ -1,7 +1,9 @@
 <?php
 include_once($SERVER_ROOT.'/classes/RpcBase.php');
-
+include_once($SERVER_ROOT.'/traits/TaxonomyTrait.php');
 class RpcTaxonomy extends RpcBase{
+
+	use TaxonomyTrait;
 
 	private $taxAuthID = 1;
 
@@ -26,21 +28,40 @@ class RpcTaxonomy extends RpcBase{
 			foreach($termArr as $k => $v){
 				if(mb_strlen($v) == 1) unset($termArr[$k]);
 			}
-			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.author FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE ts.taxauthid = '.$this->taxAuthID.' AND (t.sciname LIKE "'.$term.'%" ';
+			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE ts.taxauthid = '.$this->taxAuthID.' AND (t.sciname LIKE "'.$term.'%" ';
 			$sqlFrag = '';
-			if($unit1 = array_shift($termArr)) $sqlFrag =  't.unitname1 LIKE "'.$unit1.'%" ';
-			if($unit2 = array_shift($termArr)) $sqlFrag .=  'AND t.unitname2 LIKE "'.$unit2.'%" ';
+			if($unit1 = array_shift($termArr)) $sqlFrag =  't.unitname1 LIKE "' . $unit1 . '%" ';
+			if($unit2 = array_shift($termArr)) $sqlFrag .=  'AND t.unitname2 LIKE "' . $unit2 . '%" ';
 			if($sqlFrag) $sql .= 'OR ('.$sqlFrag.')';
 			$sql .= ') ';
 			if($rankLimit) $sql .= 'AND (t.rankid = '.$rankLimit.') ';
 			else{
 				if($rankLow) $sql .= 'AND (t.rankid > '.$rankLow.' OR t.rankid IS NULL) ';
-				if($rankHigh) $sql .= 'AND (t.rankid < '.$rankHigh.' OR t.rankid IS NULL) ';
+				if($rankHigh) $sql .= 'AND (t.rankid <= '.$rankHigh.' OR t.rankid IS NULL) ';
 			}
 			$sql .= 'ORDER BY t.sciname';
 			$rs = $this->conn->query($sql);
+			$sciname = null;
 			while($r = $rs->fetch_object()) {
-				$sciname = $r->sciname.' '.$r->author;
+				$sciname = $r->sciname;
+
+				if(!empty($r->tradeName)){
+					$sciname = str_replace($r->tradeName, '', $sciname);
+				}
+
+				if(!empty($r->cultivarEpithet)){
+					$sciname = str_replace("'" . $r->cultivarEpithet . "'", '', trim($sciname)); // @TODO could possibly replace off-target if cultivarEpithet matches some parent taxon exactly. We think extremely unlikely edge case, so ignoring for now.
+				}
+
+				if(!empty($r->author)){
+					$sciname = trim($sciname) . ' ' . $r->author;
+				}
+				if(!empty($r->cultivarEpithet)){
+					$sciname .= " " . $this->standardizeCultivarEpithet($r->cultivarEpithet);
+				}
+				if(!empty($r->tradeName)){
+					$sciname .= ' ' . $this->standardizeTradeName($r->tradeName);
+				}
 				$retArr[] = array('id' => $r->tid,'label' => $sciname);
 			}
 			$rs->free();
@@ -50,13 +71,30 @@ class RpcTaxonomy extends RpcBase{
 
 	public function getAcceptedTaxa($queryTerm){
 		$retArr = Array();
-		$sql = 'SELECT t.tid, t.sciname, t.author '.
+		$sql = 'SELECT t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author '.
 			'FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid '.
 			'WHERE (ts.taxauthid = '.$this->taxAuthID.') AND (ts.tid = ts.tidaccepted) AND (t.sciname LIKE "'.$this->cleanInStr($queryTerm).'%") '.
 			'ORDER BY t.sciname LIMIT 20';
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
-			$sciname = $r->sciname.' '.$r->author;
+			$sciname = $r->sciname; //.' '.$r->author;
+			if(!empty($r->tradeName)){
+				$sciname = str_replace($r->tradeName, '', $sciname);
+			}
+
+			if(!empty($r->cultivarEpithet)){
+				$sciname = str_replace("'" . $r->cultivarEpithet . "'", '', trim($sciname)); // @TODO could possibly replace off-target if cultivarEpithet matches some parent taxon exactly. We think extremely unlikely edge case, so ignoring for now.
+			}
+
+			if(!empty($r->author)){
+				$sciname = trim($sciname) . ' ' . $r->author;
+			}
+			if(!empty($r->cultivarEpithet)){
+				$sciname .= " " . $this->standardizeCultivarEpithet($r->cultivarEpithet);
+			}
+			if(!empty($r->tradeName)){
+				$sciname .= ' ' . $this->standardizeTradeName($r->tradeName);
+			}
 			$retArr[] = array('id' => $r->tid,'label' => $sciname);
 		}
 		$rs->free();
@@ -174,7 +212,7 @@ class RpcTaxonomy extends RpcBase{
 		else{
 			$objId = filter_var($objId, FILTER_SANITIZE_NUMBER_INT);
 			//Get children, but only accepted children
-			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid FROM taxa AS t INNER JOIN taxstatus AS ts ON t.tid = ts.tid ';
+			$sql = 'SELECT DISTINCT t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author, t.rankid FROM taxa AS t INNER JOIN taxstatus AS ts ON t.tid = ts.tid ';
 			if($limitToOccurrences) $sql .= 'INNER JOIN taxaenumtree e ON t.tid = e.parenttid INNER JOIN omoccurrences o ON e.tid = o.tidInterpreted ';
 			$sql .=	'WHERE (ts.taxauthid = ?) AND (ts.tid = ts.tidaccepted) AND ((ts.parenttid = ?) OR (t.tid = ?)) ';
 			//echo $sql.'<br>';
@@ -186,10 +224,14 @@ class RpcTaxonomy extends RpcBase{
 				while($r = $result->fetch_object()){
 					$rankName = (isset($taxonUnitArr[$r->rankid]) ? $taxonUnitArr[$r->rankid] : 'Unknown');
 					$label = '2-'.$r->rankid.'-'.$rankName.'-'.$r->sciname;
-					$sciName = $r->sciname;
-					if($r->rankid >= 180) $sciName = '<i>' . $sciName . '</i>';
-					if($r->tid == $targetId) $sciName = '<b>' . $sciName . '</b>';
-					$sciName = "<span style='font-size:75%;'>" . $rankName . ":</span> " . $sciName . ($displayAuthor ? " " . $r->author : "");
+					$sciNameParts = $this->splitScinameByProvided($r->sciname, $r->cultivarEpithet, $r->tradeName, $r->author);
+                    $sciName = $sciNameParts['base'];
+                    if($r->rankid >= 180) $sciName = '<i>' . $sciName . '</i>';
+                    $sciName .= $displayAuthor ? " " . $r->author : "";
+                    if(!empty($sciNameParts['cultivarEpithet'])) $sciName .= " '" . $sciNameParts['cultivarEpithet'] . "'";
+                    if(!empty($sciNameParts['tradeName'])) $sciName .= " " . $sciNameParts['tradeName'];
+                    if($r->tid == $targetId) $sciName = '<b>' . $sciName . '</b>';
+                    $sciName = "<span style='font-size:75%;'>" . $rankName . ":</span> " . $sciName;
 					if($r->tid == $objId){
 						$retArr['id'] = $r->tid;
 						$retArr['label'] = $label;
@@ -238,7 +280,7 @@ class RpcTaxonomy extends RpcBase{
 			}
 
 			//Get synonyms for all accepted taxa
-			$sqlSyns = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid '.
+			$sqlSyns = 'SELECT DISTINCT t.tid, t.sciname, t.cultivarEpithet, t.tradeName, t.author, t.rankid '.
 				'FROM taxa AS t INNER JOIN taxstatus AS ts ON t.tid = ts.tid '.
 				'WHERE (ts.tid <> ts.tidaccepted) AND (ts.taxauthid = ?) AND (ts.tidaccepted = ?)';
 			//echo 'syn: '.$sqlSyns.'<br/>';
@@ -249,10 +291,13 @@ class RpcTaxonomy extends RpcBase{
 				while($row = $resultSyns->fetch_object()){
 					$rankName = (isset($taxonUnitArr[$row->rankid]) ? $taxonUnitArr[$row->rankid] : 'Unknown');
 					$label = '1-' . $row->rankid . '-' . $rankName . '-' . $row->sciname;
-					$sciName = $row->sciname;
-					if($row->rankid >= 180) $sciName = '<i>' . $sciName . '</i>';
-					if($row->tid == $targetId) $sciName = '<b>' . $sciName . '</b>';
-					$sciName = '[' . $sciName . ']' . ($displayAuthor ? ' ' . $row->author : '');
+					$sciNameParts = $this->splitScinameByProvided($row->sciname, $row->cultivarEpithet, $row->tradeName, $row->author);
+                    $sciName = $sciNameParts['base'];
+                    if($row->rankid >= 180) $sciName = '[<i>' . $sciName . '</i>]';
+                    $sciName .= $displayAuthor ? " " . $row->author : "";
+                    if(!empty($sciNameParts['cultivarEpithet'])) $sciName .= " '" . $sciNameParts['cultivarEpithet'] . "'";
+                    if(!empty($sciNameParts['tradeName'])) $sciName .= " " . $sciNameParts['tradeName'];
+                    if($row->tid == $targetId) $sciName = '<b>' . $sciName . '</b>';
 					$childArr[$i]['id'] = $row->tid;
 					$childArr[$i]['label'] = $label;
 					$childArr[$i]['name'] = $sciName;

@@ -222,7 +222,10 @@ $specImgArr = $occManager->getImageMap();  // find out if there are images in or
 					<div>
 						<?php
 						if($detRec['identificationqualifier']) echo $detRec['identificationqualifier'].' ';
-						echo '<b><i>'.$detRec['sciname'].'</i></b> '.$detRec['scientificnameauthorship'];
+							$nonItalicized = ' ';
+							if (!empty($detRec['nonItalicized']))
+								$nonItalicized .= $detRec['nonItalicized'];
+							echo '<b><i>' . $detRec['sciname'] . '</i>' . $nonItalicized .'</b> ' . $detRec['scientificnameauthorship'];
 						if($detRec['iscurrent']){
 							if($detRec['appliedstatus']){
 								echo '<span style="margin-left:10px;color:red;">'.$LANG['CURRENT_DET'].'</span>';
