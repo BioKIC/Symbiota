@@ -81,7 +81,7 @@ if(isset($PORTAL_GUID) && $PORTAL_GUID){
                     	alert("<?= $LANG['NO_POINTS_TO_TRANSFER'] ?>");
                     }
                     else{
-	                	opener.geoLocateUpdateCoord(breakdown[0],breakdown[1],breakdown[2],breakdown[3]);
+						opener.geoLocateUpdateCoord(breakdown[0],breakdown[1],breakdown[2],breakdown[3], '<?= $CLIENT_ROOT ?>');
 	                    self.close();
                     }
                 }

@@ -951,5 +951,24 @@ class GeographicThesaurus extends Manager {
 		$rs->free();
 		return $bool;
 	}
+
+	public function geocode($lng, $lat) {
+		if(!$lng || !$lat) return [];
+
+		$result = SymbUtil::execute_query($this->conn ,"
+			SELECT g.geoThesID, geoterm, geoLevel 
+			from geographicthesaurus g 
+			join geographicpolygon gp on gp.geoThesID = g.geoThesID 
+			where ST_Within(Point(?, ?), gp.footprintPolygon) order by geolevel
+			", [floatval($lng), floatval($lat)]);
+
+		$matches = [];
+		while($r = $result->fetch_assoc()) {
+			array_push($matches, $r);
+		}
+
+
+		return $matches;
+	}
 }
 ?>
