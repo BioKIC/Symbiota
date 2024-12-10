@@ -26,7 +26,7 @@ class TPImageEditorManager extends TPEditorManager{
 			$rs1->free();
 		}
 
-		$sql = 'SELECT m.media_id, m.url, m.thumbnailurl, m.originalurl, m.caption, m.creator, m.creatorUid, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorDisplay,
+		$sql = 'SELECT m.mediaID, m.url, m.thumbnailurl, m.originalurl, m.caption, m.creator, m.creatorUid, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorDisplay,
 			m.owner, m.locality, m.occid, m.notes, m.sortsequence, m.sourceurl, m.copyright, t.tid, t.sciname ';
 		if($this->acceptance){
 			$sql .= 'FROM media m INNER JOIN taxstatus ts ON m.tid = ts.tid
@@ -44,7 +44,7 @@ class TPImageEditorManager extends TPEditorManager{
 		$rs = $this->conn->query($sql);
 		$imgCnt = 0;
 		while($r = $rs->fetch_object()){
-			$imageArr[$imgCnt]['imgid'] = $r->media_id;
+			$imageArr[$imgCnt]['mediaid'] = $r->mediaID;
 			$imageArr[$imgCnt]['url'] = $r->url;
 			$imageArr[$imgCnt]['thumbnailurl'] = $r->thumbnailurl;
 			$imageArr[$imgCnt]['originalurl'] = $r->originalurl;
@@ -81,7 +81,7 @@ class TPImageEditorManager extends TPEditorManager{
 		$status = "";
 		foreach($imgSortEdits as $editKey => $editValue){
 			if(is_numeric($editKey) && is_numeric($editValue)){
-				$sql = 'UPDATE media SET sortsequence = '.$editValue.' WHERE media_id= '.$editKey;
+				$sql = 'UPDATE media SET sortsequence = '.$editValue.' WHERE mediaID = '.$editKey;
 				//echo $sql;
 				if(!$this->conn->query($sql)){
 					$status .= $this->conn->error."\nSQL: ".$sql."; ";

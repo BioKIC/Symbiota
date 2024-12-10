@@ -34,7 +34,7 @@ function openTaxonPopup(tid){
 }
 
 function openImagePopup(imageId){
-	openPopup("imgdetails.php?imgid="+imageId, 'image'+imageId);
+	openPopup("imgdetails.php?mediaid="+imageId, 'image'+imageId);
 	return false;
 }
 

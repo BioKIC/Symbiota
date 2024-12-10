@@ -5,8 +5,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Media extends Model{
 
-	protected $table = 'images';
-	protected $primaryKey = 'imgid';
+	protected $table = 'media';
+	protected $primaryKey = 'mediaID';
 
 	public $timestamps = false;
 

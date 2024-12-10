@@ -78,7 +78,7 @@ else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/imgpro
 			$imgCnt = 1;
 			foreach($imgArr as $imgCnt => $iArr){
 				$iUrl = $iArr['web'];
-				$imgId = $iArr['imgid'];
+				$imgId = $iArr['mediaid'];
 				?>
 				<div id="labeldiv-<?php echo $imgCnt; ?>" style="display:<?php echo ($imgCnt==1?'block':'none'); ?>;">
 					<div>

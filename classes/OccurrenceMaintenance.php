@@ -498,7 +498,7 @@ class OccurrenceMaintenance {
 					$rs->free();
 
 					$this->outputMsg('Calculating number of specimens imaged... ', 1);
-					$sql = 'SELECT count(DISTINCT o.occid) as imgspeccnt, count(DISTINCT m.media_id) AS imgcnt
+					$sql = 'SELECT count(DISTINCT o.occid) as imgspeccnt, count(DISTINCT m.mediaID) AS imgcnt
 						FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid
 						WHERE o.collid = '.$collid;
 					$rs = $this->conn->query($sql);

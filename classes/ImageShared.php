@@ -547,7 +547,7 @@ class ImageShared{
 			//Save currently loaded record
 			$guid = UuidFactory::getUuidV4();
 			$sql = 'INSERT INTO media (tid, url, thumbnailurl, originalurl, archiveUrl, sourceurl, referenceUrl, creator, creatorUid, format, caption, owner,
-				locality, occid, anatomy, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights, copyright, hashFunction, hashValue, mediaMD5, recordID, media_type)
+				locality, occid, anatomy, notes, username, sortsequence, sortoccurrence, sourceIdentifier, rights, accessrights, copyright, hashFunction, hashValue, mediaMD5, recordID, mediaType)
 				VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, "image")';
 			if($stmt = $this->conn->prepare($sql)) {
 				$userName = $this->cleanInStr($GLOBALS['USERNAME']);
@@ -581,7 +581,7 @@ class ImageShared{
 	public function deleteImage($imgIdDel, $removeImg){
 		if(is_numeric($imgIdDel)){
 			$imgUrl = ''; $imgThumbnailUrl = ''; $imgOriginalUrl = ''; $occid = 0;
-			$sqlQuery = 'SELECT url, thumbnailUrl, originalUrl, tid, occid FROM media WHERE (media_id = '.$imgIdDel.')';
+			$sqlQuery = 'SELECT url, thumbnailUrl, originalUrl, tid, occid FROM media WHERE (mediaID = '.$imgIdDel.')';
 			$rs = $this->conn->query($sqlQuery);
 			if($r = $rs->fetch_object()){
 				$imgUrl = $r->url;
@@ -594,12 +594,12 @@ class ImageShared{
 
 			if($occid){
 				//Remove any OCR text blocks linked to the image
-				$this->conn->query('DELETE FROM specprocessorrawlabels WHERE (imgid = '.$imgIdDel.')');
+				$this->conn->query('DELETE FROM specprocessorrawlabels WHERE (mediaID = ' . $imgIdDel . ')');
 			}
 			//Remove image tags
-			$this->conn->query('DELETE FROM imagetag WHERE (imgid = '.$imgIdDel.')');
+			$this->conn->query('DELETE FROM imagetag WHERE (mediaID = ' . $imgIdDel . ')');
 
-			$sql = "DELETE FROM media WHERE (media_id = ".$imgIdDel.')';
+			$sql = 'DELETE FROM media WHERE (mediaID = ' . $imgIdDel . ')';
 			//echo $sql;
 			if($this->conn->query($sql)){
 				if($removeImg){
@@ -651,7 +651,7 @@ class ImageShared{
 			$kArr = $this->getImageTagValues();
 			foreach($kArr as $key => $description) {
 				if(array_key_exists("ch_$key",$reqArr)) {
-					$sql = "INSERT INTO imagetag (imgid,keyvalue) VALUES (?,?) ";
+					$sql = 'INSERT INTO imagetag (mediaID, keyvalue) VALUES (?,?) ';
 					$stmt = $this->conn->stmt_init();
 					$stmt->prepare($sql);
 					if($stmt){

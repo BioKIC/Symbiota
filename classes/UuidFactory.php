@@ -92,7 +92,7 @@ class UuidFactory {
 
 		//Populate image GUIDs
 		$this->echoStr("Populating image GUIDs\n");
-		$sql = 'SELECT m.media_id FROM media m ';
+		$sql = 'SELECT m.mediaID FROM media m ';
 		if($collId) $sql .= 'INNER JOIN omoccurrences o ON m.occid = o.occid ';
 		$sql .= 'WHERE m.recordID IS NULL ';
 		if($collId) $sql .= 'AND o.collid = '.$collId;
@@ -101,7 +101,7 @@ class UuidFactory {
 		if($rs->num_rows){
 			while($r = $rs->fetch_object()){
 				$guid = UuidFactory::getUuidV4();
-				$insSql = 'UPDATE media SET recordID = "'.$guid.'" WHERE (recordID IS NULL) AND (media_id = ' . $r->media_id .')';
+				$insSql = 'UPDATE media SET recordID = "'.$guid.'" WHERE (recordID IS NULL) AND (mediaID = ' . $r->mediaID .')';
 				if(!$this->conn->query($insSql)){
 					$this->echoStr('ERROR: image guids; '.$this->conn->error);
 				}
@@ -154,9 +154,9 @@ class UuidFactory {
 
 	public function getImageCount($collId = 0){
 		$retCnt = 0;
-		$sql = 'SELECT COUNT(m.media_id) as reccnt FROM media m ';
+		$sql = 'SELECT COUNT(m.mediaID) as reccnt FROM media m ';
 		if($collId) $sql .= 'INNER JOIN omoccurrences o ON m.occid = o.occid ';
-		$sql .= 'WHERE m.recordID IS NULL and m.media_type = "image"';
+		$sql .= 'WHERE m.recordID IS NULL and m.mediaType = "image"';
 		if($collId) $sql .= 'AND o.collid = '.$collId;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){

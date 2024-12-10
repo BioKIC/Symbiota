@@ -1477,8 +1477,8 @@ class SpecUploadBase extends SpecUpload{
 				}
 
 				//Load images
-				$sql = 'INSERT INTO media ('.implode(',',array_keys($imageFieldArr)).', media_type) '.
-					'SELECT '.implode(',',array_keys($imageFieldArr)).', "images" as media_type FROM uploadimagetemp WHERE (occid IS NOT NULL) AND (collid = '.$this->collId.')';
+				$sql = 'INSERT INTO media ('.implode(',',array_keys($imageFieldArr)).', mediaType) '.
+					'SELECT '.implode(',',array_keys($imageFieldArr)).', "images" as mediaType FROM uploadimagetemp WHERE (occid IS NOT NULL) AND (collid = '.$this->collId.')';
 				if($this->conn->query($sql)){
 					$this->outputMsg('<li style="margin-left:10px;">'.$this->imageTransferCount.' images transferred</li> ');
 				}

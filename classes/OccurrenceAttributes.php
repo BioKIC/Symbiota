@@ -183,7 +183,7 @@ class OccurrenceAttributes extends Manager {
 			$rs = $this->conn->query($sql);
 			if($r = $rs->fetch_object()){
 				$retArr[$r->occid]['catnum'] = $r->catnum;
-				$sql2 = 'SELECT m.media_id, m.url, m.originalurl, m.occid '.
+				$sql2 = 'SELECT m.mediaID, m.url, m.originalurl, m.occid '.
 					'FROM media m '.
 					'WHERE (m.occid = '.$r->occid.') ';
 				$rs2 = $this->conn->query($sql2);
@@ -457,7 +457,7 @@ class OccurrenceAttributes extends Manager {
 			}
 			$rs1->free();
 			//Get images for target occid (isolation query into separate statements returns all images where there are multiples per specimen)
-			$sql = 'SELECT media_id, url, originalurl, occid FROM media WHERE (occid = '.$targetOccid.')';
+			$sql = 'SELECT mediaID, url, originalurl, occid FROM media WHERE (occid = '.$targetOccid.')';
 			//echo $sql; exit;
 			$rs = $this->conn->query($sql);
 			$cnt = 1;

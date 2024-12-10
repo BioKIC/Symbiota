@@ -76,7 +76,7 @@ class GamesManager extends Manager{
 				$ootdInfo['lastDate'] = $currentDate;
 
 				$tidArr = Array();
-				$sql = 'SELECT l.TID, COUNT(m.media_id) AS cnt '.
+				$sql = 'SELECT l.TID, COUNT(m.mediaID) AS cnt '.
 					'FROM fmchklsttaxalink l INNER JOIN media m ON l.TID = m.tid '.
 					'LEFT JOIN omoccurrences o ON m.occid = o.occid '.
 					'LEFT JOIN omcollections c ON o.collid = c.collid '.

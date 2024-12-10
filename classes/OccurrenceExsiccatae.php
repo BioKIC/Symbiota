@@ -156,7 +156,7 @@ class OccurrenceExsiccatae {
 			'o.sciname, o.scientificnameauthorship, o.recordedby, o.recordnumber, DATE_FORMAT(o.eventdate,"%d %M %Y") AS eventdate, '.
 			'trim(o.country) AS country, trim(o.stateprovince) AS stateprovince, trim(o.county) AS county, '.
 			'trim(o.municipality) AS municipality, o.locality, o.decimallatitude, o.decimallongitude, '.
-			'm.media_id, m.thumbnailurl, m.url '.
+			'm.mediaID, m.thumbnailurl, m.url '.
 			'FROM omexsiccatiocclink ol INNER JOIN omoccurrences o ON ol.occid = o.occid '.
 			'INNER JOIN omcollections c ON o.collid = c.collid '.
 			'INNER JOIN omexsiccatinumbers en ON ol.omenid = en.omenid '.
@@ -193,8 +193,8 @@ class OccurrenceExsiccatae {
 					$retArr[$r->omenid][$r->occid]['lng'] = $r->decimallongitude;
 				}
 				if($r->url){
-					$retArr[$r->omenid][$r->occid]['img'][$r->media_id]['url'] = $r->url;
-					$retArr[$r->omenid][$r->occid]['img'][$r->media_id]['tnurl'] = ($r->thumbnailurl?$r->thumbnailurl:$r->url);
+					$retArr[$r->omenid][$r->occid]['img'][$r->mediaID]['url'] = $r->url;
+					$retArr[$r->omenid][$r->occid]['img'][$r->mediaID]['tnurl'] = ($r->thumbnailurl?$r->thumbnailurl:$r->url);
 				}
 			}
 			$rs->free();

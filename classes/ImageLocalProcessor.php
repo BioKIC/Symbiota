@@ -1038,7 +1038,7 @@ class ImageLocalProcessor {
 			if(isset($imgArr['occid'])) $occid = $imgArr['occid'];
 			if($occid){
 				//Check to see if image url already exists for that occid
-				$sql = 'SELECT imgid, url, thumbnailUrl, originalUrl, sourceIdentifier, mediaMD5 FROM media WHERE (occid = '.$occid.') ';
+				$sql = 'SELECT mediaID, url, thumbnailUrl, originalUrl, sourceIdentifier, mediaMD5 FROM media WHERE (occid = '.$occid.') ';
 				$rs = $this->conn->query($sql);
 				while($r = $rs->fetch_object()){
 					$isExactMatch = false;
@@ -1046,19 +1046,19 @@ class ImageLocalProcessor {
 					if(isset($imgArr['mediamd5']) && $imgArr['mediamd5'] && $imgArr['mediamd5'] == $r->mediaMD5) $isExactMatch = true;
 					if($isExactMatch){
 						//exact match, thus reset record data with current image urls (thumbnail or original image might be in different locality)
-						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE imgid = '.$r->imgid)){
-							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->imgid.' (equal URLs): '.$this->conn->error,1);
+						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE mediaID = '.$r->mediaID)){
+							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->mediaID.' (equal URLs): '.$this->conn->error,1);
 						}
-						if(!$this->conn->query('DELETE FROM media WHERE imgid = '.$r->imgid)){
-							$this->logOrEcho('ERROR deleting image record #'.$r->imgid.' (equal URLs): '.$this->conn->error,1);
+						if(!$this->conn->query('DELETE FROM media WHERE mediaID = '.$r->mediaID)){
+							$this->logOrEcho('ERROR deleting image record #'.$r->mediaID.' (equal URLs): '.$this->conn->error,1);
 						}
 					}
 					elseif($this->imgExists == 2 && strcasecmp(basename($r->url),basename($imgArr['url'])) == 0){
 						//Copy-over-image is set to true and basenames equal, thus delete image PLUS delete old images
-						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE imgid = '.$r->imgid)){
-							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->imgid.' (equal basename): '.$this->conn->error,1);
+						if(!$this->conn->query('DELETE FROM specprocessorrawlabels WHERE mediaID = '.$r->mediaID)){
+							$this->logOrEcho('ERROR deleting OCR for image record #'.$r->mediaID.' (equal basename): '.$this->conn->error,1);
 						}
-						if($this->conn->query('DELETE FROM media WHERE imgid = '.$r->imgid)){
+						if($this->conn->query('DELETE FROM media WHERE mediaID = '.$r->mediaID)){
 							//Remove images
 							$urlPath = parse_url($r->url, PHP_URL_PATH);
 							if($urlPath && strpos($urlPath, $this->imgUrlBase) === 0){
@@ -1077,7 +1077,7 @@ class ImageLocalProcessor {
 							}
 						}
 						else{
-							$this->logOrEcho('ERROR: Unable to delete image record #'.$r->imgid.' (equal basename): '.$this->conn->error,1);
+							$this->logOrEcho('ERROR: Unable to delete image record #'.$r->mediaID.' (equal basename): '.$this->conn->error,1);
 						}
 					}
 				}
@@ -1102,7 +1102,7 @@ class ImageLocalProcessor {
 				}
 			}
 			if($paramArr){
-				$sql = 'INSERT INTO ('.trim($sql1,', ').', media_type) VALUES ('.trim($sql2,', ').', "image")';
+				$sql = 'INSERT INTO ('.trim($sql1,', ').', mediaType) VALUES ('.trim($sql2,', ').', "image")';
 				if($stmt = $this->conn->prepare($sql)){
 					$stmt->bind_param($paramType, ...$paramArr);
 					$stmt->execute();
@@ -1757,7 +1757,7 @@ class ImageLocalProcessor {
 					}
 				}
 				$rs->free();
-				unset($this->imageTableMap['imgid']);
+				unset($this->imageTableMap['mediaID']);
 				unset($this->imageTableMap['dynamicProperties']);
 				unset($this->imageTableMap['initialTimestamp']);
 			}

@@ -8,13 +8,14 @@ else include_once($SERVER_ROOT . '/content/lang/imagelib/imgdetails.en.php');
 
 header('Content-Type: text/html; charset='.$CHARSET);
 
-$imgId = filter_var($_REQUEST['imgid'], FILTER_SANITIZE_NUMBER_INT);
+$mediaID = array_key_exists('mediaid', $_REQUEST) ? filter_var($_REQUEST['mediaid'], FILTER_SANITIZE_NUMBER_INT) : 0;
+if(!$mediaID && array_key_exists('imgid', $_REQUEST)) $mediaID = filter_var($_REQUEST['imgid'], FILTER_SANITIZE_NUMBER_INT);
 $action = array_key_exists('submitaction',$_REQUEST)?$_REQUEST['submitaction']:'';
 $eMode = array_key_exists('emode',$_REQUEST)?filter_var($_REQUEST['emode'], FILTER_SANITIZE_NUMBER_INT):0;
 
-$imgManager = new ImageDetailManager($imgId,($action?'write':'readonly'));
+$imgManager = new ImageDetailManager($mediaID,($action?'write':'readonly'));
 
-$imgArr = Media::getMedia($imgId);
+$imgArr = Media::getMedia($mediaID);
 $creatorArray = Media::getCreatorArray();
 
 $isEditor = false;
@@ -26,19 +27,19 @@ $status = '';
 
 if($isEditor){
 	if($action == 'Submit Image Edits'){
-		Media::update($imgId, $_POST, new LocalStorage());
+		Media::update($mediaID, $_POST, new LocalStorage());
 	}
 	elseif($action == 'Transfer Image'){
-		Media::update($imgId, ['tid' => $_REQUEST['targettid']]);
+		Media::update($mediaID, ['tid' => $_REQUEST['targettid']]);
 		header( 'Location: ../taxa/profile/tpeditor.php?tid='.$_REQUEST['targettid'].'&tabindex=1' );
 	}
 	elseif($action == 'Delete Image'){
 		$remove_files = $_REQUEST['removeimg'] ?? false;
-		Media::delete(intval($_REQUEST['imgid']), boolval($remove_files));
+		Media::delete(intval($mediaID), boolval($remove_files));
 	}
-	$imgArr = Media::getMedia($imgId);
+	$imgArr = Media::getMedia($mediaID);
 }
-// TODO (Logan) once basic utils for domain image manager can be removed 
+// TODO (Logan) once basic utils for domain image manager can be removed
 $serverPath = $imgManager->getDomain();
 
 if($imgArr){
@@ -72,11 +73,11 @@ if($imgArr){
 		<meta name="twitter:card" content="photo" data-dynamic="true" />
 		<meta name="twitter:title" content="<?php echo $imgArr["sciname"]; ?>" />
 		<meta name="twitter:image" content="<?php echo $metaUrl; ?>" />
-		<meta name="twitter:url" content="<?php echo $serverPath.$CLIENT_ROOT.'/imagelib/imgdetails.php?imgid='.$imgId; ?>" />
+		<meta name="twitter:url" content="<?php echo $serverPath.$CLIENT_ROOT.'/imagelib/imgdetails.php?mediaid='.$mediaID; ?>" />
 		<?php
 	}
 	?>
-	<title><?php echo $DEFAULT_TITLE." Image Details: #".$imgId; ?></title>
+	<title><?php echo $DEFAULT_TITLE." Image Details: #".$mediaID; ?></title>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
 	include_once($SERVER_ROOT.'/includes/head.php');
@@ -138,8 +139,8 @@ if($imgArr){
 		<a href="index.php">Image Browser</a> &gt;&gt;
 		<a href="search.php">Image Search</a> &gt;&gt;
 		<?php
-		//if(isset($imgArr['tid']) && $imgArr['tid']) echo '<a href="../taxa/index.php?tid=' . htmlspecialchars($imgArr['tid'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">Image Search</a> &gt;&gt;';
-		//echo '<b>Image Profile: image <a href="imgdetails.php?imgid=' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">#' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></b>';
+		//if(isset($imgArr['tid']) && $imgArr['tid']) echo '<a href="../taxa/index.php?tid=' . $imgArr['tid'] . '">Image Search</a> &gt;&gt;';
+		//echo '<b>Image Profile: image <a href="imgdetails.php?mediaid=' . $mediaID . '">#' . $mediaID . '</a></b>';
 		?>
 	</div>
 	 -->
@@ -182,7 +183,7 @@ if($imgArr){
 				}
 				?>
 				<div style="float:right;margin-right:10px;">
-					<a class="twitter-share-button" data-text="<?php echo $imgArr["sciname"]; ?>" href="https://twitter.com/share" data-url="<?php echo htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE). htmlspecialchars($CLIENT_ROOT, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '/imagelib/imgdetails.php?imgid=' . htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>"><?php echo $LANG['TWEET'] ?></a>
+					<a class="twitter-share-button" data-text="<?php echo $imgArr["sciname"]; ?>" href="https://twitter.com/share" data-url="<?php echo htmlspecialchars($_SERVER['HTTP_HOST'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE). $CLIENT_ROOT . '/imagelib/imgdetails.php?mediaid=' . $mediaID; ?>"><?php echo $LANG['TWEET'] ?></a>
 					<script>
 						window.twttr=(function(d,s,id){
 							var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};
@@ -265,9 +266,9 @@ if($imgArr){
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['OCCURRENCE_RECORD'] ?> #:</b>
-								<input id="imgdisplay-<?php echo $imgId; ?>" name="displayoccid" type="text" value="" disabled style="width:70px" />
-								<input id="imgoccid-<?php echo $imgId; ?>" name="occid" type="hidden" value="" />
-								<span onclick="openOccurrenceSearch('<?php echo $imgId; ?>');return false"><a href="#"><?php echo $LANG['LINK_OCCUR_RECORD'] ?></a></span>
+								<input id="imgdisplay-<?php echo $mediaID; ?>" name="displayoccid" type="text" value="" disabled style="width:70px" />
+								<input id="imgoccid-<?php echo $mediaID; ?>" name="occid" type="hidden" value="" />
+								<span onclick="openOccurrenceSearch('<?php echo $mediaID; ?>');return false"><a href="#"><?php echo $LANG['LINK_OCCUR_RECORD'] ?></a></span>
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['NOTES'] ?>:</b>
@@ -322,7 +323,7 @@ if($imgArr){
 								}
 								?>
 							</div>
-							<input name="imgid" type="hidden" value="<?php echo $imgId; ?>" />
+							<input name="mediaid" type="hidden" value="<?php echo $mediaID; ?>" />
 							<div style="margin-top:2px;">
 								<button type="submit" name="submitaction" id="editsubmit" value="Submit Image Edits" ><?php echo $LANG['SUBMIT_IMAGE_EDITS'] ?></button>
 							</div>
@@ -336,7 +337,7 @@ if($imgArr){
 								<input type="text" id="taxa" name="targettaxon" size="40" />
 								<input type="hidden" id="tid" name="targettid" value="" />
 								<input type="hidden" name="sourcetid" value="<?php echo $imgArr["tid"];?>" />
-								<input type="hidden" name="imgid" value="<?php echo $imgId; ?>" />
+								<input type="hidden" name="mediaid" value="<?php echo $mediaID; ?>" />
 
 								<input type="hidden" name="submitaction" value="Transfer Image" />
 								<button type="submit" name="submitaction" value="Transfer Image" ><?php echo $LANG['TRANSFER_IMAGE'] ?></button>
@@ -346,7 +347,7 @@ if($imgArr){
 					<form name="deleteform" action="imgdetails.php" method="post" target="_self" onsubmit="return window.confirm('<?php echo $LANG['DELETE_IMAGE_FROM_SERVER'] ?>');">
 						<fieldset style="margin:5px 0px 5px 5px;">
 					    	<legend><b><?php echo $LANG['AUTHORIZED_REMOVE_IMAGE'] ?></b></legend>
-							<input name="imgid" type="hidden" value="<?php echo $imgId; ?>" />
+							<input name="mediaid" type="hidden" value="<?php echo $mediaID; ?>" />
 							<div style="margin-top:2px;">
 								<button class="button-danger" type="submit" name="submitaction" id="submit" value="Delete Image"><?php echo $LANG['DELETE_IMAGE'] ?></button>
 							</div>
@@ -364,17 +365,17 @@ if($imgArr){
 				<div style="width:350px;padding:10px;float:left;">
 					<?php
 					$imgDisplay = $imgUrl;
-					$media_type = MediaType::tryFrom($imgArr['media_type']);
+					$mediaType = MediaType::tryFrom($imgArr['mediaType']);
 					if((!$imgDisplay || $imgDisplay == 'empty') && $origUrl) $imgDisplay = $origUrl;
 					?>
-					<?php if($media_type === MediaType::Image):?>
+					<?php if($mediaType === MediaType::Image):?>
 					<a href="<?php echo htmlspecialchars($imgDisplay, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>">
 						<img src="<?php echo htmlspecialchars($imgDisplay, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE);?>" style="width:300px;" />
 					</a>
 					<?php
 					if($origUrl) echo '<div><a href="' . htmlspecialchars($origUrl, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '">' . $LANG['CLICK_IMAGE'] . '</a></div>';
 					?>
-					<?php elseif($media_type === MediaType::Audio):?>
+					<?php elseif($mediaType === MediaType::Audio):?>
 						<audio controls style="margin-top: 5rem">
 							<source src="<?= $origUrl ?>" type="<?=$imgArr['format']?>">
 							Your browser does not support the audio element.
@@ -421,8 +422,8 @@ if($imgArr){
 						<div style="margin-top:20px;">
 							<?php echo $LANG['ERROR_COMMENT_ABOUT_IMAGE'] ?> <br/><?php echo $LANG['SEND_EMAIL'] ?>:
 							<?php
-							$emailSubject = $DEFAULT_TITLE . ' ' . $LANG['IMG_NO'] . ' ' . $imgId;
-							$emailBody = 'Image being referenced: '.urlencode($serverPath.$CLIENT_ROOT.'/imagelib/imgdetails.php?imgid='.$imgId);
+							$emailSubject = $DEFAULT_TITLE . ' ' . $LANG['IMG_NO'] . ' ' . $mediaID;
+							$emailBody = 'Image being referenced: '.urlencode($serverPath.$CLIENT_ROOT.'/imagelib/imgdetails.php?mediaid='.$imgId);
 							$emailRef = 'subject=' . $emailSubject . '&cc=' . $ADMIN_EMAIL . '&body=' . $emailBody;
 							echo '<a href="mailto:' . $ADMIN_EMAIL . '?' . $emailRef . '">' . $emailAddress . '</a>';
 							?>

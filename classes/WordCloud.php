@@ -48,7 +48,7 @@ class WordCloud{
 
 	public function batchBuildWordClouds($csMode = 0){
 		$processingArr = array();
-		$sql = 'SELECT DISTINCT c.collid FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid INNER JOIN specprocessorrawlabels r ON m.media_id = r.imgid ';
+		$sql = 'SELECT DISTINCT c.collid FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid INNER JOIN specprocessorrawlabels r ON m.mediaID = r.mediaID ';
 		if($csMode) $sql .= 'INNER JOIN omcrowdsourcequeue q ON o.occid = q.occid ';
 		$sql .= 'WHERE o.processingstatus = "unprocessed" AND o.locality IS NULL ';
 		$rs = $this->conn->query($sql);
@@ -67,7 +67,7 @@ class WordCloud{
 		unset($this->frequencyArr);
 		$this->frequencyArr = array();
 		$this->tagUrl .= '&collid='.$collid.'&q_customfield1=ocrFragment&q_customtype1=LIKE&q_customvalue1=';
-		$sql = 'SELECT DISTINCT r.rawstr FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid INNER JOIN specprocessorrawlabels r ON m.media_id = r.imgid ';
+		$sql = 'SELECT DISTINCT r.rawstr FROM omoccurrences o INNER JOIN media m ON o.occid = m.occid INNER JOIN specprocessorrawlabels r ON m.mediaID = r.mediaID ';
 		if($csMode) $sql .= 'INNER JOIN omcrowdsourcequeue q ON o.occid = q.occid ';
 		$sql .= 'WHERE o.processingstatus = "unprocessed" AND o.locality IS NULL ';
 		if($collid) $sql .= 'AND o.collid = '.$collid;

@@ -150,11 +150,11 @@ class TaxonProfile extends Manager {
 			if($start == 0 && $trueLength == 1) echo '<div id="centralimage">';
 			else echo '<div class="imgthumb">';
 
-			if($imgObj["media_type"] === 'audio') {
+			if($imgObj["mediaType"] === 'audio') {
 				$imgObj["thumbnailurl"] = $GLOBALS['CLIENT_ROOT'] . '/images/speaker_thumbnail.png';
 			}
 			$imgUrl = $imgObj['url'];
-			$imgAnchor = '../imagelib/imgdetails.php?imgid='.$imgId;
+			$imgAnchor = '../imagelib/imgdetails.php?mediaid='.$imgId;
 			$imgThumbnail = $imgObj['thumbnailurl'];
 			if(array_key_exists('MEDIA_DOMAIN',$GLOBALS)){
 				//Images with relative paths are on another server
@@ -195,11 +195,11 @@ class TaxonProfile extends Manager {
 			$rs1->free();
 
 			$tidStr = implode(",",$tidArr);
-			$sql = 'SELECT t.sciname, m.media_id, m.media_type, m.format, m.url, m.thumbnailurl, m.originalurl, m.caption, m.occid, m.creator, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorLinked '.
+			$sql = 'SELECT t.sciname, m.mediaID, m.mediaType, m.format, m.url, m.thumbnailurl, m.originalurl, m.caption, m.occid, m.creator, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorLinked '.
 				'FROM media m LEFT JOIN users u ON m.creatorUid = u.uid '.
 				'INNER JOIN taxstatus ts ON m.tid = ts.tid '.
 				'INNER JOIN taxa t ON m.tid = t.tid '.
-				'WHERE (ts.taxauthid = 1 AND ts.tidaccepted IN ('.$tidStr.')) AND m.SortSequence < 500 AND (media_type != "image" || m.thumbnailurl IS NOT NULL)';
+				'WHERE (ts.taxauthid = 1 AND ts.tidaccepted IN ('.$tidStr.')) AND m.SortSequence < 500 AND (m.mediaType != "image" || m.thumbnailurl IS NOT NULL)';
 			if(!$this->displayLocality) $sql .= 'AND m.occid IS NULL ';
 			$sql .= 'ORDER BY m.sortsequence, m.sortOccurrence LIMIT 100';
 
@@ -209,15 +209,15 @@ class TaxonProfile extends Manager {
 				if($imgUrl == 'empty') $imgUrl = '';
 				if(!$imgUrl && $row->originalurl) $imgUrl = $row->originalurl;
 				if(!$imgUrl) continue;
-				$this->imageArr[$row->media_id]['url'] = $imgUrl;
-				$this->imageArr[$row->media_id]['thumbnailurl'] = $row->thumbnailurl;
-				if($row->creatorLinked) $this->imageArr[$row->media_id]['creator'] = $row->creatorLinked;
-				else $this->imageArr[$row->media_id]['creator'] = $row->creator;
-				$this->imageArr[$row->media_id]['caption'] = $row->caption;
-				$this->imageArr[$row->media_id]['occid'] = $row->occid;
-				$this->imageArr[$row->media_id]['sciname'] = $row->sciname;
-				$this->imageArr[$row->media_id]['media_type'] = $row->media_type;
-				$this->imageArr[$row->media_id]['format'] = $row->format;
+				$this->imageArr[$row->mediaID]['url'] = $imgUrl;
+				$this->imageArr[$row->mediaID]['thumbnailurl'] = $row->thumbnailurl;
+				if($row->creatorLinked) $this->imageArr[$row->mediaID]['creator'] = $row->creatorLinked;
+				else $this->imageArr[$row->mediaID]['creator'] = $row->creator;
+				$this->imageArr[$row->mediaID]['caption'] = $row->caption;
+				$this->imageArr[$row->mediaID]['occid'] = $row->occid;
+				$this->imageArr[$row->mediaID]['sciname'] = $row->sciname;
+				$this->imageArr[$row->mediaID]['mediaType'] = $row->mediaType;
+				$this->imageArr[$row->mediaID]['format'] = $row->format;
 			}
 			$result->free();
 		}
@@ -556,12 +556,12 @@ class TaxonProfile extends Manager {
 
 			if($tids){
 				//Get Images
-				$sql = 'SELECT t.sciname, t.tid, m.media_id, m.url, m.thumbnailurl, m.caption, m.creator, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorLinked '.
-					'FROM media m INNER JOIN (SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(m.sortsequence,6,"0"),m.media_id)),7) AS media_id '.
+				$sql = 'SELECT t.sciname, t.tid, m.mediaID, m.url, m.thumbnailurl, m.caption, m.creator, CONCAT_WS(" ",u.firstname,u.lastname) AS creatorLinked '.
+					'FROM media m INNER JOIN (SELECT ts1.tid, SUBSTR(MIN(CONCAT(LPAD(m.sortsequence,6,"0"),m.mediaID)),7) AS mediaID '.
 					'FROM taxstatus ts1 INNER JOIN taxstatus ts2 ON ts1.tidaccepted = ts2.tidaccepted '.
 					'INNER JOIN media m ON ts2.tid = m.tid '.
 					'WHERE ts1.taxauthid = 1 AND ts2.taxauthid = 1 AND (ts1.tid IN('.implode(',',$tids).')) AND (m.thumbnailurl IS NOT NULL) AND (m.url != "empty") '.
-					'GROUP BY ts1.tid) m2 ON m.media_id = m2.media_id '.
+					'GROUP BY ts1.tid) m2 ON m.mediaID = m2.mediaID '.
 					'INNER JOIN taxa t ON m2.tid = t.tid '.
 					'LEFT JOIN users u ON m.creatorUid = u.uid ';
 				//echo $sql;
@@ -572,7 +572,7 @@ class TaxonProfile extends Manager {
 						$firstPos = strpos($sciName," ",2)+2;
 						$sciName = substr($sciName,0,strpos($sciName," ",$firstPos));
 					}
-					$this->sppArray[$sciName]['media_id'] = $r->media_id;
+					$this->sppArray[$sciName]['mediaID'] = $r->mediaID;
 					$this->sppArray[$sciName]['url'] = $r->url;
 					$this->sppArray[$sciName]['thumbnailurl'] = $r->thumbnailurl;
 					if($r->creatorLinked) $this->sppArray[$sciName]['creator'] = $r->creatorLinked;

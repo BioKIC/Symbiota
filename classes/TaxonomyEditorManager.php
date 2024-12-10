@@ -696,7 +696,7 @@ class TaxonomyEditorManager extends Manager{
 		$rs->free();
 
 		//Field images
-		$sql ='SELECT COUNT(imgid) AS cnt FROM media WHERE tid = '.$this->tid;
+		$sql ='SELECT COUNT(mediaID) AS cnt FROM media WHERE tid = '.$this->tid;
 		$rs = $this->conn->query($sql);
 		while($r = $rs->fetch_object()){
 			$retArr['img'] = $r->cnt;

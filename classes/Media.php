@@ -10,51 +10,51 @@ if(file_exists($SERVER_ROOT.'/content/lang/classes/Media.'.$LANG_TAG.'.php')) {
 }
 
 abstract class StorageStrategy {
-    /**
-     * If a file is given then return the storage path for that resource otherwise just return the root path.
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} 
-     * @return string 
-     */
+	/**
+	 * If a file is given then return the storage path for that resource otherwise just return the root path.
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int}
+	 * @return string
+	 */
 	abstract public function getDirPath(array|string $file): string;
 
-    /**
-     * If a file is given then return the url path to that resource otherwise just return the root url path.
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} 
-     * @return string 
-     */
+	/**
+	 * If a file is given then return the url path to that resource otherwise just return the root url path.
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int}
+	 * @return string
+	 */
 	abstract public function getUrlPath(array|string $file): string;
 
-    /**
-     * Function to check if a file exists for the storage location of the upload strategy.
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} 
-     * @return bool 
-     */
+	/**
+	 * Function to check if a file exists for the storage location of the upload strategy.
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int}
+	 * @return bool
+	 */
 	abstract public function file_exists(array|string $file): bool;
 
-    /**
-     * Function to handle how a file should be uploaded.
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} 
-     * @return bool 
+	/**
+	 * Function to handle how a file should be uploaded.
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int}
+	 * @return bool
 	 * @throws MediaException(MediaException::DuplicateMediaFile)
-     */
+	 */
 	abstract public function upload(array $file): bool;
 
-    /**
-     * Function to handle how a file should be removed.
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} 
-     * @return bool 
+	/**
+	 * Function to handle how a file should be removed.
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int}
+	 * @return bool
 	 * @throws MediaException(MediaException::DuplicateMediaFile)
-     */
+	 */
 	abstract public function remove(string $file): bool;
 
-    /**
-     * Function to handle renaming an existing file.
+	/**
+	 * Function to handle renaming an existing file.
 	 * @param string $filepath
 	 * @param array $new_filepath
-     * @return bool 
+	 * @return bool
 	 * @throws MediaException(MediaException::FileDoesNotExist)
 	 * @throws MediaException(MediaException::FileAlreadyExists)
-     */
+	 */
 	abstract public function rename(string $filepath, string $new_filepath): void;
 }
 
@@ -62,7 +62,7 @@ function get_occurrence_upload_path($institutioncode, $collectioncode, $catalogn
 		$root = $institutioncode . ($collectioncode? '_'. $collectioncode: '') . '/';
 
 		if($catalognumber) {
-			//Clean out Symbols that would interfere with 
+			//Clean out Symbols that would interfere with
 			$derived_cat_num = str_replace(array('/','\\',' '), '', $catalognumber);
 
 			//Grab any characters in the range of 0-8 then any amount digits
@@ -97,8 +97,8 @@ class LocalStorage extends StorageStrategy {
 
 	public function getDirPath(array | string $file = null): string {
 		$file_name = is_array($file)? $file['name']: $file;
-		return $GLOBALS['MEDIA_ROOT_PATH'] . 
-			(substr($GLOBALS['MEDIA_ROOT_PATH'],-1) != "/"? '/': '') . 
+		return $GLOBALS['MEDIA_ROOT_PATH'] .
+			(substr($GLOBALS['MEDIA_ROOT_PATH'],-1) != "/"? '/': '') .
 			$this->path . $file_name;
 	}
 
@@ -109,22 +109,22 @@ class LocalStorage extends StorageStrategy {
 		   	$this->path . $file_name;
 	}
 
-    /**
-     * Private help function for interal use that holds logic for how storage paths are created.
-     * @return string 
-     */
+	/**
+	 * Private help function for interal use that holds logic for how storage paths are created.
+	 * @return string
+	 */
 
 	public function file_exists(array|string $file): bool {
 		if(is_array($file)) {
 			return file_exists($this->getDirPath() . $file['name']);
-		} else { 
+		} else {
 			return file_exists($this->getDirPath() . $file);
 		}
 	}
 
-    /**
-     * Upload implemenation stores files on the server and expect duplicate files to be handled by the caller
-     */
+	/**
+	 * Upload implemenation stores files on the server and expect duplicate files to be handled by the caller
+	 */
 	public function upload(array $file): bool {
 		$dir_path = $this->getDirPath();
 		$file_path = $dir_path . $file['name'];
@@ -133,7 +133,7 @@ class LocalStorage extends StorageStrategy {
 		if(!is_dir($dir_path)) {
 			mkdir($dir_path, 744, true);
 		}
-		
+
 		if(file_exists($file_path)) {
 			throw new MediaException(MediaException::DuplicateMediaFile);
 		}
@@ -152,19 +152,19 @@ class LocalStorage extends StorageStrategy {
 
 		return true;
 	}
-    /**
-     * @return bool
-     * @param mixed $path
-     */
-    static private function on_system($path) {
+	/**
+	 * @return bool
+	 * @param mixed $path
+	 */
+	static private function on_system($path) {
 		//Check if path is absoulte path
 		if(file_exists($path)) {
 			return true;
 		}
 		//Convert url path to dir_path
 		$dir_path = str_replace(
-			$GLOBALS['MEDIA_ROOT_URL'], 
-			$GLOBALS['MEDIA_ROOT_PATH'], 
+			$GLOBALS['MEDIA_ROOT_URL'],
+			$GLOBALS['MEDIA_ROOT_PATH'],
 			$path
 		);
 
@@ -183,8 +183,8 @@ class LocalStorage extends StorageStrategy {
 
 		//Get Absoulte Path
 		$dir_path = str_replace(
-			$GLOBALS['MEDIA_ROOT_URL'], 
-			$GLOBALS['MEDIA_ROOT_PATH'], 
+			$GLOBALS['MEDIA_ROOT_URL'],
+			$GLOBALS['MEDIA_ROOT_PATH'],
 			$filename
 		);
 
@@ -198,7 +198,7 @@ class LocalStorage extends StorageStrategy {
 		}
 
 		return false;
-	}	
+	}
 
 	public function rename(string $filepath, string $new_filepath): void {
 		//Remove MEDIA_ROOT_PATH + Path from filepath if it exists
@@ -208,19 +208,19 @@ class LocalStorage extends StorageStrategy {
 		$new_filepath = str_replace($dir_path, '', $GLOBALS['SERVER_ROOT'] . $new_filepath);
 		//Constrain Rename to Scope of MEDIA_ROOT_PATH + Storage Path
 		if($this->file_exists($new_filepath)) {
-			throw new MediaException(MediaException::FileAlreadyExists); 
+			throw new MediaException(MediaException::FileAlreadyExists);
 		} else if(!$this->file_exists($filepath)) {
-			throw new MediaException(MediaException::FileDoesNotExist); 
+			throw new MediaException(MediaException::FileDoesNotExist);
 		} else {
 			rename($dir_path . $filepath, $dir_path . $new_filepath);
 		}
 	}
-} 
+}
 
 class MediaType {
-	public const Image = 'image'; 
+	public const Image = 'image';
 	public const Audio = 'audio';
-	public const Video = 'video' ; 
+	public const Video = 'video' ;
 
 	public static function tryFrom(string $value) {
 		if($value === self::Image || $value === self::Audio || $value === self::Video) {
@@ -232,11 +232,11 @@ class MediaType {
 
 	public static function values(): array {
 		return [
-			self::Image, 
-			self::Audio, 
+			self::Image,
+			self::Audio,
 			self::Video
 		];
-    }
+	}
 }
 
 class MediaException extends Exception {
@@ -245,9 +245,9 @@ class MediaException extends Exception {
 	public const FileDoesNotExist = 'FILE_DOES_NOT_EXIST';
 	public const FileAlreadyExists = 'FILE_ALREADY_EXISTS';
 
-    function __construct(string $case){
+	function __construct(string $case){
 		parent::__construct($LANG[$case]);
-    }
+	}
 }
 
 class Media {
@@ -294,13 +294,13 @@ class Media {
 
 	/**
 	 * Pulls file name out of directory path or url
-	 * 
+	 *
 	 * Note: The url parsing expects the filename to not be in the query or hash
 	 *
 	 * @param string $filepath Can be a file or url path
-	 * return array<string,mixed> 
-* @return array<string,mixed>
- 	 */
+	 * return array<string,mixed>
+	 * @return array<string,mixed>
+	 */
 	public static function parseFileName(string $filepath): array {
 		$file_name = $filepath;
 
@@ -321,13 +321,13 @@ class Media {
 			'extension' => substr($file_name, $file_type_pos + 1),
 		];
 	}
-    /**
-     * @return string
-     * @param array<int,mixed> $media_arr
-     * @param mixed $thumbnail
-     */
-    public static function render_media_item(array $media_arr, $thumbnail=false) {
-		if($media_arr['media_type'] !== 'image' && !$thumbnail) {
+	/**
+	 * @return string
+	 * @param array<int,mixed> $media_arr
+	 * @param mixed $thumbnail
+	 */
+	public static function render_media_item(array $media_arr, $thumbnail=false) {
+		if($media_arr['mediaType'] !== 'image' && !$thumbnail) {
 			$src = $media_arr['url'];
 			$format = $media_arr['format'];
 			$html = <<< HTML
@@ -361,11 +361,11 @@ class Media {
 			return $html;
 		}
 	}
-    /**
-     * @param mixed $url
-     * @param mixed $text
-     */
-    static function render_media_link($url, $text) {
+	/**
+	 * @param mixed $url
+	 * @param mixed $text
+	 */
+	static function render_media_link($url, $text) {
 		$slash_route = substr($url, 0, 1) == '/';
 		if(array_key_exists('MEDIA_DOMAIN',$GLOBALS) && $slash_route) {
 			$url = $GLOBALS['MEDIA_DOMAIN'] . $url;
@@ -567,7 +567,7 @@ class Media {
 		return isset($mime_map[$mime]) ? $mime_map[$mime] : false;
 	}
 
-	/* 
+	/*
 	 * Curls url for header information and returns a $_FILES like file array
 	 * @param string $url
 	 * return array | bool
@@ -585,7 +585,7 @@ class Media {
 		$data = curl_exec($ch);
 
 		//If there is no data then throw error
-		if($data === false && $errno = curl_errno($ch)) { 
+		if($data === false && $errno = curl_errno($ch)) {
 			$message = curl_strerror($errno);
 			curl_close($ch);
 			throw new Exception($message);
@@ -595,7 +595,7 @@ class Media {
 
 		if($retCode >= 400) {
 			error_log(
-				'Error Status ' . $retCode . ' in getRemoteFileInfo LINE:' . __LINE__ . 
+				'Error Status ' . $retCode . ' in getRemoteFileInfo LINE:' . __LINE__ .
 				' URL:' . $url
 			);
 			return false;
@@ -649,22 +649,22 @@ class Media {
 	}
 
 	/**
-      * This function returns the maximum files size that can be uploaded 
-      * in PHP
-      * @returns int File size in bytes
-      **/
-	public static function getMaximumFileUploadSize(): int {  
+	  * This function returns the maximum files size that can be uploaded
+	  * in PHP
+	  * @returns int File size in bytes
+	  **/
+	public static function getMaximumFileUploadSize(): int {
 		return min(
-			self::size_2_bytes(ini_get('post_max_size')), 
+			self::size_2_bytes(ini_get('post_max_size')),
 			self::size_2_bytes(ini_get('upload_max_filesize'))
-		);  
-	}  
+		);
+	}
 
 	private static function size_2_bytes(string $size):int {
 		// Remove the non-unit characters from the size.
-		$unit = preg_replace('/[^bkmgtpezy]/i', '', $size); 
+		$unit = preg_replace('/[^bkmgtpezy]/i', '', $size);
 		// Remove the non-numeric characters from the size.
-		$size = preg_replace('/[^0-9\.]/', '', $size); 
+		$size = preg_replace('/[^0-9\.]/', '', $size);
 		if ($unit) {
 			// Find the position of the unit in the ordered string which is the power of magnitude to multiply a kilobyte by.
 			return round($size * pow(1024, stripos('bkmgtpezy', $unit[0])));
@@ -678,13 +678,13 @@ class Media {
 		return $file && !empty($file) && isset($file['error']) && $file['error'] === 0;
 	}
 
-    /**
-     * @param array<int,mixed> $post_arr
-     * @param StorageStrategy $storage Class where and how to save files. If left empty will not store files
-	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} Post file data, if none given will assume remote resource 
-     * @return bool
-    **/
-    public static function add(array $post_arr, StorageStrategy|Null $storage = null, array|null $file = null): void {
+	/**
+	 * @param array<int,mixed> $post_arr
+	 * @param StorageStrategy $storage Class where and how to save files. If left empty will not store files
+	 * @param array $file {name: string, type: string, tmp_name: string, error: int, size: int} Post file data, if none given will assume remote resource
+	 * @return bool
+	**/
+	public static function add(array $post_arr, StorageStrategy|Null $storage = null, array|null $file = null): void {
 		$clean_post_arr = Sanitize::in($post_arr);
 
 		$copy_to_server = $clean_post_arr['copytoserver']?? false;
@@ -702,7 +702,7 @@ class Media {
 			throw new Exception('Error: Uploaded/Remote media missing');
 		}
 
-		//If file being uploaded is too big throw error 
+		//If file being uploaded is too big throw error
 		else if($should_upload_file && self::getMaximumFileUploadSize() < intval($file['size'])) {
 			throw new Exception('Error: File is to large to upload');
 		}
@@ -717,7 +717,7 @@ class Media {
 
 		$taxon_result = SymbUtil::execute_query(
 			$conn,
-			$sql, 
+			$sql,
 			[$clean_post_arr['occid']]
 		);
 
@@ -761,7 +761,7 @@ class Media {
 			"hashValue" => $clean_post_arr['hashValue'] ?? null,
 			"mediaMD5" => $clean_post_arr['mediamd5'] ?? null,
 			"recordID" => $clean_post_arr['recordID'] ?? UuidFactory::getUuidV4(),
-			"media_type" => $media_type_str,
+			"mediaType" => $media_type_str,
 		];
 
 		//What is url for files
@@ -774,7 +774,7 @@ class Media {
 			$keyValuePairs['url'] = $storage->getUrlPath() . $file['name'];
 			$keyValuePairs['originalUrl'] = $storage->getUrlPath() . $file['name'];
 		}
-		
+
 		$keys = implode(",", array_keys($keyValuePairs));
 		$parameters = str_repeat('?,', count($keyValuePairs) - 1) . '?';
 
@@ -794,10 +794,10 @@ class Media {
 			if($should_upload_file) {
 				//Check if file exists
 				if($storage->file_exists($file)) {
-					//Add media_id onto end of file name which should be unique within portal
-					$file['name'] = self::addToFilename($file['name'], '_' . $media_id);
+					//Add mediaID onto end of file name which should be unique within portal
+					$file['name'] = self::addToFilename($file['name'], '_' . $mediaID);
 
-					//Fail case the appended media_id is taken stops after 10 
+					//Fail case the appended mediaID is taken stops after 10
 					$cnt = 1;
 					while($storage->file_exists($file) && $cnt < 10) {
 						$file['name'] = self::addToFilename($file['name'], '_' . $cnt);
@@ -807,7 +807,7 @@ class Media {
 
 					//Update source url to reflect new filename
 					self::update_metadata([
-						'url' => $updated_path, 
+						'url' => $updated_path,
 						'originalUrl' => $updated_path
 					], $media_id, $conn);
 				}
@@ -816,8 +816,8 @@ class Media {
 
 				//Generate Deriatives if needed
 				if($media_type === MediaType::Image) {
-					//Will download file if its remote. 
-					//This is a naive solution assuming we are upload to our server 
+					//Will download file if its remote.
+					//This is a naive solution assuming we are upload to our server
 					$size = getimagesize($storage->getDirPath($file));
 					$metadata = [
 						'pixelXDimension' => $size[0],
@@ -858,7 +858,7 @@ class Media {
 							$metadata['url'] = $storage->getUrlPath($med_name);
 						}
 					}
-					
+
 					self::update_metadata($metadata, $media_id, $conn);
 				}
 			}
@@ -867,21 +867,21 @@ class Media {
 		} catch(Throwable $e) {
 			mysqli_rollback($conn);
 			array_push(self::$errors, $e->getMessage());
-		} 
+		}
 	}
 
 	private static function addToFilename(string $filename, string $ext): string {
 		return substr_replace(
-			$filename, 
-			$ext, 
-			strrpos($filename, '.'), 
+			$filename,
+			$ext,
+			strrpos($filename, '.'),
 			0
 		);
 	}
-    /**
-     * @return void
-     */
-    public static function remap(int $media_id, int $new_occid, StorageStrategy $old_strategy, StorageStrategy $new_strategy): void {
+	/**
+	 * @return void
+	 */
+	public static function remap(int $media_id, int $new_occid, StorageStrategy $old_strategy, StorageStrategy $new_strategy): void {
 		$media_arr = self::getMedia($media_id);
 		$update_arr = ['occid' => $new_occid];
 		$move_files = [];
@@ -909,7 +909,7 @@ class Media {
 
 					if(!in_array($url_path, $update_arr)) {
 						$file = [
-							'name' => $filename, 
+							'name' => $filename,
 							'tmp_name' => $old_strategy->getDirPath($filename)
 						];
 						array_push($move_files, $file);
@@ -921,7 +921,7 @@ class Media {
 		}
 
 		self::update_metadata($update_arr, $media_id);
-		
+
 		foreach($move_files as $file) {
 			$new_strategy->upload($file);
 			$old_strategy->remove($file['name']);
@@ -932,13 +932,13 @@ class Media {
 		self::update_metadata(['occid' => null], $media_id);
 	}
 
-    /**
-     * @return void
-     * @param mixed $media_id
-     * @param mixed $tag_arr
-     * @param mixed $conn
-     */
-    private static function update_tags($media_id, $tag_arr, $conn = null): void {
+	/**
+	 * @return void
+	 * @param mixed $media_id
+	 * @param mixed $tag_arr
+	 * @param mixed $conn
+	 */
+	private static function update_tags($media_id, $tag_arr, $conn = null): void {
 		$tags =	[
 			"HasOrganism",
 			"HasLabel",
@@ -971,11 +971,11 @@ class Media {
 		}
 
 		foreach($add_tags as $add) {
-			SymbUtil::execute_query($conn, 'INSERT INTO imagetag (imgid, keyvalue) VALUES (?, ?)', [$media_id, $add]);
+			SymbUtil::execute_query($conn, 'INSERT INTO imagetag (mediaID, keyvalue) VALUES (?, ?)', [$media_id, $add]);
 		}
 
 		foreach($remove_tags as $remove) {
-			SymbUtil::execute_query($conn, 'DELETE FROM imagetag where imgid = ? and keyvalue = ?', [$media_id, $remove]);
+			SymbUtil::execute_query($conn, 'DELETE FROM imagetag where mediaID = ? and keyvalue = ?', [$media_id, $remove]);
 		}
 	}
 
@@ -985,14 +985,14 @@ class Media {
 		return $errors;
 	}
 
-    /**
-     * @return bool
-     * @param mixed $media_id
-     * @param mixed $media_arr
-     */
-    public static function update($media_id, $media_arr, StorageStrategy $storage) {
+	/**
+	 * @return bool
+	 * @param mixed $media_id
+	 * @param mixed $media_arr
+	 */
+	public static function update($media_id, $media_arr, StorageStrategy $storage) {
 		$clean_arr = Sanitize::in($media_arr);
-	
+
 		$meta_data = [
 			"tid",
 			"occid",
@@ -1021,7 +1021,7 @@ class Media {
 			"hashValue",
 			"mediaMD5",
 			"recordID",
-			"media_type",
+			"mediaType",
 		];
 
 		$data = [];
@@ -1057,7 +1057,7 @@ class Media {
 			array_push(self::$errors, $e->getMessage());
 
 			mysqli_rollback($conn);
-			error_log('ERROR: Media update failed on media_id ' 
+			error_log('ERROR: Media update failed on mediaID '
 				. $media_id . ' ' . $e->getMessage()
 			);
 			return false;
@@ -1067,7 +1067,7 @@ class Media {
 	/*
 	 * While the function does create an image it does so to resize it
 	 *
-	 * This function is a wrapper to call the correct image generation function based on what image handler is configured in a given Symbiota Portal. Most use gd 
+	 * This function is a wrapper to call the correct image generation function based on what image handler is configured in a given Symbiota Portal. Most use gd
 	 *
 	 * @param string $src_file Filename to image base
 	 * @param string $new_file Filename for newly resized image
@@ -1101,7 +1101,7 @@ class Media {
 	 * This function is implemenation for Symbiota Portals using imagick.
 	 * Most portals using imagick have ImageMagick installed on server and make system calls in order to use it.
 	 * At the time of making this function no know portals have the imagick pecl package installed but and implemenation was made as we are potentially heading in that direction.
-	 * 
+	 *
 	 * @param string $src_file Filename to image base
 	 * @param string $new_file Filename for newly resized image
 	 * @param StorageStrategy $storage Class that instructs where how how an image should be stored
@@ -1109,8 +1109,8 @@ class Media {
 	 * @param int $new_height Maximum height for the new image if zero will box to width
 	 */
 	private static function create_image_imagick(
-		string $src_file, string $new_file, 
-		StorageStrategy $storage, 
+		string $src_file, string $new_file,
+		StorageStrategy $storage,
 		int $new_width, int $new_height
 	): void {
 		$src_path = $storage->getDirPath($src_file);
@@ -1150,7 +1150,7 @@ class Media {
 	 *
 	 * This function is implemenation for Symbiota Portals using gd.
 	 * Gd is the typical default configuration for most portals
-	 * 
+	 *
 	 * @param string $src_file Filename to image base
 	 * @param string $new_file Filename for newly resized image
 	 * @param StorageStrategy $storage Class that instructs where how how an image should be stored
@@ -1158,8 +1158,8 @@ class Media {
 	 * @param int $new_height Maximum height for the new image if zero will box to width
 	 */
 	private static function create_image_gd(
-		string $src_file, string $new_file, 
-		StorageStrategy $storage, 
+		string $src_file, string $new_file,
+		StorageStrategy $storage,
 		int $new_width, int $new_height
 	): void {
 
@@ -1238,10 +1238,10 @@ class Media {
 		}
 		array_push($values, $media_id);
 
-		$sql = 'UPDATE media set '. $parameter_str . ' where media_id = ?';
+		$sql = 'UPDATE media set '. $parameter_str . ' where mediaID = ?';
 		SymbUtil::execute_query(
-			$conn ?? Database::connect('write'), 
-			$sql, 
+			$conn ?? Database::connect('write'),
+			$sql,
 			$values
 		);
 	}
@@ -1253,16 +1253,16 @@ class Media {
 	public static function delete($media_id, $remove_files = true): void {
 		$conn = Database::connect('write');
 		$result = SymbUtil::execute_query(
-			$conn, 
-			'SELECT url, thumbnailUrl, originalUrl from media where media_id = ?', 
+			$conn,
+			'SELECT url, thumbnailUrl, originalUrl from media where mediaID = ?',
 			[$media_id]
 		);
 		$media_urls = $result->fetch_assoc();
 
 		$queries = [
-			'DELETE FROM specprocessorrawlabels WHERE imgid = ?',
-			'DELETE FROM imagetag WHERE imgid = ?',
-			'DELETE FROM media WHERE media_id = ?'
+			'DELETE FROM specprocessorrawlabels WHERE mediaID = ?',
+			'DELETE FROM imagetag WHERE mediaID = ?',
+			'DELETE FROM media WHERE mediaID = ?'
 		];
 		mysqli_begin_transaction($conn);
 		try {
@@ -1282,17 +1282,17 @@ class Media {
 			}
 			mysqli_commit($conn);
 		} catch(Exception $e) {
-			error_log("Error: couldnt' remove media of media_id " . $media_id .": " . $e->getMessage());
+			error_log("Error: couldnt' remove media of mediaID " . $media_id .": " . $e->getMessage());
 			array_push(self::$errors, $e->getMessage());
 			mysqli_rollback($conn);
 		}
 	}
 
-    /**
-     * @param int $media_id
-     * @param string media_type Should use MediaType Constants
-     */
-    public static function getMedia(int $media_id, string $media_type = null): Array {
+	/**
+	 * @param int $media_id
+	 * @param string mediaType Should use MediaType Constants
+	 */
+	public static function getMedia(int $media_id, string $media_type = null): Array {
 		if(!$media_id) return [];
 		$parameters = [$media_id];
 		$select = [
@@ -1306,10 +1306,10 @@ class Media {
 		$sql ='SELECT ' . implode(', ', $select) .' FROM media m ' .
 		'LEFT JOIN taxa t ON t.tid = m.tid ' .
 		'LEFT JOIN users u on u.uid = m.creatorUid ' .
-		'WHERE media_id = ?';
+		'WHERE mediaID = ?';
 
 		if($media_type) {
-			$sql .= ' AND media_type = ?';
+			$sql .= ' AND mediaType = ?';
 			array_push($parameters, $media_type);
 		}
 
@@ -1323,11 +1323,11 @@ class Media {
 		}
 	}
 
-    /**
-     * @param int $tid
-     * @param string $media_type Should use MediaType Constants
-     */
-    public static function getByTid(int $tid, string $media_type = null): Array {
+	/**
+	 * @param int $tid
+	 * @param string $media_type Should use MediaType Constants
+	 */
+	public static function getByTid(int $tid, string $media_type = null): Array {
 		if(!$tid) return [];
 		$parameters = [$tid];
 
@@ -1345,7 +1345,7 @@ class Media {
 			'WHERE m.tid = ?';
 
 		if($media_type) {
-			$sql .= ' AND media_type = ?';
+			$sql .= ' AND mediaType = ?';
 			array_push($parameters, $media_type);
 		}
 
@@ -1355,11 +1355,11 @@ class Media {
 		return Sanitize::out(self::get_media_items($results));
 	}
 
-    /**
-     * @param int $occid
-     * @param string $media_type Should use MediaType constants
-     */
-    public static function fetchOccurrenceMedia(int $occid, string $media_type = null): Array {
+	/**
+	 * @param int $occid
+	 * @param string $media_type Should use MediaType constants
+	 */
+	public static function fetchOccurrenceMedia(int $occid, string $media_type = null): Array {
 		if(!$occid) return [];
 		$select = [
 			'm.*',
@@ -1376,7 +1376,7 @@ class Media {
 			'WHERE m.occid = ?';
 
 		if($media_type) {
-			$sql .= ' AND m.media_type = ?';
+			$sql .= ' AND m.mediaType = ?';
 			array_push($parameters, $media_type);
 		}
 
@@ -1387,30 +1387,30 @@ class Media {
 		return Sanitize::out(self::get_media_items($results));
 	}
 
-    /**
+	/**
 	 * @param MysqliResult $results
-     * @param mixed $results
-     */
-    private static function get_media_items($results): array {
+	 * @param mixed $results
+	 */
+	private static function get_media_items($results): array {
 		$media_items = Array();
 
 		while($row = $results->fetch_assoc()){
-			$media_items[$row['media_id']] = $row;
+			$media_items[$row['mediaID']] = $row;
 		}
 		$results->free();
 
 		return $media_items;
 	}
-	
-    /**
-	 * @param int|array $media_id 
+
+	/**
+	 * @param int|array $media_id
 	 * @param Mysqli $conn
-     * @return array<string>
-     */
+	 * @return array<string>
+	 */
 	public static function getMediaTags(int|array $media_id, mysqli $conn = null): array {
-		$sql = 'SELECT t.imgid, k.tagkey, k.shortlabel, k.description_en FROM imagetag t 
-		INNER JOIN imagetagkey k ON t.keyvalue = k.tagkey 
-		WHERE t.imgid ';
+		$sql = 'SELECT t.mediaID, k.tagkey, k.shortlabel, k.description_en FROM imagetag t
+		INNER JOIN imagetagkey k ON t.keyvalue = k.tagkey
+		WHERE t.mediaID ';
 
 		if(is_array($media_id)) {
 			$count = count($media_id);
@@ -1423,23 +1423,23 @@ class Media {
 		}
 
 		$res = SymbUtil::execute_query(
-			$conn?? Database::connect('readonly'), 
-			$sql, 
+			$conn?? Database::connect('readonly'),
+			$sql,
 			is_array($media_id)? $media_id: [$media_id]
 		);
 		$tags = [];
 		while($row = $res->fetch_object()) {
-			$tags[$row->imgid][$row->tagkey] = $row->shortlabel;
+			$tags[$row->mediaID][$row->tagkey] = $row->shortlabel;
 		}
 		$res->free();
 
 		return Sanitize::out($tags);
 	}
 
-    /**
-     * @return array<string>
-     */
-    public static function getCreatorArray(): array {
+	/**
+	 * @return array<string>
+	 */
+	public static function getCreatorArray(): array {
 		$sql = <<< SQL
 		SELECT u.uid, CONCAT_WS(', ',u.lastname,u.firstname) AS fullname 
 		FROM users u 
@@ -1456,9 +1456,9 @@ class Media {
 		return $creators;
 	}
 
-    /**
-     * @return array<string>
-     */
+	/**
+	 * @return array<string>
+	 */
 	public static function getMediaTagKeys(): array {
 		$retArr = Array();
 
@@ -1474,10 +1474,10 @@ class Media {
 		return $retArr;
 	}
 
-    /**
-     * @param mixed $media_arr
-     */
-    private static function imagesAreWritable($media_arr): bool{
+	/**
+	 * @param mixed $media_arr
+	 */
+	private static function imagesAreWritable($media_arr): bool{
 		$bool = false;
 		$testArr = array();
 		if($media_arr['originalUrl']) $testArr[] = $media_arr['originalUrl'];
@@ -1500,10 +1500,10 @@ class Media {
 		return $bool;
 	}
 
-    /**
-     * @param array<int,mixed> $media_arr
-     */
-    private static function imageNotCatalogNumberLimited(array $media_arr, int $occid): bool{
+	/**
+	 * @param array<int,mixed> $media_arr
+	 */
+	private static function imageNotCatalogNumberLimited(array $media_arr, int $occid): bool{
 		$bool = true;
 		$testArr = array();
 		if($media_arr['originalUrl']) $testArr[] = $media_arr['originalUrl'];
@@ -1536,12 +1536,12 @@ class Media {
 		}
 		return $bool;
 	}
-    /**
-     * @return bool
-     * @param mixed $imgArr
-     * @param mixed $occid
-     */
-    public static function isRemappable($imgArr, $occid): bool{
+	/**
+	 * @return bool
+	 * @param mixed $imgArr
+	 * @param mixed $occid
+	 */
+	public static function isRemappable($imgArr, $occid): bool{
 		$bool = false;
 		//If all images are writable, then we can rename the images to ensure they will not match incoming images
 		$bool = self::imagesAreWritable($imgArr);

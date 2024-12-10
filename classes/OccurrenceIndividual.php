@@ -259,7 +259,7 @@ class OccurrenceIndividual extends Manager{
 
 	private function setImages(){
 		global $MEDIA_DOMAIN;
-		$sql = 'SELECT m.media_id, m.url, m.thumbnailurl, m.originalurl, m.sourceurl, m.notes, m.caption, m.media_type, m.format,
+		$sql = 'SELECT m.mediaID, m.url, m.thumbnailurl, m.originalurl, m.sourceurl, m.notes, m.caption, m.mediaType, m.format,
 			CONCAT_WS(" ",u.firstname,u.lastname) as innerCreator, m.creator, m.rights, m.accessRights, m.copyright
 			FROM media m LEFT JOIN users u ON m.creatorUid = u.uid
 			WHERE (m.occid = ?) ORDER BY m.sortoccurrence,m.sortsequence';
@@ -268,7 +268,7 @@ class OccurrenceIndividual extends Manager{
 			$stmt->execute();
 			if($rs = $stmt->get_result()){
 				while($row = $rs->fetch_object()){
-					$media_id = $row->media_id;
+					$mediaID = $row->mediaID;
 					$url = $row->url;
 					$tnUrl = $row->thumbnailurl;
 					$lgUrl = $row->originalurl;
@@ -279,18 +279,18 @@ class OccurrenceIndividual extends Manager{
 					}
 					if((!$url || $url == 'empty') && $lgUrl) $url = $lgUrl;
 					if(!$tnUrl && $url) $tnUrl = $url;
-					$this->occArr['imgs'][$media_id]['url'] = $url;
-					$this->occArr['imgs'][$media_id]['tnurl'] = $tnUrl;
-					$this->occArr['imgs'][$media_id]['lgurl'] = $lgUrl;
-					$this->occArr['imgs'][$media_id]['sourceurl'] = $row->sourceurl;
-					$this->occArr['imgs'][$media_id]['caption'] = $row->caption;
-					$this->occArr['imgs'][$media_id]['creator'] = $row->creator;
-					$this->occArr['imgs'][$media_id]['rights'] = $row->rights;
-					$this->occArr['imgs'][$media_id]['accessrights'] = $row->accessRights;
-					$this->occArr['imgs'][$media_id]['copyright'] = $row->copyright;
-					$this->occArr['imgs'][$media_id]['media_type'] = $row->media_type;
-					$this->occArr['imgs'][$media_id]['format'] = $row->format;
-					if($row->innerCreator) $this->occArr['imgs'][$media_id]['creator'] = $row->innerCreator;
+					$this->occArr['imgs'][$mediaID]['url'] = $url;
+					$this->occArr['imgs'][$mediaID]['tnurl'] = $tnUrl;
+					$this->occArr['imgs'][$mediaID]['lgurl'] = $lgUrl;
+					$this->occArr['imgs'][$mediaID]['sourceurl'] = $row->sourceurl;
+					$this->occArr['imgs'][$mediaID]['caption'] = $row->caption;
+					$this->occArr['imgs'][$mediaID]['creator'] = $row->creator;
+					$this->occArr['imgs'][$mediaID]['rights'] = $row->rights;
+					$this->occArr['imgs'][$mediaID]['accessrights'] = $row->accessRights;
+					$this->occArr['imgs'][$mediaID]['copyright'] = $row->copyright;
+					$this->occArr['imgs'][$mediaID]['mediaType'] = $row->mediaType;
+					$this->occArr['imgs'][$mediaID]['format'] = $row->format;
+					if($row->innerCreator) $this->occArr['imgs'][$mediaID]['creator'] = $row->innerCreator;
 				}
 				$rs->free();
 			}
@@ -424,7 +424,7 @@ class OccurrenceIndividual extends Manager{
 					$objectID = $r->catalogNumber;
 					if($objectID) {
 						if(strpos($objectID, $r->instCode) === false){
-							//Append institution and collection code to catalogNumber, but only if it is not already included 
+							//Append institution and collection code to catalogNumber, but only if it is not already included
 							$collCode = $r->instCode;
 							if($r->collCode) $collCode .= '-' . $r->collCode;
 							$objectID = $collCode . ':' . $r->catalogNumber;

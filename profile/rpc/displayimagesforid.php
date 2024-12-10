@@ -27,7 +27,7 @@ foreach($imgArr as $imgArr){
 
 	<div class="tndiv" style="margin-top: 15px; margin-bottom: 15px">
 		<div class="tnimg">
-			<a href="imgdetails.php?imgid=<?php echo htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
+			<a href="imgdetails.php?mediaid=<?php echo htmlspecialchars($imgId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>">
 				<img src="<?php echo $imgUrl; ?>" />
 			</a>
 		</div>

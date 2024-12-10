@@ -449,7 +449,7 @@ class ActionRequest {
          }
          $caption .= " " . $imArr['initialtimestamp'];
          $caption = trim($caption);
-         $result = "<a href='../imagelib/imgdetails.php?imgid=$this->fk'>" .  htmlspecialchars($caption, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "</a>";
+         $result = "<a href='../imagelib/imgdetails.php?mediaid=$this->fk'>" .  htmlspecialchars($caption, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "</a>";
       }
       return $result;
    }

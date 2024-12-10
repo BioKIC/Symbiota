@@ -18,7 +18,7 @@ try {
 		if(array_key_exists($key, $mediaTags)) {
 			$specImgArr[$key]["tags"] = $mediaTags[$key];
 		}
-	} 
+	}
 } catch(Exception $e) {
 	error_log($e->getMessage());
 }
@@ -192,7 +192,7 @@ $creatorArray = Media::getCreatorArray();
 					$tnUrl = $imgArr["thumbnailUrl"];
 					?>
 					<tr>
-					<?php if($imgArr['media_type'] === 'image'):?>
+					<?php if($imgArr['mediaType'] === 'image'):?>
 						<td style="width:300px;text-align:center;padding:20px;">
 							<?php
 							if((!$imgUrl || $imgUrl == 'empty') && $origUrl) $imgUrl = $origUrl;
@@ -220,12 +220,12 @@ $creatorArray = Media::getCreatorArray();
 							if($origUrl) echo '<div><a href="' . $origUrl . '" target="_blank">' . $LANG['OPEN_LARGE'] . '</a></div>';
 							?>
 						</td>
-						<?php elseif($imgArr['media_type'] === 'audio'):?>
+						<?php elseif($imgArr['mediaType'] === 'audio'):?>
 						<td style="vertical-align: middle">
 							<audio controls>
 								<source src="<?= $origUrl ?>" type="<?=$imgArr['format']?>">
 								Your browser does not support the audio element.
-							</audio> 
+							</audio>
 						</td>
 						<?php endif?>
 						<td class="imgInfo" style="text-align:left;padding:10px;">
@@ -286,7 +286,7 @@ $creatorArray = Media::getCreatorArray();
 									<b><?php echo $LANG['LARGE_IMG_URL']; ?>: </b>
 									<a href="<?= $origUrl ?>" title="<?= $origUrl ?>" target="_blank">
 										<?php
-										echo $origUrl && strlen($origUrl) > 60? 
+										echo $origUrl && strlen($origUrl) > 60?
 										'...'.substr($origUrl,-60):
 										$origUrl;
 										?>
@@ -295,7 +295,7 @@ $creatorArray = Media::getCreatorArray();
 								<div>
 									<b><?php echo $LANG['THUMB_URL']; ?>: </b>
 									<a href="<?= $tnUrl ?>" title="<?= $tnUrl ?>" target="_blank">
-										<?= $tnUrl && strlen($tnUrl) > 60 ? 
+										<?= $tnUrl && strlen($tnUrl) > 60 ?
 											'...'.substr($tnUrl,-60) : $tnUrl?>
 									</a>
 								</div>

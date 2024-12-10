@@ -237,10 +237,10 @@ if($SYMB_UID){
 
 				$collMap = $occManager->getCollMap();
 
-				//Ensures correct order on taxon profile page 
+				//Ensures correct order on taxon profile page
 				if(strpos($collMap['colltype'], 'Observations') !== false) {
 					$_POST['sortsequence'] = 40;
-				} 
+				}
 
 				try {
 					$occur_map = $occManager->getOccurMap()[$occId];
@@ -250,7 +250,7 @@ if($SYMB_UID){
 						$occur_map['catalognumber']
 					);
 					Media::add(
-						$_POST, 
+						$_POST,
 						new LocalStorage($path),
 						$_FILES['imgfile'] ?? null
 					);
@@ -281,8 +281,8 @@ if($SYMB_UID){
 				}
 			}
 			elseif($action == 'Remap Image' || $action == 'remapImageToNewRecord'){
-				$target_occid = $action == 'remapImageToNewRecord' ? 
-					$occManager->createOccurrenceFrom(): 
+				$target_occid = $action == 'remapImageToNewRecord' ?
+					$occManager->createOccurrenceFrom():
 					intval($_POST['targetoccid']);
 
 				try {
@@ -302,9 +302,9 @@ if($SYMB_UID){
 						$occur_map['catalognumber']
 					);
 					Media::remap(
-						intval($_POST['imgid']), 
-						$target_occid, 
-						new LocalStorage($current_path), 
+						intval($_POST['imgid']),
+						$target_occid,
+						new LocalStorage($current_path),
 						new LocalStorage($remap_path)
 					);
 
@@ -317,10 +317,10 @@ if($SYMB_UID){
 			}
 			elseif($action == "Disassociate Image"){
 				try {
-					$media_id = intval($_POST["imgid"]);
-					Media::disassociate($media_id);
+					$mediaID = filter_var($_POST['imgid'], FILTER_SANITIZE_NUMBER_INT);
+					Media::disassociate($mediaID);
 
-					$statusStr = $LANG['DISASS_SUCCESS'] . ' <a href="../../imagelib/imgdetails.php?imgid=' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">#' . htmlspecialchars($media_id, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a>';
+					$statusStr = $LANG['DISASS_SUCCESS'] . ' <a href="../../imagelib/imgdetails.php?mediaid=' . $mediaID . '" target="_blank">#' . $mediaID . '</a>';
 				} catch(Exception $e) {
 					$statusStr = $LANG['DISASS_ERORR'] .': '.$e->getMessage();
 				}
@@ -452,7 +452,7 @@ if($SYMB_UID){
 			$iUrl = $i2['url'];
 			if($iUrl == 'empty' && $i2['origurl']) $iUrl = $i2['origurl'];
 			if($imgUrlPrefix && substr($iUrl,0,4) != 'http') $iUrl = $imgUrlPrefix.$iUrl;
-			$imgArr[$imgCnt]['imgid'] = $imgId;
+			$imgArr[$imgCnt]['mediaid'] = $imgId;
 			$imgArr[$imgCnt]['web'] = $iUrl;
 			if($i2['origurl']){
 				$lgUrl = $i2['origurl'];

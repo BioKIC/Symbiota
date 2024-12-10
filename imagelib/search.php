@@ -17,13 +17,13 @@ $imageType = isset($_REQUEST['imagetype']) ? filter_var($_REQUEST['imagetype'], 
 $pageNumber = array_key_exists('page', $_REQUEST) ? filter_var($_REQUEST['page'], FILTER_SANITIZE_NUMBER_INT) : 1;
 $cntPerPage = array_key_exists('cntperpage', $_REQUEST) && is_numeric($_REQUEST['cntperpage']) ? filter_var($_REQUEST['cntperpage'], FILTER_SANITIZE_NUMBER_INT) : 200;
 
-$media_type = null;
-if(isset($_REQUEST['media_type'])) {
-	if($_REQUEST['media_type'] === 'image') {
-		$media_type = 'image';
+$mediaType = null;
+if(isset($_REQUEST['mediatype'])) {
+	if($_REQUEST['mediatype'] === 'image') {
+		$mediatype = 'image';
 	}
-	elseif($_REQUEST['media_type'] === 'audio') {
-		$media_type = 'audio';
+	elseif($_REQUEST['mediatype'] === 'audio') {
+		$mediatype = 'audio';
 	}
 }
 
@@ -45,7 +45,7 @@ $imgLibManager->setKeywords($keywords);
 $imgLibManager->setImageCount($imageCount);
 $imgLibManager->setImageType($imageType);
 //Setter only takes 'image' and 'audio' as valid values so no need to sanitize
-$imgLibManager->setMediaType($media_type);
+$imgLibManager->setMediaType($mediaType);
 if(isset($_REQUEST['db'])) $imgLibManager->setCollectionVariables($_REQUEST);
 
 $statusStr = '';
@@ -256,7 +256,7 @@ if($action == 'batchAssignTag'){
 						</div>
 						<div class="row-div flex-form">
 							<fieldset>
-								<?php 
+								<?php
 									$is_image = false;
 									$is_audio = false;
 									$is_all = false;
@@ -270,11 +270,11 @@ if($action == 'batchAssignTag'){
 									}
 								?>
 								<legend> <?= $LANG['MEDIA_TYPE'] ?> </legend>
-								<input id="m_image" type="radio" name="media_type" value="image" <?= $is_image? 'CHECKED': ''?>>
+								<input id="m_image" type="radio" name="mediatype" value="image" <?= $is_image? 'CHECKED': ''?>>
 								<label for="m_image"> <?= $LANG['MEDIA_TYPE_IMAGE'] ?></label><br>
-								<input id="m_audio" type="radio" name="media_type" value="audio" <?= $is_audio? 'CHECKED': ''?>>
+								<input id="m_audio" type="radio" name="mediatype" value="audio" <?= $is_audio? 'CHECKED': ''?>>
 								<label for="m_audio"> <?= $LANG['MEDIA_TYPE_AUDIO']?></label><br>
-									<input id="m_all" type="radio" name="media_type" value="" <?= $is_all? 'CHECKED': ''?>>
+									<input id="m_all" type="radio" name="mediatype" value="" <?= $is_all? 'CHECKED': ''?>>
 								<label for="m_all"> <?= $LANG['MEDIA_TYPE_ALL'] ?></label><br>
 							</fieldset>
 						</div>
@@ -403,7 +403,7 @@ if($action == 'batchAssignTag'){
 								if($imgTn){
 									$imgUrl = $imgTn;
 									if($MEDIA_DOMAIN && substr($imgTn,0,1) == '/') $imgUrl = $MEDIA_DOMAIN . $imgTn;
-								} else if($imgArr['media_type'] == 'audio') {
+								} else if($imgArr['mediaType'] == 'audio') {
 									$imgUrl = $CLIENT_ROOT . '/images/speaker_thumbnail.png';
 								}
 								elseif($MEDIA_DOMAIN && substr($imgUrl,0,1) == '/'){

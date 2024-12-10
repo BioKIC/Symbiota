@@ -158,7 +158,7 @@ class ImageProcessor {
 										//$fieldArr['originalurl'] = $baseUrl.'?resize=4000&format=jpeg';
 										if($occid){
 											if(is_numeric($occid)) $this->insertImage($occid,$fieldArr);
-											elseif(substr($occid,0,6) == 'imgid-') $this->updateImage(substr($occid,6),$fieldArr);
+											elseif(substr($occid,0,6) == 'mediaid-') $this->updateImage(substr($occid,6),$fieldArr);
 										}
 									}
 									else $this->logOrEcho("NOTICE: File skipped, unable to extract specimen identifier (".$fileName.")",2);
@@ -280,7 +280,7 @@ class ImageProcessor {
 							$origUrl = substr($originalUrl, 5);
 							$baseUrl = substr($url, 5);
 							foreach($occArr as $occid => $tid){
-								$sql1 = 'SELECT media_id as imgid, url, originalurl, thumbnailurl FROM media WHERE (occid = '.$occid.')';
+								$sql1 = 'SELECT mediaID, url, originalurl, thumbnailurl FROM media WHERE (occid = '.$occid.')';
 								$rs1 = $this->conn->query($sql1);
 								while($r1 = $rs1->fetch_object()){
 									$testOrigUrl = substr($r1->originalurl,5);
@@ -294,7 +294,7 @@ class ImageProcessor {
 										$sql2 = 'UPDATE media '.
 											'SET url = "'.$url.'", originalurl = "'.$originalUrl.'", thumbnailurl = '.($thumbnailUrl?'"'.$thumbnailUrl.'"':'NULL').', '.
 											'sourceurl = '.($sourceUrl?'"'.$sourceUrl.'"':'NULL').' '.
-											'WHERE media_id = '.$r1->imgid;
+											'WHERE mediaID = '.$r1->mediaID;
 										if($this->conn->query($sql2)){
 											$this->logOrEcho('Existing image replaced with new image mapping: <a href="../editor/occurrenceeditor.php?occid=' . htmlspecialchars($occid, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">'.($catalogNumber?$catalogNumber:$otherCatalogNumbers).'</a>',1);
 											//Delete physical images it previous version was mapped locally
@@ -411,10 +411,10 @@ class ImageProcessor {
 					}
 					//Grab existing images for that occurrence
 					$imgArr = array();
-					$sqlTest = 'SELECT media_id as imgid, sourceidentifier FROM media WHERE (occid = '.$occid.') ';
+					$sqlTest = 'SELECT mediaID, sourceidentifier FROM media WHERE (occid = '.$occid.') ';
 					$rsTest = $this->conn->query($sqlTest);
 					while($rTest = $rsTest->fetch_object()){
-						$imgArr[$rTest->imgid] = $rTest->sourceidentifier;
+						$imgArr[$rTest->mediaID] = $rTest->sourceidentifier;
 					}
 					$rsTest->free();
 					//Process images to determine if new images should be added
@@ -429,12 +429,12 @@ class ImageProcessor {
 								$fnBase = implode($fnArr);
 								if($guid == $sourceIdentifier){
 									//Image file already loaded (based on identifier, thus abort and don't reload
-									$occid = 'imgid-'.$imgId;
+									$occid = 'mediaid-'.$imgId;
 									break;
 								}
 								elseif($sourceFileName == $fileName){
 									//Image file already loaded, thus abort and don't reload
-									$occid = 'imgid-'.$imgId;
+									$occid = 'mediaid-'.$imgId;
 									//$this->logOrEcho('NOTICE: Image mapping skipped; file ('.$fileName.') already in system (#'.$occLink.')',2);
 									break;
 								}
@@ -447,7 +447,7 @@ class ImageProcessor {
 								elseif($fileExt == 'jpg' && in_array($fnExt,$highResList)){
 									//$this->logOrEcho('NOTICE: Replacing exist map of high-res with this JPG version ('.$fileName.'; #'.$occLink.')',2);
 									//Replace high res source with JPG by deleteing high res from database
-									$this->conn->query('DELETE FROM media WHERE media_id = '.$imgId);
+									$this->conn->query('DELETE FROM media WHERE mediaID = '.$imgId);
 								}
 							}
 						}
@@ -510,16 +510,16 @@ class ImageProcessor {
 		return $status;
 	}
 
-	private function updateImage($imgid,$targetFieldArr){
+	private function updateImage($mediaID,$targetFieldArr){
 		$status = true;
-		if($imgid && $targetFieldArr){
+		if($mediaID && $targetFieldArr){
 			$format = 'image/jpeg';
 			if(!array_key_exists('format', $targetFieldArr) || !$targetFieldArr['format']) $targetFieldArr['format'] = $format;
 			$sqlFrag = '';
 			foreach($targetFieldArr as $fieldName => $value){
 				$sqlFrag .= $fieldName.' = '.($value?'"'.$this->cleanInStr($value).'"':'NULL').',';
 			}
-			$sql = 'UPDATE media SET '.trim($sqlFrag,' ,').' WHERE (media_id = '.$imgid.')';
+			$sql = 'UPDATE media SET '.trim($sqlFrag,' ,').' WHERE (mediaID = '.$mediaID.')';
 			if($this->conn->query($sql)){
 				$this->logOrEcho('Existing image data updated '.(isset($targetFieldArr['sourceIdentifier'])?'('.$targetFieldArr['sourceIdentifier'].')':''),2);
 			}
@@ -531,7 +531,7 @@ class ImageProcessor {
 		}
 		else{
 			$status = false;
-			if(!$imgid) $this->logOrEcho('ERROR updating image: missing imgid',2);
+			if(!$mediaID) $this->logOrEcho('ERROR updating image: missing mediaID',2);
 			else $this->logOrEcho('ERROR updating image: missing image data',2);
 		}
 		return $status;

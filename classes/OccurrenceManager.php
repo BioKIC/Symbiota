@@ -445,11 +445,11 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 			$this->displaySearchArr[] = $this->LANG['IS_TYPE'];
 		}
 		if(array_key_exists('hasimages', $this->searchTermArr)){
-			$sqlWhere .= 'AND (o.occid IN(SELECT occid FROM media where media_type = "image")) ';
+			$sqlWhere .= 'AND (o.occid IN(SELECT occid FROM media where mediaType = "image")) ';
 			$this->displaySearchArr[] = $this->LANG['HAS_IMAGES'];
 		}
 		if(array_key_exists('hasaudio', $this->searchTermArr)){
-			$sqlWhere .= 'AND (o.occid IN(SELECT occid FROM media where media_type = "audio")) ';
+			$sqlWhere .= 'AND (o.occid IN(SELECT occid FROM media where mediaType = "audio")) ';
 			$this->displaySearchArr[] = $this->LANG['HAS_IMAGES'];
 		}
 		if(array_key_exists('hasgenetic', $this->searchTermArr)){

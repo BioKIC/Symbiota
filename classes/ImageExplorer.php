@@ -34,19 +34,19 @@ class ImageExplorer{
 		$rs = $this->conn->query($sql);
 		if($rs){
 			while($r = $rs->fetch_assoc()){
-				$retArr[$r['media_id']] = $r;
+				$retArr[$r['mediaID']] = $r;
 			}
 			$rs->free();
 
 			if($retArr){
 				//Grab sciname and tid assigned to img, whether accepted or not
-				$sql2 = 'SELECT m.media_id, t.tid, t.sciname FROM media m INNER JOIN taxa t ON m.tid = t.tid '.
-					'WHERE m.media_id IN('.implode(',',array_keys($retArr)).')';
+				$sql2 = 'SELECT m.mediaID, t.tid, t.sciname FROM media m INNER JOIN taxa t ON m.tid = t.tid '.
+					'WHERE m.mediaID IN('.implode(',',array_keys($retArr)).')';
 				$rs2 = $this->conn->query($sql2);
 				if($rs2){
 					while($r2 = $rs2->fetch_object()){
-						$retArr[$r2->media_id]['tid'] = $r2->tid;
-						$retArr[$r2->media_id]['sciname'] = $r2->sciname;
+						$retArr[$r2->mediaID]['tid'] = $r2->tid;
+						$retArr[$r2->mediaID]['sciname'] = $r2->sciname;
 					}
 					$rs2->free();
 				}
@@ -56,7 +56,7 @@ class ImageExplorer{
 				}
 
 				//Set image count
-				$cntSql = 'SELECT count(DISTINCT m.media_type) AS cnt '.substr($sql,strpos($sql,' FROM '));
+				$cntSql = 'SELECT count(DISTINCT m.mediaType) AS cnt '.substr($sql,strpos($sql,' FROM '));
 				$cntSql = substr($cntSql,0,strpos($cntSql,' LIMIT '));
 				//echo '<br/>'.$cntSql.'<br/>';
 				$cntRs = $this->conn->query($cntSql);
@@ -86,7 +86,7 @@ class ImageExplorer{
 	 * Output: String, SQL to be used to query database
 	 */
 	private function getSql($searchCriteria){
-		$sqlWhere = 'AND m.media_type = "image"';
+		$sqlWhere = 'AND m.mediaType = "image"';
 
 		//Set taxa
 		if(isset($searchCriteria['taxa']) && $searchCriteria['taxa']){
@@ -190,7 +190,7 @@ class ImageExplorer{
 		    }
 		}
 
-		$sqlStr = 'SELECT DISTINCT m.media_id, ts.tidaccepted, m.url, m.thumbnailurl, m.originalurl, '.
+		$sqlStr = 'SELECT DISTINCT m.mediaID, ts.tidaccepted, m.url, m.thumbnailurl, m.originalurl, '.
 			'u.uid, CONCAT_WS(", ",u.lastname,u.firstname) as creator, m.caption, '.
 			'o.occid, o.stateprovince, o.catalognumber, CONCAT_WS("-",c.institutioncode, c.collectioncode) as instcode, '.
 			'm.initialtimestamp '.
@@ -203,7 +203,7 @@ class ImageExplorer{
 			$sqlStr .= 'LEFT JOIN omoccurverification v ON o.occid = v.occid ';
 		}
 		if(isset($searchCriteria['tags']) && $searchCriteria['tags']){
-			$sqlStr .= 'LEFT JOIN imagetag it ON m.media_id = it.imgid';
+			$sqlStr .= 'LEFT JOIN imagetag it ON m.mediaID = it.mediaID';
 		}
 		if(isset($searchCriteria['countPerCategory'])){
 			$countPerCategory = (int)$searchCriteria['countPerCategory'];
@@ -360,7 +360,7 @@ class ImageExplorer{
 
 	public function getCollections(){
 		$retArr = array();
-        $sql = 'SELECT count(m.media_id) as ct, c.collid, c.institutioncode, c.collectioncode ' .
+        $sql = 'SELECT count(m.mediaID) as ct, c.collid, c.institutioncode, c.collectioncode ' .
                ' FROM omcollections c '.
                '    INNER JOIN omoccurrences o ON c.collid = o.collid '.
                '    INNER JOIN media m ON o.occid = m.occid '.

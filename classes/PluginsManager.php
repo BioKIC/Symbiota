@@ -84,7 +84,7 @@ class PluginsManager extends Manager {
 			$ssIdInfo['imagetype'] = $imageType;
 
 			$files = Array();
-			$sql = 'SELECT m.media_id, m.tid, m.occid, m.url, m.creator, m.`owner`, t.sciname, o.sciname AS occsciname, '.
+			$sql = 'SELECT m.mediaID, m.tid, m.occid, m.url, m.creator, m.`owner`, t.sciname, o.sciname AS occsciname, '.
 				'CONCAT_WS(" ",u.firstname,u.lastname) AS creatorName, '.
 				'CONCAT_WS("; ",o.sciname, o.catalognumber, CONCAT_WS(" ",o.recordedby,IFNULL(o.recordnumber,o.eventdate))) AS identifier '.
 				'FROM media m LEFT JOIN users u ON m.creatorUid = u.uid '.
@@ -122,17 +122,17 @@ class PluginsManager extends Manager {
 				if($size = ImageShared::getImgDim(str_replace(' ', '%20', $file))){
 					$width = $size[0];
 					$height = $size[1];
-					$files[$row->media_id]['url'] = $file;
-					$files[$row->media_id]['width'] = $width;
-					$files[$row->media_id]['height'] = $height;
-					$files[$row->media_id]['tid'] = $row->tid;
-					$files[$row->media_id]['occid'] = $row->occid;
-					$files[$row->media_id]['creator'] = $row->creator;
-					$files[$row->media_id]['owner'] = $row->owner;
-					$files[$row->media_id]['sciname'] = $row->sciname;
-					$files[$row->media_id]['occsciname'] = $row->occsciname;
-					$files[$row->media_id]['creatorName'] = $row->creatorName;
-					$files[$row->media_id]['identifier'] = $row->identifier;
+					$files[$row->mediaID]['url'] = $file;
+					$files[$row->mediaID]['width'] = $width;
+					$files[$row->mediaID]['height'] = $height;
+					$files[$row->mediaID]['tid'] = $row->tid;
+					$files[$row->mediaID]['occid'] = $row->occid;
+					$files[$row->mediaID]['creator'] = $row->creator;
+					$files[$row->mediaID]['owner'] = $row->owner;
+					$files[$row->mediaID]['sciname'] = $row->sciname;
+					$files[$row->mediaID]['occsciname'] = $row->occsciname;
+					$files[$row->mediaID]['creatorName'] = $row->creatorName;
+					$files[$row->mediaID]['identifier'] = $row->identifier;
 					$cnt++;
 				}
 			}

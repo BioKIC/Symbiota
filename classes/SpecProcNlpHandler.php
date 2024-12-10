@@ -123,7 +123,7 @@ class SpecProcNlpHandler {
 		$sql = 'SELECT r.rawstr, o.collid, o.catalogNumber '.
 			'FROM omoccurrences o '.
 			'INNER JOIN media m ON o.occid = m.occid '.
-			'INNER JOIN specprocessorrawlabels r ON m.media_id = r.imgid '.
+			'INNER JOIN specprocessorrawlabels r ON m.mediaID = r.mediaID '.
 			'WHERE (r.prlid = '.$prlid.')';
 		//echo $sql;
 		$rs = $this->conn->query($sql);
@@ -143,7 +143,7 @@ class SpecProcNlpHandler {
 		foreach($collArr as $collid){
 			$this->setCollId($collid);
 			$sql = 'SELECT r.prlid, r.rawstr, r.source, o.occid, o.collid, o.catalognumber, IFNULL(m.originalurl,m.url) AS url '.
-				'FROM specprocessorrawlabels r LEFT JOIN media m ON r.imgid = m.media_id '.
+				'FROM specprocessorrawlabels r LEFT JOIN media m ON r.mediaID = m.mediaID '.
 				'INNER JOIN omoccurrences o ON IFNULL(m.occid,r.occid) = o.occid '.
 				'WHERE length(r.rawstr) > 20 AND (o.processingstatus = "unprocessed") ';
 			//if($this->collId) $sql .= 'AND (o.collid = '.$this->collId.') ';

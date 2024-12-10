@@ -60,7 +60,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 					}
 					if($rawStr){
 						if($ocrSource) $ocrSource .= ': '.date('Y-m-d');
-						$sql = 'INSERT INTO specprocessorrawlabels(imgid, rawstr, source) VALUES('.$this->activeImgId.',"'.$this->cleanRawFragment($rawStr).'","'.$this->cleanInStr($ocrSource).'")';
+						$sql = 'INSERT INTO specprocessorrawlabels(mediaID, rawstr, source) VALUES('.$this->activeImgId.',"'.$this->cleanRawFragment($rawStr).'","'.$this->cleanInStr($ocrSource).'")';
 						if(!$this->conn->query($sql)){
 							$this->errorArr[] = $LANG['ERROR_LOAD_OCR'].': '.$this->conn->error;
 						}
@@ -74,9 +74,9 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		return $status;
 	}
 
-	public function editImage($imgArr){
+	private function editImage($imgArr){
 		$status = false;
-		$imgId = $imgArr['imgid'];
+		$imgId = $imgArr['mediaid'];
 		if(!$imgId) return false;
 		$sql = 'UPDATE media SET ';
 		$fieldArr = array();
@@ -147,7 +147,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		if($fieldArr){
 			$fieldArr[] = 'specimen';
 			$fieldArr[] = $imgId;
-			$sql .= 'imagetype=? WHERE (media_id= ?)';
+			$sql .= 'imagetype=? WHERE (mediaID = ?)';
 			$types .= 'si';
 			$imgUpdateStatus = false;
 			$stmt = $this->conn->stmt_init();
@@ -156,7 +156,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			if($stmt->execute()){
 				$imgUpdateStatus = true;
 				if(array_key_exists('occid', $imgArr) || array_key_exists('tidinterpreted', $imgArr)){
-					$imgSql = 'UPDATE media m INNER JOIN omoccurrences o ON m.occid = o.occid SET m.tid = o.tidinterpreted WHERE (m.media_id = '.$imgId.')';
+					$imgSql = 'UPDATE media m INNER JOIN omoccurrences o ON m.occid = o.occid SET m.tid = o.tidinterpreted WHERE (m.mediaID = '.$imgId.')';
 					$this->conn->query($imgSql);
 				}
 				$status = true;
@@ -175,11 +175,11 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 					if(array_key_exists('hidden_'.$key, $imgArr)){
 						$sql = null;
 						if(array_key_exists("ch_$key",$imgArr)) {
-							if(!$imgArr['hidden_'.$key]) $sql = 'INSERT IGNORE into imagetag (imgid,keyvalue) values (?,?)';
+							if(!$imgArr['hidden_'.$key]) $sql = 'INSERT IGNORE into imagetag (mediaID, keyValue) values (?,?)';
 						}
 						else{
 							// checkbox is not selected and this tag was used for this image
-							if($imgArr['hidden_'.$key] == 1) $sql = 'DELETE from imagetag where imgid = ? and keyvalue = ?';
+							if($imgArr['hidden_'.$key] == 1) $sql = 'DELETE from imagetag where mediaID = ? and keyValue = ?';
 						}
 						if($sql) {
 							$stmt = $this->conn->stmt_init();
@@ -187,7 +187,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 							if ($stmt) {
 								$stmt->bind_param('is',$imgId,$key);
 								if (!$stmt->execute()) {
-									//$status .= ' ('.$LANG['WARNING_FAILED_TAG'].' (tag: '.[$key].', imgid: '.$imgId.'): '.$stmt->error ;
+									//$status .= ' ('.$LANG['WARNING_FAILED_TAG'].' (tag: '.[$key].', mediaID: '.$imgId.'): '.$stmt->error ;
 								}
 								$stmt->close();
 							}
@@ -302,7 +302,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 
 	public function createOccurrenceFrom(): int {
 		$sql = 'INSERT INTO omoccurrences(collid, observeruid,processingstatus) SELECT collid, observeruid, "unprocessed" FROM omoccurrences WHERE occid = ?';
-			
+
 		try {
 			mysqli_execute_query($this->conn, $sql, [$this->occid]);
 			return $this->conn->insert_id;
@@ -312,10 +312,10 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 		}
 	}
 
-	public function remapImage($imgId, $targetOccid = 0){
+	public function remapImage($mediaID, $targetOccid = 0){
 		global $LANG;
 		$status = true;
-		if(!is_numeric($imgId)) return false;
+		if(!is_numeric($mediaID)) return false;
 		if($targetOccid == 'new'){
 			$sql = 'INSERT INTO omoccurrences(collid, observeruid,processingstatus) SELECT collid, observeruid, "unprocessed" FROM omoccurrences WHERE occid = '.$this->occid;
 			if($this->conn->query($sql)){
@@ -328,8 +328,8 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			}
 		}
 		if($targetOccid && is_numeric($targetOccid)){
-			$imgArr = array_intersect_key(current(parent::getImageMap($imgId)), array('url'=>'','tnurl'=>'','origurl'=>''));
-			$editArr = array('imgid' => $imgId, 'occid' => $targetOccid);
+			$imgArr = array_intersect_key(current(parent::getImageMap($mediaID)), array('url'=>'','tnurl'=>'','origurl'=>''));
+			$editArr = array('mediaid' => $mediaID, 'occid' => $targetOccid);
 			if(!$this->imageNotCatalogNumberLimited($imgArr)){
 				if($this->imagesAreWritable($imgArr)){
 					//Rename images to ensure that files are not written over with file named using previous catalog number
@@ -363,7 +363,7 @@ class OccurrenceEditorImages extends OccurrenceEditorManager {
 			}
 		}
 		else{
-			$sql = 'UPDATE media SET occid = NULL WHERE (media_id = '.$imgId.')';
+			$sql = 'UPDATE media SET occid = NULL WHERE (mediaID = '.$imgId.')';
 			if(!$this->conn->query($sql)){
 				$this->errorArr[] = $LANG['UNABLE_DISSOCIATE'].': '.$this->conn->error;
 				return false;

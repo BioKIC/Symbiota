@@ -14,7 +14,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 	private $keywords;
 	private $imageCount = 0;
 	private $imageType = 0;
-	private $media_type = null;
+	private $mediaType = null;
 
 	private $recordCount = 0;
 	private $tidFocus;
@@ -37,7 +37,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 		$retArr = Array();
 		$this->setSqlWhere();
 		$this->setRecordCnt();
-		$sql = 'SELECT m.media_id, m.tid, IFNULL(t.sciname,o.sciname) as sciname, m.url, m.thumbnailurl, m.originalurl, m.creatorUid, m.caption, m.occid, m.media_type ';
+		$sql = 'SELECT m.mediaID, m.tid, IFNULL(t.sciname,o.sciname) as sciname, m.url, m.thumbnailurl, m.originalurl, m.creatorUid, m.caption, m.occid, m.mediaType ';
 		$sqlWhere = $this->sqlWhere;
 		if($this->imageCount == 1) $sqlWhere .= 'GROUP BY sciname ';
 		elseif($this->imageCount == 2) $sqlWhere .= 'GROUP BY m.occid ';
@@ -49,9 +49,9 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 		$result = $this->conn->query($sql);
 		$imgId = 0;
 		while($r = $result->fetch_object()){
-			if($imgId == $r->media_id) continue;
-			$imgId = $r->media_id;
-			$retArr[$imgId]['media_id'] = $r->media_id;
+			if($imgId == $r->mediaID) continue;
+			$imgId = $r->mediaID;
+			$retArr[$imgId]['mediaID'] = $r->mediaID;
 			//$retArr[$imgId]['tidaccepted'] = $r->tidinterpreted;
 			$retArr[$imgId]['tid'] = $r->tid;
 			$retArr[$imgId]['sciname'] = $r->sciname;
@@ -61,7 +61,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			$retArr[$imgId]['uid'] = $r->creatorUid;
 			$retArr[$imgId]['caption'] = $r->caption;
 			$retArr[$imgId]['occid'] = $r->occid;
-			$retArr[$imgId]['media_type'] = $r->media_type;
+			$retArr[$imgId]['mediaType'] = $r->mediaType;
 			//$retArr[$imgId]['stateprovince'] = $r->stateprovince;
 			//$retArr[$imgId]['catalognumber'] = $r->catalognumber;
 			//$retArr[$imgId]['instcode'] = $r->instcode;
@@ -173,13 +173,13 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			$sqlWhere .= 'AND (m.creatoruid IN('.$this->photographerUid.')) ';
 		}
 		if($this->tag){
-			$sqlWhere .= 'AND m.media_id ';
+			$sqlWhere .= 'AND m.mediaID ';
 			$tagFrag = '';
 			if($this->tag != 'ANYTAG') $tagFrag = 'WHERE keyvalue = "'.$this->cleanInStr($this->tag).'"';
 			if(!$this->tagExistance){
 				$sqlWhere .= 'NOT ';
 			}
-			$sqlWhere .= 'IN(SELECT imgid FROM imagetag '.$tagFrag.')';
+			$sqlWhere .= 'IN(SELECT mediaid FROM imagetag '.$tagFrag.')';
 		}
 		if($this->keywords){
 			$keywordArr = explode(";",$this->keywords);
@@ -199,16 +199,16 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 				$sqlWhere .= 'AND (m.occid IS NULL) ';
 			}
 		}
-		if($this->media_type){
-			//Note media_type is cleaned to only be 'image' and 'audio' strings
-			$sqlWhere .= 'AND (m.media_type = "' . $this->media_type . '") ';
+		if($this->mediaType){
+			//Note mediaType is cleaned to only be 'image' and 'audio' strings
+			$sqlWhere .= 'AND (m.mediaType = "' . $this->mediaType . '") ';
 		}
 		if(strpos($sqlWhere,'ts.taxauthid')) $sqlWhere = str_replace('m.tid', 'ts.tid', $sqlWhere);
 		if($sqlWhere) $this->sqlWhere = 'WHERE '.substr($sqlWhere,4);
 	}
 
 	private function setRecordCnt(){
-		$sql = 'SELECT COUNT(DISTINCT m.media_id) AS cnt ';
+		$sql = 'SELECT COUNT(DISTINCT m.mediaID) AS cnt ';
 		if($this->imageCount){
 			if($this->imageCount == 1) $sql = 'SELECT COUNT(DISTINCT m.tid) AS cnt ';
 			elseif($this->imageCount == 2) $sql = 'SELECT COUNT(DISTINCT m.occid) AS cnt ';
@@ -236,7 +236,7 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 			$sql .= 'INNER JOIN taxaenumtree e ON m.tid = e.tid ';
 		}
 		if($this->keywords){
-			$sql .= 'INNER JOIN imagekeywords ik ON m.media_id = ik.imgid ';
+			$sql .= 'INNER JOIN imagekeywords ik ON m.mediaID = ik.mediaid ';
 		}
 		if($this->dbStr && $this->dbStr != 'all'){
 			$sql .= 'INNER JOIN omoccurrences o ON m.occid = o.occid ';
@@ -277,16 +277,16 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 	//Action editing functions
 	public function batchAssignImageTag($postArr){
 		$status = false;
-		$imageArr = $postArr['imgid'];
+		$imageArr = $postArr['mediaid'];
 		$tagName = $postArr['imgTagAction'];
 		if($imageArr && $tagName){
 			$cnt = 0;
 			$fail = 0;
-			foreach($imageArr as $imgid){
-				if(is_numeric($imgid)){
-					$sql = 'INSERT IGNORE INTO imagetag(imgid, keyValue) VALUE(?, ?)';
+			foreach($imageArr as $mediaID){
+				if(is_numeric($mediaID)){
+					$sql = 'INSERT IGNORE INTO imagetag(mediaid, keyValue) VALUE(?, ?)';
 					if($stmt = $this->conn->prepare($sql)){
-						$stmt->bind_param('is', $imgid, $tagName);
+						$stmt->bind_param('is', $mediaID, $tagName);
 						$stmt->execute();
 						if($stmt->affected_rows) $cnt++;
 						elseif($stmt->error){
@@ -452,12 +452,12 @@ class ImageLibrarySearch extends OccurrenceTaxaManager{
 
 	public function setMediaType($type) {
 		if($type === 'image' || $type === 'audio') {
-			$this->media_type = $type;
+			$this->mediaType = $type;
 		}
 	}
 
 	public function getMediaType() {
-		return $this->media_type;
+		return $this->mediaType;
 	}
 }
 ?>
