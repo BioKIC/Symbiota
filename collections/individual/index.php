@@ -4,6 +4,7 @@ include_once($SERVER_ROOT . '/classes/OccurrenceIndividual.php');
 include_once($SERVER_ROOT . '/classes/DwcArchiverCore.php');
 include_once($SERVER_ROOT . '/classes/utilities/RdfUtil.php');
 include_once($SERVER_ROOT . '/classes/utilities/GeneralUtil.php');
+include_once($SERVER_ROOT.'/classes/TaxonomyEditorManager.php');
 
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/individual/index.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/individual/index.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/individual/index.en.php');
@@ -496,12 +497,23 @@ $traitArr = $indManager->getTraitArr();
 							<div id="sciname-div" class="sciname-div bottom-breathing-room-rel-sm">
 								<?php
 								echo '<label>'.$LANG['TAXON'].':</label> ';
-								echo '<i>'.$occArr['sciname'].'</i> '.$occArr['scientificnameauthorship'];
 								if(isset($occArr['taxonsecure'])){
 									echo '<span class="notice-span"> '.$LANG['ID_PROTECTED'].'</span>';
 								}
 								if($occArr['tidinterpreted']){
+									$taxonEditorObj = new TaxonomyEditorManager();
+									$taxonEditorObj->setTid($occArr['tidinterpreted']);
+									$taxonEditorObj->setTaxon();
+									$splitSciname = $taxonEditorObj->splitSciname($occArr);
+									$author = !empty($splitSciname['author']) ? ($splitSciname['author'] . ' ') : '';
+									$cultivarEpithet = !empty($splitSciname['cultivarEpithet']) ? ($taxonEditorObj->standardizeCultivarEpithet($splitSciname['cultivarEpithet'])) . ' ' : '';
+									$tradeName = !empty($splitSciname['tradeName']) ? ($taxonEditorObj->standardizeTradeName($splitSciname['tradeName']) . ' ') : '';
+									$nonItalicizedScinameComponent = $author . $cultivarEpithet . $tradeName;
+									echo '<i>' . $splitSciname['base'] . '</i> ' . $nonItalicizedScinameComponent;
 									//echo ' <a href="../../taxa/index.php?taxon=' . $occArr['tidinterpreted'] . '" title="Open Species Profile Page"><img src="" /></a>';
+								} else{
+									// $splitSciname = $taxonEditorObj->splitScinameFromOccArr($occArr); // the misformatting herein is a good reminder to end users to attach entries from the taxonomy thesuarus to their occurrences https://github.com/BioKIC/Symbiota/issues/528#issuecomment-2384276915.
+									echo '<i>' . $occArr['sciname'] .  '</i>';
 								}
 								?>
 							</div>

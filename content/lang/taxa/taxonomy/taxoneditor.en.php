@@ -24,6 +24,9 @@ $LANG['DELETE'] = 'Delete';
 $LANG['UNITNAME1'] = 'UnitName';
 $LANG['UNITNAME2'] = 'Specific Epithet';
 $LANG['UNITNAME3'] = 'Infraspecific Epithet';
+$LANG['UNITNAME4'] = 'Cultivar Epithet';
+$LANG['UNITNAME4_DESCRIPTION'] = 'Don\'t include single quotation marks for cultivar epithet during data entry';
+$LANG['UNITNAME5'] = 'Trade Name';
 $LANG['AUTHOR'] = 'Author';
 $LANG['KINGDOM'] = 'Kingdom';
 $LANG['RANK_NAME'] = 'Rank Name';
@@ -71,5 +74,6 @@ $LANG['EMPTY'] = 'Empty';
 $LANG['TARGET_TAXON_MISSING'] = 'Target Taxon missing';
 $LANG['NOT_AUTH'] = 'You are not authorized to access this page';
 $LANG['GENUS_NAME'] = 'Genus Name';
+$LANG['QUICK_PARSER_LABEL'] = 'Optional Quick Parser';
 
 ?>

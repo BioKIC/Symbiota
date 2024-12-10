@@ -1,9 +1,10 @@
 <?php
 include_once($SERVER_ROOT . '/classes/GPoint.php');
 include_once($SERVER_ROOT . '/classes/utilities/TaxonomyUtil.php');
+include_once($SERVER_ROOT.'/traits/TaxonomyTrait.php');
 
 class OccurrenceUtil {
-
+	use TaxonomyTrait;
 	private static $monthRoman = array('I'=>'01','II'=>'02','III'=>'03','IV'=>'04','V'=>'05','VI'=>'06','VII'=>'07','VIII'=>'08','IX'=>'09','X'=>'10','XI'=>'11','XII'=>'12');
 	public static $monthNames = array('jan'=>'01','ene'=>'01','feb'=>'02','mar'=>'03','abr'=>'04','apr'=>'04','may'=>'05','jun'=>'06','jul'=>'07','ago'=>'08',
 		'aug'=>'08','sep'=>'09','oct'=>'10','nov'=>'11','dec'=>'12','dic'=>'12');
@@ -713,8 +714,14 @@ class OccurrenceUtil {
 				//Build sciname from individual units supplied by source
 				$sciName = trim($recMap['genus'].' '.$recMap['specificepithet']);
 				if(array_key_exists('infraspecificepithet',$recMap)){
-					if(array_key_exists('taxonrank',$recMap)) $sciName .= ' '.$recMap['taxonrank'];
+					if(array_key_exists('taxonrank',$recMap) && strtolower($recMap['taxonrank'])!== 'cultivar') $sciName .= ' '.$recMap['taxonrank'];
 					$sciName .= ' '.$recMap['infraspecificepithet'];
+				}
+				if(array_key_exists('cultivarepithet',$recMap) && !empty($recMap['cultivarepithet']) ){
+					$sciName .= " " . self::standardizeCultivarEpithet($recMap['cultivarepithet']);
+				}
+				if(array_key_exists('tradename',$recMap) && !empty($recMap['tradename'])){
+					$sciName .= ' ' . self::standardizeTradeName($recMap['tradename']);
 				}
 				$recMap['sciname'] = trim($sciName);
 			}

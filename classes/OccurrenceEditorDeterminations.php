@@ -1,11 +1,14 @@
 <?php
 include_once($SERVER_ROOT . '/classes/OccurrenceEditorManager.php');
 include_once($SERVER_ROOT . '/classes/utilities/QueryUtil.php');
+include_once($SERVER_ROOT . '/traits/TaxonomyTrait.php');
 
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/classes/OccurrenceEditorDeterminations.en.php');
 
 class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
+
+	use TaxonomyTrait;
 
 	public function __construct(){
  		parent::__construct();
@@ -49,7 +52,65 @@ class OccurrenceEditorDeterminations extends OccurrenceEditorManager{
 				}
 			}
 		}
+		if ($detId){
+			$scinameValues = [];
+			foreach ($retArr as $detData) {
+				if (!empty($detData['sciname'])) {
+					$scinameValues[] = $detData['sciname'];
+				}
+			}
+			$placeholders = implode(',', array_fill(0, count($scinameValues), '?'));
 
+			$sql3 = 'SELECT tid, rankid, sciname, unitind1, unitname1, '.
+				'unitind2, unitname2, unitind3, unitname3, cultivarEpithet, tradeName '.
+				'FROM taxa '.
+				'WHERE sciname IN (' .$placeholders. ')';
+			$statement = $this->conn->prepare($sql3);
+
+			if ($statement = $this->conn->prepare($sql3)) {
+				$types = str_repeat('s', count($scinameValues));
+				$statement->bind_param($types, ...$scinameValues);
+				$statement->execute();
+				$result3 = $statement->get_result();
+				while($row3 = $result3->fetch_assoc()){
+					foreach ($retArr as $detId => &$detData) {
+						if ($detData['sciname'] == $row3['sciname'] && !isset($detData['nonItalicized'])) {
+							$detData['sciname'] = '';
+							$sciNameFull = [];
+							$nonItalicized = '';
+							if (!empty($row3['unitind1']))
+								$sciNameFull[] = $row3['unitind1'];
+							if (!empty($row3['unitname1']))
+								$sciNameFull[] = $row3['unitname1'];
+							if (!empty($row3['unitind2']))
+								$sciNameFull[] = $row3['unitind2'];
+							if (!empty($row3['unitname2']))
+								$sciNameFull[] = $row3['unitname2'];
+							if (!empty($row3['unitind3']))
+								$sciNameFull[] = $row3['unitind3'];
+							if (!empty($row3['unitname3']))
+								$sciNameFull[] = $row3['unitname3'];
+							if (!empty($sciNameFull))
+								$detData['sciname'] .= implode(' ', $sciNameFull);
+
+							$detData['nonItalicized'] = '';
+							if (!empty($row3['cultivarEpithet']))
+								$nonItalicized = $this->standardizeCultivarEpithet($row3['cultivarEpithet']);
+								if (!empty($row3['tradeName'])) {
+								if (!empty($nonItalicized))
+									$nonItalicized .= ' '  . $this->standardizeTradeName($row3['tradeName']);
+							}
+							if (!empty($nonItalicized)) {
+								if (empty($detData['nonItalicized']))
+									$detData['nonItalicized'] .= ' ' . $nonItalicized;
+							}
+						}
+					}
+				}
+				$result3->free();
+				$statement->close();
+			}
+		}
 		return $retArr;
 	}
 

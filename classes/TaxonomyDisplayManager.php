@@ -1,8 +1,11 @@
 <?php
 include_once($SERVER_ROOT.'/classes/Manager.php');
 include_once($SERVER_ROOT.'/classes/utilities/TaxonomyUtil.php');
+include_once($SERVER_ROOT.'/traits/TaxonomyTrait.php');
 
 class TaxonomyDisplayManager extends Manager{
+
+	use TaxonomyTrait;
 
 	private $taxaArr = Array();
 	private $targetStr = '';
@@ -45,7 +48,7 @@ class TaxonomyDisplayManager extends Manager{
 		$this->primeTaxaEnumTree();
 		$taxaParentIndex = Array();
 		$zeroRank = array();
-		$sql = 'SELECT DISTINCT t.tid, ts.tidaccepted, t.sciname, t.author, t.rankid, ts.parenttid
+		$sql = 'SELECT DISTINCT t.tid, ts.tidaccepted, t.sciname, t.cultivarepithet, t.tradename, t.author, t.rankid, ts.parenttid
 			FROM taxa t LEFT JOIN taxstatus ts ON t.tid = ts.tid ';
 		if($this->limitToOccurrences){
 			$sql .= 'INNER JOIN taxaenumtree pe ON t.tid = pe.parenttid INNER JOIN omoccurrences o ON pe.tid = o.tidInterpreted ';
@@ -81,6 +84,8 @@ class TaxonomyDisplayManager extends Manager{
 			$tid = $r->tid;
 			if($tid == $r->tidaccepted || !$r->tidaccepted){
 				$this->taxaArr[$tid]['sciname'] = $r->sciname;
+				$this->taxaArr[$tid]['cultivarEpithet'] = $r->cultivarepithet;
+				$this->taxaArr[$tid]['tradeName'] = $r->tradename;
 				$this->taxaArr[$tid]['author'] = $r->author;
 				$this->taxaArr[$tid]['rankid'] = $r->rankid;
 				if(!$r->rankid) $zeroRank[] = $tid;
@@ -95,11 +100,13 @@ class TaxonomyDisplayManager extends Manager{
 		$rs->free();
 		//Get details for synonyms
 		if($tidAcceptedArr){
-			$sql1 = 'SELECT t.tid, t.sciname, t.author, t.rankid, ts.parenttid FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE t.tid IN('.implode(',',$tidAcceptedArr).')';
+			$sql1 = 'SELECT t.tid, t.sciname, t.cultivarepithet, t.tradename, t.author, t.rankid, ts.parenttid FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid WHERE t.tid IN('.implode(',',$tidAcceptedArr).')';
 			$rs1 = $this->conn->query($sql1);
 			while($r1 = $rs1->fetch_object()){
 				$tid = $r1->tid;
 				$this->taxaArr[$tid]['sciname'] = $r1->sciname;
+				$this->taxaArr[$tid]['cultivarEpithet'] = $r1->cultivarepithet;
+				$this->taxaArr[$tid]['tradeName'] = $r1->tradename;
 				$this->taxaArr[$tid]['author'] = $r1->author;
 				$this->taxaArr[$tid]['rankid'] = $r1->rankid;
 				if(!$r1->rankid) $zeroRank[] = $tid;
@@ -113,7 +120,7 @@ class TaxonomyDisplayManager extends Manager{
 		if($this->taxaArr){
 			//Get direct children, but only accepted children
 			$tidStr = implode(',',array_keys($this->taxaArr));
-			$sql2 = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid, ts.parenttid
+			$sql2 = 'SELECT DISTINCT t.tid, t.sciname, t.cultivarepithet, t.tradename, t.author, t.rankid, ts.parenttid
 				FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid
 				INNER JOIN taxaenumtree e ON t.tid = e.tid ';
 			if($this->limitToOccurrences){
@@ -126,18 +133,20 @@ class TaxonomyDisplayManager extends Manager{
 			$rs2 = $this->conn->query($sql2);
 			while($row2 = $rs2->fetch_object()){
 				$tid = $row2->tid;
-				$this->taxaArr[$tid]["sciname"] = $row2->sciname;
-				$this->taxaArr[$tid]["author"] = $row2->author;
-				$this->taxaArr[$tid]["rankid"] = $row2->rankid;
+				$this->taxaArr[$tid]['sciname'] = $row2->sciname;
+				$this->taxaArr[$tid]['cultivarEpithet'] = $row2->cultivarepithet;
+				$this->taxaArr[$tid]['tradeName'] = $row2->tradename;
+				$this->taxaArr[$tid]['author'] = $row2->author;
+				$this->taxaArr[$tid]['rankid'] = $row2->rankid;
 				if(!$row2->rankid) $zeroRank[] = $tid;
 				$parentTid = $row2->parenttid;
-				$this->taxaArr[$tid]["parenttid"] = $parentTid;
+				$this->taxaArr[$tid]['parenttid'] = $parentTid;
 				if($parentTid) $taxaParentIndex[$tid] = $parentTid;
 			}
 			$rs2->free();
 
 			//Get all parent taxa
-			$sql3 = 'SELECT DISTINCT t.tid, t.sciname, t.author, t.rankid, ts.parenttid '.
+			$sql3 = 'SELECT DISTINCT t.tid, t.sciname, t.cultivarepithet, t.tradename, t.author, t.rankid, ts.parenttid '.
 				'FROM taxa t INNER JOIN taxaenumtree te ON t.tid = te.parenttid '.
 				'INNER JOIN taxstatus ts ON t.tid = ts.tid '.
 				'WHERE (te.taxauthid = '.$this->taxAuthId.') AND (ts.taxauthid = '.$this->taxAuthId.') AND (te.tid IN('.$tidStr.')) ';
@@ -145,17 +154,19 @@ class TaxonomyDisplayManager extends Manager{
 			while($row3 = $rs3->fetch_object()){
 				$tid = $row3->tid;
 				$parentTid = $row3->parenttid;
-				$this->taxaArr[$tid]["sciname"] = $row3->sciname;
-				$this->taxaArr[$tid]["author"] = $row3->author;
-				$this->taxaArr[$tid]["rankid"] = $row3->rankid;
+				$this->taxaArr[$tid]['sciname'] = $row3->sciname;
+				$this->taxaArr[$tid]['cultivarEpithet'] = $row3->cultivarepithet;
+				$this->taxaArr[$tid]['tradeName'] = $row3->tradename;
+				$this->taxaArr[$tid]['author'] = $row3->author;
+				$this->taxaArr[$tid]['rankid'] = $row3->rankid;
 				if(!$row3->rankid) $zeroRank[] = $tid;
-				$this->taxaArr[$tid]["parenttid"] = $parentTid;
+				$this->taxaArr[$tid]['parenttid'] = $parentTid;
 				if($parentTid) $taxaParentIndex[$tid] = $parentTid;
 			}
 			$rs3->free();
 
 			//Get synonyms for all accepted taxa
-			$sqlSyns = 'SELECT ts.tidaccepted, t.tid, t.sciname, t.author, t.rankid
+			$sqlSyns = 'SELECT ts.tidaccepted, t.tid, t.sciname, t.cultivarepithet, t.tradename, t.author, t.rankid
 				FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid
 				WHERE (ts.tid <> ts.tidaccepted) AND (ts.taxauthid = ' . $this->taxAuthId . ') AND (ts.tidaccepted IN(' . implode(',', array_keys($this->taxaArr)) . '))';
 			$rsSyns = $this->conn->query($sqlSyns);
@@ -258,9 +269,14 @@ class TaxonomyDisplayManager extends Manager{
 					$sciName = str_replace($this->targetStr, '<b>'.htmlspecialchars($this->targetStr).'</b>', $sciName);
 					$taxonRankId = $this->taxaArr[$key]['rankid'];
 					if($this->taxaArr[$key]['rankid'] >= 180){
-						$sciName = ' <i>' . $sciName . '</i> ';
+						$author = ($this->displayAuthor) ? $this->taxaArr[$key]['author'] : '';
+						$sciNameParts = $this->splitScinameByProvided($this->taxaArr[$key]['sciname'], $this->taxaArr[$key]['cultivarEpithet'], $this->taxaArr[$key]['tradeName'], $author);
+						$sciName = $sciNameParts['base'];
+						if($taxonRankId >= 180) $sciName = '<i>'.$sciName.'</i>';
+						if(!empty($sciNameParts['cultivarEpithet'])) $sciName .= " '" . $sciNameParts['cultivarEpithet'] . "'";
+						if(!empty($sciNameParts['tradeName'])) $sciName .= " " . $sciNameParts['tradeName'];
+						if($this->displayAuthor) $sciName .= " " . $author;
 					}
-					if($this->displayAuthor) $sciName .= ' '.$this->taxaArr[$key]['author'];
 				}
 				elseif(!$key){
 					$sciName = '&nbsp;';
@@ -400,7 +416,7 @@ class TaxonomyDisplayManager extends Manager{
 		$out = fopen('php://output', 'w');
 		//Add BOM to fix UTF-8 in Excel
 		fputs($out, ( chr(0xEF) . chr(0xBB) . chr(0xBF) ));
-		$headerArr = array('taxonID', 'scientificName', 'scientificNameAuthorship', 'unitName1', 'unitName2', 'unitInd3', 'unitName3', 'rankID', 'kingdomName', 'family',
+		$headerArr = array('taxonID', 'scientificName', 'scientificNameAuthorship', 'unitName1', 'unitName2', 'unitInd3', 'unitName3','cultivarEpithet','tradeName', 'rankID', 'kingdomName', 'family',
 			'parentTaxonID', 'parentScientificName', 'acceptance', 'acceptedTaxonID', 'acceptedScientificName');
 		fputcsv($out, $headerArr);
 		$this->setTaxa();
@@ -410,7 +426,7 @@ class TaxonomyDisplayManager extends Manager{
 				if(!empty($tArr['synonyms'])) $targetTids .= ',' . implode(',', array_keys($tArr['synonyms']));
 			}
 			$sql = 'SELECT DISTINCT t.tid, t.sciname AS scientificName, t.author AS scientificNameAuthorship,
-				CONCAT_WS(" ", t.unitInd1, t.unitName1) AS unitName1, CONCAT_WS(" ", t.unitInd2, t.unitName2) AS unitName2, t.unitInd3, t.unitName3,
+				CONCAT_WS(" ", t.unitInd1, t.unitName1) AS unitName1, CONCAT_WS(" ", t.unitInd2, t.unitName2) AS unitName2, t.unitInd3, t.unitName3, t.cultivarEpithet, t.tradeName,
 				t.rankid, t.kingdomName, ts.family, p.tid AS parentTid, p.sciname AS parentScientificName, IF(ts.tid = ts.tidaccepted, 1, 0) as acceptance,
 				a.tid AS acceptedTid, a.sciname AS acceptedScientificName
 				FROM taxa t INNER JOIN taxstatus ts ON t.tid = ts.tid

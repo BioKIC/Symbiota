@@ -72,6 +72,10 @@ class DwcArchiverOccurrence extends Manager{
 		$this->occurDefArr['fields']['verbatimTaxonRank'] = 't.unitind3 AS verbatimTaxonRank';
 		$this->occurDefArr['terms']['infraspecificEpithet'] = 'http://rs.tdwg.org/dwc/terms/infraspecificEpithet';
 		$this->occurDefArr['fields']['infraspecificEpithet'] = 't.unitname3 AS infraspecificEpithet';
+		$this->occurDefArr['terms']['cultivarEpithet'] = 'http://rs.tdwg.org/dwc/terms/cultivarEpithet';
+		$this->occurDefArr['fields']['cultivarEpithet'] = 't.cultivarEpithet AS cultivarEpithet';
+		$this->occurDefArr['terms']['tradeName'] = 'http://rs.tdwg.org/dwc/terms/tradeName';
+		$this->occurDefArr['fields']['tradeName'] = 't.tradeName AS tradeName';
 		$this->occurDefArr['terms']['taxonRank'] = 'http://rs.tdwg.org/dwc/terms/taxonRank';
 		$this->occurDefArr['fields']['taxonRank'] = '';
 		$this->occurDefArr['terms']['identifiedBy'] = 'http://rs.tdwg.org/dwc/terms/identifiedBy';
@@ -312,7 +316,8 @@ class DwcArchiverOccurrence extends Manager{
 			if($this->schemaType == 'dwc' || $this->schemaType == 'pensoft'){
 				$trimArr = array('recordedByID','associatedCollectors','substrate','verbatimAttributes','cultivationStatus',
 					'localitySecurityReason','genericcolumn1','genericcolumn2','storageLocation','observerUid','processingStatus',
-					'duplicateQuantity','labelProject','dateEntered','dateLastModified','sourcePrimaryKey-dbpk');
+					'duplicateQuantity','labelProject','dateEntered','dateLastModified','sourcePrimaryKey-dbpk', 'tradeName');
+				// TODO add confirm dialog and look for a notes section in the DWC export to alert end user of loss of the trimmed fields during export.
 				$this->occurDefArr[$k] = array_diff_key($vArr,array_flip($trimArr));
 			}
 			elseif($this->schemaType == 'symbiota'){
