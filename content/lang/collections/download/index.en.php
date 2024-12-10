@@ -28,7 +28,6 @@ $LANG['IMG_DARWIN_INFO'] = 'Info icon: DwC is a TDWG endorsed standard for bioda
 $LANG['DARWIN_GUIDE'] = 'Darwin Core (DwC) is a TDWG endorsed exchange standard specifically for biodiversity datasets.
                         For more information on what data fields are included in DwC, visit the';
 $LANG['DARWIN_GUIDE_LINK'] = 'DwC Quick Reference Guide';
-$LANG['WHAT_IS_DARWIN_LINK'] = 'What is Darwin Core?';
 $LANG['DATA_EXTS'] = 'Data Extensions';
 $LANG['INCLUDE_HISTORY'] = 'include Determination History';
 $LANG['INCLUDE_IMG'] = 'include Image Records';

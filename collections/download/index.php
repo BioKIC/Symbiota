@@ -1,7 +1,8 @@
 <?php
 include_once('../../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/DwcArchiverCore.php');
-include_once($SERVER_ROOT.'/content/lang/collections/download/index.'.$LANG_TAG.'.php');
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT . '/content/lang/collections/download/index.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT.'/content/lang/collections/download/index.' . $LANG_TAG . '.php');
+else include_once($SERVER_ROOT . '/content/lang/collections/download/index.en.php');
 
 header("Content-Type: text/html; charset=".$CHARSET);
 
@@ -16,7 +17,7 @@ $dwcManager = new DwcArchiverCore();
 <!DOCTYPE html>
 <html lang="<?php echo $LANG_TAG ?>">
 <head>
-	<title> <?php echo (isset($LANG['COLL_SEARCH_DWNL']) ? $LANG['COLL_SEARCH_DWNL'] : 'Collections Search Download'); ?> </title>
+	<title> <?= $LANG['COLL_SEARCH_DWNL'] ?> </title>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $CHARSET; ?>"/>
 	<link href="<?php echo $CSS_BASE_PATH; ?>/jquery-ui.css" type="text/css" rel="stylesheet">
 	<?php
@@ -97,104 +98,100 @@ $dwcManager = new DwcArchiverCore();
 		include($SERVER_ROOT.'/includes/header.php');
 		?>
 		<div class="navpath">
-			<a href="../../index.php"> <?php echo (isset($LANG['HOME']) ? $LANG['HOME'] : 'Home'); ?> </a> &gt;&gt;
-			<a href="#" onclick="closePage(0)"> <?php echo (isset($LANG['RETURN']) ? $LANG['RETURN'] : 'Return to Search Page'); ?> </a> &gt;&gt;
-			<b> <?php echo (isset($LANG['OCC_DOWNLOAD']) ? $LANG['OCC_DOWNLOAD'] : 'Occurrence Record Download'); ?> </b>
+			<a href="../../index.php"> <?= $LANG['HOME'] ?> </a> &gt;&gt;
+			<a href="#" onclick="closePage(0)"> <?= $LANG['RETURN'] ?> </a> &gt;&gt;
+			<b> <?= $LANG['OCC_DOWNLOAD'] ?> </b>
 		</div>
 		<?php
 	}
 	?>
 	<div style="width:100%; background-color:white;">
-		<h1 class="page-heading"><?php echo (isset($LANG['DATA_GUIDE']) ? $LANG['DATA_GUIDE'] : 'Data Usage Guidelines'); ?></h1>
+		<h1 class="page-heading"><?= $LANG['DATA_GUIDE'] ?></h1>
 		<div style="margin:15px 0px;">
-		<?php echo (isset($LANG['GUIDE_ONE']) ? $LANG['GUIDE_ONE'] : 'By downloading data, the user confirms that he/she has read and agrees with the general'); ?> <a href="../../includes/usagepolicy.php#images"> <?= $LANG['GUIDE_LINK'] ?> </a>.
-			<?php echo (isset($LANG['GUIDE_TWO']) ? $LANG['GUIDE_TWO'] : 'Note that additional terms of use specific to the individual collections may be distributed with the data download. When present, the terms
-			supplied by the owning institution should take precedence over the general terms posted on the website.'); ?>
+		<?= $LANG['GUIDE_ONE'] ?> <a href="../../includes/usagepolicy.php#images"> <?= $LANG['GUIDE_LINK'] ?> </a>.
+			<?= $LANG['GUIDE_TWO'] ?>
 		</div>
 		<div style='margin:30px 15px;'>
 			<form name="downloadform" action="downloadhandler.php" method="post" onsubmit="return validateDownloadForm(this);">
 				<fieldset>
 					<legend>
 						<?php
-						if($downloadType == 'checklist') echo (isset($LANG['DOWNLOAD_CHECKL']) ? $LANG['DOWNLOAD_CHECKL'] : 'Download Checklist');
-						elseif($downloadType == 'georef') echo (isset($LANG['DOWNLOAD_GEO_DATA']) ? $LANG['DOWNLOAD_GEO_DATA'] : 'Download Georeference Data');
-						else echo (isset($LANG['DOWNLOAD_SPEC_REC']) ? $LANG['DOWNLOAD_SPEC_REC'] : 'Download Specimen Records');
+						if($downloadType == 'checklist') echo $LANG['DOWNLOAD_CHECKL'];
+						elseif($downloadType == 'georef') echo $LANG['DOWNLOAD_GEO_DATA'];
+						else echo $LANG['DOWNLOAD_SPEC_REC'] ;
 						?>
 					</legend>
 					<?php
 					if($downloadType == 'specimen'){
 						?>
 						<fieldset class="sectionDiv">
-							<legend>  <?php echo (isset($LANG['STRUCTURE']) ? $LANG['STRUCTURE'] : 'Structure'); ?>:</legend>
+							<legend>  <?= $LANG['STRUCTURE'] ?>:</legend>
 							<div class="formElemDiv">
 								<input type="radio" name="schema" id="symbiota-native" value="symbiota" onclick="georefRadioClicked(this)" CHECKED />
-								<label for="symbiota-native">  <?php echo (isset($LANG['SYMB_NATIVE']) ? $LANG['SYMB_NATIVE'] : 'Symbiota Native'); ?>  </label>
-								<a id="schemanativeinfo" aria-label="<?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?>" href="#" onclick="return false" title="<?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?>">
-									<img src="../../images/info.png" alt=" <?php echo (isset($LANG['IMG_NATIVE_INFO']) ? $LANG['IMG_NATIVE_INFO'] : 'Info icon clarifying that Symbiota native is similar to Darwin Core plus some fields'); ?> " style="width:1.2em;" />
+								<label for="symbiota-native">  <?= $LANG['SYMB_NATIVE'] ?>  </label>
+								<a id="schemanativeinfo" aria-label="<?= $LANG['MORE_INFO'] ?>" href="#" onclick="return false" title="<?= $LANG['MORE_INFO']; ?>">
+									<img src="../../images/info.png" alt=" <?= $LANG['IMG_NATIVE_INFO']; ?> " style="width:1.2em;" />
 								</a><br/>
 								<div id="schemanativeinfodialog">
-									<?php echo (isset($LANG['SYMB_NATIVE_INFO']) ? $LANG['SYMB_NATIVE_INFO'] : 'Symbiota native is very similar to Darwin Core except with the addtion of a few fields
-									such as substrate, associated collectors, verbatim description.'); ?>
+									<?= $LANG['SYMB_NATIVE_INFO']; ?>
 								</div>
 								<input type="radio" name="schema" id="darwin-core" value="dwc" onclick="georefRadioClicked(this)" />
-								<label for="darwin-core">  <?php echo (isset($LANG['DARWIN_CORE']) ? $LANG['DARWIN_CORE'] : 'Darwin Core'); ?> </label>
-								<a id="schemadwcinfo" href="#" title="<?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?>" aria-label="<?php echo (isset($LANG['MORE_INFO']) ? $LANG['MORE_INFO'] : 'More Information'); ?>">
-									<img src="../../images/info.png" alt=" <?php echo (isset($LANG['IMG_DARWIN_INFO']) ? $LANG['IMG_DARWIN_INFO'] : 'Info icon: DwC is a TDWG endorsed standard for biodata. Link to DwC quick ref guide in the dialog.'); ?>" style="width:1.2em;" />
+								<label for="darwin-core">  <?= $LANG['DARWIN_CORE'] ?> </label>
+								<a id="schemadwcinfo" href="#" title="<?= $LANG['MORE_INFO'] ?>" aria-label="<?= $LANG['MORE_INFO'] ?>">
+									<img src="../../images/info.png" alt=" <?= $LANG['IMG_DARWIN_INFO'] ?>" style="width:1.2em;" />
 								</a><br/>
 								<div id="schemadwcinfodialog">
-									<?php echo (isset($LANG['DARWIN_GUIDE']) ? $LANG['DARWIN_GUIDE'] : 'Darwin Core (DwC) is a TDWG endorsed exchange standard specifically for biodiversity datasets.
-									For more information on what data fields are included in DwC, visit the'); ?>
-									<a href="http://rs.tdwg.org/dwc/index.htm"target='_blank'> <?php echo (isset($LANG['DARWIN_GUIDE_LINK']) ? $LANG['DARWIN_GUIDE_LINK'] : 'DwC Quick Reference Guide'); ?></a>.
+									<?= $LANG['DARWIN_GUIDE'] ?>
+									<a href="http://rs.tdwg.org/dwc/index.htm"target='_blank'> <?= $LANG['DARWIN_GUIDE_LINK'] ?></a>.
 								</div>
-								*<a href='http://rs.tdwg.org/dwc/index.htm' class='bodylink' target='_blank'> <?php echo (isset($LANG['WHAT_IS_DARWIN_LINK']) ? $LANG['WHAT_IS_DARWIN_LINK'] : 'Ho What is Darwin Core?me'); ?></a>
 							</div>
 						</fieldset>
 						<fieldset class="sectionDiv">
-							<legend>  <?php echo (isset($LANG['DATA_EXTS']) ? $LANG['DATA_EXTS'] : 'Data Extensions'); ?>:</legend>
+							<legend>  <?= $LANG['DATA_EXTS'] ?>:</legend>
 							<div class="formElemDiv">
 								<input type="checkbox" name="identifications" id="identifications" value="1" onchange="extensionSelected(this)" checked />
-								<label for="identifications"> <?php echo (isset($LANG['INCLUDE_HISTORY']) ? $LANG['INCLUDE_HISTORY'] : 'include Determination History'); ?> </label>
+								<label for="identifications"> <?= $LANG['INCLUDE_HISTORY'] ?> </label>
 								<br/>
 								<input type="checkbox" name="images" id="images" value="1" onchange="extensionSelected(this)" checked />
-								<label for="images"> <?php echo (isset($LANG['INCLUDE_IMG']) ? $LANG['INCLUDE_IMG'] : 'include Image Records'); ?> </label>
+								<label for="images"> <?= $LANG['INCLUDE_IMG'] ?> </label>
 								<br/>
 								<?php
 								if($dwcManager->hasAttributes()) echo '<input type="checkbox" name="attributes" id="attributes" value="1" onchange="extensionSelected(this)" checked /> <label for="attributes">' . $LANG['INCLUDE_ATTR'] . '</label><br/>';
 								if($dwcManager->hasMaterialSamples()) echo '<input type="checkbox" name="materialsample" id="materialsample" value="1" onchange="extensionSelected(this)" checked /><label for="materialsample">' . $LANG['IMCLUDE_MAT'] . '</label><br/>';
 								if($dwcManager->hasIdentifiers()) echo '<input type="checkbox" name="identifiers" id="identifiers" value="1" onchange="extensionSelected(this)" checked /> <label for="identifiers">' . $LANG['INCLUDE_IDENT'] . '</label><br/>';
 								?>
-								*<?php echo (isset($LANG['DATA_EXT_NOTE']) ? $LANG['DATA_EXT_NOTE'] : 'Output must be a compressed archive'); ?>
+								*<?= $LANG['DATA_EXT_NOTE'] ?>
 							</div>
 						</fieldset>
 						<?php
 					}
 					?>
 					<fieldset class="sectionDiv">
-						<legend> <?php echo (isset($LANG['FILE_FORMAT']) ? $LANG['FILE_FORMAT'] : 'File Format'); ?>:</legend>
+						<legend> <?= $LANG['FILE_FORMAT'] ?>:</legend>
 						<div class="formElemDiv">
-							<input type="radio" name="format" id="csv-format" value="csv" CHECKED /><label for="csv-format">  <?php echo (isset($LANG['COMMA_DELIM']) ? $LANG['COMMA_DELIM'] : 'Comma Delimited (CSV)'); ?> </label><br/>
-							<input type="radio" name="format" id="tab-delimited-format" value="tab" /><label for="tab-delimited-format">  <?php echo (isset($LANG['TAB_DELIM']) ? $LANG['TAB_DELIM'] : 'Tab Delimited'); ?> </label><br/>
+							<input type="radio" name="format" id="csv-format" value="csv" CHECKED /><label for="csv-format">  <?= $LANG['COMMA_DELIM'] ?> </label><br/>
+							<input type="radio" name="format" id="tab-delimited-format" value="tab" /><label for="tab-delimited-format">  <?= $LANG['TAB_DELIM'] ?> </label><br/>
 						</div>
 					</fieldset>
 					<fieldset class="sectionDiv">
-						<legend>  <?php echo (isset($LANG['CHAR_SET']) ? $LANG['CHAR_SET'] : 'Character Set'); ?>: </legend>
+						<legend>  <?= $LANG['CHAR_SET'] ?>: </legend>
 						<div class="formElemDiv">
 							<?php
 							//$cSet = strtolower($CHARSET);
 							$cSet = 'iso-8859-1';
 							?>
 							<input type="radio" name="cset" id="iso-8859" value="iso-8859-1" <?php echo ($cSet=='iso-8859-1' ? 'checked' : ''); ?> />
-							<label for="iso-8859"> <?php echo (isset($LANG['ISO']) ? $LANG['ISO'] : 'ISO-8859-1 (western)'); ?> </label>
+							<label for="iso-8859"> <?= $LANG['ISO'] ?> </label>
 							<br/>
 							<input type="radio" name="cset" id="utf-8" value="utf-8" <?php echo ($cSet=='utf-8' ? 'checked' : ''); ?> />
-							<label for="utf-8"> <?php echo (isset($LANG['UTF_8']) ? $LANG['UTF_8'] : 'UTF-8 (unicode)'); ?> </label>
+							<label for="utf-8"> <?= $LANG['UTF_8'] ?> </label>
 						</div>
 					</fieldset>
 					<fieldset class="sectionDiv">
-						<legend>  <?php echo (isset($LANG['HCOMPRESSIONOME']) ? $LANG['COMPRESSION'] : 'Compression'); ?>: </legend>
+						<legend>  <?= $LANG['COMPRESSION'] ?>: </legend>
 						<div class="formElemDiv">
 							<input type="checkbox" name="zip" id="zip" value="1" onchange="zipSelected(this)" checked />
-							<label for="zip"> <?php echo (isset($LANG['COMPRESSED_ZIP']) ? $LANG['COMPRESSED_ZIP'] : 'Compressed ZIP file'); ?> </label><br/>
+							<label for="zip"> <?= $LANG['COMPRESSED_ZIP'] ?> </label><br/>
 						</div>
 					</fieldset>
 					<div class="sectionDiv">
@@ -210,7 +207,7 @@ $dwcManager = new DwcArchiverCore();
 						<img id="workingcircle" src="../../images/ajax-loader_sm.gif" style="margin-bottom:-4px;width:20px;display:none;" />
 					</div>
 					<div class="sectionDiv">
-						*  <?php echo (isset($LANG['LIMIT_NOTE']) ? $LANG['LIMIT_NOTE'] : 'There is a 1,000,000 record limit to occurrence downloads'); ?>
+						*  <?= $LANG['LIMIT_NOTE'] ?>
 					</div>
 				</fieldset>
 			</form>

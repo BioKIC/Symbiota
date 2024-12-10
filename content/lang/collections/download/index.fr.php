@@ -28,7 +28,6 @@ $LANG['IMG_DARWIN_INFO'] = 'icône d\'information qui précise que Darwin Core (
 $LANG['DARWIN_GUIDE'] = 'Darwin Core (DwC) est une norme d\'échange approuvée par le TDWG spécifiquement pour les ensembles de données sur la biodiversité.
                          Pour plus d\'informations sur les champs de données inclus dans DwC, visitez le site ';
 $LANG['DARWIN_GUIDE_LINK'] = 'Guide de référence rapide DwC';
-$LANG['WHAT_IS_DARWIN_LINK'] = 'Qu\'est-ce que Darwin Core ?';
 $LANG['DATA_EXTS'] = 'Extensions de données';
 $LANG['INCLUDE_HISTORY'] = 'inclure l\'historique des déterminations';
 $LANG['INCLUDE_IMG'] = 'inclure les enregistrements d\'images';
