@@ -54,6 +54,7 @@ class DwcArchiverPublisher extends DwcArchiverCore{
 		$includeAttributes = $this->includeAttributes;
 		$includeMatSample = $this->includeMaterialSample;
 		$includeIdentifiers = $this->includeIdentifiers;
+		$includeAssociations = $this->includeAssociations;
 		foreach($collIdArr as $id){
 			//Create a separate DWCA object for each collection
 			if($includeAttributes){
@@ -68,6 +69,10 @@ class DwcArchiverPublisher extends DwcArchiverCore{
 				if($this->hasIdentifiers($id)) $this->includeIdentifiers = true;
 				else $this->includeIdentifiers = false;
 			}
+			if($includeAssociations){
+				if($this->hasAssociations($id)) $this->includeAssociations = true;
+				else $this->includeAssociations = false;
+			}
 			$this->resetCollArr($id);
 			$this->conditionArr['collid'] = $id;
 			$this->conditionSql = '';
@@ -79,6 +84,7 @@ class DwcArchiverPublisher extends DwcArchiverCore{
 		$this->includeAttributes = $includeAttributes;
 		$this->includeMaterialSample = $includeMatSample;
 		$this->includeIdentifiers = $includeIdentifiers;
+		$this->includeAssociations = $includeAssociations;
 		//Reset $this->collArr with all the collections ran successfully and then rebuild the RSS feed
 		$this->resetCollArr(implode(',',$successArr));
 		$this->writeRssFile();
