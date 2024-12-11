@@ -246,7 +246,7 @@ if ($SYMB_UID) {
 			<section id="quicksearch-box" class="fieldset-like" >
 				<h3><span><?= $LANG['QUICK_SEARCH'] ?></span></h3>
 				<div id="dialogContainer" style="position: relative;">
-					<form name="quicksearch" style="display: flex; align-items:center; gap:0.5rem; flex-wrap: wrap" action="javascript:void(0);" onsubmit="directSubmitAction(event)">
+					<form id="quicksearch" name="quicksearch" style="display: flex; align-items:center; gap:0.5rem; flex-wrap: wrap" action="javascript:void(0);" onsubmit="directSubmitAction(event)">
 						<div class="quicksearch-input-container">
 								<label style="display:flex; align-items: center; position: relative; margin-right: 1.5rem" for="catalog-number"><?= $LANG['OCCURENCE_IDENTIFIER'] ?>
 						<a href="#" id="q_catalognumberinfo" style="text-decoration:none; position: absolute; right: -1.5rem">
@@ -259,7 +259,7 @@ if ($SYMB_UID) {
 						<input style="margin-bottom: 0" name="catalog-number" id="catalog-number" type="text" />
 						<dialog id="dialogEl" aria-live="polite" aria-label="Catalog number search dialog">
 							<?= $LANG['IDENTIFIER_PLACEHOLDER_LIST'] . ' ' ?>
-							<button id="closeDialog">Close</button>
+							<button id="closeDialog" value="search">Close</button>
 						</dialog>
 						</div>
 						<input name="collid" type="hidden" value="<?= $collid; ?>" />
@@ -1059,6 +1059,14 @@ if ($SYMB_UID) {
 			dialogContainer.style.position = 'relative';
 			dialogContainer.appendChild(dialogEl);
 
+		});
+		document.getElementById('quicksearch').addEventListener('keypress', e => {
+			if (e.key === 'Enter') {
+			e.preventDefault();
+			const editEnabled = <?php echo ($editCode == 1 || $editCode == 2 || $editCode == 3); ?>;
+			const newSubmitObj= {submitter:{value: editEnabled ? 'edit': 'search'}};
+			directSubmitAction(newSubmitObj);
+			}
 		});
 
 		closeDialogButton.addEventListener('click', (e) => {
