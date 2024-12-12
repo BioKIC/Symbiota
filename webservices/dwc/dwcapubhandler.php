@@ -48,6 +48,7 @@ $includeImgs = isset($_REQUEST['imgs']) && !$_REQUEST['imgs'] ? 0 : 1;
 $includeAttributes = !empty($_REQUEST['attr']) ? 1 : 0;
 $includeMaterialSample = !empty($_REQUEST['matsample']) ? 1 : 0;
 $includeIdentifiers = !empty($_REQUEST['ident']) ? 1 : 0;
+$includeAssociations = !empty($_REQUEST['assoc']) ? 1 : 0;
 $pubGuid = array_key_exists('publicationguid', $_REQUEST) ? $_REQUEST['publicationguid'] : 0;
 $requestPortalGuid = array_key_exists('portalguid', $_REQUEST) ? $_REQUEST['portalguid'] : 0;
 
@@ -103,6 +104,7 @@ $dwcaHandler->setIncludeImgs($includeImgs);
 $dwcaHandler->setIncludeAttributes($includeAttributes);
 $dwcaHandler->setIncludeMaterialSample($includeMaterialSample);
 $dwcaHandler->setIncludeIdentifiers($includeIdentifiers);
+$dwcaHandler->setIncludeAssociations($includeAssociations);
 $dwcaHandler->setPublicationGuid($pubGuid);
 $dwcaHandler->setRequestPortalGuid($requestPortalGuid);
 

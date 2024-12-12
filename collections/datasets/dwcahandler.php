@@ -25,6 +25,7 @@ if($argc){
 	$includeAttributes = 1;
 	$inlcudeMaterialSample = 1;
 	$includeIdentifiers = 1;
+	$includeAssociations = 1;
 	$redactLocalities = 1;
 	if($argc > 3 && is_numeric($argv[3])){
 		$includeDets = $argv[3];
@@ -38,6 +39,9 @@ if($argc){
 						$inlcudeMaterialSample = $argv[7];
 						if($argc > 8 && is_numeric($argv[8])){
 							$includeIdentifiers = $argv[8];
+							if($argc > 9 && is_numeric($argv[9])){
+								$includeAssociations = $argv[9];
+							}
 						}
 					}
 				}
@@ -52,6 +56,7 @@ if($argc){
 		$dwcaManager->setIncludeAttributes($includeAttributes);
 		if($dwcaManager->hasMaterialSamples()) $dwcaManager->setIncludeMaterialSample($inlcudeMaterialSample);
 		if($dwcaManager->hasIdentifiers()) $dwcaManager->setIncludeIdentifiers($includeIdentifiers);
+		if($dwcaManager->hasAssociations()) $dwcaManager->setIncludeAssociations($includeAssociations);
 		$dwcaManager->setRedactLocalities($redactLocalities);
 		$dwcaManager->setServerDomain($serverDomain);
 		$dwcaManager->setTargetPath($SERVER_ROOT.(substr($SERVER_ROOT,-1)=='/'?'':'/').'content/dwca/');

@@ -66,6 +66,7 @@ $dwcManager = new DwcArchiverCore();
 				if(obj.form.attributes) obj.form.attributes.checked = false;
 				if(obj.form.materialsample) obj.form.materialsample.checked = false;
 				if(obj.form.identifiers) obj.form.identifiers.checked = false;
+				if(obj.form.associations) obj.form.associations.checked = false;
 			}
 		}
 
@@ -162,6 +163,7 @@ $dwcManager = new DwcArchiverCore();
 								if($dwcManager->hasAttributes()) echo '<input type="checkbox" name="attributes" id="attributes" value="1" onchange="extensionSelected(this)" checked /> <label for="attributes">' . $LANG['INCLUDE_ATTR'] . '</label><br/>';
 								if($dwcManager->hasMaterialSamples()) echo '<input type="checkbox" name="materialsample" id="materialsample" value="1" onchange="extensionSelected(this)" checked /><label for="materialsample">' . $LANG['IMCLUDE_MAT'] . '</label><br/>';
 								if($dwcManager->hasIdentifiers()) echo '<input type="checkbox" name="identifiers" id="identifiers" value="1" onchange="extensionSelected(this)" checked /> <label for="identifiers">' . $LANG['INCLUDE_IDENT'] . '</label><br/>';
+								if($dwcManager->hasAssociations()) echo '<input type="checkbox" name="associations" id="associations" value="1" onchange="extensionSelected(this)" checked /> <label for="associations">' . $LANG['INCLUDE_ASSOCIATIONS'] . '</label><br/>';
 								?>
 								*<?php echo (isset($LANG['DATA_EXT_NOTE']) ? $LANG['DATA_EXT_NOTE'] : 'Output must be a compressed archive'); ?>
 							</div>
