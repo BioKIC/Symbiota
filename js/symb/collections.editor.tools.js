@@ -69,21 +69,6 @@ function openMappingAid() {
 	}
 }
 
-function openMappingPolyAid() {
-   var mapWindow = open(
-      "../tools/mapcoordaid.php?&map_mode_strict=true&mapmode=polygon",
-      "polygon",
-      "resizable=0,width=900,height=630,left=20,top=20"
-   );
-	if(mapWindow != null){
-		if (mapWindow.opener == null) mapWindow.opener = self;
-		mapWindow.focus();
-	}
-	else{
-		alert("Unable to open map, which is likely due to your browser blocking popups. Please adjust your browser settings to allow popups from this website.");
-	}
-}
-
 function geoLocateLocality(){
 	var f = document.fullform;
 	var country = encodeURIComponent(f.country.value);

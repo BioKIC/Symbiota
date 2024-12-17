@@ -823,25 +823,6 @@ $taxonFilter = htmlspecialchars($taxonFilter, ENT_COMPAT | ENT_HTML401 | ENT_SUB
 								</div>
 								<?php
 							}
-							if(false && $clArray['dynamicsql']){
-								//Temporarily turned off
-								?>
-								<span style="margin:5px">
-									<a href="../collections/map/index.php?clid=<?php echo $clid . '&cltype=all&taxonfilter=' . $taxonFilter; ?>&db=all&type=1&reset=1">
-										<?php
-										if($coordArr){
-											echo '<img src="../images/world.png" style="width:30px" title="' . $LANG['OCCUR_DYNAMIC_MAP'] . '" alt="' . $LANG['IMG_OCCUR_DYNAMIC_MAP'] . '" />';
-										}
-										else{
-											$polygonCoordArr = $clManager->getPolygonCoordinates();
-											$googleUrl .= '&markers=size:tiny|'.implode('|',$polygonCoordArr);
-											echo '<img src="'.$googleUrl.'" style="border:0px;" /><br/>';
-										}
-										?>
-									</a>
-								</span>
-								<?php
-							}
 							?>
 						</div>
 						<?php

@@ -21,6 +21,7 @@ $recLimit = array_key_exists('recordlimit',$_REQUEST)?$_REQUEST['recordlimit']:1
 $catId = array_key_exists('catid',$_REQUEST)?$_REQUEST['catid']:0;
 $tabIndex = array_key_exists('tabindex',$_REQUEST)?$_REQUEST['tabindex']:0;
 $submitForm = array_key_exists('submitform',$_REQUEST)?$_REQUEST['submitform']:'';
+$geoJson = array_key_exists('footprintGeoJson', $_REQUEST)? $_REQUEST['footprintGeoJson']:'';
 
 $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 $topVal = $shouldUseMinimalMapHeader ? '6rem' : '0';
@@ -510,7 +511,7 @@ if(isset($_REQUEST['llpoint'])) {
 			document.getElementById("leftlong").value = '';
 			document.getElementById("bottomlat").value = '';
 			document.getElementById("rightlong").value = '';
-			document.getElementById("polycoords").value = '';
+			document.getElementById("footprintGeoJson").value = '';
 			document.getElementById("distFromMe").value = '';
 			document.getElementById("noshapecriteria").style.display = "block";
 			document.getElementById("polygeocriteria").style.display = "none";
@@ -525,7 +526,15 @@ if(isset($_REQUEST['llpoint'])) {
 			} else if(shape.type === 'rectangle') {
 				setRectangleCoords(shape.upperLat, shape.lowerLat, shape.leftLng, shape.rightLng);
 			} else if (shape.type === 'polygon') {
-				setPolyCoords(shape.wkt);
+            //Doesn't support multiple polygons
+            setPolyCoords(JSON.stringify({
+               "type": "Feature",
+               "properties": {},
+               "geometry": {
+                  "type": "Polygon",
+                  "coordinates": [shape.latlngs.map(([lat, lng]) => [lng, lat])]
+               },
+            }));
 			}
 		}
 
@@ -538,7 +547,7 @@ if(isset($_REQUEST['llpoint'])) {
 			document.getElementById("leftlong").value = '';
 			document.getElementById("bottomlat").value = '';
 			document.getElementById("rightlong").value = '';
-			document.getElementById("polycoords").value = '';
+			document.getElementById("footprintGeoJson").value = '';
 			document.getElementById("distFromMe").value = '';
 			document.getElementById("noshapecriteria").style.display = "none";
 			document.getElementById("polygeocriteria").style.display = "none";
@@ -555,7 +564,7 @@ if(isset($_REQUEST['llpoint'])) {
 			document.getElementById("pointlat").value = '';
 			document.getElementById("pointlong").value = '';
 			document.getElementById("radius").value = '';
-			document.getElementById("polycoords").value = '';
+			document.getElementById("footprintGeoJson").value = '';
 			document.getElementById("distFromMe").value = '';
 			document.getElementById("noshapecriteria").style.display = "none";
 			document.getElementById("polygeocriteria").style.display = "none";
@@ -565,7 +574,7 @@ if(isset($_REQUEST['llpoint'])) {
 		}
 
 		function setPolyCoords(wkt) {
-			document.getElementById("polycoords").value = wkt;
+			document.getElementById("footprintGeoJson").value = wkt;
 			document.getElementById("pointlat").value = '';
 			document.getElementById("pointlong").value = '';
 			document.getElementById("radius").value = '';
@@ -1885,7 +1894,7 @@ if(isset($_REQUEST['llpoint'])) {
 					shapeType = "circle"
 				} else if(document.getElementById("upperlat").value) {
 					shapeType = "rectangle"
-				} else if(document.getElementById("polycoords").value) {
+				} else if(document.getElementById("footprintGeoJson").value) {
 					shapeType = "polygon"
 				}
 
@@ -1896,9 +1905,9 @@ if(isset($_REQUEST['llpoint'])) {
 
 				if(shapeType) {
 					shape = loadMapShape(shapeType, {
-						polygonLoader: () => document.getElementById("polycoords").value.trim(),
+						polygonLoader: () => ({geoJSON: document.getElementById("footprintGeoJson").value.trim()}),
 						circleLoader: () => {
-                     const units = document.getElementById("pointunits").value;
+							const units = document.getElementById("pointunits").value;
 							return {
 								radius: parseFloat(document.getElementById("radius").value),
 								radUnits: units == "mi" || units == "km"? units: "km",
@@ -2032,17 +2041,17 @@ Record Limit:
 											<input type="hidden" id="gridSizeSetting" name="gridSizeSetting" value="<?php echo $gridSize; ?>" />
 											<input type="hidden" id="minClusterSetting" name="minClusterSetting" value="<?php echo $minClusterSize; ?>" />
 											<input type="hidden" id="clusterSwitch" name="clusterSwitch" value="<?php echo $clusterOff; ?>" />
-											<input type="hidden" id="pointlat" name="pointlat" value='<?php echo isset($pointLat)? $pointLat : "" ?>' />
-											<input type="hidden" id="pointlong" name="pointlong" value='<?php echo isset($pointLng)? $pointLng : "" ?>' />
-											<input type="hidden" id="pointunits" name="pointunits" value='<?php echo isset($pointUnit)? $pointUnit : "km" ?>' />
-											<input type="hidden" id="radius" name="radius" value='<?php echo isset($pointRad)? $pointRad : "" ?>' />
-											<input type="hidden" id="upperlat" name="upperlat" value='<?php echo isset($upperLat)? $upperLat : "" ?>' />
-											<input type="hidden" id="rightlong" name="rightlong" value='<?php echo isset($upperLng)? $upperLng : "" ?>' />
-											<input type="hidden" id="bottomlat" name="bottomlat" value='<?php echo isset($lowerLat)? $lowerLat : "" ?>' />
-											<input type="hidden" id="leftlong" name="leftlong" value='<?php echo isset($lowerLng)? $lowerLng : "" ?>' />
-											<input type="hidden" id="polycoords" name="polycoords" value='<?php echo $mapManager->getSearchTerm('polycoords'); ?>' />
-											<button data-role="none" type="button" name="resetbutton" onclick="resetQueryForm(this.form)"><?php echo $LANG['RESET']; ?></button>
-											<button data-role="none" name="submitform" type="submit" ><?php echo $LANG['SEARCH']; ?></button>
+											<input type="hidden" id="pointlat" name="pointlat" value='<?php echo isset($pointLat)? $pointLat:"" ?>' />
+											<input type="hidden" id="pointlong" name="pointlong" value='<?php echo isset($pointLng)? $pointLng:"" ?>' />
+											<input type="hidden" id="pointunits" name="pointunits" value='<?php echo isset($pointUnit)? $pointUnit:"km" ?>' />
+											<input type="hidden" id="radius" name="radius" value='<?php echo isset($pointRad)? $pointRad:"" ?>' />
+											<input type="hidden" id="upperlat" name="upperlat" value='<?php echo isset($upperLat)? $upperLat:"" ?>' />
+											<input type="hidden" id="rightlong" name="rightlong" value='<?php echo isset($upperLng)? $upperLng:"" ?>' />
+											<input type="hidden" id="bottomlat" name="bottomlat" value='<?php echo isset($lowerLat)? $lowerLat:"" ?>' />
+											<input type="hidden" id="leftlong" name="leftlong" value='<?php echo isset($lowerLng)? $lowerLng:"" ?>' />
+											<input type="hidden" id="footprintGeoJson" name="footprintGeoJson" value='<?php echo $mapManager->getSearchTerm('footprintGeoJson') ?>' />
+											<button data-role="none" type="button" name="resetbutton" onclick="resetQueryForm(this.form)"><?php echo (isset($LANG['RESET'])?$LANG['RESET']:'Reset'); ?></button>
+											<button data-role="none" name="submitform" type="submit" ><?php echo (isset($LANG['SEARCH'])?$LANG['SEARCH']:'Search'); ?></button>
 										</div>
 									</div>
 									<div style="margin:5 0 5 0;"><hr /></div>
@@ -2118,8 +2127,8 @@ Record Limit:
 									</div>
 									<div style="margin:5 0 5 0;"><hr /></div>
 									<div id="shapecriteria">
-										<div id="noshapecriteria" style="display:<?php echo ((!$mapManager->getSearchTerm('polycoords') && !$mapManager->getSearchTerm('upperlat'))?'block':'none'); ?>;">
-											<div id="geocriteria" style="display:<?php echo ((!$mapManager->getSearchTerm('polycoords') && !$distFromMe && !$mapManager->getSearchTerm('pointlat') && !$mapManager->getSearchTerm('upperlat'))?'block':'none'); ?>;">
+										<div id="noshapecriteria" style="display:<?php echo ((!$mapManager->getSearchTerm('footprintGeoJson') && !$mapManager->getSearchTerm('upperlat'))?'block':'none'); ?>;">
+											<div id="geocriteria" style="display:<?php echo ((!$mapManager->getSearchTerm('footprintGeoJson') && !$distFromMe && !$mapManager->getSearchTerm('pointlat') && !$mapManager->getSearchTerm('upperlat'))?'block':'none'); ?>;">
 												<div>
 													<?php echo (isset($LANG['SHAPE_TOOLS'])?$LANG['SHAPE_TOOLS']:'Use the shape tools on the map to select occurrences within a given shape'); ?>.
 												</div>
@@ -2132,7 +2141,7 @@ Record Limit:
 												</div>
 											</div>
 										</div>
-										<div id="polygeocriteria" style="display:<?php echo (($mapManager->getSearchTerm('polycoords'))?'block':'none'); ?>;">
+										<div id="polygeocriteria" style="display:<?php echo (($mapManager->getSearchTerm('footprintGeoJson'))?'block':'none'); ?>;">
 											<div>
 												<?php echo (isset($LANG['WITHIN_POLYGON'])?$LANG['WITHIN_POLYGON']:'Within the selected polygon'); ?>.
 											</div>
@@ -2147,7 +2156,7 @@ Record Limit:
 												<?php echo (isset($LANG['WITHIN_RECTANGLE'])?$LANG['WITHIN_RECTANGLE']:'Within the selected rectangle'); ?>.
 											</div>
 										</div>
-										<div id="deleteshapediv" style="margin-top:5px;display:<?php echo (($mapManager->getSearchTerm('pointlat') || $mapManager->getSearchTerm('upperlat') || $mapManager->getSearchTerm('polycoords'))?'block':'none'); ?>;">
+										<div id="deleteshapediv" style="margin-top:5px;display:<?php echo (($mapManager->getSearchTerm('pointlat') || $mapManager->getSearchTerm('upperlat') || $mapManager->getSearchTerm('footprintGeoJson'))?'block':'none'); ?>;">
 											<button class="button-danger" data-role="none" type="button" onclick="deleteMapShape()"><?php echo (isset($LANG['DELETE_SHAPE'])?$LANG['DELETE_SHAPE']:'Delete Selected Shape'); ?></button>
 										</div>
 									</div>

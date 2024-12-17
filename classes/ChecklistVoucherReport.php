@@ -353,7 +353,7 @@ class ChecklistVoucherReport extends ChecklistVoucherAdmin {
 
 	private function getTableJoinFrag($sqlFrag){
 		$retSql = '';
-		if(strpos($sqlFrag,'p.point')){
+		if(strpos($sqlFrag,'p.lngLatPoint')){
 			$retSql .= 'INNER JOIN omoccurpoints p ON o.occid = p.occid ';
 		}
 		return $retSql;

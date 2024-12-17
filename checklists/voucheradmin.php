@@ -1,6 +1,7 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/ChecklistVoucherReport.php');
+include_once($SERVER_ROOT.'/classes/ChecklistAdmin.php');
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/checklists/voucheradmin.' . $LANG_TAG . '.php')) include_once($SERVER_ROOT . '/content/lang/checklists/voucheradmin.' . $LANG_TAG . '.php');
 else include_once($SERVER_ROOT.'/content/lang/checklists/voucheradmin.en.php');
 header('Content-Type: text/html; charset='.$CHARSET);
@@ -17,11 +18,17 @@ $displayMode = (array_key_exists('displaymode', $_REQUEST) ? filter_var($_REQUES
 $clManager = new ChecklistVoucherReport();
 $clManager->setClid($clid);
 
+//Needed to save polygon footprint
+$clAdminManager = new ChecklistAdmin();
+$clAdminManager->setClid($clid);
+
 $statusStr = '';
 $isEditor = 0;
 if($IS_ADMIN || (array_key_exists('ClAdmin',$USER_RIGHTS) && in_array($clid,$USER_RIGHTS['ClAdmin']))){
 	$isEditor = 1;
 	if($action == 'SaveSearch'){
+		$clAdminManager->savePolygon($_POST['footprint']);
+
 		$statusStr = $clManager->saveQueryVariables($_POST);
 	}
 	elseif($action == 'DeleteVariables'){
@@ -75,10 +82,11 @@ $clMetaArr = $clManager->getClMetadata();
 	?>
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 	<script src="<?php echo $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
+	<script src="<?= $CLIENT_ROOT ?>/js/symb/mapAidUtils.js" type="text/javascript"></script>
 	<script type="text/javascript">
 		var clid = <?php echo $clid; ?>;
 		var tabIndex = <?php echo $tabIndex; ?>;
-		var footprintwktExists = <?php echo ($clManager->getClFootprintWkt()?'true':'false') ?>;
+		var footprintExists = <?php echo ($clManager->getClFootprint()?'true':'false') ?>;
 	</script>
 	<script type="text/javascript" src="../js/symb/checklists.voucheradmin.js?ver=2"></script>
 	<style>
@@ -198,9 +206,10 @@ if($clid && $isEditor){
 									<b><?php echo $LANG['LATN'];?>:</b>
 									<input id="upperlat" type="text" name="latnorth" style="width:80px;" value="<?php echo isset($termArr['latnorth'])?$termArr['latnorth']:''; ?>" title="<?php echo $LANG['LAT_NORTH'] ?>" />
 									<?php
-									$coordAidUrl = '../collections/tools/mapcoordaid.php?map_mode_strict=true&mapmode=rectangle&latdef='.$clMetaArr['latcentroid'].'&lngdef='.$clMetaArr['longcentroid'];
+									$latDef = $clMetaArr['latcentroid'];
+									$lngDef = $clMetaArr['longcentroid'];
 									?>
-									<a href="#" onclick="openPopup('<?= $coordAidUrl ?>','boundingbox')"><img src="../images/world.png" style="width:1.2em" title="<?php echo $LANG['FIND_COORD'] ?>" /></a>
+											<a href="#" onclick="openCoordAid({map_mode: MAP_MODES.RECTANGLE, client_root:'<?=$CLIENT_ROOT?>', map_mode_strict: true, latdef: '<?= $latDef ?>', lngdef: '<?= $lngDef ?>' })"><img src="../images/world.png" style="width:1.2em" title="<?php echo $LANG['FIND_COORD'] ?>" /></a>
 								</div>
 								<div>
 									<b><?php echo $LANG['LATS'];?>:</b>
@@ -221,7 +230,7 @@ if($clid && $isEditor){
 								<div>
 									<input name="includewkt" value="1" type="checkbox" <?php if(isset($termArr['includewkt'])) echo 'CHECKED'; ?> onclick="coordInputSelected(this)" />
 									<?php echo $LANG['POLYGON_SEARCH']; ?>
-									<a href="#"  onclick="openPopup('tools/mappolyaid.php?clid=<?= $clid ?>','mappopup');return false;" title="<?php echo $LANG['EDIT_META_POLYGON'] ?>"><img src="../images/edit.png" style="width:1.2em" /></a>
+									<a href="#"  onclick="openCoordAid({map_mode: MAP_MODES.POLYGON, polygon_text_type: POLYGON_TEXT_TYPES.GEOJSON, client_root:'<?=$CLIENT_ROOT?>', map_mode_strict: true, latdef: '<?= $latDef ?>', lngdef: '<?= $lngDef ?>' });return false;" title="<?php echo $LANG['EDIT_META_POLYGON'] ?>"><img src="../images/edit.png" style="width:1.2em" /></a>
 								</div>
 								<div>
 									<input name="excludecult" value="1" type="checkbox" <?php if(isset($termArr['excludecult'])) echo 'CHECKED'; ?> />
@@ -239,6 +248,7 @@ if($clid && $isEditor){
 								<input type="hidden" name="submitaction" value="SaveSearch" />
 								<input type='hidden' name='clid' value='<?php echo $clid; ?>' />
 								<input type='hidden' name='pid' value='<?php echo $pid; ?>' />
+								<input type='hidden' id="footprintwkt" name='footprint' value='<?php echo htmlspecialchars($clManager->getClFootprint()); ?>' />
 							</div>
 						</td>
 					</tr>

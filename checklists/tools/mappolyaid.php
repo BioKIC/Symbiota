@@ -18,7 +18,8 @@ if(!is_numeric($zoom)) $zoom = 0;
 
 $clManager = new ChecklistAdmin();
 $clManager->setClid($clid);
-$wkt = $clManager->getFootprintWkt();
+//$wkt = $clManager->getFootprintWkt();
+$wkt = $clManager->getFootprint();
 
 if($formSubmit){
 	if($formSubmit == 'save'){

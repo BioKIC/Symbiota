@@ -10,10 +10,10 @@ $formSubmit = array_key_exists("formsubmit",$_POST)?$_POST["formsubmit"]:0;
 $latDef = array_key_exists("latdef",$_REQUEST)?$_REQUEST["latdef"]:'';
 $lngDef = array_key_exists("lngdef",$_REQUEST)?$_REQUEST["lngdef"]:'';
 $zoom = array_key_exists("zoom",$_REQUEST)&&is_numeric($_REQUEST["zoom"])?$_REQUEST["zoom"]:5;
-$mapMode = array_key_exists("mapmode",$_REQUEST)? htmlspecialchars($_REQUEST["mapmode"]):'';
-$mapModeStrict = array_key_exists("map_mode_strict",$_REQUEST)? true:false;
-$wktInputId = array_key_exists("wkt_input_id", $_REQUEST)? htmlspecialchars($_REQUEST["wkt_input_id"]):"footprintwkt";
-$outputType= array_key_exists("geoJson", $_REQUEST)?"geoJson":"wkt";
+$mapMode = array_key_exists("map_mode",$_REQUEST)? htmlspecialchars($_REQUEST["map_mode"]):'';
+$mapModeStrict = array_key_exists("map_mode_strict",$_REQUEST) && is_bool(boolval($_REQUEST["map_mode_strict"]))? boolval($_REQUEST["map_mode_strict"]):false;
+$polygonInputId = array_key_exists("polygon_input_id", $_REQUEST)? htmlspecialchars($_REQUEST["polygon_input_id"]):"footprintwkt";
+$outputType= array_key_exists("polygon_text_type", $_REQUEST)? htmlspecialchars($_REQUEST["polygon_text_type"]):"wkt";
 
 if($formSubmit){
 	if($formSubmit == 'save'){
@@ -71,46 +71,71 @@ else{
 			</button>
 			<?php echo isset($LANG['COORD_AID_HELP_TEXT'])? $LANG['COORD_AID_HELP_TEXT'] :'Click the map to start drawing or select from the shape controls to draw bounds of that shape'?>
 		</div>
-		<div id="helptext">
-		</div>
+		<div id="helptext"></div>
 		<div id="map"></div>
+		<div 
+			id="service-container" 
+			data-zoom="<?= htmlspecialchars($zoom) ?>" 
+			data-lat-center="<?= htmlspecialchars($latCenter) ?>" 
+			data-lng-center="<?= htmlspecialchars($lngCenter) ?>" 
+			data-map-mode="<?= htmlspecialchars($mapMode) ?>" 
+			data-map-mode-strict="<?= htmlspecialchars($mapModeStrict) ?>"
+			data-footprint-type="<?= htmlspecialchars($outputType) ?>"
+			data-footprint-id="<?= htmlspecialchars($polygonInputId) ?>"
+		></div>
 		<script type="text/javascript">
 
 		/* Type Definitions
-	   *
-	   * lat: -90 < float < 90;
-	   * lng: -180 < float < 180;
-	   *
-	   */
+		*
+		* lat: -90 < float < 90;
+		* lng: -180 < float < 180;
+		*
+		*/
 
 		/* Shape Defintions:
-	   *
-	   * Polygon {
-	   *    type: polygon, 
-	   *    latlngs: [[lat, lng]...],
-	   *    wkt: String (Wkt format),
-	   * }
-	   *
-	   * Rectangle {
-	   *    type: "rectangle",
-	   *    upperLat: lat,
-	   *    lowerLat: lat,
-	   *    rightLng: lng,
-	   *    leftLng: lng,
-	   * }
-	   *
-	   * Circle { 
-	   *    type: "circle"
-	   *    radius: float,
-	   *    center [lat, lng]
-	   * }
-	   */
+		*
+		* Polygon {
+		*    type: polygon, 
+		*    latlngs: [[lat, lng]...],
+		*    wkt: String (Wkt format),
+		* }
+		*
+		* Rectangle {
+		*    type: "rectangle",
+		*    upperLat: lat,
+		*    lowerLat: lat,
+		*    rightLng: lng,
+		*    leftLng: lng,
+		* }
+		*
+		* Circle { 
+		*    type: "circle"
+		*    radius: float,
+		*    center [lat, lng]
+		* }
+		*/
 
 		const MILEStoKM = 1.60934;
 		const KMtoM = 1000; 
 		const SIG_FIGS = 6;
-		const wktInputId = "<?= $wktInputId?>";
-		const polyOutputType = "<?= $outputType ?>";
+		const data = document.getElementById("service-container");
+		const mapMode = data.getAttribute('data-map-mode');
+		const mapModeStrict = data.getAttribute('data-map-mode-strict');
+		const zoom = data.getAttribute('data-zoom');
+		const footprintId = data.getAttribute('data-footprint-id');
+		const footprintType = data.getAttribute('data-footprint-type');
+		const latCenter = data.getAttribute('data-lat-center');
+		const lngCenter = data.getAttribute('data-lng-center');
+		const lang = "<?= $LANG_TAG; ?>";
+
+		const fieldBuffer = {};
+
+		function commitFieldBuffer(buffer = {}) {
+			for(id in buffer) {
+				const elem = opener.document.getElementById(id);
+				if(elem) elem.value = buffer[id];
+			}
+		}
 
 		function saveCoordAid() {
 			const leaflet_save = document.querySelector(".leaflet-draw-actions li a[title='Save changes']");
@@ -164,16 +189,16 @@ else{
 		}
 
 		function setPolygon(poly_output) {
-			setField(wktInputId, poly_output);
+			setField(footprintId, poly_output);
 		}
 
-	  /* setShapeToSearchForm: 
-	   *
-	   * Sets Shape data to search form.
-	   *
-	   * activeShape: Shape Type (See Def at top of script)
-	   * 
-	   */
+		/* setShapeToSearchForm: 
+		*
+		* Sets Shape data to search form.
+		*
+		* activeShape: Shape Type (See Def at top of script)
+		* 
+		*/
 		function setShapeToSearchForm(activeShape) {
 			//Clear Form
 			setField("pointlat", "");
@@ -181,7 +206,7 @@ else{
 			setField("radius", "");
 			setField("radiusunits", "");
 
-			setField(wktInputId, "");
+			setField(footprintId, "");
 
 			setField("upperlat", "");
 			setField("bottomlat", "");
@@ -194,8 +219,8 @@ else{
 
 			switch(activeShape.type) {
 				case "polygon":
-					if(polyOutputType === "geoJson") {
-						setPolygon( JSON.stringify({
+					if(footprintType === "geoJson") {
+						setPolygon(JSON.stringify({
 							"type": "Feature",
 							"properties": {},
 							"geometry": {
@@ -218,18 +243,17 @@ else{
 			}
 		}
 
-	  /* LoadShape Reads Coordinates from Form: 
-	   *
-	   * mapMode: enum ("polygon", "rectangle", "circle")
-	   *
-	   * Returns A Shape (See top of script):
-	   */
+		/* LoadShape Reads Coordinates from Form: 
+		*
+		* mapMode: enum ("polygon", "rectangle", "circle")
+		*
+		* Returns A Shape (See top of script):
+		*/
 		function loadShape(mapMode) {
 			switch(mapMode) {
 				case "polygon":
-					if(polyOutputType === "geoJson") {
-						const geoJsonStr = getField(wktInputId);
-						if(!geoJsonStr) break;
+					const geoJsonStr = getField(footprintId);
+					if(footprintType && footprintType.toLowerCase() === "geojson" && geoJsonStr) {
 						try {
 							const geoJson = JSON.parse(geoJsonStr);
 							return { 
@@ -240,18 +264,18 @@ else{
 							alert(e.message);
 						}
 					} else {
-						const origFootprintWkt = getField(wktInputId);
+						const origFootprint = getField(footprintId);
 						try {
-							const polyPoints = parseWkt(origFootprintWkt);
+							const polyPoints = parseWkt(origFootprint);
 							if(polyPoints) {
-								return { type: "polygon", latlngs: polyPoints, wkt: getField(wktInputId)};
+								return { type: "polygon", latlngs: polyPoints, wkt: getField(footprintId)};
 							}
 						} catch(e) {
 							alert(e.message);
-							opener.document.getElementById(wktInputId).value = origFootprintWkt;
+							opener.document.getElementById(footprintId).value = origFootprint;
 						}
 					}
-					break;
+				break;
 				case "rectangle":
 					const upperLat = getField("upperlat");
 					const lowerLat= getField("bottomlat");
@@ -268,7 +292,7 @@ else{
 							leftLng: leftLng * (getField("leftlong_EW") === "E"? 1: -1),
 						}
 					}
-					break;
+				break;
 				case "circle":
 					const radius = getField("radius");
 					const pointlat = getField("pointlat");
@@ -285,28 +309,27 @@ else{
 							]
 						}
 					}
-					break;
+				break;
 				default:
 					alert(`No Settings for Map Mode: ${mapMode}`)
 					return false;
-					break;
+				break;
 			} 
 		}
-		let formShape = loadShape("<?php echo $mapMode?>");
-		let mapModeStrict = <?php echo $mapModeStrict? "true": "false"?>;
+
+		const formShape = loadShape(mapMode);
 		function leafletInit() {
 			const MapOptions = {
-				center: [<?php echo $latCenter?>, <?php echo $lngCenter?>],
-			zoom: <?php echo $zoom?>,
-				lang: "<?php echo $LANG_TAG; ?>"
+				center: [latCenter, lngCenter],
+				zoom,
+				lang
 			};
 
 			let map = new LeafletMap('map', MapOptions );
-			let mode = "<?php echo $mapMode?>";
 
 			map.enableDrawing({
 				polyline: false,
-				mode: "<?php echo $mapMode?>",
+				mode: mapMode,
 				map_mode_strict: mapModeStrict,
 				circlemarker: false,
 				marker: false,
@@ -319,22 +342,24 @@ else{
 				map.drawShape(formShape);
 			}
 		}
+
 		function googleInit() {
 			const MapOptions= {
-				zoom: <?php echo $zoom; ?>,
-				center: new google.maps.LatLng(<?php echo $latCenter . ',' . $lngCenter; ?>),
+				center: new google.maps.LatLng(latCenter, lngCenter),
+				zoom,
 				mapTypeId: google.maps.MapTypeId.TERRAIN,
 				scaleControl: true
 			};
 
 			let map = new GoogleMap('map', MapOptions)
 			map.enableDrawing({
-				mode: "<?php echo $mapMode?>",
+				mode: mapMode,
 				map_mode_strict: mapModeStrict
-				}, setShapeToSearchForm);
+			}, setShapeToSearchForm);
 
-			if(formShape) 
-			map.drawShape(formShape, setShapeToSearchForm)
+			if(formShape)  {
+				map.drawShape(formShape, setShapeToSearchForm)
+			}
 		}
 
 		<?php if(empty($GOOGLE_MAP_KEY)): ?> 

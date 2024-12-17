@@ -299,7 +299,7 @@ class LeafletMap {
                         rectangle: 'Dibujar un rectángulo',
                         circle: 'Dibuja un circulo',
                         marker: 'Dibujar un marcador',
-                        circlemarker: 'Dibuja un marcador circular'
+                        circlemarker: 'Dibuja un marcadgeojsonor circular'
                      }
                   },
                   handlers: {
@@ -521,10 +521,12 @@ class LeafletMap {
          setDrawColor("rectangle");
          setDrawColor("circle");
       }
+
       if(drawOptions.map_mode_strict) {
          if(drawOptions.mode !== "polygon") drawOptions.polygon = false;
          if(drawOptions.mode !== "circle") drawOptions.circle = false;
-         if(drawOptions.mode !== "rectangle") drawOptions.rectangle= false;
+         if(drawOptions.mode !== "rectangle") drawOptions.rectangle = false;
+         if(drawOptions.mode !== "marker") drawOptions.marker = false;
          if(drawOptions.mode !== "polyline") drawOptions.polyline = false;
       }
 
@@ -601,6 +603,11 @@ class LeafletMap {
 
    drawShape(shape, fitbounds=true) {
       const id = this.shapes.length;
+
+      const fitShape = () => {
+         this.mapLayer.fitBounds(this.activeShape.layer.getBounds());
+      }
+
       switch(shape.type) {
          case "geoJSON":
             const geoJSON = L.geoJSON(shape.geoJSON);
@@ -617,6 +624,7 @@ class LeafletMap {
             const poly = L.polygon(shape.latlngs);
             this.activeShape = getShapeCoords(shape.type, poly);
             poly.addTo(this.drawLayer);
+            if(fitbounds) fitShape();
             break;
          case "rectangle":
             const rec = L.rectangle([
@@ -625,24 +633,23 @@ class LeafletMap {
             ]);
             this.activeShape = getShapeCoords(shape.type, rec);
             rec.addTo(this.drawLayer)
+            if(fitbounds) fitShape();
             break;
          case "circle":
             const circ = L.circle(shape.latlng, shape.radius);
             this.activeShape = getShapeCoords(shape.type, circ);
             circ.addTo(this.drawLayer);
+            if(fitbounds) fitShape();
             break;
          default:
             throw Error(`Can't draw ${shape.type}`)
       }
 
-      this.activeShape.id = id;
-      this.shapes.push(this.activeShape);
-
-      if(fitbounds) {
-         this.mapLayer.fitBounds(this.activeShape.layer.getBounds());
+      if(this.activeShape) {
+         this.activeShape.id = id;
+         this.shapes.push(this.activeShape);
       }
    }
-
 }
 
 function getShapeCoords(layerType, layer) {
@@ -685,7 +692,7 @@ function getShapeCoords(layerType, layer) {
          };
          break;
       default:
-         throw Error("Couldn't parse this shape type");
+         throw Error(`Couldn't parse "${layerType}" as a shape type`);
    }
 
    return shape;

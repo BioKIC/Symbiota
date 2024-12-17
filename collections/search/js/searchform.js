@@ -25,7 +25,7 @@ let paramNames = [
   "elevlow",
   "elevhigh",
   "llbound",
-  "footprintwkt",
+  "footprintGeoJson",
   "llpoint",
   "eventdate1",
   "eventdate2",
@@ -56,7 +56,7 @@ const pLngEw = document.getElementById("pointlong_EW") || null;
 const pRadius = document.getElementById("radius") || null;
 const pRadiusUn = document.getElementById("radiusunits") || null;
 
-let paramsArr = [];
+let paramsArr = {};
 //////////////////////////////////////////////////////////////////////////
 
 /**
@@ -91,21 +91,6 @@ function openModal(elementid) {
  */
 function closeModal(elementid) {
   $(elementid)?.css("display", "none");
-}
-
-/**
- * Opens map helper
- * @param {String} mapMode Option from select in form
- * Function from `../../js/symb/collections.harvestparams.js`
- */
-function openCoordAid(mapMode) {
-  mapWindow = open(
-    "../tools/mapcoordaid.php?mapmode=" + mapMode,
-    "polygon",
-    "resizable=0,width=900,height=630,left=20,top=20"
-  );
-  if (mapWindow.opener == null) mapWindow.opener = self;
-  mapWindow.focus();
 }
 
 /**
@@ -319,7 +304,7 @@ function updateChip(e) {
   });
 
   // then go through remaining options and find selected items
-  const optionElements = document.querySelectorAll(".content option");
+  const optionElements = document.querySeliectorAll(".content option");
   optionElements.forEach((item) => {
     if (item.selected && item.value && item.hasAttribute("data-chip")) {
       addChip(item);
@@ -397,7 +382,7 @@ function getDomainsSitesChips() {
 /**
  * Toggles state of checkboxes in nested lists when clicking an "all-selector" element
  * Uses jQuery
- */
+ */i
 function toggleAllSelector() {
   $(this)
     .siblings()
@@ -602,7 +587,7 @@ function getSearchUrl() {
   const baseUrl = new URL(harvestUrl + urlSuffix);
 
   // Clears array temporarily to avoid redundancy
-  paramsArr = [];
+  paramsArr = {};
 
   // Grabs params from form for each param name
   paramNames.forEach((param, i) => {
@@ -611,7 +596,7 @@ function getSearchUrl() {
 
   // Appends each key value for each param in search url
   let queryString = Object.keys(paramsArr).map((key) => {
-    baseUrl.searchParams.append(key, paramsArr[key]);
+		baseUrl.searchParams.append(key, paramsArr[key]);
   });
 
   baseUrl.searchParams.append("comingFrom", "newsearch");

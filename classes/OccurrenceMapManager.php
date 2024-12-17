@@ -18,7 +18,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 		parent::__destruct();
 	}
 
-	private function readGeoRequestVariables(){
+	private function readGeoRequestVariables() {
 		if(array_key_exists('gridSizeSetting',$_REQUEST)){
 			$this->searchTermArr['gridSizeSetting'] = $this->cleanInStr($_REQUEST['gridSizeSetting']);
 		}
@@ -30,21 +30,7 @@ class OccurrenceMapManager extends OccurrenceManager {
 		}
 		if(array_key_exists('cltype',$_REQUEST) && $_REQUEST['cltype']){
 			if($_REQUEST['cltype'] == 'all') $this->searchTermArr['cltype'] = 'all';
-			$this->searchTermArr['cltype'] = 'vouchers';
-		}
-		if(array_key_exists('poly_array',$_REQUEST) && $_REQUEST['poly_array']){
-			$this->searchTermArr['polycoords'] = $_REQUEST['poly_array'];
-		}
-		elseif(array_key_exists('polycoords',$_REQUEST) && $_REQUEST['polycoords']){
-			$this->searchTermArr['polycoords'] = $_REQUEST['polycoords'];
-		}
-		elseif($this->getClFootprintWkt()){
-			$this->searchTermArr['polycoords'] = $this->getClFootprintWkt();
-		}
-		if(!$this->getSearchTerm('polycoords')){
-			if($this->getSearchTerm('clid') && $this->getClFootprintWkt()){
-				$this->searchTermArr['poly_array'] = $this->getClFootprintWkt();
-			}
+			else $this->searchTermArr['cltype'] = 'vouchers';
 		}
 	}
 
@@ -72,23 +58,19 @@ class OccurrenceMapManager extends OccurrenceManager {
 			$color = 'e69e67';
 			$occidArr = array();
 			while($row = $result->fetch_object()){
+				if(!($row->DecimalLongitude <= 180 && $row->DecimalLongitude >= -180) || !($row->DecimalLatitude <= 90 && $row->DecimalLatitude >= -90)) { 
+					continue;
+				}
 				$occidArr[] = $row->occid;
 				$collName = $row->CollectionName;
 				$tidInterpreted = $this->htmlEntities($row->tidinterpreted);
 				$latLngStr = $row->DecimalLatitude.",".$row->DecimalLongitude;
 				$coordArr[$collName][$row->occid]["llStr"] = $latLngStr;
 				$coordArr[$collName][$row->occid]["collid"] = $this->htmlEntities($row->collid);
-				//$tidcode = strtolower(str_replace(" ", "",$tidInterpreted.$row->sciname));
-				//$tidcode = preg_replace( "/[^A-Za-z0-9 ]/","",$tidcode);
-				//$coordArr[$collName][$occId]["ns"] = $this->htmlEntities($tidcode);
 				$coordArr[$collName][$row->occid]["tid"] = $tidInterpreted;
 				$coordArr[$collName][$row->occid]["fam"] = ($row->family?strtoupper($row->family):'undefined');
 				$coordArr[$collName][$row->occid]["sn"] = $row->sciname;
 				$coordArr[$collName][$row->occid]["id"] = $this->htmlEntities($row->identifier);
-				//$coordArr[$collName][$occId]["icode"] = $this->htmlEntities($row->institutioncode);
-				//$coordArr[$collName][$occId]["ccode"] = $this->htmlEntities($row->collectioncode);
-				//$coordArr[$collName][$occId]["cn"] = $this->htmlEntities($row->catalognumber);
-				//$coordArr[$collName][$occId]["ocn"] = $this->htmlEntities($row->othercatalognumbers);
 				$coordArr[$collName]["c"] = $color;
 			}
 			$statsManager->recordAccessEventByArr($occidArr, 'map');
@@ -194,8 +176,6 @@ class OccurrenceMapManager extends OccurrenceManager {
 	private function setRecordCnt(){
 		if($this->sqlWhere){
 			$sql = "SELECT COUNT(DISTINCT o.occid) AS cnt FROM omoccurrences o ".$this->getTableJoins($this->sqlWhere).$this->sqlWhere;
-			//echo "<div>Count sql: ".$sql."</div>";
-
 			$result = $this->conn->query($sql);
 			if($result){
 				if($row = $result->fetch_object()){
@@ -214,121 +194,42 @@ class OccurrenceMapManager extends OccurrenceManager {
 	private function setGeoSqlWhere(){
 		global $USER_RIGHTS;
 		$sqlWhere = $this->getSqlWhere();
-		if($this->searchTermArr){
-			if(array_key_exists('clid',$this->searchTermArr) && $this->searchTermArr['clid']){
-				if(isset($this->searchTermArr['cltype']) && $this->searchTermArr['cltype'] == 'all'){
-					$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . "(ST_Within(p.point,GeomFromText('".$this->getClFootprintWkt()." '))) ";
+		if($this->searchTermArr) {
+			$sqlWhere = $this->getSqlWhere();
+			$sqlWhere .= ($sqlWhere?' AND ':' WHERE ').'(o.DecimalLatitude IS NOT NULL AND o.DecimalLongitude IS NOT NULL) ';
+			if(array_key_exists('clid',$this->searchTermArr) && $this->searchTermArr['clid']) {
+				//Set Footprint for map to load
+				$this->setSearchTerm('footprintGeoJson', $this->voucherManager->getClFootprint());
+				if(isset($this->searchTermArr['cltype']) && $this->searchTermArr['cltype'] == 'all') {
+					$sqlWhere .= "AND (ST_Within(p.lngLatPoint,ST_GeomFromGeoJSON('". $this->voucherManager->getClFootprint()." '))) ";
+
 				}
-				else{
-					//$sqlWhere .= "AND (v.clid IN(".$this->searchTermArr['clid'].")) ";
-				}
+
 			}
-			elseif(array_key_exists("polycoords",$this->searchTermArr)){
-				$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . " (ST_Within(p.point,GeomFromText('".$this->searchTermArr["polycoords"]." '))) ";
-			}
-		}
-		//Check and exclude records with sensitive species protections
-		if(array_key_exists('SuperAdmin',$USER_RIGHTS) || array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('RareSppAdmin',$USER_RIGHTS) || array_key_exists('RareSppReadAll',$USER_RIGHTS)){
-			//Is global rare species reader, thus do nothing to sql and grab all records
-		}
-		elseif(isset($USER_RIGHTS['RareSppReader']) || isset($USER_RIGHTS['CollEditor'])){
-			$securityCollArr = array();
-			if(isset($USER_RIGHTS['CollEditor'])) $securityCollArr = $USER_RIGHTS['CollEditor'];
-			if(isset($USER_RIGHTS['RareSppReader'])) $securityCollArr = array_unique(array_merge($securityCollArr, $USER_RIGHTS['RareSppReader']));
-			$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . ' (o.CollId IN ('.implode(',',$securityCollArr).') OR (o.LocalitySecurity = 0 OR o.LocalitySecurity IS NULL)) ';
-		}
-		elseif(!empty($sqlWhere)){
-				$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . ' (o.LocalitySecurity = 0 OR o.LocalitySecurity IS NULL) ';
 		}
 
+		//Only add these if a search is going to be done
 		if($sqlWhere) {
+			//Check and exclude records with sensitive species protections
+			if(array_key_exists('SuperAdmin',$USER_RIGHTS) || array_key_exists('CollAdmin',$USER_RIGHTS) || array_key_exists('RareSppAdmin',$USER_RIGHTS) || array_key_exists('RareSppReadAll',$USER_RIGHTS)){
+				//Is global rare species reader, thus do nothing to sql and grab all records
+			}
+			elseif(isset($USER_RIGHTS['RareSppReader']) || isset($USER_RIGHTS['CollEditor'])){
+				$securityCollArr = array();
+				if(isset($USER_RIGHTS['CollEditor'])) $securityCollArr = $USER_RIGHTS['CollEditor'];
+				if(isset($USER_RIGHTS['RareSppReader'])) $securityCollArr = array_unique(array_merge($securityCollArr, $USER_RIGHTS['RareSppReader']));
+				$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . ' (o.CollId IN ('.implode(',',$securityCollArr).') OR (o.LocalitySecurity = 0 OR o.LocalitySecurity IS NULL)) ';
+			}
+			elseif(!empty($sqlWhere)){
+				$sqlWhere .= ($sqlWhere ? ' AND' : ' WHERE' ) . ' (o.LocalitySecurity = 0 OR o.LocalitySecurity IS NULL) ';
+			}
+
 			$sqlWhere .=  ' AND ((o.decimallatitude BETWEEN -90 AND 90) AND (o.decimallongitude BETWEEN -180 AND 180)) ';
 		}
 		$this->sqlWhere = $sqlWhere;
-		//echo '<div style="margin-left:10px">sql: '.$this->sqlWhere.'</div>'; exit;
 	}
 
 	//Shape functions
-	public function createShape(){
-		$queryShape = '';
-		$properties = 'strokeWeight: 0,';
-		$properties .= 'fillOpacity: 0.45,';
-		$properties .= 'editable: true,';
-		//$properties .= 'draggable: true,';
-		$properties .= 'map: map});';
-
-		if($this->getSearchTerm('upperlat')){
-			$queryShape = 'var queryRectangle = new google.maps.Rectangle({';
-			$queryShape .= 'bounds: new google.maps.LatLngBounds(';
-			$queryShape .= 'new google.maps.LatLng('.$this->getSearchTerm('bottomlat').', '.$this->getSearchTerm('leftlong').'),';
-			$queryShape .= 'new google.maps.LatLng('.$this->getSearchTerm('upperlat').', '.$this->getSearchTerm('rightlong').')),';
-			$queryShape .= $properties;
-			$queryShape .= "queryRectangle.type = 'rectangle';";
-			$queryShape .= "google.maps.event.addListener(queryRectangle, 'click', function() {";
-			$queryShape .= 'setSelection(queryRectangle);});';
-			$queryShape .= "google.maps.event.addListener(queryRectangle, 'dragend', function() {";
-			$queryShape .= 'setSelection(queryRectangle);});';
-			$queryShape .= "google.maps.event.addListener(queryRectangle, 'bounds_changed', function() {";
-			$queryShape .= 'setSelection(queryRectangle);});';
-			$queryShape .= 'setSelection(queryRectangle);';
-			$queryShape .= 'var queryShapeBounds = new google.maps.LatLngBounds();';
-			$queryShape .= 'queryShapeBounds.extend(new google.maps.LatLng('.$this->getSearchTerm('bottomlat').', '.$this->getSearchTerm('leftlong').'));';
-			$queryShape .= 'queryShapeBounds.extend(new google.maps.LatLng('.$this->getSearchTerm('upperlat').', '.$this->getSearchTerm('rightlong').'));';
-			$queryShape .= 'map.fitBounds(queryShapeBounds);';
-			$queryShape .= 'map.panToBounds(queryShapeBounds);';
-		}
-		if($this->getSearchTerm('pointlat')){
-			$radius = (($this->getSearchTerm('radius')/0.6214)*1000);
-			$queryShape = 'var queryCircle = new google.maps.Circle({';
-			$queryShape .= 'center: new google.maps.LatLng('.$this->getSearchTerm('pointlat').', '.$this->getSearchTerm('pointlong').'),';
-			$queryShape .= 'radius: '.$radius.',';
-			$queryShape .= $properties;
-			$queryShape .= "queryCircle.type = 'circle';";
-			$queryShape .= "google.maps.event.addListener(queryCircle, 'click', function() {";
-			$queryShape .= 'setSelection(queryCircle);});';
-			$queryShape .= "google.maps.event.addListener(queryCircle, 'dragend', function() {";
-			$queryShape .= 'setSelection(queryCircle);});';
-			$queryShape .= "google.maps.event.addListener(queryCircle, 'radius_changed', function() {";
-			$queryShape .= 'setSelection(queryCircle);});';
-			$queryShape .= "google.maps.event.addListener(queryCircle, 'center_changed', function() {";
-			$queryShape .= 'setSelection(queryCircle);});';
-			$queryShape .= 'setSelection(queryCircle);';
-			$queryShape .= 'var queryShapeBounds = queryCircle.getBounds();';
-			$queryShape .= 'map.fitBounds(queryShapeBounds);';
-			$queryShape .= 'map.panToBounds(queryShapeBounds);';
-		}
-		if($this->getSearchTerm('polycoords')){
-			$wkt = $this->getSearchTerm('polycoords');
-			if(substr($wkt,0,7) == 'POLYGON') $wkt = substr($wkt,7);
-			else if(substr($wkt,0,12) == 'MULTIPOLYGON') $wkt = substr($wkt,12);
-			$coordArr = explode('),(', $wkt);
-			$shapeBounds = 'var queryShapeBounds = new google.maps.LatLngBounds();'."\n";
-			foreach($coordArr as $k => $polyFrag){
-				if($pointArr = explode(',', trim($polyFrag,' (),'))){
-					$queryShape .= 'var queryPolygon'.$k.' = new google.maps.Polygon({';
-					$points = '';
-					foreach($pointArr as $ptStr){
-						$ptArr = explode(' ',$ptStr);
-						$points .= ',new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].')';
-						$shapeBounds .= 'queryShapeBounds.extend(new google.maps.LatLng('.$ptArr[0].', '.$ptArr[1].'));'."\n";
-					}
-					$queryShape .= 'paths: ['.substr($points,1).'],';
-					$queryShape .= $properties;
-					$queryShape .= 'queryPolygon'.$k.'.type = "polygon";';
-					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.', "click", function() { setSelection(queryPolygon'.$k.');});';
-					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.', "dragend", function() { setSelection(queryPolygon'.$k.');});';
-					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "insert_at", function() { setSelection(queryPolygon'.$k.');});';
-					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "remove_at", function() { setSelection(queryPolygon'.$k.');});';
-					$queryShape .= 'google.maps.event.addListener(queryPolygon'.$k.'.getPath(), "set_at", function() { setSelection(queryPolygon'.$k.');});';
-					$queryShape .= 'setSelection(queryPolygon'.$k.');';
-				}
-			}
-			$queryShape .= $shapeBounds;
-			$queryShape .= 'map.fitBounds(queryShapeBounds);';
-			$queryShape .= 'map.panToBounds(queryShapeBounds);'."\n";
-		}
-		return $queryShape;
-	}
 
 	public function writeKMLFile($recLimit, $extraFieldArr = null){
 		//Output data
