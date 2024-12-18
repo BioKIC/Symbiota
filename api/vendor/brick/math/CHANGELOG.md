@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.12.1](https://github.com/brick/math/releases/tag/0.12.1) - 2023-11-29
+
+⚡️ **Performance improvements**
+
+- `BigNumber::of()` is now faster, thanks to [@SebastienDug](https://github.com/SebastienDug) in [#77](https://github.com/brick/math/pull/77).
+
+## [0.12.0](https://github.com/brick/math/releases/tag/0.12.0) - 2023-11-26
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 8.1
+- `RoundingMode` is now an `enum`; if you're type-hinting rounding modes, you need to type-hint against `RoundingMode` instead of `int` now
+- `BigNumber` classes do not implement the `Serializable` interface anymore (they use the [new custom object serialization mechanism](https://wiki.php.net/rfc/custom_object_serialization))
+- The following breaking changes only affect you if you're creating your own `BigNumber` subclasses:
+  - the return type of `BigNumber::of()` is now `static`
+  - `BigNumber` has a new abstract method `from()`
+  - all `public` and `protected` functions of `BigNumber` are now `final`
+
+## [0.11.0](https://github.com/brick/math/releases/tag/0.11.0) - 2023-01-16
+
+💥 **Breaking changes**
+
+- Minimum PHP version is now 8.0
+- Methods accepting a union of types are now strongly typed<sup>*</sup>
+- `MathException` now extends `Exception` instead of `RuntimeException`
+
+<sup>* You may now run into type errors if you were passing `Stringable` objects to `of()` or any of the methods
+internally calling `of()`, with `strict_types` enabled. You can fix this by casting `Stringable` objects to `string`
+first.</sup>
+
 ## [0.10.2](https://github.com/brick/math/releases/tag/0.10.2) - 2022-08-11
 
 👌 **Improvements**
@@ -343,8 +373,8 @@ This release also comes with many performance improvements.
   - `getFraction()` is renamed to `fraction()`
   - `divideAndRemainder()` is renamed to `quotientAndRemainder()`
   - `dividedBy()` now takes a **mandatory** `$scale` parameter **before** the rounding mode
-  - `toBigInteger()` does not accept a `$roundingMode` parameter any more
-  - `toBigRational()` does not simplify the fraction any more; explicitly add `->simplified()` to get the previous behaviour
+  - `toBigInteger()` does not accept a `$roundingMode` parameter anymore
+  - `toBigRational()` does not simplify the fraction anymore; explicitly add `->simplified()` to get the previous behaviour
 - `BigRational`:
   - `getSign()` is renamed to `sign()`
   - `getNumerator()` is renamed to  `numerator()`
@@ -418,7 +448,7 @@ Added `BigDecimal::divideAndRemainder()`
 
 ## [0.2.0](https://github.com/brick/math/releases/tag/0.2.0) - 2015-05-22
 
-- `min()` and `max()` do not accept an `array` any more, but a variable number of parameters
+- `min()` and `max()` do not accept an `array` anymore, but a variable number of parameters
 - **minimum PHP version is now 5.6**
 - continuous integration with PHP 7
 

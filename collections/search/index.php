@@ -196,7 +196,7 @@ $obsArr = (isset($collList['obs'])?$collList['obs']:null);
 										<label for="elevhigh" class="input-text--outlined">
 											<span class="screen-reader-only"><?php echo $LANG['MAXIMUM_ELEVATION'] ?></span>
 											<input type="number" step="any" name="elevhigh" id="elevhigh" data-chip="<?php echo $LANG['MAX_ELEVATION'] ?>" />
-											<span class="inset-input-label"><?php echo $LANG['MINIMUM_ELEVATION'] ?></span>
+											<span class="inset-input-label"><?php echo $LANG['MAXIMUM_ELEVATION'] ?></span>
 										</label>
 										<span class="assistive-text"><?php echo $LANG['NUMBER_IN_METERS'] ?></span>
 									</div>
@@ -221,9 +221,9 @@ $obsArr = (isset($collList['obs'])?$collList['obs']:null);
 								<button type="button" onclick="openCoordAid('rectangle');"><?php echo $LANG['SELECT_IN_MAP'] ?></button>
 								<div class="input-text-container">
 										<label for="upperlat" class="input-text--outlined">
-											<span class="screen-reader-only"><?php echo $LANG['UPPER_LATITUDE'] ?></span>
+											<span class="screen-reader-only"><?php echo $LANG['NORTHERN_LATITUDE'] ?></span>
 											<input type="number" step="any" min="-90" max="90" id="upperlat" name="upperlat" data-chip="<?php echo $LANG['UPPER_LAT'] ?>" />
-											<span class="inset-input-label"><?php echo $LANG['MINIMUM_ELEVATION'] ?></span>
+											<span class="inset-input-label"><?php echo $LANG['NORTHERN_LATITUDE'] ?></span>
 											<span class="assistive-text"><?php echo $LANG['VALUE_BETWEEN_NUM'] ?></span>
 										</label>
 
@@ -238,7 +238,7 @@ $obsArr = (isset($collList['obs'])?$collList['obs']:null);
 								</div>
 								<div class="input-text-container">
 									<label for="bottomlat" class="input-text--outlined">
-										<span class="screen-reader-only"><?php echo $LANG['BOTTOM_LATITUDE'] ?></span>
+										<span class="screen-reader-only"><?php echo $LANG['SOUTHERN_LATITUDE'] ?></span>
 										<input type="number" step="any" min="-90" max="90" id="bottomlat" name="bottomlat" data-chip="<?php echo $LANG['BOTTOM_LAT'] ?>" />
 										<span class="inset-input-label"><?php echo $LANG['SOUTHERN_LATITUDE'] ?></span>
 										<span class="assistive-text"><?php echo $LANG['VALUE_BETWEEN_NUM'] ?></span>

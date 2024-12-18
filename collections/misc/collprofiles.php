@@ -914,17 +914,21 @@ if ($SYMB_UID) {
 			include('collprofilestats.php');
 			?>
 			<div style="margin-bottom: 2rem;">
-			<form action="<?= $actionPage ?>">
-				<input hidden id="'<?= 'coll-' . $collid . '-' ?>'" name="db[]" class="specobs" value='<?= $collid ?>' type="checkbox" onclick="selectAll(this);" checked />
-				<button type="submit" class="button button-primary">
-					<?= $LANG['ADVANCED_SEARCH_THIS_COLLECTION'] ?>
-				</button>
-			</form>
+				<form name="coll-search-form" action="<?= $actionPage ?>" method="get">
+					<input name="db" value="<?= $collid ?>" type="hidden">
+					<button type="submit" class="button button-primary">
+						<?= $LANG['ADVANCED_SEARCH_THIS_COLLECTION'] ?>
+					</button>
+				</form>
 			</div>
 			<div>
-				<span class="button button-primary">
-					<a id="image-search" href="<?= $CLIENT_ROOT ?>/imagelib/search.php?submitaction=search&db[]=<?= $collid ?>" ><?= $LANG['IMAGE_SEARCH_THIS_COLLECTION'] ?></a>
-				</span>
+				<form name="image-search-form" action="<?= $CLIENT_ROOT ?>/imagelib/search.php" method="get">
+					<input name="db" value="<?= $collid ?>" type="hidden">
+					<input name="imagetype" value="1" type="hidden">
+					<button name="submitaction" type="submit" value="search" class="button button-primary">
+						<?= $LANG['IMAGE_SEARCH_THIS_COLLECTION'] ?>
+					</button>
+				</form>
 			</div>
 			<?php
 		} elseif($collectionData) {

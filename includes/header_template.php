@@ -16,24 +16,27 @@ $collectionSearchPage = $SHOULD_USE_HARVESTPARAMS ? '/collections/index.php' : '
 					<div class="welcome-text bottom-breathing-room-rel">
 						<?= $LANG['H_WELCOME'] . ' ' . $USER_DISPLAY_NAME ?>!
 					</div>
-					<span style="white-space: nowrap;" class="button button-tertiary bottom-breathing-room-rel">
-						<a href="<?= $CLIENT_ROOT ?>/profile/viewprofile.php"><?= $LANG['H_MY_PROFILE'] ?></a>
+					<span id="profile">
+						<form name="profileForm" method="post" action="<?= $CLIENT_ROOT . '/profile/viewprofile.php' ?>">
+							<button class="button button-tertiary bottom-breathing-room-rel left-breathing-room-rel" name="profileButton" type="submit"><?= $LANG['H_MY_PROFILE'] ?></button>
+						</form>
 					</span>
-					<span style="white-space: nowrap;" class="button button-secondary bottom-breathing-room-rel">
-						<a href="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout"><?= $LANG['H_LOGOUT'] ?></a>
+					<span id="logout">
+						<form name="logoutForm" method="post" action="<?= $CLIENT_ROOT ?>/profile/index.php?submit=logout">
+							<button class="button button-secondary bottom-breathing-room-rel left-breathing-room-rel" name="logoutButton" type="submit"><?= $LANG['H_LOGOUT'] ?></button>
+						</form>
 					</span>
 					<?php
 				} else {
 					?>
-					<span class="button button-tertiary">
-						<a onclick="window.location.href='#'">
-							<?= $LANG['H_CONTACT_US'] ?>
-						</a>
+					<span id="contactUs">
+						<button class="button button-tertiary bottom-breathing-room-rel left-breathing-room-rel" onclick="window.location.href='#'"><?= $LANG['H_CONTACT_US'] ?></button>
 					</span>
-					<span class="button button-secondary">
-						<a href="<?= $CLIENT_ROOT . "/profile/index.php?refurl=" . htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES); ?>">
-							<?= $LANG['H_LOGIN'] ?>
-						</a>
+					<span id="login">
+						<form name="loginForm" method="post" action="<?= $CLIENT_ROOT . "/profile/index.php" ?>">
+							<input name="refurl" type="hidden" value="<?= htmlspecialchars($_SERVER['SCRIPT_NAME'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . "?" . htmlspecialchars($_SERVER['QUERY_STRING'], ENT_QUOTES) ?>">
+							<button class="button button-secondary bottom-breathing-room-rel left-breathing-room-rel" name="loginButton" type="submit"><?= $LANG['H_LOGIN'] ?></button>
+						</form>
 					</span>
 					<?php
 				}

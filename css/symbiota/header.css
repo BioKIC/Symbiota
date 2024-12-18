@@ -30,8 +30,26 @@ header {
   margin-right: 0.4rem;
 }
 
+
+nav.top-login > span > form{
+  display: inline;
+  margin: 0;
+  padding: 0;
+
+}
+
+#profile, #contactUs{
+  float: left;
+}
+
+#login, #logout {
+  float: right;
+}
+
 .top-brand {
   /* align a and brand-name */
+  clear: both;
+  padding-top: 0.5rem;
   grid-column: 1;
   display: flex;
   align-items: stretch;

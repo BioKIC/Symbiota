@@ -33,9 +33,9 @@ $LANG['TURN_ON_HEATMAP'] = 'Activer la carte thermique';
 $LANG['HEAT_RADIUS'] = 'Rayon';
 $LANG['MIN_DENSITY'] = 'Densité Minimale';
 $LANG['MAX_DENSITY'] = 'Densité Maximale';
-
 $LANG['RECORDS_TAXA'] = 'Registres et Taxons';
 $LANG['RECORDS'] = 'Registres';
+$LANG['INTERNAL_RECORDS'] = 'Registres Internes';
 $LANG['EXTERNAL_RECORDS'] = 'Registres Externes';
 $LANG['PORTAL_LIST'] = 'Liste des portails';
 $LANG['COLLECTIONS'] = 'Collections';

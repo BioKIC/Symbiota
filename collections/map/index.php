@@ -157,6 +157,9 @@ if(isset($_REQUEST['llpoint'])) {
 		<style type="text/css">
 			.panel-content a{ outline-color: transparent; font-size: .9rem; font-weight: normal; }
 			.ui-front { z-index: 9999999 !important; }
+			#cross_portal_record_label {
+				display: none;
+			}
 		</style>
 		<script src="<?= $CLIENT_ROOT; ?>/js/jquery-3.7.1.min.js" type="text/javascript"></script>
 		<script src="<?= $CLIENT_ROOT; ?>/js/jquery-ui.min.js" type="text/javascript"></script>
@@ -341,13 +344,23 @@ if(isset($_REQUEST['llpoint'])) {
 		function buildPanels(cross_portal_enabled) {
          const cross_portal_results = document.getElementById("cross_portal_results");
          const cross_portal_list = document.getElementById("cross_portal_list");
+         const record_label = document.getElementById("standard_record_label");
+         const cross_portal_record_label = document.getElementById("cross_portal_record_label");
          if(cross_portal_results) {
             if(cross_portal_enabled) {
                cross_portal_results.style.display = "block";
                cross_portal_list.style.display = "block";
+
+			   //Swap record table label for cross portal searches
+			   cross_portal_record_label.style.display = "block";
+			   standard_record_label.style.display = "none";
             } else {
                cross_portal_results.style.display = "none";
                cross_portal_list.style.display = "none";
+
+			   //Swap record table label for standard searches 
+			   cross_portal_record_label.style.display = "none";
+			   standard_record_label.style.display = "block";
             }
          }
 			setPanels(true);
@@ -2280,7 +2293,14 @@ Record Limit:
 						<h3 id="recordstaxaheader" style="display:none;padding-left:30px;"><?php echo (isset($LANG['RECORDS_TAXA'])?$LANG['RECORDS_TAXA']:'Records and Taxa'); ?></h3>
 						<div id="tabs2" style="display:none;padding:0px;">
 							<ul>
-								<li><a href='#occurrencelist'><span><?= $LANG['RECORDS'] ?></span></a></li>
+								<li><a href='#occurrencelist'>
+									<span id="standard_record_label">
+										<?= $LANG['RECORDS'] ?>
+									</span>
+									<span id="cross_portal_record_label">
+										<?= $LANG['INTERNAL_RECORDS'] ?>
+									</span></a>
+								</li>
 								<li id="cross_portal_results"><a href='#external_occurrencelist'><span><?= $LANG['EXTERNAL_RECORDS'] ?></span></a></li>
 								<li id="cross_portal_list"><a href='#portalsymbology'><span><?= $LANG['PORTAL_LIST'] ?></span></a></li>
 						   	<li><a href='#symbology'><span><?= $LANG['COLLECTIONS'] ?></span></a></li>
