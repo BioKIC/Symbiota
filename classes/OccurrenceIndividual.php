@@ -1,4 +1,5 @@
 <?php
+
 include_once('Manager.php');
 include_once('OccurrenceAccessStats.php');
 include_once('ChecklistVoucherAdmin.php');
@@ -162,6 +163,21 @@ class OccurrenceIndividual extends Manager{
 					if($this->occArr['collectioncode']){
 						if($this->metadataArr['collectioncode'] != $this->occArr['collectioncode']) $this->metadataArr['collectioncode'] = $this->occArr['collectioncode'];
 					}
+					// if($this->metadataArr['guidtarget'] == 'occurrenceID'){
+					// 	$this->occArr['occurrenceid'] = $this->occArr['occurrenceid']; // a tautology. Not necessary.
+					// }
+					if($this->metadataArr['guidtarget'] == 'symbiotaUUID'){
+						if(!isset($this->occArr['occurrenceid'])){
+							$this->occArr['occurrenceid'] = $this->occArr['recordid'];
+						}
+					}
+					if($this->metadataArr['guidtarget'] == 'catalogNumber'){
+						$this->occArr['occurrenceid'] = $this->occArr['catalognumber'];
+					}
+					if(!isset($this->metadataArr['guidtarget'])){
+						$this->occArr['occurrenceid'] = null;
+					}
+
 					if(!$this->occArr['occurrenceid']){
 						//Set occurrence GUID based on GUID target, but only if occurrenceID field isn't already populated
 						if($this->metadataArr['guidtarget'] == 'catalogNumber'){
