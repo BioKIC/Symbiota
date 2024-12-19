@@ -181,18 +181,18 @@ $shouldUseMinimalMapHeader = $SHOULD_USE_MINIMAL_MAP_HEADER ?? false;
 		<?php
 		if($shouldUseMinimalMapHeader) include_once($SERVER_ROOT . '/includes/minimalheader.php');
 		?>
-		<h1 class="page-heading screen-reader-only"><?php echo $LANG['MAP_POINT_HELPER']; ?></h1>
+		<h1 class="page-heading screen-reader-only"><?= $LANG['MAP_POINT_HELPER']; ?></h1>
 		<div style="padding:0.5rem; width: fit-content; height:fit-content" class="minimal-header-margin">
 			<div>
-				<?php echo isset($LANG['MPR_INSTRUCTIONS']) ?$LANG['MPR_INSTRUCTIONS']: 'Click once to capture coordinates. Click on the submit button to transfer coordinates.' ?>
+				<?= $LANG['MPR_INSTRUCTIONS'] ?>
 			</div>
 			<div>
-				<b> <?php echo isset($LANG['MPR_LAT'])? $LANG['MPR_LAT']: 'Latitude' ?>:
-				</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="latbox" size="13" name="lat" value="<?php echo $latDef; ?>" />&nbsp;&nbsp;&nbsp;
+				<b> <?= $LANG['MPR_LAT'] ?>:
+				</b>&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" id="latbox" size="13" name="lat" value="<?= $latDef; ?>" />&nbsp;&nbsp;&nbsp;
 				<b>
-					<?php echo isset($LANG['MPR_LNG'])? $LANG['MPR_LNG']: 'Longitude' ?>:
-				</b> <input type="text" id="lngbox" size="13" name="lon" value="<?php echo $lngDef; ?>" />
-				<input type="submit" name="addcoords" value="<?php echo isset($LANG['SUBMIT'])? $LANG['SUBMIT']: 'Submit'?>" onclick="updateParentForm();" />&nbsp;&nbsp;&nbsp;
+					<?= $LANG['MPR_LNG'] ?>:
+				</b> <input type="text" id="lngbox" size="13" name="lon" value="<?= $lngDef; ?>" />
+				<input type="submit" name="addcoords" value="<?= $LANG['SUBMIT'] ?>" onclick="updateParentForm();" />&nbsp;&nbsp;&nbsp;
 			</div>
 		</div>
 		<div id='map_canvas'></div>

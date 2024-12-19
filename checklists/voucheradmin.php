@@ -276,7 +276,7 @@ if($clid && $isEditor){
 				<li><a href="vaconflicts.php?clid=<?= $clid . '&pid=' . $pid . '&start=' . $startPos; ?>"><span><?= $LANG['VOUCHCONF'];?></span></a></li>
 				<?php
 				if($clManager->getAssociatedExternalService()) echo '<li><a href="externalvouchers.php?clid=' . $clid . '&pid=' . $pid . '"><span>' . $LANG['EXTERNALVOUCHERS'] . '</span></a></li>';
-				if($clManager->hasVoucherProjects()) echo '<li><a href="imgvouchertab.php?clid=' . $clid . '">' . (isset($LANG['ADDIMGV'])?$LANG['ADDIMGV']:'Add Image Voucher') . '</a></li>';
+				if($clManager->hasVoucherProjects()) echo '<li><a href="imgvouchertab.php?clid=' . $clid . '">' . $LANG['ADDIMGV'] . '</a></li>';
 				?>
 				<li><a href="#reportDiv"><span><?= $LANG['REPORTS'] ?></span></a></li>
 			</ul>
