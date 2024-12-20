@@ -80,7 +80,7 @@ if($isEditor){
 							<input type="hidden" name="<?php echo $tid; ?>" id="v-<?php echo $taxonWithDashes; ?>">
 							<span class="view-specimen-span printoff">
 								<a style="text-decoration: none;" onclick="retrieveVoucherInfo('<?php echo $taxonWithDashes; ?>')">
-									<?php echo (isset($LANG['LOOKUPEXT'])?$LANG['LOOKUPEXT']:'Lookup external vouchers'); ?>
+									<?= $LANG['LOOKUPEXT']; ?>
 								</a>
 							</span>
 							<span id="r-<?php echo $taxonWithDashes; ?>"></span>
