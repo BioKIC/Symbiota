@@ -888,6 +888,10 @@ img.editimg {
 	width:			15px;
 }
 
+img[id^="activeimg-"] {
+	max-width: unset;
+}
+
 table { 
 	font-family: 	Arial, Helvetica, sans-serif; 
 }
