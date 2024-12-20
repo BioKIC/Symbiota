@@ -466,20 +466,20 @@ $traitArr = $indManager->getTraitArr();
 							</div>
 							<?php
 						}
-						if($occArr['occurrenceid']){
-							?>
-							<div id="occurrenceid-div" class="bottom-breathing-room-rel-sm">
-								<?php
-								echo '<label>'.$LANG['OCCURRENCE_ID'].': </label>';
-								$resolvableGuid = false;
-								if(substr($occArr['occurrenceid'],0,4) == 'http') $resolvableGuid = true;
-								if($resolvableGuid) echo '<a href="' . $occArr['occurrenceid'] . '" target="_blank">';
-								echo $occArr['occurrenceid'];
-								if($resolvableGuid) echo '</a>';
-								?>
-							</div>
+						?>
+						<div id="occurrenceid-div" class="bottom-breathing-room-rel-sm">
 							<?php
-						}
+							echo '<label>'.$LANG['OCCURRENCE_ID'].': </label>';
+							$resolvableGuid = false;
+							if(substr($occArr['occurrenceid'],0,4) == 'http') $resolvableGuid = true;
+							if($resolvableGuid) echo '<a href="' . $occArr['occurrenceid'] . '" target="_blank">';
+							if(isset($occArr['occurrenceid'])){
+								echo $occArr['occurrenceid'];
+							}
+							if($resolvableGuid) echo '</a>';
+							?>
+						</div>
+						<?php
 						if($occArr['othercatalognumbers']){
 							?>
 							<div id="assoccatnum-div" class="assoccatnum-div bottom-breathing-room-rel-sm">
@@ -1091,9 +1091,6 @@ $traitArr = $indManager->getTraitArr();
 							if($rightsStr) echo $rightsStr;
 							else echo '<a href="../../includes/usagepolicy.php">' . $LANG['USAGE_POLICY'] . '</a>';
 							?>
-						</div>
-						<div id="record-id-div" style="margin:3px 0px;">
-							<?php echo '<label>'.$LANG['RECORD_ID'].': </label>'.$occArr['recordid']; ?>
 						</div>
 						<?php
 						if(isset($occArr['source'])){
