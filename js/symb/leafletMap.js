@@ -132,7 +132,8 @@ class LeafletMap {
 
       var macro_strat = L.tileLayer('https://macrostrat.org/api/v2/maps/burwell/emphasized/{z}/{x}/{y}/tile.png', {
          displayRetina:true,
-         attribution: 'Map data: &copy; <a href="https://macrostrat.org/#about">Macrostrat</a> (<a href="http://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>)'
+		 opacity: .50,
+         attribution: 'Map data: &copy; <a href="https://macrostrat.org/#about">Macrostrat</a> (<a href="http://creativecommons.org/licenses/by/4.0/">CC-BY-4.0</a>)',
       });
 
       const openTopoLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
@@ -142,14 +143,16 @@ class LeafletMap {
       });
 
       if(map_options.layer_control !== false) {
-         L.control.layers({
-            "Terrain": terrainLayer,
-            "Basic": basicLayer,
-            "Topo": openTopoLayer,
-            "Satellite": Esri_WorldImagery,
-            "Macrostrat": macro_strat,
-            //"Satellite": satelliteLayer,
-         }).addTo(this.mapLayer);
+			const layers = {
+				"Terrain": terrainLayer,
+				"Basic": basicLayer,
+				"Topo": openTopoLayer,
+				"Satellite": Esri_WorldImagery,
+			};
+			const overlays = {
+				"Macro Strat": L.layerGroup([macro_strat])
+			}
+         L.control.layers(layers, overlays).addTo(this.mapLayer);
       }
 
       if(map_options.scale !== false) {
