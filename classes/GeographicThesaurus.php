@@ -775,7 +775,7 @@ class GeographicThesaurus extends Manager {
 		}
 	}
 
-	public function searchGeothesaurus(string $geoterm, int|null $geolevel = null, string|null $parent = null, bool $distict_geoterms = false): array {
+	public function searchGeothesaurus(string $geoterm, $geolevel = null, $parent = null, bool $distict_geoterms = false) {
 
 		if (!empty($parent))
 			$parent = $this->findAcceptedGeoTerm($parent);
