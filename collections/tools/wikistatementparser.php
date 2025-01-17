@@ -287,7 +287,7 @@ if(!file_exists('./config/symbini.php')) {
 	}
 
 	if(isset($GLOBALS['SYMB_UID'])) {
-		$taxon_names  =get_taxon_names(); 
+		$taxon_names = get_taxon_names(); 
 		$count = 0;
 
 		$maxCount = count($taxon_names);
@@ -311,22 +311,25 @@ if(!file_exists('./config/symbini.php')) {
 
 			$count++;
 
+			//If no synonym hits check wikipedia for main name 
+			// Does This Need to change? 
+			if(!statements) $statements = getWikipediaStatements($taxon['sciname']);
+
+			//If no main name wikipedia hits check synonyms 
+			// Make sure taxadescrprofile has the Id as Wikipedia
+			if(!$statements) {
+				foreach($taxon['synonyms'] as $synonym) {
+					$statements = getWikipediaStatements($synonym);
+					if($statements) {
+						insertStatements(2 , $tid, "Wikipedia Description", $statements, MySQLiConnectionFactory::getCon("write"));
+						break;
+					};
+				}
+			} else {
+				insertStatements(2 , $tid, "Wikipedia Description", $statements, MySQLiConnectionFactory::getCon("write"));
+			}
+
 			echo progress_bar($count, $maxCount);
-
-
-			/* No Wikipedia statements for now
-	  //If no synonym hits check wikipedia for main name 
-	  if(!$statements) $statements = getWikipediaStatements($taxon['sciname']);
-
-	  //If no main name wikipedia hits check synonyms 
-	  if(!$statements) {
-		 foreach($taxon['synonyms'] as $synonym) {
-			$statements = getWikipediaStatements($synonym);
-			if($statements) break;
-		 }
-	  } else {
-		 //insertStatements(2 , $tid, "Wikipedia Description", $statements, $conn);
-	  }*/
 		};
 	} else {
 		echo "Cannot run script because there is no user id available";
