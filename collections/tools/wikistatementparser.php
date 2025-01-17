@@ -313,7 +313,7 @@ if(!file_exists('./config/symbini.php')) {
 
 			//If no synonym hits check wikipedia for main name 
 			// Does This Need to change? 
-			if(!statements) $statements = getWikipediaStatements($taxon['sciname']);
+			if(!$statements) $statements = getWikipediaStatements($taxon['sciname']);
 
 			//If no main name wikipedia hits check synonyms 
 			// Make sure taxadescrprofile has the Id as Wikipedia
