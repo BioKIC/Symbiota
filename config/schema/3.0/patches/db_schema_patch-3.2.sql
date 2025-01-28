@@ -190,6 +190,19 @@ ALTER TABLE `kmdescr`
   ADD CONSTRAINT `FK_descr_cs`  FOREIGN KEY (`cid` , `cs`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_descr_tid`  FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
+#Adjust FK to restrict deletion of record upon deletion of either internal occurrence or createdBy/modifiedBy users  
+ALTER TABLE `omoccurassociations`
+  DROP FOREIGN KEY `FK_occurassoc_occidassoc`,
+  DROP FOREIGN KEY `FK_occurassoc_uidcreated`,
+  DROP FOREIGN KEY `FK_occurassoc_uidmodified`;
+
+ALTER TABLE `omoccurassociations`
+  ADD CONSTRAINT `FK_occurassoc_occidassoc` FOREIGN KEY (`occidAssociate`) REFERENCES `omoccurrences` (`occid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+  ADD CONSTRAINT `FK_occurassoc_uidcreated` FOREIGN KEY (`createdUid`) REFERENCES `users` (`uid`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+  ADD CONSTRAINT `FK_occurassoc_uidmodified` FOREIGN KEY (`modifiedUid`) REFERENCES `users` (`uid`) ON UPDATE RESTRICT ON DELETE RESTRICT;
+
+
+
 
 #occurrence access tables
 ALTER TABLE `omoccuraccess` ENGINE=InnoDB;
