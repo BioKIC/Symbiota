@@ -55,8 +55,12 @@ $LANG['MAT_SAMPLE_ADDED'] = 'Échantillon de matériau ajouté';
 $LANG['DETERMINATION_ADDED'] = 'Détermination ajoutée';
 $LANG['CHOOSE_FILE'] = 'Choisir un fichier';
 $LANG['HOME'] = 'Accueil';
+$LANG['IDENTIFIERS'] = 'Identifiants';
+$LANG['IDENTIFIER_ADDED'] = 'Identifiant ajouté';
+$LANG['IDENTIFIER_UPDATE_OR_DELETE'] = 'Mettre à jour les identifiants avec l\'occurrenceID, le catalogNUmber ou un otherCatalogNumber plus l\'identifiantName';
+$LANG['IDENTIFIER_UPDATED'] = 'Identifiant mis à jour';
+$LANG['ACTION'] = 'Action';
+$LANG['BATCH_ADD_OR_UPDATE'] = 'Ajout ou mise à jour par lots';
 $LANG['AUDIO_UPLOAD'] = 'Téléchargement audio';
 $LANG['IMAGE_UPLOAD'] = 'Téléchargement d\'images';
 $LANG['MEDIA_UPLOAD_TYPE'] = 'Type de téléchargement multimédia';
-
-?>
