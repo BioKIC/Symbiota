@@ -834,7 +834,10 @@ class TaxonomyUpload{
 		}while($loopCnt < 30);
 
 		$this->outputMsg('House cleaning... ');
-		TaxonomyUtil::buildHierarchyEnumTree($this->conn, $this->taxAuthId);
+		$enumTreeStatus = TaxonomyUtil::buildHierarchyEnumTree($this->conn, $this->taxAuthId);
+		if (is_string($enumTreeStatus)) {
+			$this->outputMsg($enumTreeStatus);
+		}
 
 		//Update occurrences with new tids
 		$occurMaintenance = new OccurrenceMaintenance($this->conn);
