@@ -77,7 +77,7 @@ class DwcArchiverCore extends Manager{
 		$this->condAllowArr = array(
 			'catalognumber', 'othercatalognumbers', 'occurrenceid', 'family', 'sciname', 'country', 'stateprovince', 'county', 'municipality',
 			'recordedby', 'recordnumber', 'eventdate', 'decimallatitude', 'decimallongitude', 'minimumelevationinmeters', 'maximumelevationinmeters', 'cultivationstatus',
-			'datelastmodified', 'dateentered', 'processingstatus', 'dbpk'
+			'datelastmodified', 'dateentered', 'processingstatus', 'dbpk', 'traitid', 'stateid'
 		);
 
 		$this->securityArr = array(
@@ -1676,6 +1676,7 @@ class DwcArchiverCore extends Manager{
 			//$dwcOccurManager->setUpperTaxonomy();
 			$dwcOccurManager->setTaxonRank();
 		}
+
 		if ($rs = $this->dataConn->query($sql, MYSQLI_USE_RESULT)) {
 			$this->setServerDomain();
 			$urlPathPrefix = $this->serverDomain . $GLOBALS['CLIENT_ROOT'] . (substr($GLOBALS['CLIENT_ROOT'], -1) == '/' ? '' : '/');
