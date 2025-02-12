@@ -68,4 +68,5 @@ $LANG['NOT_AUTH'] = 'No está autorizado a ver este conjunto de datos';
 $LANG['DS_NOT_IDENTIFIED'] = 'ERROR: ID del conjunto de datos no identificado';
 
 $LANG['DROP_ICON'] = 'Icono de Colocación';
-?>
+$LANG['PAGE'] = 'Pagina';
+$LANG['OF'] = 'de';

@@ -68,4 +68,5 @@ $LANG['NOT_AUTH'] = 'Vous n\'êtes pas autorisé à consulter cet ensemble de do
 $LANG['DS_NOT_IDENTIFIED'] = 'ERREUR : identifiant de l\'ensemble de données non identifié';
 
 $LANG['DROP_ICON'] = 'Déposer l\'icône';
-?>
+$LANG['PAGE'] = 'Page';
+$LANG['OF'] = 'sur';
