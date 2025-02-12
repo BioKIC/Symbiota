@@ -2,7 +2,9 @@ INSERT INTO `schemaversion` (versionnumber) values ("3.1");
 
 ALTER TABLE `ctcontrolvocab` 
   ADD COLUMN `filterVariable` VARCHAR(150) NOT NULL DEFAULT '' AFTER `fieldName`,
-  DROP INDEX `UQ_ctControlVocab` ,
+  DROP INDEX `UQ_ctControlVocab`;
+
+ALTER TABLE `ctcontrolvocab` 
   ADD UNIQUE INDEX `UQ_ctControlVocab` (`title` ASC, `tableName` ASC, `fieldName` ASC, `filterVariable` ASC);
 
 INSERT INTO `ctcontrolvocab`(title, tableName, fieldName, filterVariable)
@@ -39,12 +41,17 @@ ALTER TABLE `fmchklstcoordinates`
 
 
 -- Ensure these older tables are innoDB
-ALTER TABLE `geographicpolygon` ENGINE = InnoDB;
-ALTER TABLE `geographicthesaurus`  ENGINE = InnoDB;
+ALTER TABLE `geographicpolygon` 
+  ENGINE = InnoDB;
 
-ALTER TABLE `geographicpolygon` MODIFY COLUMN footprintPolygon geometry NOT NULL;
+ALTER TABLE `geographicthesaurus` 
+  ENGINE = InnoDB;
+
+ALTER TABLE `geographicpolygon` 
+  MODIFY COLUMN footprintPolygon geometry NOT NULL;
 
 DROP PROCEDURE IF EXISTS `insertGeographicPolygon`;
+
 DROP PROCEDURE IF EXISTS `updateGeographicPolygon`;
 
 DELIMITER |
@@ -87,7 +94,9 @@ UPDATE `omoccurassociations`
   WHERE instanceID IS NULL AND sourceIdentifier IS NOT NULL;
 
 ALTER TABLE `omoccurassociations` 
-  DROP INDEX `UQ_omoccurassoc_sciname` ,
+  DROP INDEX `UQ_omoccurassoc_sciname`;
+  
+ALTER TABLE `omoccurassociations` 
   ADD UNIQUE INDEX `UQ_omoccurassoc_sciname` (`occid` ASC, `verbatimSciname` ASC, `associationType` ASC);
 
 ALTER TABLE `omoccurassociations` 

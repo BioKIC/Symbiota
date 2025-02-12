@@ -83,14 +83,20 @@ class ProfileManager extends Manager{
 	private function authenticateUsingToken(){
 		$status = false;
 		if($this->token){
-			$sql = 'SELECT u.uid, u.firstname, u.username FROM users u INNER JOIN useraccesstokens t ON u.uid = t.uid WHERE (t.token = ?) AND ((u.username = ?) OR (u.email = ?)) ';
-			if($stmt = $this->conn->prepare($sql)){
-				if($stmt->bind_param('sss', $this->token, $this->userName, $this->userName)){
-					$stmt->execute();
-					$stmt->bind_result($this->uid, $this->displayName, $this->userName);
-					if($stmt->fetch()) $status = true;
-					$stmt->close();
+			try{
+				$sql = 'SELECT u.uid, u.firstname, u.username FROM users u INNER JOIN useraccesstokens t ON u.uid = t.uid WHERE (t.token = ?) AND ((u.username = ?) OR (u.email = ?)) ';
+				if($stmt = $this->conn->prepare($sql)){
+					if($stmt->bind_param('sss', $this->token, $this->userName, $this->userName)){
+						$stmt->execute();
+						$stmt->bind_result($this->uid, $this->displayName, $this->userName);
+						if($stmt->fetch()) $status = true;
+						$stmt->close();
+					}
 				}
+			}
+			catch(Exception $e){
+				//Probably a new installation and schema does not yet exists, thus just catch error and let schema manager handle the issue
+				//echo $e->getMessage();
 			}
 		}
 		return $status;

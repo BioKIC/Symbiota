@@ -1,7 +1,7 @@
 <?php
 include_once('../config/symbini.php');
 include_once($SERVER_ROOT.'/classes/SchemaManager.php');
-header("Content-Type: text/html; charset=".$CHARSET);
+header('Content-Type: text/html; charset=' . $CHARSET);
 
 $username = isset($_POST['username']) ? $_POST['username'] : '';
 $schemaCode = isset($_POST['schemaCode']) ? $_POST['schemaCode'] : '';
@@ -14,8 +14,16 @@ $port = MySQLiConnectionFactory::$SERVERS[0]['port'];
 $schemaManager = new SchemaManager();
 $verHistory = $schemaManager->getVersionHistory();
 $curentVersion = $schemaManager->getCurrentVersion();
+$isNewInstall = false;
+if(!$curentVersion) $isNewInstall = true;
+elseif(isset($verHistory['3.0'])){
+	if(strpos($verHistory['3.0'], date('Y-m-d')) === 0) $isNewInstall = true;
+}
+elseif(isset($verHistory['1.0'])){
+	if(strpos($verHistory['1.0'], date('Y-m-d')) === 0) $isNewInstall = true;
+}
 
-if(!$IS_ADMIN && $curentVersion) header('Location: ../profile/index.php?refurl=../admin/schemamanager.php');
+if(!$IS_ADMIN && !$isNewInstall) header('Location: ../profile/index.php?refurl=../admin/schemamanager.php');
 ?>
 <html lang="en">
 	<head>
@@ -39,7 +47,7 @@ if(!$IS_ADMIN && $curentVersion) header('Location: ../profile/index.php?refurl=.
 		<div role="main" id="innertext">
 			<h1>Database Schema Manager</h1>
 			<?php
-			if($IS_ADMIN || !$curentVersion){
+			if($IS_ADMIN || $isNewInstall){
 				if($action){
 					?>
 					<fieldset>

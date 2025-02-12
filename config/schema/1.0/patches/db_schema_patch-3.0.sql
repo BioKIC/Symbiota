@@ -30,8 +30,8 @@ ALTER TABLE `agents`
   ADD INDEX `IX_agents_firstname` (`firstName` ASC);
 
 ALTER TABLE `agents` 
-  ADD INDEX `FK_agents_preferred_recby_idx` (`preferredRecByID` ASC),
-  DROP INDEX `FK_agents_preferred_recby`;
+  DROP INDEX `FK_agents_preferred_recby`,
+  ADD INDEX `FK_agents_preferred_recby_idx` (`preferredRecByID` ASC);
 
 CREATE TABLE `agentoccurrencelink` (
   `agentID` BIGINT(20) NOT NULL,
@@ -267,7 +267,7 @@ ALTER TABLE `geographicthesaurus`
   DROP FOREIGN KEY `FK_geothes_parentID`;
 
 ALTER TABLE `geographicthesaurus` 
-ADD CONSTRAINT `FK_geothes_parentID`  FOREIGN KEY (`parentID`)  REFERENCES `geographicthesaurus` (`geoThesID`)  ON DELETE RESTRICT  ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_geothes_parentID`  FOREIGN KEY (`parentID`)  REFERENCES `geographicthesaurus` (`geoThesID`)  ON DELETE RESTRICT  ON UPDATE CASCADE;
 
 ALTER TABLE `geographicthesaurus` 
   ADD UNIQUE INDEX `UQ_geothes` (`geoterm` ASC, `parentID` ASC);

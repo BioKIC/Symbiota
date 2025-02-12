@@ -203,8 +203,11 @@ ALTER TABLE `kmdescr`
 
 
 #occurrence access tables
-ALTER TABLE `omoccuraccess` ENGINE=InnoDB;
-ALTER TABLE `omoccuraccesslink` ENGINE=InnoDB;
+ALTER TABLE `omoccuraccess`
+  ENGINE=InnoDB;
+
+ALTER TABLE `omoccuraccesslink`
+  ENGINE=InnoDB;
 
 # Drop old deprecated tables to save space, following statemetns will do if this was not originally a 1.0 install
 DROP TABLE IF EXISTS `deprecated_adminstats`;
@@ -347,22 +350,22 @@ ALTER TABLE `imagetag`
 
 # Recreate indexes and foreign keys to imagekeywords table
 ALTER TABLE `imagekeywords`
-  ADD KEY `FK_imagekeywords_keyword` (`keyword`),
-  ADD KEY `FK_imagekeywords_mediaID_idx` (`mediaID`),
-  ADD KEY `FK_imagekeywords_uid_idx` (`uidAssignedBy`),
+  ADD INDEX `FK_imagekeywords_keyword` (`keyword`),
+  ADD INDEX `FK_imagekeywords_mediaID_idx` (`mediaID`),
+  ADD INDEX `FK_imagekeywords_uid_idx` (`uidAssignedBy`),
   ADD CONSTRAINT `FK_imagekeywords_uid` FOREIGN KEY (`uidAssignedBy`) REFERENCES `users` (`uid`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_imagekeywords_mediaID` FOREIGN KEY (`mediaID`) REFERENCES `media` (`mediaID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 # Recreate indexes and foreign keys to specprocessorrawlabels table
 ALTER TABLE `specprocessorrawlabels`
-  ADD KEY `FK_specproclabels_media_idx` (`mediaID`),
-  ADD KEY `FK_specproclabels_occid_idx` (`occid`),
+  ADD INDEX `FK_specproclabels_media_idx` (`mediaID`),
+  ADD INDEX `FK_specproclabels_occid_idx` (`occid`),
   ADD CONSTRAINT `FK_specproclabels_occid` FOREIGN KEY (`occid`) REFERENCES `omoccurrences` (`occid`)  ON UPDATE CASCADE  ON DELETE CASCADE,
   ADD CONSTRAINT `FK_specproclabels_media` FOREIGN KEY (`mediaID`) REFERENCES `media` (`mediaID`)  ON UPDATE CASCADE  ON DELETE CASCADE;
 
 # Recreate indexes and foreign keys to tmattributes table
 ALTER TABLE `tmattributes`
-  ADD KEY `FK_tmattr_mediaID_idx` (`mediaID`),
+  ADD INDEX `FK_tmattr_mediaID_idx` (`mediaID`),
   ADD CONSTRAINT `FK_tmattr_mediaID` FOREIGN KEY (`mediaID`) REFERENCES `media` (`mediaID`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 
@@ -520,7 +523,9 @@ ALTER TABLE `omoccuridentifiers`
   CHANGE COLUMN `initialtimestamp` `initialTimestamp` TIMESTAMP NOT NULL DEFAULT current_timestamp() AFTER `modifiedTimestamp`,
   DROP INDEX `UQ_omoccuridentifiers`,
   ADD UNIQUE INDEX `UQ_omoccuridentifiers` (`occid`, `identifierValue`, `identifierName`),
-  DROP INDEX `IX_omoccuridentifiers_value`,
+  DROP INDEX `IX_omoccuridentifiers_value`;
+
+ALTER TABLE `omoccuridentifiers`
   ADD INDEX `IX_omoccuridentifiers_value` (`identifierValue`);
 
 # Occurrence table adjustments
@@ -600,4 +605,5 @@ CREATE TABLE `uploadkeyvaluetemp`(
   CONSTRAINT `FK_uploadKeyValue_collid` FOREIGN KEY (`collid`) REFERENCES `omcollections` (`collID`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `FK_uploadKeyValue_uid` FOREIGN KEY (`uploadUid`) REFERENCES `users` (`uid`) ON DELETE CASCADE ON UPDATE CASCADE);
 
-ALTER TABLE uploadimagetemp ADD COLUMN mediaType varchar(45);
+ALTER TABLE uploadimagetemp
+  ADD COLUMN mediaType varchar(45);

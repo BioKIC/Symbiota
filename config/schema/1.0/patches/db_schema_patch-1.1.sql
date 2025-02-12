@@ -22,10 +22,8 @@ CREATE TABLE `tmtraits` (
   INDEX `traitsname` (`traitname` ASC),
   INDEX `FK_traits_uidcreated_idx` (`createduid` ASC),
   INDEX `FK_traits_uidmodified_idx` (`modifieduid` ASC),
-  CONSTRAINT `FK_traits_uidcreated`
-    FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
-  CONSTRAINT `FK_traits_uidmodified`
-    FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE);
+  CONSTRAINT `FK_traits_uidcreated`  FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
+  CONSTRAINT `FK_traits_uidmodified`  FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE);
 
 CREATE TABLE `tmstates` (
   `stateid` INT UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -44,12 +42,9 @@ CREATE TABLE `tmstates` (
   UNIQUE INDEX `traitid_code_UNIQUE` (`traitid` ASC, `statecode` ASC),
   INDEX `FK_tmstate_uidcreated_idx` (`createduid` ASC),
   INDEX `FK_tmstate_uidmodified_idx` (`modifieduid` ASC),
-  CONSTRAINT `FK_tmstates_uidcreated`
-    FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmstates_uidmodified`
-    FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmstates_traits`
-    FOREIGN KEY (`traitid`)   REFERENCES `tmtraits` (`traitid`)   ON DELETE RESTRICT   ON UPDATE CASCADE);
+  CONSTRAINT `FK_tmstates_uidcreated`  FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmstates_uidmodified`  FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmstates_traits`  FOREIGN KEY (`traitid`)   REFERENCES `tmtraits` (`traitid`)   ON DELETE RESTRICT   ON UPDATE CASCADE);
 
 CREATE TABLE `tmattributes` (
   `stateid` INT UNSIGNED NOT NULL,
@@ -71,16 +66,11 @@ CREATE TABLE `tmattributes` (
   INDEX `FK_tmattr_imgid_idx` (`imgid` ASC),
   INDEX `FK_attr_uidcreate_idx` (`createduid` ASC),
   INDEX `FK_tmattr_uidmodified_idx` (`modifieduid` ASC),
-  CONSTRAINT `FK_tmattr_stateid`
-    FOREIGN KEY (`stateid`)   REFERENCES `tmstates` (`stateid`)   ON DELETE CASCADE   ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmattr_occid`
-    FOREIGN KEY (`occid`)   REFERENCES `omoccurrences` (`occid`)   ON DELETE CASCADE   ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmattr_imgid`
-    FOREIGN KEY (`imgid`)  REFERENCES `images` (`imgid`)  ON DELETE SET NULL  ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmattr_uidcreate`
-    FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
-  CONSTRAINT `FK_tmattr_uidmodified`
-    FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE
+  CONSTRAINT `FK_tmattr_stateid`  FOREIGN KEY (`stateid`)   REFERENCES `tmstates` (`stateid`)   ON DELETE CASCADE   ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmattr_occid`  FOREIGN KEY (`occid`)   REFERENCES `omoccurrences` (`occid`)   ON DELETE CASCADE   ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmattr_imgid`  FOREIGN KEY (`imgid`)  REFERENCES `images` (`imgid`)  ON DELETE SET NULL  ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmattr_uidcreate`  FOREIGN KEY (`createduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE,
+  CONSTRAINT `FK_tmattr_uidmodified`  FOREIGN KEY (`modifieduid`)   REFERENCES `users` (`uid`)   ON DELETE SET NULL   ON UPDATE CASCADE
 );
 
 CREATE TABLE `tmtraittaxalink` (
@@ -91,10 +81,8 @@ CREATE TABLE `tmtraittaxalink` (
   PRIMARY KEY (`traitid`, `tid`),
   INDEX `FK_traittaxalink_traitid_idx` (`traitid` ASC),
   INDEX `FK_traittaxalink_tid_idx` (`tid` ASC),
-  CONSTRAINT `FK_traittaxalink_traitid`
-    FOREIGN KEY (`traitid`)  REFERENCES `tmtraits` (`traitid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
-  CONSTRAINT `FK_traittaxalink_tid`
-    FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE
+  CONSTRAINT `FK_traittaxalink_traitid`  FOREIGN KEY (`traitid`)  REFERENCES `tmtraits` (`traitid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
+  CONSTRAINT `FK_traittaxalink_tid`  FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE
 );
 
 CREATE TABLE `tmtraitdependencies` (
@@ -128,16 +116,11 @@ ALTER TABLE `omoccurassococcurrences`
   ADD INDEX `FK_occurassoc_uidcreated_idx` (`createduid` ASC);
 
 ALTER TABLE `omoccurassococcurrences` 
-  ADD CONSTRAINT `FK_occurassoc_occid`
-    FOREIGN KEY (`occid`)   REFERENCES `omoccurrences` (`occid`)    ON DELETE CASCADE    ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_occurassoc_occidassoc`
-    FOREIGN KEY (`occidassociate`)    REFERENCES `omoccurrences` (`occid`)    ON DELETE SET NULL    ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_occurassoc_tid`
-    FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE SET NULL  ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_occurassoc_uidmodified`
-    FOREIGN KEY (`modifieduid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE CASCADE,
-  ADD CONSTRAINT `FK_occurassoc_uidcreated`
-    FOREIGN KEY (`createduid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE CASCADE;
+  ADD CONSTRAINT `FK_occurassoc_occid` FOREIGN KEY (`occid`)   REFERENCES `omoccurrences` (`occid`)    ON DELETE CASCADE    ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_occurassoc_occidassoc` FOREIGN KEY (`occidassociate`)    REFERENCES `omoccurrences` (`occid`)    ON DELETE SET NULL    ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_occurassoc_tid` FOREIGN KEY (`tid`)  REFERENCES `taxa` (`TID`)  ON DELETE SET NULL  ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_occurassoc_uidmodified` FOREIGN KEY (`modifieduid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE CASCADE,
+  ADD CONSTRAINT `FK_occurassoc_uidcreated` FOREIGN KEY (`createduid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE CASCADE;
 
 ALTER TABLE `omoccurassococcurrences` 
   RENAME TO  `omoccurassociations` ;
@@ -215,13 +198,16 @@ ALTER TABLE `fmprojects`
   CHANGE COLUMN `fulldescription` `fulldescription` VARCHAR(5000) NULL DEFAULT NULL ;
 
 #Identification key
-ALTER TABLE `kmcharacterlang` DROP FOREIGN KEY `FK_characterlang_1`;
+ALTER TABLE `kmcharacterlang`
+  DROP FOREIGN KEY `FK_characterlang_1`;
+
 ALTER TABLE `kmcharacterlang` 
   ADD CONSTRAINT `FK_characterlang_1` FOREIGN KEY (`cid`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmchartaxalink` 
   DROP FOREIGN KEY `FK_chartaxalink_cid`,
   DROP FOREIGN KEY `FK_chartaxalink_tid`;
+
 ALTER TABLE `kmchartaxalink` 
   ADD CONSTRAINT `FK_chartaxalink_cid`  FOREIGN KEY (`CID`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_chartaxalink_tid`  FOREIGN KEY (`TID`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE;
@@ -229,28 +215,33 @@ ALTER TABLE `kmchartaxalink`
 ALTER TABLE `kmchardependance` 
   DROP FOREIGN KEY `FK_chardependance_cid`,
   DROP FOREIGN KEY `FK_chardependance_cs`;
+
 ALTER TABLE `kmchardependance` 
   ADD CONSTRAINT `FK_chardependance_cid`  FOREIGN KEY (`CID`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_chardependance_cs`  FOREIGN KEY (`CIDDependance` , `CSDependance`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmcsimages`
   DROP FOREIGN KEY `FK_kscsimages_kscs`;
+
 ALTER TABLE `kmcsimages` 
   ADD CONSTRAINT `FK_kscsimages_kscs`  FOREIGN KEY (`cid` , `cs`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmcs` 
   DROP FOREIGN KEY `FK_cs_chars`;
+
 ALTER TABLE `kmcs` 
   ADD CONSTRAINT `FK_cs_chars`  FOREIGN KEY (`cid`)  REFERENCES `kmcharacters` (`cid`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmcslang` 
   DROP FOREIGN KEY `FK_cslang_1`;
+
 ALTER TABLE `kmcslang` 
   ADD CONSTRAINT `FK_cslang_1`  FOREIGN KEY (`cid` , `cs`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE;
 
 ALTER TABLE `kmdescr` 
   DROP FOREIGN KEY `FK_descr_cs`,
   DROP FOREIGN KEY `FK_descr_tid`;
+
 ALTER TABLE `kmdescr` 
   ADD CONSTRAINT `FK_descr_cs`  FOREIGN KEY (`CID` , `CS`)  REFERENCES `kmcs` (`cid` , `cs`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_descr_tid`  FOREIGN KEY (`TID`)  REFERENCES `taxa` (`TID`)  ON DELETE CASCADE  ON UPDATE CASCADE;
@@ -316,30 +307,30 @@ DROP TABLE `omsurveys`;
 INSERT IGNORE INTO `adminlanguages`(langid,langname,iso639_1) 
 VALUES ('1', 'English', 'en'), ('2', 'German', 'de'), ('3', 'French', 'fr'), ('4', 'Dutch', 'nl'), ('5', 'Italian', 'it'), ('6', 'Spanish', 'es'), ('7', 'Polish', 'pl'), ('8', 'Russian', 'ru'), ('9', 'Japanese', 'ja'), ('10', 'Portuguese', 'pt'), ('11', 'Swedish', 'sv'), ('12', 'Chinese', 'zh'), ('13', 'Catalan', 'ca'), ('14', 'Ukrainian', 'uk'), ('15', 'Norwegian (Bokm�l)', 'no'), ('16', 'Finnish', 'fi'), ('17', 'Vietnamese', 'vi'), ('18', 'Czech', 'cs'), ('19', 'Hungarian', 'hu'), ('20', 'Korean', 'ko'), ('21', 'Indonesian', 'id'), ('22', 'Turkish', 'tr'), ('23', 'Romanian', 'ro'), ('24', 'Persian', 'fa'), ('25', 'Arabic', 'ar'), ('26', 'Danish', 'da'), ('27', 'Esperanto', 'eo'), ('28', 'Serbian', 'sr'), ('29', 'Lithuanian', 'lt'), ('30', 'Slovak', 'sk'), ('31', 'Malay', 'ms'), ('32', 'Hebrew', 'he'), ('33', 'Bulgarian', 'bg'), ('34', 'Slovenian', 'sl'), ('35', 'Volap�k', 'vo'), ('36', 'Kazakh', 'kk'), ('37', 'Waray-Waray', 'war'), ('38', 'Basque', 'eu'), ('39', 'Croatian', 'hr'), ('40', 'Hindi', 'hi'), ('41', 'Estonian', 'et'), ('42', 'Azerbaijani', 'az'), ('43', 'Galician', 'gl'), ('44', 'Simple English', 'simple'), ('45', 'Norwegian (Nynorsk)', 'nn'), ('46', 'Thai', 'th'), ('47', 'Newar / Nepal Bhasa', 'new'), ('48', 'Greek', 'el'), ('49', 'Aromanian', 'roa-rup'), ('50', 'Latin', 'la'), ('51', 'Occitan', 'oc'), ('52', 'Tagalog', 'tl'), ('53', 'Haitian', 'ht'), ('54', 'Macedonian', 'mk'), ('55', 'Georgian', 'ka'), ('56', 'Serbo-Croatian', 'sh'), ('57', 'Telugu', 'te'), ('58', 'Piedmontese', 'pms'), ('59', 'Cebuano', 'ceb'), ('60', 'Tamil', 'ta'), ('61', 'Belarusian (Tara�kievica)', 'be-x-old'), ('62', 'Breton', 'br'), ('63', 'Latvian', 'lv'), ('64', 'Javanese', 'jv'), ('65', 'Albanian', 'sq'), ('66', 'Belarusian', 'be'), ('67', 'Marathi', 'mr'), ('68', 'Welsh', 'cy'), ('69', 'Luxembourgish', 'lb'), ('70', 'Icelandic', 'is'), ('71', 'Bosnian', 'bs'), ('72', 'Yoruba', 'yo'), ('73', 'Malagasy', 'mg'), ('74', 'Aragonese', 'an'), ('75', 'Bishnupriya Manipuri', 'bpy'), ('76', 'Lombard', 'lmo'), ('77', 'West Frisian', 'fy'), ('78', 'Bengali', 'bn'), ('79', 'Ido', 'io'), ('80', 'Swahili', 'sw'), ('81', 'Gujarati', 'gu'), ('82', 'Malayalam', 'ml'), ('83', 'Western Panjabi', 'pnb'), ('84', 'Afrikaans', 'af'), ('85', 'Low Saxon', 'nds'), ('86', 'Sicilian', 'scn'), ('87', 'Urdu', 'ur'), ('88', 'Kurdish', 'ku'), ('89', 'Cantonese', 'zh-yue'), ('90', 'Armenian', 'hy'), ('91', 'Quechua', 'qu'), ('92', 'Sundanese', 'su'), ('93', 'Nepali', 'ne'), ('94', 'Zazaki', 'diq'), ('95', 'Asturian', 'ast'), ('96', 'Tatar', 'tt'), ('97', 'Neapolitan', 'nap'), ('98', 'Irish', 'ga'), ('99', 'Chuvash', 'cv'), ('100', 'Samogitian', 'bat-smg'), ('101', 'Walloon', 'wa'), ('102', 'Amharic', 'am'), ('103', 'Kannada', 'kn'), ('104', 'Alemannic', 'als'), ('105', 'Buginese', 'bug'), ('106', 'Burmese', 'my'), ('107', 'Interlingua', 'ia');
 
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasOrganism','Image shows an organism.','Organism',0);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasLabel','Image shows label data.','Label',10);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasIDLabel','Image shows an annotation/identification label.','Annotation',20);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('TypedText','Image has typed or printed text.','Typed/Printed',30);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('Handwriting','Image has handwritten label text.','Handwritten',40);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ShowsHabitat','Field image of habitat.','Habitat',50);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasProblem','There is a problem with this image.','QC Problem',60);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ImageOfAdult','Image contains the adult organism.','Adult',80);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('Diagnostic','Image contains a diagnostic character.','Diagnostic',70);
-INSERT into imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ImageOfImmature','Image contains the immature organism.','Immature',90);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasOrganism','Image shows an organism.','Organism',0);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasLabel','Image shows label data.','Label',10);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasIDLabel','Image shows an annotation/identification label.','Annotation',20);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('TypedText','Image has typed or printed text.','Typed/Printed',30);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('Handwriting','Image has handwritten label text.','Handwritten',40);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ShowsHabitat','Field image of habitat.','Habitat',50);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('HasProblem','There is a problem with this image.','QC Problem',60);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ImageOfAdult','Image contains the adult organism.','Adult',80);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('Diagnostic','Image contains a diagnostic character.','Diagnostic',70);
+INSERT INTO imagetagkey (tagkey,description_en,shortlabel,sortorder) values ('ImageOfImmature','Image contains the immature organism.','Immature',90);
 
-insert into ctrelationshiptypes (relationship, inverse, collective) values ('Child of', 'Parent of', 'Children');
-insert into ctrelationshiptypes (relationship, inverse, collective) values ('Student of', 'Teacher of', 'Students');
-insert into ctrelationshiptypes (relationship, inverse, collective) values ('Spouse of', 'Spouse of', 'Married to');
-insert into ctrelationshiptypes (relationship, inverse, collective) values ('Could be', 'Confused with', 'Confused with');
+INSERT INTO ctrelationshiptypes (relationship, inverse, collective) values ('Child of', 'Parent of', 'Children');
+INSERT INTO ctrelationshiptypes (relationship, inverse, collective) values ('Student of', 'Teacher of', 'Students');
+INSERT INTO ctrelationshiptypes (relationship, inverse, collective) values ('Spouse of', 'Spouse of', 'Married to');
+INSERT INTO ctrelationshiptypes (relationship, inverse, collective) values ('Could be', 'Confused with', 'Confused with');
 
-insert into ctnametypes (type) values ('Full Name');
-insert into ctnametypes (type) values ('Initials Last Name');
-insert into ctnametypes (type) values ('Last Name, Initials');
-insert into ctnametypes (type) values ('First Initials Last');
-insert into ctnametypes (type) values ('First Last');
-insert into ctnametypes (type) values ('Standard Abbreviation');
-insert into ctnametypes (type) values ('Standard DwC List');
-insert into ctnametypes (type) values ('Also Known As');
+INSERT INTO ctnametypes (type) values ('Full Name');
+INSERT INTO ctnametypes (type) values ('Initials Last Name');
+INSERT INTO ctnametypes (type) values ('Last Name, Initials');
+INSERT INTO ctnametypes (type) values ('First Initials Last');
+INSERT INTO ctnametypes (type) values ('First Last');
+INSERT INTO ctnametypes (type) values ('Standard Abbreviation');
+INSERT INTO ctnametypes (type) values ('Standard DwC List');
+INSERT INTO ctnametypes (type) values ('Also Known As');
 
 INSERT INTO `referencetype` VALUES ('1', 'Generic', null, 'Title', 'SecondaryTitle', 'PlacePublished', 'Publisher', 'Volume', 'NumberVolumes', 'Number', 'Pages', 'Section', 'TertiaryTitle', 'Edition', 'Date', 'TypeWork', 'ShortTitle', 'AlternativeTitle', 'Isbn_Issn', 'Figures', null, '2014-06-17 00:27:12');
 INSERT INTO `referencetype` VALUES ('2', 'Journal Article', null, 'Title', 'Periodical Title', null, null, 'Volume', null, 'Issue', 'Pages', null, null, null, 'Date', null, 'Short Title', 'Alt. Jour.', null, 'Figures', null, '2014-06-17 00:27:12');
@@ -438,9 +429,12 @@ ALTER TABLE `uploadtaxa`
 
 ALTER TABLE `taxa` 
   DROP COLUMN `KingdomID`,
-  DROP INDEX `sciname_unique`,
+  DROP INDEX `sciname_unique`;
+
+ALTER TABLE `taxa` 
   ADD UNIQUE INDEX `sciname_unique` (`SciName` ASC, `RankId` ASC, `Author` ASC),
   ADD INDEX `sciname_index` (`SciName` ASC);
+
 
 ALTER TABLE `taxa` 
   ADD INDEX `idx_taxa_kingdomName` (`kingdomName` ASC);
@@ -483,7 +477,7 @@ ALTER TABLE `omcollections`
   ADD CONSTRAINT `FK_collid_iid` FOREIGN KEY (`iid`) REFERENCES `institutions` (`iid`)  ON DELETE SET NULL  ON UPDATE CASCADE;
 
 ALTER TABLE `omcollectionstats`
-	MODIFY COLUMN `dynamicProperties` longtext NULL AFTER `uploadedby`;
+  MODIFY COLUMN `dynamicProperties` longtext NULL AFTER `uploadedby`;
 
 ALTER TABLE `omcollcatlink` 
   ADD COLUMN `isPrimary` TINYINT(1) NULL DEFAULT 1 AFTER `collid`;
@@ -637,7 +631,8 @@ ALTER TABLE `glossarytaxalink`
   DROP FOREIGN KEY `glossarytaxalink_ibfk_1`,
   DROP FOREIGN KEY `glossarytaxalink_ibfk_2`;
 	
-ALTER TABLE `glossarytermlink` DROP FOREIGN KEY `glossarytermlink_ibfk_1`;
+ALTER TABLE `glossarytermlink`
+  DROP FOREIGN KEY `glossarytermlink_ibfk_1`;
 
 CREATE TABLE `glossarysources` (
   `tid` int unsigned NOT NULL,
@@ -676,8 +671,10 @@ ALTER TABLE `glossarytaxalink`
 
 ALTER TABLE `glossaryimages` 
   DROP FOREIGN KEY `FK_glossaryimages_gloss`;
+
 ALTER TABLE `glossaryimages` 
   ADD INDEX `FK_glossaryimages_uid_idx` (`uid` ASC);
+
 ALTER TABLE `glossaryimages` 
   ADD CONSTRAINT `FK_glossaryimages_glossid` FOREIGN KEY (`glossid`)  REFERENCES `glossary` (`glossid`)  ON DELETE CASCADE  ON UPDATE CASCADE,
   ADD CONSTRAINT `FK_glossaryimages_uid`  FOREIGN KEY (`uid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE SET NULL;
@@ -687,6 +684,7 @@ ALTER TABLE `glossarysources`
 
 ALTER TABLE `glossary` 
   ADD INDEX `FK_glossary_uid_idx` (`uid` ASC);
+
 ALTER TABLE `glossary` 
   ADD CONSTRAINT `FK_glossary_uid`  FOREIGN KEY (`uid`)  REFERENCES `users` (`uid`)  ON DELETE SET NULL  ON UPDATE SET NULL;
 

@@ -383,7 +383,9 @@ WHERE v.langid IS NULL;
 
 ALTER TABLE `taxavernaculars` 
   CHANGE COLUMN `Language` `Language` VARCHAR(15) NULL ,
-  DROP INDEX `unique-key` ,
+  DROP INDEX `unique-key`;
+
+ALTER TABLE `taxavernaculars` 
   ADD UNIQUE INDEX `unique-key` (`VernacularName` ASC, `TID` ASC, `langid` ASC);
 
 ALTER TABLE `taxaresourcelinks` 
@@ -634,7 +636,9 @@ ALTER TABLE `uploadtaxa`
   CHANGE COLUMN `UnitInd3` `UnitInd3` VARCHAR(45) NULL DEFAULT NULL ;
 
 ALTER TABLE `uploadtaxa` 
-  DROP INDEX `UNIQUE_sciname` ,
+  DROP INDEX `UNIQUE_sciname`;
+
+ALTER TABLE `uploadtaxa` 
   ADD UNIQUE INDEX `UNIQUE_sciname` (`SciName` ASC, `RankId` ASC, `Author` ASC, `AcceptedStr` ASC);
 
 
