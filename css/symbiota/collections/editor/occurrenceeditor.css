@@ -829,6 +829,10 @@ fieldset{
 	clear:both;
 }
 
+.bottom-breathing-room-rel {
+	margin-bottom: 1rem;
+}
+
 /* Paleo fields */
 #eonDiv{ float:left; margin:3px; }
 #eraDiv{ float:left; margin:3px; }
@@ -858,6 +862,34 @@ fieldset{
 #geologicalContextIdDiv input{ width:120px; }
 
 /* Button Controls */
+
+.button {
+	background-color: var(--darkest-color);
+	border: none;
+	border-radius: 5px;
+	padding: 0.5rem 1rem;
+	font-family: var(--body-font-family);
+	letter-spacing: 1px;
+	text-align: center;
+	cursor: pointer;
+	transition: all 0.2s ease-in-out;
+	width: fit-content;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+  }
+
+  .icon-button {
+	padding: 6px;
+	border-width: 1px;
+	border-style: outset;
+	border-color: buttonborder;
+  }
+  
+  .button-primary {
+	background-color: var(--darkest-color);
+  }
+
 #bottomSubmitDiv{
 	padding:10px;
 }

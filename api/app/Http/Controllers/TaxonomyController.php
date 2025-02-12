@@ -31,7 +31,7 @@ class TaxonomyController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="offset",
 	 *		 in="query",
-	 *		 description="Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+	 *		 description="Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
 	 *		 required=false,
 	 *		 @OA\Schema(type="integer", default=0)
 	 *	 ),
@@ -76,7 +76,7 @@ class TaxonomyController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="taxon",
 	 *		 in="query",
-	 *		 description="Taxon searh term",
+	 *		 description="Taxon search term",
 	 *		 required=true,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
@@ -101,7 +101,7 @@ class TaxonomyController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="offset",
 	 *		 in="query",
-	 *		 description="Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+	 *		 description="Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
 	 *		 required=false,
 	 *		 @OA\Schema(type="integer", default=0)
 	 *	 ),
@@ -241,7 +241,7 @@ class TaxonomyController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="offset",
 	 *		 in="query",
-	 *		 description="Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+	 *		 description="Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
 	 *		 required=false,
 	 *		 @OA\Schema(type="integer", default=0)
 	 *	 ),
@@ -282,4 +282,24 @@ class TaxonomyController extends Controller{
 		return response()->json($retObj);
 	}
 
+	//Support functions
+	public static function getSynonyms(Int $tid){
+		$synonymResult = DB::table('taxstatus as ts')
+		->join('taxstatus as s', 'ts.tidaccepted', '=', 's.tidaccepted')
+		->where('ts.tid', $tid)->where('ts.taxauthid', 1)->where('s.taxauthid', 1)->pluck('s.tid');
+		return $synonymResult->toArray();
+	}
+
+	public static function getChildren(Int $tid){
+		//Direct accepted children only
+		$childrenResult = DB::table('taxstatus as c')
+		->join('taxstatus as a', 'c.parenttid', '=', 'a.tidaccepted')
+		->where('a.tid', $tid)->where('c.taxauthid', 1)->where('a.taxauthid', 1)->whereColumn('c.tid', 'c.tidaccepted')->pluck('c.tid');
+		/*
+		SELECT c.tid
+		FROM taxstatus c INNER JOIN taxstatus a ON c.parenttid = a.tidaccepted
+		WHERE a.tid = 61943 AND c.taxauthid = 1 AND a.taxauthid = 1 AND c.tid = c.tidaccepted;
+		*/
+		return $childrenResult->toArray();
+	}
 }

@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Media;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Http\Controllers\TaxonomyController;
 
 class MediaController extends Controller{
 
@@ -34,9 +36,44 @@ class MediaController extends Controller{
 	 *	 path="/api/v2/media",
 	 *	 operationId="showAllMedia",
 	 *	 tags={""},
+	 *	 @OA\Parameter(
+	 *		 name="tid",
+	 *		 in="query",
+	 *		 description="Display media filtered by target taxon ID (PK key of taxon)",
+	 *		 required=false,
+	 *		 @OA\Schema(type="integer")
+	 *	 ),
+	 *	 @OA\Parameter(
+	 *		 name="includeSynonyms",
+	 *		 in="query",
+	 *		 description="Include media linked to synonyms of target taxon (0 = false, 1 = true)",
+	 *		 required=false,
+	 *		 @OA\Schema(type="integer", default=0)
+	 *	 ),
+	 *	 @OA\Parameter(
+	 *		 name="includeChildren",
+	 *		 in="query",
+	 *		 description="Include media linked to direct children of target taxon (0 = false, 1 = true)",
+	 *		 required=false,
+	 *		 @OA\Schema(type="integer", default=0)
+	 *	 ),
+	 *	 @OA\Parameter(
+	 *		 name="limit",
+	 *		 in="query",
+	 *		 description="Controls the number of results in the page.",
+	 *		 required=false,
+	 *		 @OA\Schema(type="integer", default=100)
+	 *	 ),
+	 *	 @OA\Parameter(
+	 *		 name="offset",
+	 *		 in="query",
+	 *		 description="Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
+	 *		 required=false,
+	 *		 @OA\Schema(type="integer", default=0)
+	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="200",
-	 *		 description="Returns list of media records",
+	 *		 description="Success: Returns list of media records",
 	 *		 @OA\JsonContent()
 	 *	 ),
 	 *	 @OA\Response(
@@ -45,8 +82,44 @@ class MediaController extends Controller{
 	 *	 ),
 	 * )
 	 */
-	public function showAllMedia(){
-		return response()->json(Media::skip(0)->take(100)->get());
+	public function showAllMedia(Request $request){
+
+		$this->validate($request, [
+			'tid' => 'integer',
+			'includeSynonyms' => 'integer',
+			'includeChildren' => 'integer',
+			'limit' => 'integer',
+			'offset' => 'integer'
+		]);
+		$tid = $request->input('tid');
+		$includeSynonyms = $request->input('includeSynonyms');
+		$includeChildren = $request->input('includeChildren');
+		$limit = $request->input('limit',100);
+		$offset = $request->input('offset',0);
+
+		$mediaModel = Media::query();
+		if($tid){
+			$tidArr = array($tid);
+			if($includeSynonyms){
+				$tidArr = TaxonomyController::getSynonyms($tid);
+			}
+			if($includeChildren){
+				$tidArr = array_merge($tidArr, TaxonomyController::getChildren($tid));
+			}
+			$mediaModel->whereIn('tid', $tidArr);
+		}
+		$fullCnt = $mediaModel->count();
+		$result = $mediaModel->skip($offset)->take($limit)->get();
+
+		$eor = false;
+		$retObj = [
+			'offset' => (int)$offset,
+			'limit' => (int)$limit,
+			'endOfRecords' => $eor,
+			'count' => $fullCnt,
+			'results' => $result
+		];
+		return response()->json($retObj);
 	}
 
 	/**
@@ -63,7 +136,7 @@ class MediaController extends Controller{
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="200",
-	 *		 description="Returns single media record",
+	 *		 description="Success: Returns single media record",
 	 *		 @OA\JsonContent(type="application/json")
 	 *	 ),
 	 *	 @OA\Response(
@@ -233,7 +306,7 @@ class MediaController extends Controller{
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="201",
-	 *		 description="Returns JSON object of the of media record that was created"
+	 *		 description="Success: Returns JSON object of the of media record that was created"
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="400",
@@ -424,7 +497,7 @@ class MediaController extends Controller{
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="200",
-	 *		 description="Returns full JSON object of the of media record that was edited"
+	 *		 description="Success: Returns full JSON object of the of media record that was edited"
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="400",
@@ -472,7 +545,7 @@ class MediaController extends Controller{
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="204",
-	 *		 description="Record deleted successfully"
+	 *		 description="Success: Record deleted successfully"
 	 *	 ),
 	 *	 @OA\Response(
 	 *		 response="400",
@@ -496,6 +569,7 @@ class MediaController extends Controller{
 		return response()->json(['status' => 'failure', 'error' => 'Unauthorized'], 401);
 	}
 
+	//Support functions
 	private function adjustInputData(&$data){
 		if(!empty($data['mediumUrl'])){
 			//remap mediumUrl to url field

@@ -52,7 +52,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -316,7 +316,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -391,7 +391,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -420,9 +420,60 @@
                     ""
                 ],
                 "operationId": "showAllMedia",
+                "parameters": [
+                    {
+                        "name": "tid",
+                        "in": "query",
+                        "description": "Display media filtered by target taxon ID (PK key of taxon)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "includeSynonyms",
+                        "in": "query",
+                        "description": "Include media linked to synonyms of target taxon (0 = false, 1 = true)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "includeChildren",
+                        "in": "query",
+                        "description": "Include media linked to direct children of target taxon (0 = false, 1 = true)",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
                 "responses": {
                     "200": {
-                        "description": "Returns list of media records",
+                        "description": "Success: Returns list of media records",
                         "content": {
                             "application/json": {
                                 "schema": {}
@@ -580,7 +631,7 @@
                 },
                 "responses": {
                     "201": {
-                        "description": "Returns JSON object of the of media record that was created"
+                        "description": "Success: Returns JSON object of the of media record that was created"
                     },
                     "400": {
                         "description": "Error: Bad request."
@@ -610,7 +661,7 @@
                 ],
                 "responses": {
                     "200": {
-                        "description": "Returns single media record",
+                        "description": "Success: Returns single media record",
                         "content": {
                             "application/json": {
                                 "schema": {
@@ -651,7 +702,7 @@
                 ],
                 "responses": {
                     "204": {
-                        "description": "Record deleted successfully"
+                        "description": "Success: Record deleted successfully"
                     },
                     "400": {
                         "description": "Error: Bad request. Media identifier is required."
@@ -812,7 +863,7 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Returns full JSON object of the of media record that was edited"
+                        "description": "Success: Returns full JSON object of the of media record that was edited"
                     },
                     "400": {
                         "description": "Error: Bad request."
@@ -902,7 +953,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1062,7 +1113,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1361,7 +1412,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1394,7 +1445,7 @@
                     {
                         "name": "taxon",
                         "in": "query",
-                        "description": "Taxon searh term",
+                        "description": "Taxon search term",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1429,7 +1480,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",
@@ -1513,7 +1564,7 @@
                     {
                         "name": "offset",
                         "in": "query",
-                        "description": "Determines the offset for the search results. A limit of 200 and offset of 100, will get the third page of 100 results.",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
                         "required": false,
                         "schema": {
                             "type": "integer",

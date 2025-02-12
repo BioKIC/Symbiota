@@ -454,9 +454,14 @@ class TaxonProfile extends Manager {
 	private function setLinkArr(){
 		if($this->linkArr === false && $this->tid){
 			$this->linkArr = array();
-			$sql = 'SELECT DISTINCT l.tlid, l.url, l.icon, l.title, l.notes
-				FROM taxalinks l LEFT JOIN taxaenumtree e ON l.tid = e.parenttid
-				WHERE (e.tid IN('.$this->tid.') OR l.tid IN('.$this->tid.')) ORDER BY l.sortsequence, l.title';
+			$sql = '(SELECT tlid, url, icon, title, notes, sortsequence
+				FROM taxalinks l
+				WHERE (l.tid = ' . $this->tid . ')
+				UNION
+				SELECT l.tlid, l.url, l.icon, l.title, l.notes, l.sortsequence
+				FROM taxalinks l INNER JOIN taxaenumtree e ON l.tid = e.parenttid
+				WHERE (e.tid = ' . $this->tid . '))
+				ORDER BY sortsequence, title';
 			$rs = $this->conn->query($sql);
 			while($r = $rs->fetch_object()){
 				$this->linkArr[$r->tlid]['title'] = $r->title;
@@ -617,6 +622,7 @@ class TaxonProfile extends Manager {
 				$clidArr[] = $r->clidchild;
 				$childStr .= ','.$r->clidchild;
 			}
+			$rs->free();
 			$sql = $sqlBase.substr($childStr,1).')';
 		}while($childStr);
 		return implode(',',$clidArr);

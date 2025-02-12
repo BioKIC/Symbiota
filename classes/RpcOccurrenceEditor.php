@@ -98,15 +98,18 @@ class RpcOccurrenceEditor extends RpcBase{
 	public function getDupesOtherCatalogNumbers($otherCatNum, $collid, $skipOccid){
 		$retArr = array();
 		if(is_numeric($collid) && is_numeric($skipOccid) && $otherCatNum){
-			$sql = 'SELECT o.occid FROM omoccurrences o LEFT JOIN omoccuridentifiers i ON o.occid = i.occid
-				WHERE (o.othercatalognumbers = ? OR i.identifierValue = ?) AND (o.collid = ?) AND (o.occid != ?) ';
+			$sql = 'SELECT o.occid FROM omoccurrences o INNER JOIN omoccuridentifiers i ON o.occid = i.occid
+				WHERE (i.identifierValue = ?) AND (o.collid = ?)
+				UNION
+				SELECT occid FROM omoccurrences
+				WHERE (othercatalognumbers = ?) AND (collid = ?) ';
 			if($stmt = $this->conn->prepare($sql)) {
-				$stmt->bind_param('ssii', $otherCatNum, $otherCatNum, $collid, $skipOccid);
+				$stmt->bind_param('sisi', $otherCatNum, $collid, $otherCatNum, $collid);
 				$stmt->execute();
 				$occid = 0;
 				$stmt->bind_result($occid);
 				while($stmt->fetch()){
-					$retArr[$occid] = $occid;
+					if($occid != $skipOccid) $retArr[$occid] = $occid;
 				}
 				$stmt->close();
 			}

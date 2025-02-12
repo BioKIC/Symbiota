@@ -26,6 +26,10 @@ class Media extends Model{
 		return $this->belongsTo(Occurrence::class, 'occid', 'occid');
 	}
 
+	public function Taxonomy() {
+		return $this->belongsTo(Taxonomy::class, 'tid', 'tid');
+	}
+
 	//Accessor functions
 	public function getUrlAttribute($value){
 		if(substr($value, 0, 1) == '/') $value = $this->serverDomain . $value;

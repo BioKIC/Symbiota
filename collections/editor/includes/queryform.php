@@ -275,8 +275,8 @@ else{
 					<?php
 				}
 				?>
-			<div>
 				<div>
+					<div>
 
 					<?php
 					if(!$crowdSourceMode){
@@ -290,17 +290,17 @@ else{
 						if($qDateEntered) $qryStr .= '&dateentered='.$qDateEntered;
 						if($qDateLastModified) $qryStr .= '&datelastmodified='.$qDateLastModified;
 						if($qryStr){
-							?>
-							<a href="../reports/labelmanager.php?collid=<?php echo htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . htmlspecialchars($qryStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank">
-								<button type="button" class="icon-button" title="<?php echo $LANG['GO_LABEL_PRINT']; ?>">
-									<img src="../../images/list.png" style="width:1.3em" />
-								</button>
-							</a>
-							<?php
+					?>
+						<a class="button button-primary icon-button bottom-breathing-room-rel" title="<?php echo $LANG['GO_LABEL_PRINT']; ?>" href="../reports/labelmanager.php?collid=<?php echo htmlspecialchars($collId, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . htmlspecialchars($qryStr, ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE); ?>" target="_blank">
+							<img src="../../images/list.png" style="width:1.3em" />
+						</a>	
+					<?php
 						}
 					}
 					?>
+					</div>
 				</div>
+				<div>
 				<input type="hidden" name="collid" value="<?php echo $collId; ?>" />
 				<input type="hidden" name="csmode" value="<?php echo $crowdSourceMode; ?>" />
 				<input type="hidden" name="occid" value="<?php echo $occManager->getOccId(); ?>" />

@@ -306,7 +306,7 @@ class ChecklistVoucherAdmin extends Manager {
 			}
 		}
 		if(isset($this->queryVariablesArr['includewkt']) && $this->queryVariablesArr['includewkt'] && $this->footprintWkt){
-			//Searh based on polygon
+			//search based on polygon
 			$sqlFrag .= 'AND (ST_Within(p.point,GeomFromText("'.$this->footprintWkt.'"))) ';
 			$llStr = false;
 		}
