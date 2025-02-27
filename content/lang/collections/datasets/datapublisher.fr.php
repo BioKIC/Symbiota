@@ -92,4 +92,5 @@ $LANG['METADATA'] = 'Métadonnées';
 $LANG['NO_PUBLISHABLE'] = 'Il n\'y a pas de collections publiables';
 $LANG['ADDIT_SOURCES'] = 'Sources de données supplémentaires au sein du Réseau de Portails';
 $LANG['EDIT'] = 'Modifier';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'Inclure les Relations entre Ressources (associations et ressources liées)';
 

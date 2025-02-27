@@ -100,6 +100,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 					var f = cbObj.form;
 					f.identifications.checked = false;
 					f.images.checked = false;
+					f.associations.checked = false;
 					if(f.attributes) f.attributes.checked = false;
 				}
 			}
@@ -490,6 +491,7 @@ $advFieldArr = array('family'=>'Family','sciname'=>'Scientific Name','identified
 										<div style="margin:10px 0px;">
 											<input type="checkbox" name="identifications" value="1" onchange="extensionSelected(this)" checked /> <?php echo $LANG['INCLUDE_DET']; ?><br/>
 											<input type="checkbox" name="images" value="1" onchange="extensionSelected(this)" checked /> <?php echo $LANG['INCLUDE_IMAGES']; ?><br/>
+											<input type="checkbox" name="associations" value="1" onchange="extensionSelected(this)" checked /> <?php echo $LANG['INCLUDE_ASSOCIATIONS']; ?><br/>
 											<?php
 											if($traitArr) echo '<input type="checkbox" name="attributes" value="1" onchange="extensionSelected(this)" checked /> '.$LANG['INCLUDE_ATTRIBUTES'].'<br/>';
 											?>

@@ -23,6 +23,7 @@ if ($schema == 'backup') {
 			$dwcaHandler->setIncludeAttributes(1);
 			if ($dwcaHandler->hasMaterialSamples()) $dwcaHandler->setIncludeMaterialSample(1);
 			if ($dwcaHandler->hasIdentifiers()) $dwcaHandler->setIncludeIdentifiers(1);
+			if ($dwcaHandler->hasAssociations()) $dwcaHandler->setIncludeAssociations(1);
 			$dwcaHandler->setRedactLocalities(0);
 			$dwcaHandler->setCollArr($collid);
 
@@ -126,6 +127,7 @@ if ($schema == 'backup') {
 			$dwcaHandler->setIncludeAttributes(0);
 			$dwcaHandler->setIncludeMaterialSample(0);
 			$dwcaHandler->setIncludeIdentifiers(0);
+			$dwcaHandler->setIncludeAssociations(0);
 			$dwcaHandler->setOverrideConditionLimit(true);
 			$dwcaHandler->addCondition('catalognumber', 'NOT_NULL');
 			$dwcaHandler->addCondition('locality', 'NOT_NULL');
@@ -189,6 +191,8 @@ if ($schema == 'backup') {
 			$dwcaHandler->setIncludeMaterialSample($includeMaterialSample);
 			$includeIdentifiers = (array_key_exists('identifiers', $_POST) ? 1 : 0);
 			$dwcaHandler->setIncludeIdentifiers($includeIdentifiers);
+			$includeAssociations = (array_key_exists('associations', $_POST) ? 1 : 0);
+			$dwcaHandler->setIncludeAssociations($includeAssociations);
 
 			$outputFile = $dwcaHandler->createDwcArchive();
 		} else {
