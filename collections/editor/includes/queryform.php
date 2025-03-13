@@ -3,6 +3,12 @@ if(!$displayQuery && array_key_exists('displayquery',$_REQUEST)) $displayQuery =
 if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/editor/includes/queryform.'.$LANG_TAG.'.php')) include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/queryform.'.$LANG_TAG.'.php');
 else include_once($SERVER_ROOT.'/content/lang/collections/editor/includes/queryform.en.php');
 
+if($LANG_TAG != 'en' && file_exists($SERVER_ROOT.'/content/lang/collections/specprocessor/exporter.' . $LANG_TAG . '.php')){
+	include_once($SERVER_ROOT . '/content/lang/collections/specprocessor/exporter.' . $LANG_TAG . '.php');
+} else{
+	include_once($SERVER_ROOT . '/content/lang/collections/specprocessor/exporter.en.php');
+}
+
 $qryArr = $occManager->getQueryVariables();
 // Construct a link containing the queryform search parameters
 $queryLink = '?displayquery=1&collid='.$collId.'&'.http_build_query($qryArr, '', '&amp;');
@@ -23,6 +29,10 @@ $qWithoutImg = (array_key_exists('woi',$qryArr)?$qryArr['woi']:0);
 $qOcrFrag = (array_key_exists('ocr',$qryArr)?htmlentities($qryArr['ocr'], ENT_COMPAT, $CHARSET):'');
 $qOrderBy = (array_key_exists('orderby',$qryArr)?$qryArr['orderby']:'');
 $qOrderByDir = (array_key_exists('orderbydir',$qryArr)?$qryArr['orderbydir']:'');
+$qTraitIds = (array_key_exists('traitid',$qryArr)?$qryArr['traitid']: []);
+$qTraitStateIds = (array_key_exists('stateid',$qryArr)?$qryArr['stateid']: []);
+
+$qTraitArr = $occManager->getAttributeTraits($collId);
 
 $customFieldArr = array();
 if($crowdSourceMode){
@@ -178,6 +188,44 @@ else{
 						<label for="q_withoutimg"><?php echo $LANG['WITHOUT_IMAGES']; ?></label>
 					</div>
 				</div>
+				<?php if($qTraitArr): ?>
+					<div style="margin-bottom: 10px">
+						<div class="fieldGroupDiv">
+							<div>
+								<div>
+									<?php echo $LANG['TRAIT_FILTER']; ?>:
+								</div>
+							</div>
+							<div>
+								<select name="q_traitid[]" multiple>
+									<?php
+										foreach($qTraitArr as $traitID => $tArr){
+											echo '<option '. (in_array($traitID, $qTraitIds)? 'selected':'') .' value="'.$traitID.'">'.$tArr['name'].' [ID:'.$traitID.']</option>';
+										}
+									?>
+								</select>
+							</div>
+							<div>
+							-- <?php echo $LANG['OR_SPEC_ATTRIBUTE']; ?> --
+							</div>
+							<div>
+								<select name="q_stateid[]" multiple>
+									<?php
+									foreach($qTraitArr as $traitID => $tArr){
+										$stateArr = $tArr['state'];
+										foreach($stateArr as $stateID => $stateName){
+											echo '<option ' . (in_array($stateID, $qTraitStateIds)? 'selected':'') . ' value="'.$stateID.'">'.$tArr['name'].': '.$stateName.'</option>';
+										}
+									}
+									?>
+								</select>
+							</div>
+						</div>
+						<div>
+							* <?php echo $LANG['HOLD_CTRL']; ?>
+						</div>
+					</div>
+				<?php endif ?>
 				<?php
 				if($ACTIVATE_EXSICCATI){
 					if($exsList = $occManager->getExsiccatiList()){

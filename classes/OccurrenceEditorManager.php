@@ -205,6 +205,50 @@ class OccurrenceEditorManager {
 		}
 	}
 
+	function getDownloadQuery(): string {
+		$queryArr = $this->getQueryVariables();
+		$retArr = [ 'db' => $this->collId ];
+
+		$map = [
+			'rb' => 'collector',
+			'rn' => 'collnum',
+			'ed' => 'eventdate1',
+			'cn' => 'catnum',
+			'ocn' => 'othercatalognumbers',
+			'eb' => 'recordenteredby',
+			'de' => 'dateentered',
+			'dm' => 'datelastmodified',
+			'ps' => 'processingstatus',
+			'traitid' => 'traitid',
+			'stateid' => 'stateid',
+			'exsid' => 'exsiccatiid',
+		];
+
+		// Handle woi and io seperately since they distill into one variable
+		if(array_key_exists('io', $queryArr)) {
+			$retArr['hasimages'] = 1;
+		} else if(array_key_exists('woi', $queryArr)) {
+			$retArr['hasimages'] = 0;
+		}
+
+		$custom_fields = [];
+		for ($i=1; $i < 11; $i++) { 
+			$custom_fields['cf' . $i] = 'customfield' . $i;
+			$custom_fields['ct' . $i] = 'customtype' . $i;
+			$custom_fields['cv' . $i] = 'customvalue' . $i;
+		}
+
+		foreach($queryArr as $name => $value) {
+			if(array_key_exists($name, $map)) {
+				$retArr[$map[$name]] = $value;
+			} else if(array_key_exists($name, $custom_fields)) {
+				$retArr[$custom_fields[$name]] = $value;
+			}
+		}
+
+		return http_build_query($retArr, "&amp");
+	}
+
 	//Query functions
 	public function setQueryVariables($overrideQry = false) {
 		if ($overrideQry) {
@@ -225,6 +269,8 @@ class OccurrenceEditorManager {
 			if (array_key_exists('q_ocrfrag', $_REQUEST) && $_REQUEST['q_ocrfrag']) $this->qryArr['ocr'] = trim($_REQUEST['q_ocrfrag']);
 			if (array_key_exists('q_imgonly', $_REQUEST) && $_REQUEST['q_imgonly']) $this->qryArr['io'] = 1;
 			if (array_key_exists('q_withoutimg', $_REQUEST) && $_REQUEST['q_withoutimg']) $this->qryArr['woi'] = 1;
+			if (array_key_exists('q_traitid', $_REQUEST)) $this->qryArr['traitid'] = $_REQUEST['q_traitid'];
+			if (array_key_exists('q_stateid', $_REQUEST)) $this->qryArr['stateid'] = $_REQUEST['q_stateid'];
 			for ($x = 1; $x < 9; $x++) {
 				if (array_key_exists('q_customandor' . $x, $_REQUEST) && $_REQUEST['q_customandor' . $x]) $this->qryArr['cao' . $x] = $_REQUEST['q_customandor' . $x];
 				if (array_key_exists('q_customopenparen' . $x, $_REQUEST) && $_REQUEST['q_customopenparen' . $x]) $this->qryArr['cop' . $x] = $_REQUEST['q_customopenparen' . $x];
@@ -533,6 +579,22 @@ class OccurrenceEditorManager {
 			//Used to find records linked to a specific exsiccati
 			$sqlWhere .= 'AND (exn.ometid = ' . $this->qryArr['exsid'] . ') ';
 		}
+			
+		// Traits
+		$traitids = array_key_exists('traitid', $this->qryArr) && is_array($this->qryArr['traitid'])?
+			array_filter($this->qryArr['traitid'], fn($v) => is_numeric($v)): [];
+		$stateids = array_key_exists('stateid', $this->qryArr) && is_array($this->qryArr['stateid'])?
+			array_filter($this->qryArr['stateid'], fn($v) => is_numeric($v)): [];
+		if(count($traitids) > 0 || count($stateids) > 0) {
+			$trait_sql = '';
+
+			if(count($traitids) > 0) {
+				$sqlWhere .= ' AND tms.traitid IN (' . implode(',', $traitids) . ') ';
+			} else {
+				$sqlWhere .= ' AND tms.stateid IN (' . implode(',', $stateids) . ') ';
+			}
+		}
+
 		//Custom search fields
 		$customWhere = '';
 		for ($x = 1; $x < 9; $x++) {
@@ -720,7 +782,7 @@ class OccurrenceEditorManager {
 			}
 		}
 		if ($sqlFrag) {
-			$sql = 'SELECT DISTINCT o.occid, o.collid, o.' . implode(',o.', array_keys($this->fieldArr['omoccurrences'])) . ', datelastmodified FROM omoccurrences o ' . $sqlFrag;
+			$sql = 'SELECT DISTINCT o.occid, o.collid, o.' . implode(',o.', array_keys($this->fieldArr['omoccurrences'])) . ', o.datelastmodified FROM omoccurrences o ' . $sqlFrag;
 			$previousOccid = 0;
 			$rs = $this->conn->query($sql);
 			$rsCnt = 0;
@@ -764,7 +826,6 @@ class OccurrenceEditorManager {
 	}
 
 	private function addTableJoins(&$sql) {
-
 		if (strpos($this->sqlWhere, 'ocr.rawstr')) {
 			if (strpos($this->sqlWhere, 'ocr.rawstr IS NULL') && array_key_exists('io', $this->qryArr)) {
 				$sql .= 'INNER JOIN media m ON o.occid = m.occid LEFT JOIN specprocessorrawlabels ocr ON m.mediaID = ocr.mediaID ';
@@ -778,6 +839,12 @@ class OccurrenceEditorManager {
 		} elseif (array_key_exists('woi', $this->qryArr)) {
 			$sql .= 'LEFT JOIN media m ON o.occid = m.occid ';
 		}
+		//Traits 
+		if(strpos($this->sqlWhere, 'tms.stateid') || strpos($this->sqlWhere, 'tms.traitid')) {
+			$sql .= ' INNER JOIN tmattributes tma ON tma.occid = o.occid ' . 
+			'INNER JOIN tmstates tms ON tms.stateid = tma.stateid ';
+		}
+
 		if (strpos($this->sqlWhere, 'id.identifierValue')) {
 			$sql .= 'LEFT JOIN omoccuridentifiers id ON o.occid = id.occid ';
 		}
@@ -2722,6 +2789,22 @@ class OccurrenceEditorManager {
 		if ($rs->num_rows) $bool = true;
 		$rs->free();
 		return $bool;
+	}
+
+	public function getAttributeTraits($collid = ''){
+		$retArr = array();
+		$sql = 'SELECT DISTINCT t.traitid, t.traitname, s.stateid, s.statename '.
+			'FROM tmtraits t INNER JOIN tmstates s ON t.traitid = s.traitid '.
+			'INNER JOIN tmattributes a ON s.stateid = a.stateid '.
+			'INNER JOIN omoccurrences o ON a.occid = o.occid ';
+		if($collid) $sql .= 'WHERE o.collid = '.$collid;
+		$rs = $this->conn->query($sql);
+		while($r = $rs->fetch_object()){
+			$retArr[$r->traitid]['name'] = $r->traitname;
+			$retArr[$r->traitid]['state'][$r->stateid] = $r->statename;
+		}
+		$rs->free();
+		return $retArr;
 	}
 
 	//Setters and getters
