@@ -6,6 +6,7 @@ include_once($SERVER_ROOT.'/classes/OccurrenceAttributeSearch.php');
 header("Content-Type: text/html; charset=".$CHARSET);
 
 $collManager = new OccurrenceManager();
+$paleoTimes = $collManager->getPaleoTimes();
 $searchVar = $collManager->getQueryTermStr();
 ?>
 <!DOCTYPE html>
@@ -24,6 +25,7 @@ $searchVar = $collManager->getQueryTermStr();
 	<script src="../js/symb/collections.traitsearch.js?ver=8" type="text/javascript"></script> <!-- Contains search-by-trait modifications -->
 	<script src="../js/symb/wktpolygontools.js?ver=1c" type="text/javascript"></script>
 	<script type="text/javascript">
+		const paleoTimes = <?= json_encode($paleoTimes) ?>;
 		var clientRoot = "<?php echo $CLIENT_ROOT; ?>";
 		$(document).ready(function() {
 			<?php
@@ -322,7 +324,7 @@ $searchVar = $collManager->getQueryTermStr();
 				$gtsTermArr = $collManager->getPaleoGtsTerms();
 				?>
 				<hr/>
-				<div style="float:left">
+				<div id="searchFormPaleo" style="float:left">
 					<div>
 						<div class="catHeaderDiv bottom-breathing-room-rel-sm"><?php echo $LANG['GEO_CONTEXT']; ?></div>
 					</div>
