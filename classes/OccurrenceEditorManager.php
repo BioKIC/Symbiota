@@ -549,7 +549,12 @@ class OccurrenceEditorManager {
 				} elseif ($customField == 'username') {
 					//Used when Modified By comes from custom field search within basic query form
 					$customField = 'u.username';
-				} else {
+				}
+				elseif(in_array($customField,$this->fieldArr['omoccurpaleo'])){
+					//Used for paleo fields
+					$customField = 'paleo.'.$customField;
+				}
+				else{
 					$customField = 'o.' . $customField;
 				}
 				if ($customField == 'o.otherCatalogNumbers') {
@@ -704,7 +709,10 @@ class OccurrenceEditorManager {
 		}
 		elseif($this->sqlWhere){
 			$this->addTableJoins($sqlFrag);
-			$sqlFrag .= 'LEFT JOIN omoccurpaleo paleo ON paleo.occid = o.occid ' . $this->sqlWhere;
+			if (strpos($sqlFrag, 'LEFT JOIN omoccurpaleo') === false) {
+				$sqlFrag .= ' LEFT JOIN omoccurpaleo paleo ON o.occid = paleo.occid ';
+			}
+			$sqlFrag .= $this->sqlWhere;
 			if($limit){
 				$this->setSqlOrderBy($sqlFrag);
 				$sqlFrag .= 'LIMIT ' . $start . ',' . $limit;
@@ -789,6 +797,9 @@ class OccurrenceEditorManager {
 		}
 		if ($this->crowdSourceMode) {
 			$sql .= 'INNER JOIN omcrowdsourcequeue q ON q.occid = o.occid ';
+		}
+		if (strpos($this->sqlWhere, 'paleo.')) {
+			$sql .= 'LEFT JOIN omoccurpaleo paleo ON o.occid = paleo.occid ';
 		}
 	}
 
@@ -2019,17 +2030,18 @@ class OccurrenceEditorManager {
 				}
 
 				$sqlWhere = 'WHERE occid IN(' . implode(',', $occidArr) . ')';
-				//Add edits to the omoccuredit table
-				$sql = 'INSERT INTO omoccuredits(occid,fieldName,fieldValueOld,fieldValueNew,appliedStatus,uid,editType) ' .
-					'SELECT occid, "' . $fn . '" AS fieldName, IFNULL(' . $fn . ',"") AS oldValue, IFNULL(' . $nvSqlFrag . ',"") AS newValue, ' .
-					'1 AS appliedStatus, ' . $GLOBALS['SYMB_UID'] . ' AS uid, 1 FROM omoccurrences ' . $sqlWhere;
-				if (!$this->conn->query($sql)) {
-					$statusStr = $LANG['ERROR_ADDING_UPDATE'] . ': ' . $this->conn->error;
-				}
-				//Apply edits to core tables
-				if (isset($this->collMap['paleoActivated']) && array_key_exists($fn, $this->fieldArr['omoccurpaleo'])) {
+				if(in_array($fn, $this->fieldArr['omoccurpaleo'])){
 					$sql = 'UPDATE omoccurpaleo SET ' . $fn . ' = ' . $nvSqlFrag . ' ' . $sqlWhere;
-				} else {
+				}
+				else {
+					//Add edits to the omoccuredit table
+					$sql = 'INSERT INTO omoccuredits(occid,fieldName,fieldValueOld,fieldValueNew,appliedStatus,uid,editType) ' .
+						'SELECT occid, "' . $fn . '" AS fieldName, IFNULL(' . $fn . ',"") AS oldValue, IFNULL(' . $nvSqlFrag . ',"") AS newValue, ' .
+						'1 AS appliedStatus, ' . $GLOBALS['SYMB_UID'] . ' AS uid, 1 FROM omoccurrences ' . $sqlWhere;
+					if(!$this->conn->query($sql)){
+						$statusStr = $LANG['ERROR_ADDING_UPDATE'] . ': ' . $this->conn->error;
+					}
+					//Apply edits to core tables
 					$sql = 'UPDATE omoccurrences SET ' . $fn . ' = ' . $nvSqlFrag . ' ' . $sqlWhere;
 				}
 				if (!$this->conn->query($sql)) {
@@ -2064,10 +2076,16 @@ class OccurrenceEditorManager {
 		$sql = $this->sqlWhere;
 
 		if (!$buMatch || $ov === '') {
-			$sql .= ' AND (o.' . $fn . ' ' . ($ov === '' ? 'IS NULL' : '= "' . $ov . '"') . ') ';
+			if (in_array($fn, $this->fieldArr['omoccurpaleo']))
+				$sql .= ' AND (paleo.'.$fn.' '.($ov===''?'IS NULL':'= "'.$ov.'"').') ';
+			else
+				$sql .= ' AND (o.' . $fn . ' ' . ($ov === '' ? 'IS NULL' : '= "' . $ov . '"') . ') ';
 		} else {
 			//Selected "Match any part of field"
-			$sql .= ' AND (o.' . $fn . ' LIKE "%' . $ov . '%") ';
+			if (in_array($fn, $this->fieldArr['omoccurpaleo']))
+			$sql .= ' AND (paleo.'.$fn.' LIKE "%'.$ov.'%") ';
+			else
+				$sql .= ' AND (o.' . $fn . ' LIKE "%' . $ov . '%") ';
 		}
 		return $sql;
 	}
