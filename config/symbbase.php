@@ -1,7 +1,7 @@
 <?php
 header('X-Frame-Options: DENY');
 header('Cache-control: private'); // IE 6 FIX
-date_default_timezone_set('America/Phoenix');
+date_default_timezone_set($DATE_DEFAULT_TIMEZONE ?? 'America/Phoenix');
 $CODE_VERSION = '3.2';
 
 set_include_path(get_include_path() . PATH_SEPARATOR . $SERVER_ROOT . PATH_SEPARATOR . $SERVER_ROOT.'/config/' . PATH_SEPARATOR . $SERVER_ROOT.'/classes/');

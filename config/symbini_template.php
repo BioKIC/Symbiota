@@ -101,6 +101,8 @@ $THIRD_PARTY_OID_AUTH_ENABLED = false;
 
 $SHOULD_USE_MINIMAL_MAP_HEADER = false;
 
+$DATE_DEFAULT_TIMEZONE = 'America/Phoenix'; // This should be set to match server default timezone
+
 $COOKIE_SECURE = false;
 if ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) {
 	header('strict-transport-security: max-age=600');
