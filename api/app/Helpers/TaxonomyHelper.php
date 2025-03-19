@@ -54,10 +54,11 @@ class TaxonomyHelper {
 					if($unitStr) array_unshift($sciNameArr, $unitStr);
 				}
 				elseif($sciNameArr[0] == '†' || mb_ord($sciNameArr[0]) == 8224){
-					$retArr['unitind1'] = array_shift($sciNameArr);
+					//No longer include support for extinction dagger
+					//$retArr['unitind1'] = array_shift($sciNameArr);
 				}
 				elseif(strpos($sciNameArr[0],chr(8224)) === 0 ){
-					$retArr['unitind1'] = '†';
+					//$retArr['unitind1'] = '†';
 					$sciNameArr[0] = trim($sciNameArr[0],'†');
 				}
 				//Genus
