@@ -56,7 +56,7 @@ class ImageLibraryBrowser extends OccurrenceTaxaManager{
 			}
 		}
 		if(!$taxon) $taxon = 'A';
-		$sql = 'SELECT DISTINCT t.tid, t.SciName '.$this->getListSql().' AND (i.sortsequence < 500) ';
+		$sql = 'SELECT DISTINCT t.tid, t.SciName '.$this->getListSql().' AND (m.sortsequence < 500) ';
 		if(strtolower(substr($taxon,-5)) == 'aceae' || strtolower(substr($taxon,-4)) == 'idae') $sql .= 'AND ((ts.family = "'.$taxon.'") ';
 		else{
 			$sql .= 'AND ((t.SciName LIKE "'.$taxon.'%") ';
