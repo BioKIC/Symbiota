@@ -23,62 +23,10 @@ class TaxonomyController extends Controller {
 	 *	 operationId="/api/v2/taxonomy",
 	 *	 tags={""},
 	 *	 @OA\Parameter(
-	 *		 name="limit",
-	 *		 in="query",
-	 *		 description="Controls the number of results in the page.",
-	 *		 required=false,
-	 *		 @OA\Schema(type="integer", default=100)
-	 *	 ),
-	 *	 @OA\Parameter(
-	 *		 name="offset",
-	 *		 in="query",
-	 *		 description="Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
-	 *		 required=false,
-	 *		 @OA\Schema(type="integer", default=0)
-	 *	 ),
-	 *	 @OA\Response(
-	 *		 response="200",
-	 *		 description="Returns list of inventories registered within system",
-	 *		 @OA\JsonContent()
-	 *	 ),
-	 *	 @OA\Response(
-	 *		 response="400",
-	 *		 description="Error: Bad request. ",
-	 *	 ),
-	 * )
-	 */
-	public function showAllTaxa(Request $request) {
-		$this->validate($request, [
-			'limit' => 'integer',
-			'offset' => 'integer'
-		]);
-		$limit = $request->input('limit', 100);
-		$offset = $request->input('offset', 0);
-
-		$fullCnt = Taxonomy::count();
-		$result = Taxonomy::skip($offset)->take($limit)->get();
-
-		$eor = false;
-		$retObj = [
-			'offset' => (int)$offset,
-			'limit' => (int)$limit,
-			'endOfRecords' => $eor,
-			'count' => $fullCnt,
-			'results' => $result
-		];
-		return response()->json($retObj);
-	}
-
-	/**
-	 * @OA\Get(
-	 *	 path="/api/v2/taxonomy/search",
-	 *	 operationId="/api/v2/taxonomy/search",
-	 *	 tags={""},
-	 *	 @OA\Parameter(
 	 *		 name="taxon",
 	 *		 in="query",
 	 *		 description="Taxon search term",
-	 *		 required=true,
+	 *		 required=false,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
 	 *	 @OA\Parameter(
@@ -119,7 +67,6 @@ class TaxonomyController extends Controller {
 	 */
 	public function showAllTaxaSearch(Request $request) {
 		$this->validate($request, [
-			'taxon' => 'required',
 			'limit' => 'integer',
 			'offset' => 'integer'
 		]);
@@ -128,22 +75,27 @@ class TaxonomyController extends Controller {
 
 		$type = $request->input('type', 'EXACT');
 
-		$taxaModel = Taxonomy::query();
-		if ($type == 'START') {
-			$taxaModel->where('sciname', 'LIKE', $request->taxon . '%');
-		} elseif ($type == 'WILD') {
-			$taxaModel->where('sciname', 'LIKE', '%' . $request->taxon . '%');
-		} elseif ($type == 'WHOLEWORD') {
-			$taxaModel->where('unitname1', $request->taxon)
-				->orWhere('unitname2', $request->taxon)
-				->orWhere('unitname3', $request->taxon);
-		} else {
-			//Exact match
-			$taxaModel->where('sciname', $request->taxon);
+		if($request->taxon){
+			$taxaModel = Taxonomy::query();
+			if ($type == 'START') {
+				$taxaModel->where('sciname', 'LIKE', $request->taxon . '%');
+			} elseif ($type == 'WILD') {
+				$taxaModel->where('sciname', 'LIKE', '%' . $request->taxon . '%');
+			} elseif ($type == 'WHOLEWORD') {
+				$taxaModel->where('unitname1', $request->taxon)
+					->orWhere('unitname2', $request->taxon)
+					->orWhere('unitname3', $request->taxon);
+			} else {
+				//Exact match
+				$taxaModel->where('sciname', $request->taxon);
+			}
+	
+			$fullCnt = $taxaModel->count();
+			$result = $taxaModel->skip($offset)->take($limit)->get();
+		}else{
+			$fullCnt = Taxonomy::count();
+			$result = Taxonomy::skip($offset)->take($limit)->get();
 		}
-
-		$fullCnt = $taxaModel->count();
-		$result = $taxaModel->skip($offset)->take($limit)->get();
 
 		$eor = false;
 		$retObj = [

@@ -150,6 +150,160 @@
                 }
             }
         },
+        "/api/v2/exsiccata/{identifier}": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/exsiccata/{identifier}",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Exsiccata ID or record ID",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns exsiccata record with matching identifier",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Valid Exsiccata identifier required"
+                    },
+                    "404": {
+                        "description": "Record not found"
+                    }
+                }
+            }
+        },
+        "/api/v2/exsiccata/{identifier}/number": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/exsiccata/identifier/number",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Identifier (ometid (PK) - currently does not accommodate recordID) associated with target exsiccata title",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns all exsiccata numbers associated with a single exsiccati title corresponding to matching identifier",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Exsiccata identifier is required."
+                    },
+                    "404": {
+                        "description": "Record not found"
+                    }
+                }
+            }
+        },
+        "/api/v2/exsiccata/{identifier}/number/{numberIdentifier}/": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/exsiccata/identifier/number/{numberIdentifier}/",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Identifier (ometid (PK)) associated with target exsiccata number",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "numberIdentifier",
+                        "in": "path",
+                        "description": "Identifier (omenid or recordID in the schema) associated with target exsiccata number",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns all exsiccata numbers associated with a single exsiccati title corresponding to matching identifier",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Exsiccata identifier is required."
+                    },
+                    "404": {
+                        "description": "Record not found"
+                    }
+                }
+            }
+        },
         "/api/v2/installation": {
             "get": {
                 "tags": [
@@ -225,12 +379,12 @@
                 }
             }
         },
-        "/api/v2/installation/ping": {
+        "/api/v2/installation/status": {
             "get": {
                 "tags": [
                     ""
                 ],
-                "operationId": "/api/v2/installation/ping",
+                "operationId": "/api/v2/installation/status",
                 "responses": {
                     "200": {
                         "description": "Returns installation metadata",
@@ -246,17 +400,17 @@
                 }
             }
         },
-        "/api/v2/installation/{identifier}/touch": {
+        "/api/v2/installation/{identifier}/handshake": {
             "get": {
                 "tags": [
                     ""
                 ],
-                "operationId": "/api/v2/installation/identifier/touch",
+                "operationId": "/api/v2/installation/identifier/handshake",
                 "parameters": [
                     {
                         "name": "identifier",
                         "in": "path",
-                        "description": "Identifier of the remote installation",
+                        "description": "Identifier of the remote installation (GUID)",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1072,12 +1226,12 @@
                 }
             }
         },
-        "/api/v2/occurrence/annotation/search": {
+        "/api/v2/occurrence/annotation": {
             "get": {
                 "tags": [
                     ""
                 ],
-                "operationId": "/api/v2/occurrence/annotation/search",
+                "operationId": "/api/v2/occurrence/annotation",
                 "parameters": [
                     {
                         "name": "collid",
@@ -1174,12 +1328,12 @@
                 }
             }
         },
-        "/api/v2/occurrence/search": {
+        "/api/v2/occurrence": {
             "get": {
                 "tags": [
                     ""
                 ],
-                "operationId": "/api/v2/occurrence/search",
+                "operationId": "/api/v2/occurrence",
                 "parameters": [
                     {
                         "name": "collid",
@@ -1344,7 +1498,7 @@
                     {
                         "name": "identifier",
                         "in": "path",
-                        "description": "occid or specimen GUID (occurrenceID) associated with target occurrence",
+                        "description": "occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1353,10 +1507,15 @@
                     {
                         "name": "includeMedia",
                         "in": "query",
-                        "description": "Whether to include media within output",
+                        "description": "Whether (1) or not (0) to include media within output",
                         "required": false,
                         "schema": {
-                            "type": "integer"
+                            "type": "integer",
+                            "default": "0",
+                            "enum": [
+                                0,
+                                1
+                            ]
                         }
                     },
                     {
@@ -1394,7 +1553,7 @@
                     {
                         "name": "identifier",
                         "in": "path",
-                        "description": "occid or specimen GUID (occurrenceID) associated with target occurrence",
+                        "description": "occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1426,7 +1585,7 @@
                     {
                         "name": "identifier",
                         "in": "path",
-                        "description": "occid or specimen GUID (occurrenceID) associated with target occurrence",
+                        "description": "occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
                         "required": true,
                         "schema": {
                             "type": "string"
@@ -1590,6 +1749,41 @@
                 }
             }
         },
+        "/api/v2/occurrence/{identifier}/reharvest": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/occurrence/identifier/reharvest",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "occid or specimen GUID (occurrenceID) associated with target occurrence",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Triggers a reharvest event of a snapshot record. If record is Live managed, request is ignored",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request: Occurrence identifier is required, API can only be triggered locally (at this time)."
+                    },
+                    "500": {
+                        "description": "Error: unable to locate record"
+                    }
+                }
+            }
+        },
         "/api/v2/taxonomy": {
             "get": {
                 "tags": [
@@ -1598,53 +1792,10 @@
                 "operationId": "/api/v2/taxonomy",
                 "parameters": [
                     {
-                        "name": "limit",
-                        "in": "query",
-                        "description": "Controls the number of results in the page.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 100
-                        }
-                    },
-                    {
-                        "name": "offset",
-                        "in": "query",
-                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
-                        "required": false,
-                        "schema": {
-                            "type": "integer",
-                            "default": 0
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "Returns list of inventories registered within system",
-                        "content": {
-                            "application/json": {
-                                "schema": {}
-                            }
-                        }
-                    },
-                    "400": {
-                        "description": "Error: Bad request. "
-                    }
-                }
-            }
-        },
-        "/api/v2/taxonomy/search": {
-            "get": {
-                "tags": [
-                    ""
-                ],
-                "operationId": "/api/v2/taxonomy/search",
-                "parameters": [
-                    {
                         "name": "taxon",
                         "in": "query",
                         "description": "Taxon search term",
-                        "required": true,
+                        "required": false,
                         "schema": {
                             "type": "string"
                         }
@@ -1732,12 +1883,105 @@
                     }
                 }
             }
+        },
+        "/api/v2/taxonomy/{identifier}/description": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy/identifier/description",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "PK, GUID, or recordID associated with target taxonomic unit",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "Controls the number of results in the page.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 100
+                        }
+                    },
+                    {
+                        "name": "offset",
+                        "in": "query",
+                        "description": "Determines the starting point for the search results. A limit of 100 and offset of 200, will display 100 records starting the 200th record.",
+                        "required": false,
+                        "schema": {
+                            "type": "integer",
+                            "default": 0
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns list of taxonomic descriptions for a given taxon",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. "
+                    }
+                }
+            }
+        },
+        "/api/v2/taxonomy/{identifier}/description/{identifier}": {
+            "get": {
+                "tags": [
+                    ""
+                ],
+                "operationId": "/api/v2/taxonomy/identifier/description/identifier",
+                "parameters": [
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "PK, GUID, or recordID associated with target taxonomic unit",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "identifier",
+                        "in": "path",
+                        "description": "Identifier (PK, tdbid) associated with taxonomic description",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Returns metabase on inventory registered within system with matching ID",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Error: Bad request. Inventory identifier is required."
+                    }
+                }
+            }
         }
     },
     "components": {
         "responses": {
             "200": {
-                "description": "Triggers a reharvest event of a snapshot record. If record is Live managed, request is ignored",
+                "description": "Returns list of occurrences associated with the given exsiccata number",
                 "content": {
                     "application/json": {
                         "schema": {}
@@ -1745,20 +1989,29 @@
                 }
             },
             "400": {
-                "description": "Error: Bad request: Occurrence identifier is required, API can only be triggered locally (at this time)."
+                "description": "Error: Bad request. Valid Exsiccata identifier and Number identifier required"
             },
-            "500": {
-                "description": "Error: unable to locate record"
+            "404": {
+                "description": "Record not found"
             }
         },
         "parameters": {
             "identifier": {
                 "name": "identifier",
                 "in": "path",
-                "description": "occid or specimen GUID (occurrenceID) associated with target occurrence",
+                "description": "Exsiccata ID or record ID",
                 "required": true,
                 "schema": {
                     "type": "string"
+                }
+            },
+            "numberIdentifier": {
+                "name": "numberIdentifier",
+                "in": "path",
+                "description": "Exsiccata number ID (omenid)",
+                "required": true,
+                "schema": {
+                    "type": "integer"
                 }
             }
         }
