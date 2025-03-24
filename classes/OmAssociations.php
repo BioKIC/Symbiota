@@ -41,7 +41,7 @@ class OmAssociations extends Manager{
 				$sql .= 'AND '.$field.' = "'.$this->cleanInStr($cond).'" ';
 			}
 		}
-
+		// echo 'sql is: ' . $sql;
 		if($rs = $this->conn->query($sql)){
 			while($r = $rs->fetch_assoc()){
 				$retArr[$r['assocID']] = $r;

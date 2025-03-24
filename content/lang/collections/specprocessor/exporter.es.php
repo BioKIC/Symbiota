@@ -53,5 +53,6 @@ $LANG['INCLUDE_IMAGES'] = 'incluir registros medios';
 $LANG['INCLUDE_ATTRIBUTES'] = 'incluir Atributos de Características de Ocurrencia (extensión MeasurementOrFact)';
 $LANG['OUTPUT_COMPRESSED'] = 'El archivo generado debe ser comprimido';
 $LANG['ACCESS_DENIED'] = 'Acceso denegado';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'incluir Relaciones de Recursos (asociaciones y recursos vinculados)';
 
 ?>

@@ -92,5 +92,6 @@ $LANG['METADATA'] = 'Metadatos';
 $LANG['NO_PUBLISHABLE'] = 'No existen colecciones publicables';
 $LANG['ADDIT_SOURCES'] = 'Fuentes Adicionales de Datos en la Red del Portal';
 $LANG['EDIT'] = 'Editar';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'Incluir Relaciones de Recursos (asociaciones y recursos vinculados)';
 
 ?>

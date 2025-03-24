@@ -43,5 +43,6 @@ $LANG['COMPRESSION'] = 'Compresión';
 $LANG['COMPRESSED_ZIP'] = 'Archivo ZIP comprimido';
 $LANG['DOWNLOAD_DATA'] = 'Descargar datos';
 $LANG['LIMIT_NOTE'] = '* Hay un límite de 1.000.000 de registros para descargas de ocurrencias';
+$LANG['INCLUDE_ASSOCIATIONS'] = 'incluir Relaciones de Recursos (asociaciones y recursos vinculados)';
 
 ?>

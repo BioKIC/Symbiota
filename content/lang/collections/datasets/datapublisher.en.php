@@ -92,5 +92,5 @@ $LANG['METADATA'] = 'Metadata';
 $LANG['NO_PUBLISHABLE'] = 'There are no publishable collections';
 $LANG['ADDIT_SOURCES'] = 'Additional Data Sources within the Portal Network';
 $LANG['EDIT'] = 'Edit';
-
+$LANG['INCLUDE_ASSOCIATIONS'] = 'Include Resource Relationships (associations & linked resources)';
 ?>
