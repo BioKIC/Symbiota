@@ -610,6 +610,21 @@ class OccurrenceManager extends OccurrenceTaxaManager {
 		return $retArr;
 	}
 
+	public function getPaleoTimes(){
+		$paleoTimes = []; 
+		if ($GLOBALS['ACTIVATE_PALEO']) {
+			$sql = "SELECT gtsterm, myaStart, myaEnd FROM omoccurpaleogts";
+			$rs = $this->conn->query($sql);
+			while ($r = $rs->fetch_object()) {
+				$paleoTimes[$r->gtsterm] = [
+					'myaStart' => floatval($r->myaStart),
+					'myaEnd' => floatval($r->myaEnd)
+				];
+			}
+		}
+		return $paleoTimes;
+	}
+
 	public function getFullCollectionList($catId = ''){
 		if(!$this->searchSupportManager) $this->searchSupportManager = new OccurrenceSearchSupport($this->conn);
 		if(isset($this->searchTermArr['db'])) $this->searchSupportManager->setCollidStr($this->searchTermArr['db']);

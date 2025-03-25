@@ -76,9 +76,11 @@ class OccurrenceListManager extends OccurrenceManager{
 				$retArr[$row->occid]['sciname'] = ($row->sciname?$this->cleanOutStr($row->sciname):'undetermined');
 				$retArr[$row->occid]['tid'] = $row->tidinterpreted;
 				$retArr[$row->occid]['author'] = $this->cleanOutStr($row->scientificnameauthorship);
-				$retArr[$row->occid]['earlyInterval'] = $this->cleanOutStr($row->earlyInterval);
-				$retArr[$row->occid]['lateInterval'] = $this->cleanOutStr($row->lateInterval);
-				$retArr[$row->occid]['formation'] = $this->cleanOutStr($row->formation);
+				if ($GLOBALS['ACTIVATE_PALEO']) {
+					$retArr[$row->occid]['earlyInterval'] = $this->cleanOutStr($row->earlyInterval);
+					$retArr[$row->occid]['lateInterval'] = $this->cleanOutStr($row->lateInterval);
+					$retArr[$row->occid]['formation'] = $this->cleanOutStr($row->formation);
+				}
 				/*
 				if(isset($row->scinameprotected) && $row->scinameprotected && !$securityClearance){
 					$retArr[$row->occid]['taxonsecure'] = 1;
