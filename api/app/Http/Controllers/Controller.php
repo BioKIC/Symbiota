@@ -16,6 +16,7 @@ $_ENV['DEFAULT_TITLE'] = $DEFAULT_TITLE;
 $_ENV['ADMIN_EMAIL'] = $ADMIN_EMAIL;
 $_ENV['CLIENT_ROOT'] = $CLIENT_ROOT;
 $_ENV['SYMBIOTA_VERSION'] = $CODE_VERSION;
+$_ENV['API_VERSION'] = '2.0';
 
 
 class Controller extends BaseController{

@@ -39,7 +39,7 @@ class MediaController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="tid",
 	 *		 in="query",
-	 *		 description="Display media filtered by target taxon ID (PK key of taxon)",
+	 *		 description="Display media filtered by target taxon ID (PK of taxon)",
 	 *		 required=false,
 	 *		 @OA\Schema(type="integer")
 	 *	 ),

@@ -98,8 +98,8 @@ class InstallationController extends Controller{
 
 	/**
 	 * @OA\Get(
-	 *	 path="/api/v2/installation/ping",
-	 *	 operationId="/api/v2/installation/ping",
+	 *	 path="/api/v2/installation/status",
+	 *	 operationId="/api/v2/installation/status",
 	 *	 tags={""},
 	 *	 @OA\Response(
 	 *		 response="200",
@@ -112,7 +112,7 @@ class InstallationController extends Controller{
 	 *	 ),
 	 * )
 	 */
-	public function pingPortal(Request $request){
+	public function portalStatus(Request $request){
 		$portalObj = null;
 		if(isset($_ENV['DEFAULT_TITLE']) && isset($_ENV['PORTAL_GUID'])){
 			$portalObj['status'] = true;
@@ -121,6 +121,7 @@ class InstallationController extends Controller{
 			$portalObj['managerEmail'] = $_ENV['ADMIN_EMAIL'];
 			$portalObj['urlRoot'] = $this->getServerDomain().$_ENV['CLIENT_ROOT'];
 			$portalObj['symbiotaVersion'] = $_ENV['SYMBIOTA_VERSION'];
+			$portalObj['apiVersion'] = $_ENV['API_VERSION'];
 		}
 		else{
 			$portalObj['status'] = false;
@@ -133,13 +134,13 @@ class InstallationController extends Controller{
 
 	/**
 	 * @OA\Get(
-	 *	 path="/api/v2/installation/{identifier}/touch",
-	 *	 operationId="/api/v2/installation/identifier/touch",
+	 *	 path="/api/v2/installation/{identifier}/handshake",
+	 *	 operationId="/api/v2/installation/identifier/handshake",
 	 *	 tags={""},
 	 *	 @OA\Parameter(
 	 *		 name="identifier",
 	 *		 in="path",
-	 *		 description="Identifier of the remote installation",
+	 *		 description="Identifier of the remote installation (GUID)",
 	 *		 required=true,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
@@ -170,7 +171,7 @@ class InstallationController extends Controller{
 			unset($responseArr['error']);
 		}
 		elseif($id == $_ENV['PORTAL_GUID']){
-			//Make sure touch isn't referring to self
+			//Make sure handshake isn't referring to self; portals can't handshake with themselves
 			$responseArr['status'] = 400;
 			$responseArr['error'] = 'Registration failed: handshake is referencing self';
 		}
@@ -178,12 +179,12 @@ class InstallationController extends Controller{
 			//Remote installation not yet in system, thus add and then process list from remote
 			if($baseUrl = $request->input('endpoint')){
 				//Insert portal
-				$urlPing = $baseUrl.'/api/v2/installation/ping';
+				$urlPing = $baseUrl.'/api/v2/installation/status';
 				if($remote = $this->getAPIResponce($urlPing)){
 					if($id == $remote['guid']){
 						//Shake back just to makes sure remote knows about self
-						$remoteTouch = $baseUrl.'/api/v2/installation/'.$_ENV['PORTAL_GUID'].'/touch?endpoint='.htmlentities($this->getServerDomain().$_ENV['CLIENT_ROOT']);
-						$this->getAPIResponce($remoteTouch, true);
+						$remoteHandshake = $baseUrl.'/api/v2/installation/'.$_ENV['PORTAL_GUID'].'/handshake?endpoint='.htmlentities($this->getServerDomain().$_ENV['CLIENT_ROOT']);
+						$this->getAPIResponce($remoteHandshake, true);
 						try {
 							//Register remote
 							$portalObj = PortalIndex::create($remote);
@@ -199,12 +200,12 @@ class InstallationController extends Controller{
 									if(PortalIndex::where('guid',$portal['guid'])->count()) $currentRegistered++;
 									elseif($portal['guid'] != $_ENV['PORTAL_GUID']){
 										//If remote exists, add by retriving info directly from source
-										$remotePing = $portal['urlRoot'].'/api/v2/installation/ping';
+										$remotePing = $portal['urlRoot'].'/api/v2/installation/status';
 										if($newRemote = $this->getAPIResponce($remotePing)){
 											PortalIndex::create($newRemote);
-											//Touch remote installation but don't wait for a response because propagation across a large network can take awhile
-											$urlTouch = $portal['urlRoot'].'/api/v2/installation/'.$_ENV['PORTAL_GUID'].'/touch?endpoint='.htmlentities($this->getServerDomain().$_ENV['CLIENT_ROOT']);
-											$this->getAPIResponce($urlTouch, true);
+											//Handshake remote installation but don't wait for a response because propagation across a large network can take awhile
+											$urlHandshake = $portal['urlRoot'].'/api/v2/installation/'.$_ENV['PORTAL_GUID'].'/handshake?endpoint='.htmlentities($this->getServerDomain().$_ENV['CLIENT_ROOT']);
+											$this->getAPIResponce($urlHandshake, true);
 											$newRegistration++;
 										}
 									}

@@ -22,8 +22,8 @@ class OccurrenceController extends Controller{
 
 	/**
 	 * @OA\Get(
-	 *	 path="/api/v2/occurrence/search",
-	 *	 operationId="/api/v2/occurrence/search",
+	 *	 path="/api/v2/occurrence",
+	 *	 operationId="/api/v2/occurrence",
 	 *	 tags={""},
 	 *	 @OA\Parameter(
 	 *		 name="collid",
@@ -219,16 +219,20 @@ class OccurrenceController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="identifier",
 	 *		 in="path",
-	 *		 description="occid or specimen GUID (occurrenceID) associated with target occurrence",
+	 *		 description="occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
 	 *		 required=true,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
 	 *	 @OA\Parameter(
 	 *		 name="includeMedia",
 	 *		 in="query",
-	 *		 description="Whether to include media within output",
+	 *		 description="Whether (1) or not (0) to include media within output",
 	 *		 required=false,
-	 *		 @OA\Schema(type="integer")
+	 *		 @OA\Schema(
+	 *			type="integer",
+	 *			default="0",
+	 *			enum={0, 1}
+	 *		)
 	 *	 ),
 	 *	 @OA\Parameter(
 	 *		 name="includeIdentifications",
@@ -253,8 +257,10 @@ class OccurrenceController extends Controller{
 			'includeMedia' => 'integer',
 			'includeIdentifications' => 'integer'
 		]);
-		$id = $this->getOccid($id);
-		$occurrence = Occurrence::find($id);
+		$occurrence = $this->getOccurrence($id);
+		if (!$occurrence) {
+			return response()->json(['error' => 'Occurrence not found'], 404);
+		}
 		if($occurrence){
 			if(!$occurrence->occurrenceID) $occurrence->occurrenceID = $occurrence->recordID;
 			if($request->input('includeMedia')) $occurrence->media;
@@ -272,7 +278,7 @@ class OccurrenceController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="identifier",
 	 *		 in="path",
-	 *		 description="occid or specimen GUID (occurrenceID) associated with target occurrence",
+	 *		 description="occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
 	 *		 required=true,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
@@ -288,8 +294,11 @@ class OccurrenceController extends Controller{
 	 * )
 	 */
 	public function showOneOccurrenceIdentifications($id, Request $request){
-		$id = $this->getOccid($id);
-		$identification = Occurrence::find($id)->identification;
+		$occurrence = $this->getOccurrence($id);
+		$identification = null;
+		if($occurrence){
+			$identification = $occurrence->identification;
+		}
 		return response()->json($identification);
 	}
 
@@ -301,7 +310,7 @@ class OccurrenceController extends Controller{
 	 *	 @OA\Parameter(
 	 *		 name="identifier",
 	 *		 in="path",
-	 *		 description="occid or specimen GUID (occurrenceID) associated with target occurrence",
+	 *		 description="occid or specimen GUID (occurrenceID) or recordID associated with target occurrence",
 	 *		 required=true,
 	 *		 @OA\Schema(type="string")
 	 *	 ),
@@ -317,8 +326,17 @@ class OccurrenceController extends Controller{
 	 * )
 	 */
 	public function showOneOccurrenceMedia($id, Request $request){
-		$id = $this->getOccid($id);
-		$media = Occurrence::find($id)->media;
+		$occurrence = $this->getOccurrence($id);
+		if (!$occurrence) {
+			return response()->json(['error' => 'Occurrence not found'], 404);
+		}
+		$media = null;
+		if($occurrence){
+			$media = $occurrence->media;
+		}
+		if (!$media) {
+			return response()->json(['error' => 'Occurrence found, but no media found'], 404);
+		}
 		return response()->json($media);
 	}
 
@@ -345,8 +363,7 @@ class OccurrenceController extends Controller{
 
 	public function update($id, Request $request){
 		if($user = $this->authenticate($request)){
-			$id = $this->getOccid($id);
-			$occurrence = Occurrence::find($id);
+			$occurrence = $this->getOccurrence($id);
 			if(!$occurrence){
 				return response()->json(['status' => 'failure', 'error' => 'Occurrence resource not found'], 400);
 			}
@@ -361,8 +378,7 @@ class OccurrenceController extends Controller{
 
 	public function delete($id, Request $request){
 		if($user = $this->authenticate($request)){
-			$id = $this->getOccid($id);
-			$occurrence = Occurrence::find($id);
+			$occurrence = $this->getOccurrence($id);
 			if(!$occurrence){
 				return response()->json(['status' => 'failure', 'error' => 'Occurrence resource not found'], 400);
 			}
@@ -600,7 +616,7 @@ class OccurrenceController extends Controller{
 	}
 
 	/**
-	 * @off_OA\Get(
+	 * @OA\Get(
 	 *	 path="/api/v2/occurrence/{identifier}/reharvest",
 	 *	 operationId="/api/v2/occurrence/identifier/reharvest",
 	 *	 tags={""},
@@ -636,8 +652,7 @@ class OccurrenceController extends Controller{
 			$responseArr['error'] = 'At this time, API call can only be triggered locally';
 			return response()->json($responseArr);
 		}
-		$id = $this->getOccid($id);
-		$occurrence = Occurrence::find($id);
+		$occurrence = $this->getOccurrence($id);
 		if(!$occurrence){
 			$responseArr['status'] = 500;
 			$responseArr['error'] = 'Unable to locate occurrence record (occid = '.$id.')';
@@ -688,14 +703,6 @@ class OccurrenceController extends Controller{
 	}
 
 	//Helper functions
-	protected function getOccid($id){
-		if(!is_numeric($id)){
-			$occid = Occurrence::where('occurrenceID', $id)->orWhere('recordID', $id)->value('occid');
-			if(is_numeric($occid)) $id = $occid;
-		}
-		return $id;
-	}
-
 	private function isAuthorized($user, $collid){
 		foreach($user['roles'] as $roles){
 			if($roles['role'] == 'SuperAdmin') return true;
@@ -722,5 +729,18 @@ class OccurrenceController extends Controller{
 		}
 		curl_close($ch);
 		return json_decode($resJson,true);
+	}
+
+	private function getOccurrence($id){
+		$decodedId = urldecode($id);
+		$occurrence = null;
+		if(is_numeric($decodedId)){
+			$occurrence = Occurrence::find($decodedId);
+		} else{
+			$occurrence = Occurrence::where('recordID', (string)$decodedId)
+				->orWhere('occurrenceID', (string)$decodedId)
+				->first();
+		}
+		return $occurrence;
 	}
 }

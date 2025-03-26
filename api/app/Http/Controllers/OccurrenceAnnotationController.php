@@ -18,8 +18,8 @@ class OccurrenceAnnotationController extends OccurrenceController{
 
 	/**
 	 * @OA\Get(
-	 *	 path="/api/v2/occurrence/annotation/search",
-	 *	 operationId="/api/v2/occurrence/annotation/search",
+	 *	 path="/api/v2/occurrence/annotation",
+	 *	 operationId="/api/v2/occurrence/annotation",
 	 *	 tags={""},
 	 *	 @OA\Parameter(
 	 *		 name="collid",
