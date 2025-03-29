@@ -315,17 +315,12 @@ class Media {
 		$query_pos = strpos($file_name,'?');
 		if($query_pos) $file_name = substr($file_name, 0, $query_pos);
 
-		$file_type_pos = strrpos($file_name,'.');
-		$dir_path_pos = strrpos($file_name,'/');
+		$file_parts = pathinfo($file_name);
 
-		if($dir_path_pos !== false) $dir_path_pos += 1;
-		if($file_type_pos === false || $file_type_pos < $dir_path_pos) {
-			$file_type_pos = strlen($file_name);
-		}
 		return [
-			'name' => substr($file_name, $dir_path_pos, $file_type_pos - $dir_path_pos),
+			'name' => $file_parts['filename'],
 			'tmp_name' => $filepath,
-			'extension' => strtolower(substr($file_name, $file_type_pos + 1)),
+			'extension' => (!empty($file_parts['extension'])) ? strtolower($file_parts['extension']) : ''
 		];
 	}
 	/**
@@ -702,7 +697,24 @@ class Media {
 
 		curl_close($ch);
 
-		$parsed_file = self::parseFileName($url);
+		// Check response header for a provided filename in "Content-Disposition"
+		$headers = explode("\r\n", $data);
+		$response_file_name = '';
+		if ($found = preg_grep('/^Content-Disposition\: /', $headers)) {
+			preg_match("/.* filename[*]?=(?:utf-8[']{2})?(.*)/",current($found),$matches);
+			if (!empty($matches)){
+				$response_file_name = urldecode($matches[1]);
+			}
+		}
+
+		// Use filename sent in response header.  Otherwise fallback to contents of URL.
+		if(!empty($response_file_name)){
+			$parsed_file = self::parseFileName($response_file_name);
+		}
+		else {
+			$parsed_file = self::parseFileName($url);
+		}
+
 		$parsed_file['name'] = self::cleanFileName($parsed_file['name']);
 
 		if(!$parsed_file['extension'] && $file_type_mime) {
@@ -930,7 +942,6 @@ class Media {
 		INSERT INTO media($keys) VALUES ($parameters)
 		SQL;
 
-		$conn = Database::connect('write');
 		mysqli_begin_transaction($conn);
 		try {
 			//insert media

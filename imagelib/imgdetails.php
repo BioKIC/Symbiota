@@ -258,7 +258,7 @@ if ($imgArr) {
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['SOURCE_URL'] ?>:</b>
-								<input name="sourceurl" type="text" value="<?php echo $imgArr["sourceurl"]; ?>" style="width:450px;" />
+								<input name="sourceurl" type="text" value="<?php echo $imgArr["sourceUrl"]; ?>" style="width:450px;" />
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['COPYRIGHT'] ?>:</b>
@@ -284,7 +284,7 @@ if ($imgArr) {
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['SORT_SEQUENCE'] ?>:</b>
-								<input name="sortsequence" type="text" value="<?php echo $imgArr["sortsequence"]; ?>" size="5" />
+								<input name="sortsequence" type="text" value="<?php echo $imgArr["sortSequence"]; ?>" size="5" />
 							</div>
 							<div style="margin-top:2px;">
 								<b><?php echo $LANG['WEB_IMAGE'] ?>:</b><br />
@@ -407,7 +407,7 @@ if ($imgArr) {
 						echo '</div>';
 					}
 					if ($imgArr['owner']) echo '<div><b>' . $LANG['MANAGER'] . ':</b> ' . $imgArr['owner'] . '</div>';
-					if ($imgArr['sourceurl']) echo '<div><b>' . $LANG['IMAGE_SOURCE'] . ':</b> <a href="' . htmlspecialchars($imgArr['sourceurl'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($imgArr['sourceurl'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
+					if ($imgArr['sourceUrl']) echo '<div><b>' . $LANG['IMAGE_SOURCE'] . ':</b> <a href="' . htmlspecialchars($imgArr['sourceurl'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '" target="_blank">' . htmlspecialchars($imgArr['sourceurl'], ENT_COMPAT | ENT_HTML401 | ENT_SUBSTITUTE) . '</a></div>';
 					if ($imgArr['locality']) echo '<div><b>' . $LANG['LOCALITY'] . ':</b> ' . $imgArr['locality'] . '</div>';
 					if ($imgArr['notes']) echo '<div><b>' . $LANG['NOTES'] . ':</b> ' . $imgArr['notes'] . '</div>';
 					if ($imgArr['rights']) echo '<div><b>' . $LANG['RIGHTS'] . ':</b> ' . $imgArr['rights'] . '</div>';
